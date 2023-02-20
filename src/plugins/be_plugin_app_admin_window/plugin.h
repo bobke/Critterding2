@@ -1,0 +1,38 @@
+#ifndef PLUGIN_H_INCLUDED
+#define PLUGIN_H_INCLUDED
+
+#include "kernel/be_plugin_interface.h"
+#include "admin_lookup_buffer.h"
+
+	// SCENE
+		class Scene: public BEntity
+		{
+			public:
+				Scene() : BEntity() {};
+				virtual ~Scene() {};
+				
+				virtual void construct();
+// 			private:
+// 			void add_admin_entity_list( BEntity* parent, BEntity* entity );
+// 			void add_admin_entity_groupbox( BEntity* parent, BEntity* entity );
+		};
+
+	// ADMIN WINDOW
+		class BAdminWindow: public BEntity
+		{
+			public:
+				BAdminWindow() : BEntity() {};
+				virtual ~BAdminWindow();
+				
+				virtual void construct();
+				virtual bool set( const Bstring& id, BEntity* value );
+			private:
+				void add_admin_entity_list( BEntity* parent, BEntity* entity );
+				void add_admin_entity_groupbox( BEntity* parent, BEntity* entity );
+				void add_admin_item( BEntity* parent, BEntity* entity );
+			
+				BAdminLookupBuffer m_lookup_buffer;
+		};
+
+
+#endif

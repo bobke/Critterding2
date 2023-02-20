@@ -1,0 +1,43 @@
+{
+   <_dl_catch_exception (qt6 dlopen)>
+   Memcheck:Leak
+   ...
+   fun:_dl_catch_exception
+   ...
+}
+
+{
+   setText
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:_dl_allocate_tls
+   fun:pthread_create@@GLIBC_2.2.5
+   fun:_ZN7QThread5startENS_8PriorityE
+   fun:_ZN15QDBusConnection10sessionBusEv
+   obj:/usr/lib/libQt6Gui.so.6.1.2
+   fun:_ZN20QSpiAccessibleBridgeC1Ev
+   fun:_ZNK15QXcbIntegration13accessibilityEv
+   fun:_ZN11QAccessible8isActiveEv
+   fun:_ZN11QAccessible19updateAccessibilityEP16QAccessibleEvent
+   fun:_ZN15QAbstractButton7setTextERK7QString
+   obj:*
+}
+
+{
+   setVisible
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:_dl_allocate_tls
+   fun:pthread_create@@GLIBC_2.2.5
+   fun:_ZN7QThread5startENS_8PriorityE
+   fun:_ZN15QDBusConnection10sessionBusEv
+   obj:/usr/lib/libQt6Gui.so.6.1.2
+   fun:_ZN20QSpiAccessibleBridgeC1Ev
+   fun:_ZNK15QXcbIntegration13accessibilityEv
+   fun:_ZN11QAccessible8isActiveEv
+   fun:_ZN11QAccessible19updateAccessibilityEP16QAccessibleEvent
+   fun:_ZN14QWidgetPrivate11show_helperEv
+   fun:_ZN14QWidgetPrivate10setVisibleEb
+}

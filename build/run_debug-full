@@ -1,0 +1,2 @@
+#  --suppressions=valgrind.supp 
+make -j5 && valgrind --memcheck:leak-check=full --show-reachable=yes --track-origins=yes  ./src/bengine2 $1

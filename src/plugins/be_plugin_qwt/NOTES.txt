@@ -1,0 +1,5 @@
+
+QWT 6.2 MUST BE INSTALLED WITH QT6 SUPPORT
+WHICH MEANS SOURCES HAVE TO BE CONFIGURED WITH QMAKE6
+
+be_plugin_qwt is based in part on the work of the Qwt project (http://qwt.sf.net).

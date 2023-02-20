@@ -1,0 +1,37 @@
+#3D artwork for critterding 
+#   Copyright (C) 2013  Samuel Porter 
+
+#  This artwork is free; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This artwork is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+newmtl Material.002
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 0.0
+illum 2
+map_Kd terraria_sand2.jpg
+map_bump terraria_sand2_normal.jpg
+
+newmtl Material.001
+Ns 125.490196
+Ka 0.000000 0.000000 0.000000
+Kd 0.70703125 0.58203125 0.39453125
+Ks 0.100000 0.100000 0.100000
+Ni 1.000000
+d 0.000000
+illum 1
+

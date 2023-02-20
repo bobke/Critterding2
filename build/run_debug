@@ -1,0 +1,1 @@
+make -j5 && valgrind --memcheck:leak-check=full  ./src/bengine2 $1

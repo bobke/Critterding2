@@ -1,0 +1,7 @@
+ALTER THESE IN MAIN CMAKELISTS.TXT
+
+OPTION(BUILD_BULLET3 "Set when you want to build Bullet 3" OFF)
+OPTION(BUILD_UNIT_TESTS "Build Unit Tests"	OFF)
+OPTION(BUILD_EXTRAS "Set when you want to build the extras" OFF)
+OPTION(BUILD_BULLET2_DEMOS "Set when you want to build the Bullet 2 demos" OFF)
+OPTION(BUILD_SHARED_LIBS "Use shared libraries" ON)

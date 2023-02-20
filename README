@@ -1,0 +1,11 @@
+BUILDING
+--------
+	cd build
+	./compile-release.sh [threads]
+
+RUNNING
+-------
+./src/bengine app_critterding
+
+
+bobke...
