@@ -62,35 +62,12 @@
 
 	BEntity* BeLibHandler::create(  BEntity* parent, const Buint id )
 	{
-// 		std::cout << "BeLibHandler::create_plugin " << parent->id() << " " << id << std::endl;
-		BEntity* e = m_create_plugin( parent, id ); // FIXME MEMLEAK
-
-// 		// FIXME ENABLE THIS TO ENABLE LIBHANDLER AGAIN
-// 		// SET LIBHANDLER 
-// 			// in the case of no entity returned we had spawned the plugin class information
-// 			if ( e != 0 )
-// 			{
-// 				e->setLibHandler( this );
-// 			}
-		
-		// std::cout << "BeLibHandler::create_plugin " << id << " under " << parent->name() << " done" << std::endl;
-		return e;
+		return m_create_plugin( parent, id ); // FIXME MEMLEAK
 	}
 
 	void BeLibHandler::destroy( BEntity* e )
 	{
-// 		e->children_clear();
-// 		std::cout << "BeLibHandler::destroy " << e->id() << std::endl;
 		m_destroy_plugin( e );
-// 		std::cout << "BeLibHandler::destroy done" << std::endl;
-	}
-
-	BEntity_Plugin::BEntity_Plugin()
-	{
-	}
-
-	BEntity_Plugin::~BEntity_Plugin()
-	{
 	}
 
 	bool BEntity_Plugin::open( const std::string& dir, const std::string& lib )
@@ -157,38 +134,6 @@
 		return t;
 	}
 
-// 	Buint BEntity_Plugin_Manager::findType( const std::string& name ) const
-// 	{
-// 		if ( hasChildren() )
-// 		{
-// 			// FIND CLASSES SUBDIR IN PLUGIN INFO
-// 			for ( auto child(children().begin()); child != children().end(); ++child )
-// 			{
-// 				for ( auto child2((*child)->children().begin()); child2 != (*child)->children().end(); ++child2 )
-// 				{
-// 					if ( (*child2)->name()=="Classes" )
-// 					{
-// 						// FIND NAME IN PLUGIN INFO
-// 						for ( auto id_child((*child2)->children().begin()); id_child != (*child2)->children().end(); ++id_child )
-// 						{
-// 							if ( (*id_child)->name()==name )
-// 							{
-// 								for ( auto id_child2((*id_child)->children().begin()); id_child2 != (*id_child)->children().end(); ++id_child2 )
-// 								{
-// 									if ( (*id_child2)->name()=="ID" )
-// 									{
-// 										return *(*id_child2)->get_uint();
-// 									}
-// 								}
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 		return 0;
-// 	}
-// 
 	BEntity* BEntity_Plugin_Manager::create( BEntity* parent, const std::string& name )
 	{
 		return create( parent, "", name );

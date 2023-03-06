@@ -8,68 +8,25 @@
 // #include <iostream>
 // #include <sstream>
 
-	// TYPE_NAME
-		template <typename T>
-		constexpr auto type_name() noexcept
-		{
-			std::string_view name = "Error: unsupported compiler", prefix, suffix;
-			#ifdef __clang__
-			name = __PRETTY_FUNCTION__;
-			prefix = "auto type_name() [T = ";
-			suffix = "]";
-			#elif defined(__GNUC__)
-			name = __PRETTY_FUNCTION__;
-			prefix = "constexpr auto type_name() [with T = ";
-			suffix = "]";
-			#elif defined(_MSC_VER)
-			name = __FUNCSIG__;
-			prefix = "auto __cdecl type_name<";
-			suffix = ">(void) noexcept";
-			#endif
-			name.remove_prefix(prefix.size());
-			name.remove_suffix(suffix.size());
-			return name;
-		}
-
-
 		BEntity::BEntity() 
-// 			: m_id(0)
-// 			: m_be_parent(0)
-// 			, m_io_handler(0)
 		{
 			m_id = 0;
-// 			m_startTime = 0;
 			m_be_parent = 0;
 			m_io_handler = 0;
-// 			m_ID_is_recyclable = false;
-// 			m_ID_is_delayed_for_reuse = false;
-// 			m_has_processing = false;
-// 			m_has_deferred_processing = false;
-// 			m_has_children = false;
-			
 			m_flagbits = 0;
 		}
-
-		BEntity::~BEntity()
-		{
-		}
-
 	// SET VALUES
 		// bool BEntity::set() { return false; }
 		bool BEntity::set()
 		{
-			// special case which makes possible copying noncomponent entities
+			// special case for copying non primitives
 			return onUpdate();
-// 			std::cout << "WARNING: BEntity::set() not overloaded for entity " << id() << std::endl;
-// 			return false;
 		}
 		
 		bool BEntity::set( BEntity* value )
 		{ 
-// 			(void)value; return false;
 			std::cout << "WARNING: BEntity::set(BEntity*) not overloaded for entity " << id() << "(" << name() << ")" << " to " << value->id() << "(" << value->name() << ")" << std::endl;
 			return false;
-// 			return onUpdate();
 		}
 
 		bool BEntity::set( const bool& value )
@@ -77,40 +34,41 @@
 			std::cout << "WARNING: BEntity::set( const Bbool value ) not overloaded for entity " << id() << " to " << name() << std::endl;
 			(void)value; return false;
 		}
+
 		bool BEntity::set( const Buint& value )
 		{
 			std::cout << "WARNING: BEntity::set( const Buint& value ) not overloaded for entity " << id() << " to " << name() << std::endl;
 			(void)value; return false;
 		}
+
 		bool BEntity::set( const Bint& value )
 		{
 			std::cout << "WARNING: BEntity::set( const Bint& value ) not overloaded for entity " << id() << " to " << name() << std::endl;
 			(void)value; return false;
 		}
+
 		bool BEntity::set( const Bfloat& value )
 		{
 			std::cout << "WARNING: BEntity::set( const Bfloat& value ) not overloaded for entity " << id() << " to " << name() << std::endl;
 			(void)value; return false;
 		}
+
 		bool BEntity::set( const Bdouble& value )
 		{
 			std::cout << "WARNING: BEntity::set( const Bdouble& value ) not overloaded for entity " << id() << " to " << name() << std::endl;
 			(void)value; return false;
 		}
+
 // 		bool BEntity::set( const Bstring& value )
 // 		{
 // 			set( value.c_str() );
 // 		}
+
 		bool BEntity::set( const char* value )
 		{
 // 			std::cout << "WARNING: BEntity::set( const char* value ) not overloaded for entity " << id() << "(" << name() << ")" << " to " << value << std::endl;
 			(void)value; return false;
 		}
-// 		bool BEntity::set( void* value )
-// 		{
-// 			std::cout << "WARNING: BEntity::set( void* value ) not overloaded for entity " << id() << " to " << value << std::endl;
-// 			(void)value; return false;
-// 		}
 
 	// GET VALUES
 		BEntity* BEntity::get_reference()
@@ -118,46 +76,48 @@
 			std::cout << "BEntity::get_reference(): should be overriding this entity " << id() << "(" << name() << ")" << std::endl;
 			return 0;
 		}
+
 		Bbool BEntity::get_bool()
 		{
 			std::cout << "BEntity::get_bool(): should be overriding this entity " << id() << "(" << name() << ")" << std::endl;
 			return false;
 		}
+
 		Buint BEntity::get_uint()
 		{
 			std::cout << "BEntity::get_uint(): should be overriding this entity " << id() << "(" << name() << ")" << std::endl;
 			return 0;
 		}
+
 		Bint BEntity::get_int()
 		{
 			std::cout << "BEntity::get_int(): should be overriding this entity " << id() << "(" << name() << ")" << std::endl;
 			return 0;
 		}
+
 		Bfloat BEntity::get_float()
 		{
 			std::cout << "BEntity::get_float(): should be overriding this entity " << id() << "(" << name() << ")" << std::endl;
 			return 0.0f;
 		}
+
 		Bdouble BEntity::get_double()
 		{
 			std::cout << "BEntity::get_double(): should be overriding this entity " << id() << "(" << name() << ")" << std::endl;
 			return 0.0;
 		}
+
 // 		Bstring* BEntity::get_string()
 // 		{
 // 			std::cout << "BEntity::get_string(): should be overriding this entity " << id() << "(" << name() << ")" << std::endl;
 // 			return 0;
 // 		}
+
 		const char* BEntity::get_string()
 		{
 			std::cout << "BEntity::get_string(): should be overriding this entity " << id() << "(" << name() << ")" << std::endl;
 			return 0;
 		}
-// 		void* BEntity::get_binary()
-// 		{
-// 			std::cout << "BEntity::get_binary(): should be overriding this entity " << id() << "(" << name() << ")" << std::endl;
-// 			return 0;
-// 		}
 
 		
 		BEntity* BEntity::get_reference( const Bstring& id )
@@ -166,30 +126,35 @@
 			(void)id;
 			return 0;
 		}
+
 		Bbool BEntity::get_bool( const Bstring& id )
 		{
 			std::cout << "BEntity::get_uint(id): wrong type for entity " << id << "(" << name() << ")" << std::endl;
 			(void)id;
 			return 0;
 		}
+
 		Buint BEntity::get_uint( const Bstring& id )
 		{
 			std::cout << "BEntity::get_uint(id): wrong type for entity " << id << "(" << name() << ")" << std::endl;
 			(void)id;
 			return 0;
 		}
+
 		Bint BEntity::get_int( const Bstring& id )
 		{
 			std::cout << "BEntity::get_int(id): wrong type for entity " << id << "(" << name() << ")" << std::endl;
 			(void)id;
 			return 0;
 		}
+
 		Bfloat BEntity::get_float( const Bstring& id )
 		{
 			std::cout << "BEntity::get_float(id): wrong type for entity " << id << "(" << name() << ")" << std::endl;
 			(void)id;
 			return 0.0f;
 		}
+
 		Bdouble BEntity::get_double( const Bstring& id )
 		{
 			std::cout << "BEntity::get_double(id): wrong type for entity " << id << "(" << name() << ")" << std::endl;
@@ -202,18 +167,13 @@
 // 			(void)id;
 // 			return 0;
 // 		}
+
 		const char* BEntity::get_string( const Bstring& id )
 		{
 			std::cout << "BEntity::get_string(id): wrong type for entity " << id << "(" << name() << ")" << std::endl;
 			(void)id;
 			return 0;
 		}
-// 		void* BEntity::get_binary( const Bstring& id )
-// 		{
-// 			std::cout << "BEntity::get_binary(id): wrong type for entity " << id << std::endl;
-// 			(void)id;
-// 			return 0;
-// 		}
 		
 		
 	// SET NAMED VALUES
@@ -222,46 +182,47 @@
 			std::cout << "BEntity::set( const Bstring& id, BEntity* value ): should be overriding this entity " << id << std::endl;
 			(void)id; (void)value; return false;
 		}
+
 		bool BEntity::set( const Bstring& id, const Bbool& value ) // FIXME KILLS SHIT WHEN UNCOMMENTED
 		{
 			std::cout << "BEntity::set( const Bstring& id, const Bbool& value ): should be overriding this entity " << id << std::endl;
 			(void)id; (void)value; return false;
 		}
+
 		bool BEntity::set( const Bstring& id, const Buint& value )
 		{
 			std::cout << "BEntity::set( const Bstring& id, const Buint& value ): should be overriding this entity " << id << std::endl;
 			(void)id; (void)value; return false;
 		}
+
 		bool BEntity::set( const Bstring& id, const Bint& value )
 		{
 			std::cout << "BEntity::set( const Bstring& id, const Bint& value ): should be overriding this entity " << id << std::endl;
 			(void)id; (void)value; return false;
 		}
+
 		bool BEntity::set( const Bstring& id, const Bfloat& value )
 		{
 			std::cout << "BEntity::set( const Bstring& id, const Bfloat& value ): should be overriding this entity " << id << std::endl;
 			(void)id; (void)value; return false;
 		}
+
 		bool BEntity::set( const Bstring& id, const Bdouble& value )
 		{
 			std::cout << "BEntity::set( const Bstring& id, const Bdouble& value ): should be overriding this entity " << id << std::endl;
 			(void)id; (void)value; return false;
 		}
+
 // 		bool BEntity::set( const Bstring& id, const Bstring& value )
 // 		{
 // 			set( id, value.c_str() );
 // 		}
+
 		bool BEntity::set( const Bstring& id, const char* value )
 		{
 			std::cout << "BEntity::set( const Bstring& id, const char* value ): should be overriding this entity " << id << std::endl;
 			(void)id; (void)value; return false;
 		}
-// 		bool BEntity::set( const Bstring& id, void* value )
-// 		{
-// 			std::cout << "BEntity::set( const Bstring& id, void* value ): should be overriding this entity " << id << std::endl;
-// 			(void)id; (void)value; return false;
-// 		}
-		
 
 		template <typename T>
 		bool BEntity::compareAndSetValue (T& original, T const& value)
@@ -273,6 +234,7 @@
 			}
 			return false;
 		}
+
 		template bool BEntity::compareAndSetValue<Bbool>(Bbool&, const Bbool&);
 		template bool BEntity::compareAndSetValue<Buint>(Buint&, const Buint&);
 		template bool BEntity::compareAndSetValue<Bint>(Bint&, const Bint&);
@@ -285,14 +247,11 @@
 		{
 			if ( original != value )
 			{
-// 				std::cout << " updating value from " << original->id() << " to " << value->id() << std::endl;
 				original = value;
-// 				std::cout << " after update " << original->id() << " to " << value->id() << std::endl;
 				return true;
 			}
 			return false;
 		}
-
 
 	// PROCESSING
 		void BEntity::process_general()
@@ -445,15 +404,25 @@
 		Buint64 BEntity::id() const { return m_id; }
 		void BEntity::setID(const Buint64 t_id) { m_id = t_id; }
 
-// 		void BEntity::setIDRecyclable() { m_ID_is_recyclable = true; }
-// 		Bbool BEntity::isIDRecyclable() const { return m_ID_is_recyclable; }
-// 		void BEntity::setDelayReuseID() { m_ID_is_delayed_for_reuse = true; }
-// 		Bbool BEntity::hasDelayReuseID() const { return m_ID_is_delayed_for_reuse; }
-		void BEntity::setIDRecyclable() { setNthBit(m_flagbits, 0); }
-		Bbool BEntity::isIDRecyclable() const { return getNthBit(m_flagbits, 0); }
-		void BEntity::setDelayReuseID() { setNthBit(m_flagbits, 1); }
-		Bbool BEntity::hasDelayReuseID() const { return getNthBit(m_flagbits, 1); }
+		void BEntity::setIDRecyclable()
+		{
+			setNthBit(m_flagbits, 0);
+		}
+		
+		Bbool BEntity::isIDRecyclable() const
+		{
+			return getNthBit(m_flagbits, 0);
+		}
 
+		void BEntity::setDelayReuseID()
+		{
+			setNthBit(m_flagbits, 1);
+		}
+
+		Bbool BEntity::hasDelayReuseID() const
+		{
+			return getNthBit(m_flagbits, 1);
+		}
 
 	// ADMIN WINDOW
 		BEntity* BEntity::getAdminWindow()
@@ -510,6 +479,46 @@
 
 		BEntity* BEntity::addChild( const std::string& name, const std::string& library, const std::string& entityClass )
 		{
+			// PRIMITIVES
+				if ( entityClass == "reference" )
+					return addChild(name, new BEntity_reference());
+
+				if ( entityClass == "external_child" )
+					return addChild(name, new BEntity_external());
+
+				if ( entityClass == "trigger" )
+					return addChild(name, new BEntity_trigger());
+
+				if ( entityClass == "bool" )
+					return addChild(name, new BEntity_bool());
+
+				if ( entityClass == "bool_property" )
+					return addChild(name, new BEntity_bool_property());
+
+				if ( entityClass == "uint" )
+					return addChild(name, new BEntity_uint());
+
+				if ( entityClass == "uint_property" )
+					return addChild(name, new BEntity_uint_property());
+				
+				if ( entityClass == "int" )
+					return addChild(name, new BEntity_int());
+
+				if ( entityClass == "int_property" )
+					return addChild(name, new BEntity_int_property());
+
+				if ( entityClass == "float" )
+					return addChild(name, new BEntity_float());
+
+				if ( entityClass == "float_property" )
+					return addChild(name, new BEntity_float_property());
+				
+				if ( entityClass == "string" )
+					return addChild(name, new BEntity_string());
+
+				if ( entityClass == "string_property" )
+					return addChild(name, new BEntity_string_property());
+
 			return addChild(name, pluginManager()->create( this, library, entityClass ));
 		}
 
@@ -533,6 +542,7 @@
 				// set all children builtin
 				entity->markBuiltinChildren();
 
+				// admin
 				if ( entity->parent()->hasAdmin() )
 				{
 					if ( topParent() )
@@ -540,19 +550,8 @@
 						auto admin_app = entity->parent()->getAdminWindow();
 						if ( admin_app )
 						{
-							// std::cout << "to add" << std::endl;
 							admin_app->set( "add", entity );
 						}
-						// auto scene = topParent()->getChild("Scene", 1);
-						// if ( scene )
-						// {
-						// 	auto admin_app = scene->getChild("Admin App", 2);
-						// 	if ( admin_app )
-						// 	{
-						// 		// std::cout << "to add" << std::endl;
-						// 		admin_app->set( "add", entity );
-						// 	}
-						// }
 					}
 				}
 
@@ -651,7 +650,6 @@
 // 						}
 // 					}
 // 				}
-			
 
 			return childHandler()->removeChild( this, entity );
 		}
@@ -674,13 +672,11 @@
 		Bbool BEntity::hasChildren() const
 		{
 			return getNthBit(m_flagbits, 4);
-// 			return m_has_children;
 		}
 
 		void BEntity::setHasChildren( const bool value )
 		{
 			setNthBit(m_flagbits, 4, value);
-// 			m_has_children = value;
 		}
 
 		const BEntityVector& BEntity::children() const
@@ -688,54 +684,9 @@
 			return childHandler()->children( this );
 		}
 
-	// FIND CHILD ENTITIES
-	// FIXME we can fix this by changine to const char*
-	// so it's back to getChild(x) or getChild(x, 10)
-// 		BEntity* BEntity::getChild(const std::string& name)
-// 		{
-// 			return getChild( this, name, 1 );
-// 		}
-// 
-// 		BEntity* BEntity::getChild(BEntity* p_entity, const std::string& name, const unsigned int max_levels)
-// 		{
-// 			if ( hasChildren() && max_levels > 0 )
-// 			{
-// 				// first try to find on this level
-// 				const auto& children_vector = childHandler()->children(p_entity);
-// 				const auto& begin(children_vector.begin());
-// 				const auto& end(children_vector.end());
-// 				for ( auto it(begin); it != end; ++it )
-// 				{
-// 					if ( (*it)->name() == name )
-// 					{
-// 						return (*it);
-// 					}
-// 				}
-// 
-// 				// reloop and pass on to children, but level -1
-// 				if ( max_levels > 1 )
-// 				{
-// 					for ( auto it(begin); it != end; ++it )
-// 					{
-// 						BEntity* found_entity = getChild((*it), name, max_levels - 1);
-// 						if ( found_entity )
-// 						{
-// 							return found_entity;
-// 						}
-// 					}
-// 				}
-// 			}
-// 			return 0;			
-// 		}
-
 		BEntity* BEntity::getChild(const char* name, const unsigned int max_levels)
 		{
-			// if ( max_levels == 1 )
-			// {
-			// 	std::cout << "getChild::" << name << " levels:" << max_levels << std::endl;
-			// }
-				
-			if ( hasChildren() && max_levels > 0 )
+			if ( max_levels > 0 && hasChildren() )
 			{
 				// first try to find on this level
 				const auto& children_vector = childHandler()->children(this);
@@ -762,8 +713,6 @@
 					}
 				}
 			}
-			// else
-				// std::cout << "WARNING::BEntity::getChild: '" << name << "' not found" << std::endl;
 
 			return 0;
 		}
@@ -784,11 +733,6 @@
 		{
 			return parent()->pluginManager();
 		}
-// 		BEntity_Plugin_Manager* BEntity::pluginManager( const BEntity* entity ) const
-// 		{
-// 			return parent()->pluginManager( entity );
-// 		}
-
 
 	// PARENT INFO
 		// FIXME be_parent()
@@ -847,7 +791,7 @@
 
 		}
 
-// TOP FUNCTIONS
+	// TOP FUNCTIONS
 		BEntity* BEntity::getNearestTop()
 		{
 			return parent()->getNearestTop();
@@ -997,30 +941,7 @@
 			return true;
 		}
 
-	// // TIME
-	// 	Buint BEntity::totalTime() const
-	// 	{
-	// 		BeTimer* t = getTimer();
-	// 		if ( t )
-	// 			return t->getTotalMilliSeconds() - m_startTime;
-	// 		return 0;
-	// 	}
-
-		// BeTimer* BEntity::getTimer() const
-		// {
-		// 	return parent()->getTimer();
-		// }
-
-		// void BEntity::setStartTime( const Buint startTime )
-		// {
-		// 	m_startTime = startTime;
-		// }
-
 	// COMMAND BUFFER
-// 		void BEntity::addToCommandBuffer( BEntity* command )
-// 		{
-// 			parent()->addToCommandBuffer( command );
-// 		}
 		BEntity* BEntity::getCommandBuffer()
 		{
 			return parent()->getCommandBuffer();
@@ -1039,27 +960,5 @@
 			else
 				packedValue = packedValue & ~(1<<selectedBitIndex);
 		} 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		void BEntity::printMemProfile()
-		{
-// 			Buint count(0);
-// 			std::cout << "  m_flags : "  << type_name<decltype(m_flags)>() << " " << sizeof(m_flags) << " bytes" << std::endl;
-// 			count += sizeof(m_flags);
-// // 			std::cout << "      total memory in variables: " << count << " bytes" << std::endl;
-		}
 		
 		

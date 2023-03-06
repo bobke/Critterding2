@@ -28,8 +28,8 @@
 	class BEntity_Plugin : public BEntity
 	{
 		public:
-			BEntity_Plugin();
-			virtual ~BEntity_Plugin();
+			BEntity_Plugin() {};
+			virtual ~BEntity_Plugin() {};
 			
 			bool open( const std::string& dir, const std::string& lib );
 			BEntity* create( BEntity* parent, const Buint id );
@@ -45,7 +45,6 @@
 			BEntity_Plugin_Manager();
 			virtual ~BEntity_Plugin_Manager();
 			BEntity_Plugin* load( const std::string& name, const std::string& dir, const std::string& lib );
-// 			Buint findType( const std::string& name ) const;
 			BEntity* create( BEntity* parent, const std::string& name );
 			BEntity* create( BEntity* parent, const std::string& library, const std::string& name );
 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager ) { (void)hboxlayout; (void) plugin_manager; }

@@ -60,13 +60,6 @@ class BEntityTop : public BEntity
 			private:
 				B_Children_Handler* m_child_handler;
 
-		// LIB HANDLER
-			public:
-// 				void setLibHandler( BEntity* entity, BeLibHandler* const lib_handler );
-// 				virtual BeLibHandler* getLibHandler( const BEntity* entity ) const;
-			private:
-// 				BeLibHandler* m_lib_handler;
-
 		// PLUGIN_MANAGER
 			public:
 				void spawnPluginManager();
@@ -88,19 +81,9 @@ class BEntityTop : public BEntity
 				void spawnCommandBuffer(); // FIXME command not needed, do it in the construct
 				void process_and_clear_command_buffer();
 // 				bool process_command(BEntity* command);
-// 				virtual void addToCommandBuffer( BEntity* command );
 				virtual BEntity* getCommandBuffer();
 			private:
 				BEntity* m_command_buffer;
-
-// 		// TIME
-// 			public:
-// 				Buint totalTime() const;
-// 				virtual BeTimer* getTimer() const { return m_timer; }
-// 			protected:
-// 				BeTimer* m_timer;
-// // 			private:
-// // 				Buint m_startTime;
 
 		// PROCESSING
 			protected:

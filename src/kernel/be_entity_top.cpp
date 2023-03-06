@@ -1,5 +1,4 @@
 #include "be_entity_top.h"
-// #include "be_timer.h"
 #include "be_lib_handler.h"
 #include "be_entity_children_handler.h"
 #include <iostream>
@@ -12,7 +11,6 @@
 		, m_numLoops(1)
 		, m_isLoopManager(false)
 		, m_command_buffer(0)
-		// , m_timer(new BeTimer())
 		, m_plugin_manager(0)
 		, m_admin_window(0)
 		{
@@ -47,7 +45,6 @@
 				delete m_child_handler;
 			}
 			delete m_processor;
-			// delete m_timer;
 		}
 
 		// MOVE RECONSTRUCT FLAG TO PROCESSOR
@@ -117,27 +114,15 @@
 
 		}
 
-		void BEntityTop::addProcessing( BEntity* entity )
+		void BEntityTop::addProcessing( BEntity* entity ) // FIXME
 		{
 			// FIXME ignore entity warning for now
 			(void)entity;
-			
-			// std::cout << "BEntityTop::addProcessing: " << entity->name() << std::endl;
-
-			// FIXME RECONSTRUCT THE ENTIRE LIST FOR NOW WHEN ADDING AN ENTITY
-			// FIXME THIS BREAKS THE THREADS, BUT THEN WE CAN ADD ONE TEST0P
-// 			auto entity_scene = getChild("Scene", 1);
-
-			// set signal to reconstruct instead of actually adding, this will fix the order
-			// and make it more performant
 			m_reconstruct_list = true;
-			// m_processor->addEntity( entity );
 		}
 
 		void BEntityTop::removeProcessing( BEntity* entity )
 		{
-			// m_reconstruct_list = true;
-			// actually remove entity from processor
 			m_processor->removeEntity( entity );
 		}
 
@@ -155,10 +140,7 @@
 	// NAME
 		void BEntityTop::addName(BEntity* entity, const std::string& entityName)
 		{
-// 			std::cout << "BEntityTop::addName " << entity->id() << " : " << entityName << std::endl;
 			m_be_name_map[entity] = entityName;
-			//if ( isProxyEntity() )
-			//	m_message_server->send( net_message_change_name(BEUInt(id()), BEString(m_be_name.c_str())) );
 		}
 
 		void BEntityTop::removeName(BEntity* entity)
@@ -166,18 +148,12 @@
 			auto search = m_be_name_map.find(entity);
 			if (search != m_be_name_map.end())
 			{
-// 				std::cout << "Found " << search->first << " " << search->second << '\n';
 				m_be_name_map.erase(search);
-// 				std::cout << m_be_name_map.size() << std::endl;
 			}
-
-			//if ( isProxyEntity() )
-			//	m_message_server->send( net_message_change_name(BEUInt(id()), BEString(m_be_name.c_str())) );
 		}
 		
 		std::string& BEntityTop::name(BEntity* entity )
 		{
-// 			parent()->name( id );
 			return m_be_name_map[entity];
 		}
 
@@ -353,27 +329,11 @@
 			m_child_handler->print( entity, max_levels );
 		}
 		
-// 		void BEntityTop::addToCommandBuffer( BEntity* command )
-// 		{
-// 			std::cout << id() << ": should add to command buffer" << std::endl;
-// 		}
 		BEntity* BEntityTop::getCommandBuffer()
 		{
 			return m_command_buffer;
 		}
 
-// 	// LIB HANDLER
-// 		void BEntityTop::setLibHandler( BEntity* entity, BeLibHandler* const lib_handler )
-// 		{
-// // 			m_lib_handler = lib_handler;
-// // 			entity->setLibHandler(lib_handler);
-// 		}
-		
-// 		BeLibHandler* BEntityTop::getLibHandler( const BEntity* entity ) const
-// 		{
-// 			return m_lib_handler;
-// 		}
-		
 	// PLUGIN_MANAGER
 		void BEntityTop::spawnPluginManager()
 		{
@@ -395,13 +355,6 @@
 
 		BEntity* BEntityTop::getAdminWindow()
 		{
-			// auto scene = getChild("Scene", 1);
-			// if ( scene )
-			// {
-			// 	return scene->getChild("Admin App", 2);
-			// }
-			// return m_admin_window;
-
 			return m_admin_window;
 		}
 

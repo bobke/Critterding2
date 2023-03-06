@@ -9,49 +9,22 @@
 	class B_IO_Handler;
 	class BEInput;
 	class BEOutput;
-	// class BeTimer;
 
 	class BEntity
 	{
 		// CONSTRUCTORS / DESTRUCTOR
 			public:
 				BEntity();
-				virtual ~BEntity();
+				virtual ~BEntity() {};
 				virtual void construct() {};
 				virtual void destruct() {};
 				virtual const char* class_id() const { return "entity"; }
 
-		// FLAGS
-			public:
-				// bit-packing struct
-// 				struct Flags // struct shaves off 16 bytes / entity.  there is room for 2 more bools
-// 				{
-// // 					// variable								memory					total memory
-// // 					Buint m_be_id;							// 8 bytes				8
-// // 					Buint m_startTime;						// 8 bytes				16
-// // 
-// // 					BEntity* m_be_parent;					// 8 bytes				24
-// // 					B_IO_Handler* m_io_handler;				// 8 bytes				32
-// 
-// 
-// // 					Bbool m_ID_is_recyclable;				// 1 byte	0
-// // 					Bbool m_ID_is_delayed_for_reuse;		// 1 byte	1
-// // 					Bbool m_has_processing;					// 1 byte	2
-// // 					Bbool m_has_deferred_processing;		// 1 byte	3
-// // 					Bbool m_has_children;					// 1 byte	4
-// // 					Bbool m_builtin;						// 1 byte	5
-// 
-// 					// 6 out of 8 bits		'				// 8 bytes				40
-// 				};
-
-			protected:
-// 				Flags m_flags;
-				// variable								memory					total memory
-				Buint m_id;								// 8 bytes				8				// FIXME m_id
-				// Buint m_startTime;						// 8 bytes				16
-				BEntity* m_be_parent;					// 8 bytes				24
-				B_IO_Handler* m_io_handler;				// 8 bytes				32
-				char m_flagbits;						// 1 byte				33
+			private:
+				Buint m_id;
+				BEntity* m_be_parent;
+				B_IO_Handler* m_io_handler;
+				char m_flagbits;
 
 		// SET VALUES
 			public:
@@ -74,7 +47,6 @@
 				virtual bool set( const Bstring& id, const Bdouble& value );
 // 				virtual bool set( const Bstring& id, const Bstring& value );
 				virtual bool set( const Bstring& id, const char* value );
-// 				virtual bool set( const Bstring& id, void* value );
 
 		// GET VALUES
 			public:
@@ -86,7 +58,6 @@
 				virtual Bdouble get_double();
 // 				virtual Bstring* get_string();
 				virtual const char* get_string();
-// 				virtual void* get_binary();
 
 				virtual BEntity* get_reference( const Bstring& id );
 				virtual Bbool get_bool( const Bstring& id );
@@ -195,7 +166,6 @@
 				virtual bool hasParent() const;
 				virtual bool hasParent( const Buint64 t_id ) const;
 				BEntity* topParent() const;
-		
 		// TOP FUNCTIONS
 				virtual BEntity* getNearestTop();
 				virtual bool getNearestTopConnectionType();
@@ -222,16 +192,6 @@
 // 				void disconnectServerServer( BEntity* entity_with_input );
 				virtual bool onUpdate() const;
 
-		// TIME
-			public:
-				// Buint totalTime() const;
-				// virtual BeTimer* getTimer() const;
-				// void setStartTime( const Buint startTime );
-
-		// PRINT MEMPROFILE
-			public:
-				void printMemProfile();
-
 		// FLAG OPERATIONS
 			protected:
 				Bbool getNthBit(const char packedValue, const int selectedBitIndex) const;
@@ -239,8 +199,6 @@
 
 		// COMMAND BUFFER
 			public:
-// 				virtual void spawnCommandBuffer() {}; // FIXME seems unneeded
-// 				virtual void addToCommandBuffer( BEntity* command );
 				virtual BEntity* getCommandBuffer();
 	};
 

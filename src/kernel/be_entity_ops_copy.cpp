@@ -86,8 +86,9 @@
 			// }
 			else if ( std::string(entity->class_id()) != "entity" )
 			{
-				// std::cout << "'" << entity->class_id() << "'" << std::endl;
+				// std::cout << "COPY '" << entity->class_id() << "'" << std::endl;
 				entity_new = to_parent->addChild( entity->name(), entity->class_id() );
+				// exit(0);
 				// std::cout << "COPY created: " << entity->id() << " : " << entity->class_id() << std::endl;
 			}
 
