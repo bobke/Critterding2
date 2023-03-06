@@ -1,3 +1,13 @@
+REQUIREMENTS
+------------
+
+	Qt6
+	Qwt (compiled against Qt6)
+	SDL
+	glew
+	boost
+	
+
 BUILDING
 --------
 	cd build
@@ -5,7 +15,24 @@ BUILDING
 
 RUNNING
 -------
-./src/bengine app_critterding
+	./src/bengine app_critterding
 
+KEYS
+----
+	F1      open admin window
+
+	up      move forward
+	down    move backwards
+	left    move left
+	right   move right
+	home    move up
+	end     move down
+
+	[4]     look left
+	[5]     look right
+	[8]     look down
+	[2]     look up
+	[1]     tilt left
+	[3]     tilt right
 
 bobke...
