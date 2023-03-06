@@ -1,20 +1,21 @@
 
 	FIND_PACKAGE( OpenGL REQUIRED)
 	FIND_PACKAGE( GLEW REQUIRED)
+	if (GLEW_FOUND)
+		include_directories(${GLEW_INCLUDE_DIRS})
+		include_directories( $(shell pkg-config --cflags glew) ) # BSD HACK
+	endif()	
+	
 
+	
+	
 	SET(Boost_USE_MULTITHREAD ON) #set a flag
 # 	FIND_PACKAGE(Boost)
 	FIND_PACKAGE ( Boost COMPONENTS filesystem system iostreams thread REQUIRED)
-	#IF (Boost_FOUND)
-		#MESSAGE("BOOST FOUND")
-		#MESSAGE(${Boost_INCLUDE_DIRS})
-## 		SET(bengine_INCLUDES ${bengine_INCLUDES} ${Boost_INCLUDE_DIRS}/boost) 
-## 		INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-## 		ADD_DEFINITIONS( " -lboost_thread -lboost_system" )
-## 		ADD_DEFINITIONS(  )
-		#SET(bengine_LIBS ${bengine_LIBS} ${BOOST_LIBRARIES}) 
-		#SET(bengine_LIBS ${bengine_LIBS} "-lboost_system") 
-	#ENDIF()	
+	if(Boost_FOUND)
+		include_directories(${Boost_INCLUDE_DIRS}) 
+		# MESSAGE(${Boost_LIBRARIES})
+	endif()	
 	
 	#set(CMAKE_AUTOMOC ON)
 	find_package(Qt6 COMPONENTS Widgets Gui OpenGLWidgets REQUIRED)
@@ -105,4 +106,4 @@
 	)
 
 	ADD_LIBRARY( be_plugin_opengl SHARED ${plugin_SRCS} )
-	TARGET_LINK_LIBRARIES( be_plugin_opengl be_base_entity_types ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${BOOST_LIBRARIES} LinearMath -lboost_system -lboost_thread -lboost_filesystem -lboost_iostreams Qt6::Widgets Qt6::Gui Qt6::OpenGLWidgets )
+	TARGET_LINK_LIBRARIES( be_plugin_opengl be_base_entity_types ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} LinearMath  ${Boost_LIBRARIES} Qt6::Widgets Qt6::Gui Qt6::OpenGLWidgets )

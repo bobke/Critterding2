@@ -1,11 +1,6 @@
 #include "plugin.h"
 #include "kernel/be_plugin_interface.h"
 #include <QPen>
-// #include <iostream>
-
-// #include "entity/be_entity_children_handler.h"
-// #include "command/be_commands.h"
-// #include "be_base_types/be_entity_types.h"
 
 	// PLOT
 		BeEntityQwtPlot::BeEntityQwtPlot()
@@ -15,10 +10,6 @@
 			setAutoReplot(true);
 			// resize ( 100, 100 );
 		}
-
-		BeEntityQwtPlot::~BeEntityQwtPlot()
-		{
-		};
 
 		Bbool BeEntityQwtPlot::onAddChild( BEntity* entity )
 		{ 
@@ -45,7 +36,7 @@
 			setPaintAttribute(FilterPoints, true);
 			setPaintAttribute(MinimizeMemory, true);
 			setPaintAttribute(ImageBuffer, true);
-			setPaintAttribute(FilterPointsAggressive, true);
+			// setPaintAttribute(FilterPointsAggressive, true);
 
 			setStyle( Steps ); // NoCurve, Lines , Sticks , Steps , Dots , UserCurve
 		}
@@ -53,7 +44,7 @@
 		void BeEntityQwtPlotCurve::construct()
 		{
 			m_size_max = addChild("size_max", new BEntity_uint());
-			m_size_max->set( (Buint)1000 ); // FIXME   parent -> setAxisScale( Position::yRight, min, max, stepsize )
+			m_size_max->set( (Buint)3600 ); // FIXME   parent -> setAxisScale( Position::yRight, min, max, stepsize )
 		}
 
 		BeEntityQwtPlotCurve::~BeEntityQwtPlotCurve()
@@ -62,8 +53,6 @@
 
 		Bbool BeEntityQwtPlotCurve::onAddChild( BEntity* entity )
 		{ 
-// 			std::cout << "BeEntityQwtPlotCurve::onAddChild" << std::endl;
-
 			auto qpen = dynamic_cast<QPen*>(entity);
 			if ( qpen )
 			{
@@ -76,7 +65,14 @@
 		
 		void BeEntityQwtPlotCurve::resizeList()
 		{
-// 			std::cout << "BeEntityQwtPlotCurve::resizeList " << "1" << std::endl;
+			// if ( m_count >= m_size_max->get_uint() )
+			// {
+			// 	while ( m_list.size() > (int)m_count )
+			// 	{
+			// 		m_list.erase(m_list.begin());
+			// 		m_count--;
+			// 	}
+			// }
 
 			if ( m_count >= m_size_max->get_uint() )
 			{
@@ -84,7 +80,6 @@
 				while ( m_list.size() > (int)m_count )
 					m_list.erase(it);
 				m_count=0;
-
 			}
 		}
 

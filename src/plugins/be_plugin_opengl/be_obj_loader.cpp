@@ -23,12 +23,12 @@ BeObjLoader::BeObjLoader( BeFilesystem& filesystem, BeFile& befile, const btVect
 // 	BeProfiler profiler(profilerId);
 	m_filename = befile.getFilename();
 
-	gVertices = new btScalar[500000000];
-	gNormals = new float[500000000];
-	gTexCoor = new float[500000000];
-	gVIndices = new int[500000000];
-	gTIndices = new int[500000000];
-	gNIndices = new int[500000000];
+	gVertices = new btScalar[500000];
+	gNormals = new float[500000];
+	gTexCoor = new float[500000];
+	gVIndices = new int[500000];
+	gTIndices = new int[500000];
+	gNIndices = new int[500000];
 
     const bool hasScale=scale!=btVector3(1,1,1);
     const bool hasTransform=!(transform==btTransform::getIdentity());

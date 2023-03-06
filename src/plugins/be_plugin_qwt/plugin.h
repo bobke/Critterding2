@@ -2,15 +2,10 @@
 #define PLUGIN_H_INCLUDED
 
 #include "kernel/be_entity_core_types.h"
-// #include <iostream>
 
 #include <QWidget>
-// #include <QApplication>
 #include <QwtPlot>
 #include <QwtPlotCurve>
-// // #include <qwt/qwt_plot.h>
-// #include <qwt/qwt_plot_curve.h>
-
 
 // PLOT
 		class BeEntityQwtPlot : public BEntity, public QwtPlot
@@ -18,7 +13,7 @@
 			// Q_OBJECT
 			public:
 				BeEntityQwtPlot();
-				virtual ~BeEntityQwtPlot();
+				virtual ~BeEntityQwtPlot() {};
 				virtual Bbool onAddChild( BEntity* entity );
 // 				virtual Bbool onRemoveChild( BEntity* entity );
 			protected:

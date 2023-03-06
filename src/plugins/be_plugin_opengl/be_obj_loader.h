@@ -6,6 +6,9 @@
 #include "be_material.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/scoped_array.hpp>
+#include <unordered_map>
+#include <vector>
+#include <string>
 
 	class BeTexture2DResource;
 	class BeFilesystem;

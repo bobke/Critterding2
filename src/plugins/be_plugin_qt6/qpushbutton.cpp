@@ -1,5 +1,5 @@
 #include "qpushbutton.h"
-#include "kernel/be_entity_core_types.h"
+// #include "kernel/be_entity_core_types.h"
 #include "kernel/be_lib_handler.h"
 #include <iostream>
 #include <QMouseEvent>
@@ -215,6 +215,9 @@
 						std::cout << std::endl;
 						
 						// SPAWN NEW ENTITY
+						// target_entity->addChild( piece.toStdString(), piece.toStdString() );
+						
+						// SPAWN NEW ENTITY
 						// get the parent of parent of ref_entity, which is a plugin
 						// let that generate our new object, then pass to param 2
 						BEntity_Plugin* p = dynamic_cast<BEntity_Plugin*>( ref_entity->parent()->parent() );
@@ -227,7 +230,8 @@
 						{
 							std::cout << "warning: not from a library" << std::endl;
 						}
-						
+
+
 	// 					DragLabel *newLabel = new DragLabel(piece, this);
 	// 					newLabel->move(position - hotSpot);
 	// 					newLabel->show();
