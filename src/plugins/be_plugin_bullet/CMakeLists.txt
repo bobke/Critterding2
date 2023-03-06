@@ -28,12 +28,16 @@
 	find_package(Qt6 COMPONENTS Widgets Gui OpenGLWidgets REQUIRED)
 
 	SET(Boost_USE_MULTITHREAD ON) #set a flag
-# 	FIND_PACKAGE(Boost)
 	FIND_PACKAGE ( Boost COMPONENTS filesystem system iostreams thread REQUIRED)
-
+	if(Boost_FOUND)
+		include_directories(${Boost_INCLUDE_DIRS}) 
+	endif()	
 	
 	FIND_PACKAGE( OpenGL REQUIRED)
 	FIND_PACKAGE( GLEW REQUIRED)
+	if (GLEW_FOUND)
+		include_directories(${GLEW_INCLUDE_DIRS})
+	endif()	
 	
 	
 	SET(
@@ -99,6 +103,6 @@
 	)
 
 	ADD_LIBRARY( be_plugin_bullet SHARED ${plugin_SRCS} )
-	TARGET_LINK_LIBRARIES( be_plugin_bullet be_base_entity_types Bullet3Common BulletSoftBody BulletDynamics BulletCollision LinearMath  ${GLEW_LIBRARIES} Qt6::Widgets Qt6::Gui Qt6::OpenGLWidgets  -lboost_system -lboost_thread -lboost_filesystem -lboost_iostreams)
+	TARGET_LINK_LIBRARIES( be_plugin_bullet be_base_entity_types Bullet3Common BulletSoftBody BulletDynamics BulletCollision LinearMath ${Boost_LIBRARIES} ${GLEW_LIBRARIES} Qt6::Widgets Qt6::Gui Qt6::OpenGLWidgets)
 
 

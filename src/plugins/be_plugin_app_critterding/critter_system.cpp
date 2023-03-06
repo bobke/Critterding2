@@ -1,6 +1,7 @@
 #include "critter_system.h"
 #include "kernel/be_entity_core_types.h"
 #include "species_system.h"
+#include "body_system.h"
 #include <iostream>
  
 	void CdCritterSystem::construct()
@@ -133,8 +134,8 @@
 					// generate random body
 					auto body_system = parent()->getChild( "body_system", 1 );
 					auto body_unit_system = body_system->getChild("unit_container", 1);
-					auto newBody = body_unit_system->addChild( "body", "CdBody" );
-					auto fixed_1 = newBody->addChild( "body_fixed1", "BodyFixed1" );
+					auto newBody = body_unit_system->addChild( "body", new BBody() );
+					auto fixed_1 = newBody->addChild( "body_fixed1", new BodyFixed1() );
 					// auto fixed_1 = newBody->getChildCustom( newBody, "generate_fixed_1" );
 						
 					// REFERENCE TO EXTERNAL CHILD

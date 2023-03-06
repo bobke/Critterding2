@@ -53,7 +53,7 @@
 		{
 // 			std::cout << "input sum = " << m_input_sum << std::endl;
 			
-			float max_input_sum = 0.6665f; // FIXME MAKE OPTION
+			float max_input_sum = 0.4f; // FIXME MAKE OPTION
 			if ( m_input_sum > max_input_sum )
 			{
 				m_input_sum = max_input_sum;
@@ -97,7 +97,7 @@
 				// // where true sets commit=true every time, if value changes or not
 				// m_angle->set( percentAngle );
 
-				// if it's the same, for update to outputs
+				// if it's the same, force update to outputs
 				if ( m_angle->get_float() == m_hinge->getHingeAngle() )
 				{
 					m_angle->onUpdate();

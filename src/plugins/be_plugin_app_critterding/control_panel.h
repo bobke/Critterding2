@@ -12,7 +12,7 @@
 					setProcessing();
 			};
 			virtual ~CdControlPanel() {};
-				const char* class_id() const { return "CdControlPanel"; }
+			const char* class_id() const { return "CdControlPanel"; }
 
 			virtual void construct();
 			virtual void process();

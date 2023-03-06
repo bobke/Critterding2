@@ -271,18 +271,24 @@
 			auto brain_system = addChild( "brain_system", "BrainSystem" );
 
 		// BODY SYSTEM
-			auto body_system = addChild( "body_system", "CdBodySystem" );
+			auto body_system = addChild( "body_system", new BodySystem() );
+			// auto body_system = addChild( "body_system", "CdBodySystem" );
 
 		// CRITTER SYSTEM
-			auto critter_system = addChild( "critter_system", "CdCritterSystem" );
+			// auto critter_system = addChild( "critter_system", "CdCritterSystem" );
+			auto critter_system = addChild( "critter_system", new CdCritterSystem() );
 			m_critter_unit_container = critter_system->getChild( "unit_container", 1 );
 
 		// FOOD SYSTEM
-			auto food_system = addChild( "food_system", "CdFoodSystem" );
+			// auto food_system = addChild( "food_system", "CdFoodSystem" );
+			auto food_system = addChild( "food_system", new CdFoodSystem() );
+			
 			m_food_unit_container = food_system->getChild( "unit_container", 1 );
 
 		// CONTROL PANEL
-			auto control_panel = addChild( "control_panel", "CdControlPanel" );
+			// auto control_panel = addChild( "control_panel", "CdControlPanel" );
+			auto control_panel = addChild( "control_panel", new CdControlPanel() );
+			
 
 			
 // 		// BODY SETTINGS

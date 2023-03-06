@@ -20,7 +20,7 @@
 		m_dropzone_size_y = dropzone->addChild( "size_y", new BEntity_float() );
 		m_dropzone_size_z = dropzone->addChild( "size_z", new BEntity_float() );
 		
-		m_number_of_units->set( Buint(450) );
+		m_number_of_units->set( Buint(500) );
 		m_intitial_energy->set( Bfloat(1500.0f) );
 		m_maximum_age->set( Buint(16000) );
 		m_dropzone_position_x->set( Bfloat(-70.0f) );
@@ -30,7 +30,7 @@
 		m_dropzone_size_y->set( Bfloat(2.2f) );
 		m_dropzone_size_z->set( Bfloat(140.0f) );
 		
-		// m_number_of_units->set( Buint(305) );
+		// m_number_of_units->set( Buint(405) );
 		// m_intitial_energy->set( Bfloat(1500.0f) );
 		// m_maximum_age->set( Buint(16000) );
 		// m_dropzone_position_x->set( Bfloat(-95.0f) );

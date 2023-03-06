@@ -1,6 +1,6 @@
 #include "brain_system.h"
 #include "kernel/be_entity_io_handler.h"
-#include <iostream>
+// #include <iostream>
 #include <iomanip>
  
 	void BrainSystem::construct()
@@ -36,9 +36,9 @@
 		m_mutationweight_synapse_alter_weight_slightly = mutation_weights->addChild( "m_mutationweight_synapse_alter_weight_slightly", new BEntity_uint() );
 		m_slightly_percent = mutation_weights->addChild( "m_slightly_percent", new BEntity_uint() );
 		
-		m_mutation_chance->set( Buint(8) );
+		m_mutation_chance->set( Buint(10) );
 		m_mutationruns_min->set( Buint(1) );
-		m_mutationruns_max->set( Buint(20) );
+		m_mutationruns_max->set( Buint(14) );
 		// m_mutation_chance->set( Buint(30) );
 		// m_mutationruns_min->set( Buint(1) );
 		// m_mutationruns_max->set( Buint(20) );
@@ -57,21 +57,21 @@
 		// m_synapse_adam_min->set( Buint(5) );
 		// m_synapse_adam_max->set( Buint(10) );
 
-		m_neuron_adam_min->set( Buint(10) );
-		m_neuron_adam_max->set( Buint(20) );
-		m_synapse_adam_min->set( Buint(2) );
-		m_synapse_adam_max->set( Buint(7) );
+		m_neuron_adam_min->set( Buint(20) );
+		m_neuron_adam_max->set( Buint(40) );
+		m_synapse_adam_min->set( Buint(4) );
+		m_synapse_adam_max->set( Buint(10) );
 
-		m_mutationweight_neuron_add->set( Buint(20) );
-		m_mutationweight_neuron_remove->set( Buint(20) );
-		m_mutationweight_neuron_alter_firingweight->set( Buint(20) );
-		m_mutationweight_neuron_alter_firingthreshold->set( Buint(20) );
+		m_mutationweight_neuron_add->set( Buint(25) );
+		m_mutationweight_neuron_remove->set( Buint(25) );
+		m_mutationweight_neuron_alter_firingweight->set( Buint(25) );
+		m_mutationweight_neuron_alter_firingthreshold->set( Buint(25) );
 		m_mutationweight_neuron_alter_firingweight_slightly->set( Buint(100) );
 		m_mutationweight_neuron_alter_firingthreshold_slightly->set( Buint(100) );
-		m_mutationweight_synapse_add_neuron_to_neuron->set( Buint(40) );
+		m_mutationweight_synapse_add_neuron_to_neuron->set( Buint(50) );
 		m_mutationweight_synapse_add_neuron_to_output->set( Buint(10) );
 		m_mutationweight_synapse_add_input_to_neuron->set( Buint(10) );
-		m_mutationweight_synapse_remove_from_neuron->set( Buint(40) );
+		m_mutationweight_synapse_remove_from_neuron->set( Buint(50) );
 		m_mutationweight_synapse_remove_from_output->set( Buint(10) );
 		m_mutationweight_synapse_alter_weight->set( Buint(80) );
 		m_mutationweight_synapse_alter_weight_slightly->set( Buint(200) );
