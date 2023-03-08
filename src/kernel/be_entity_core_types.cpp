@@ -1,5 +1,6 @@
 #include "be_entity_core_types.h"
 #include <string.h>
+#include <iostream>
 
 	// REFERENCE
 		BEntity_reference::BEntity_reference() : m_value(0) {};
@@ -28,7 +29,7 @@
 			return true;
 		}
 
-		bool BEntity_trigger::apply( BEntity* const e ) const
+		bool BEntity_trigger::apply( BEntity* e )
 		{
 // 			std::cout << "BEntity_trigger::apply : " << id() << std::endl;
 			return e->set();
@@ -54,7 +55,7 @@
 			return false;
 		}
 
-		bool BEntity_bool::apply( BEntity* const e ) const
+		bool BEntity_bool::apply( BEntity* e )
 		{
 			return e->set( m_value );
 		}
@@ -95,7 +96,7 @@
 			return 0;
 		}
 		
-		bool BEntity_bool_property::apply( BEntity* const e )
+		bool BEntity_bool_property::apply( BEntity* e )
 		{
 			// std::cout << "BEntity_float_property::apply" << std::endl;
 			if ( parent() )
@@ -143,7 +144,7 @@
 // 			return false;
 // 		}
 
-		bool BEntity_uint::apply( BEntity* const e ) const
+		bool BEntity_uint::apply( BEntity* e )
 		{
 // 			std::cout << "BEntity_uint::apply to " << e->id() << " to " << m_value << std::endl;
 			return e->set( m_value );
@@ -187,12 +188,12 @@
 			return 0;
 		}
 		
-		bool BEntity_uint_property::apply( BEntity* const e )
+		bool BEntity_uint_property::apply( BEntity* e )
 		{
 			// std::cout << "BEntity_float_property::apply" << std::endl;
 			if ( parent() )
 			{
-// 				std::cout << "BEntity_uint_property::apply( BEntity* const e ) " << parent()->name() << " " << id() << " to " << parent()->get_uint( name() ) << std::endl;
+// 				std::cout << "BEntity_uint_property::apply( BEntity* e ) " << parent()->name() << " " << id() << " to " << parent()->get_uint( name() ) << std::endl;
 				return e->set( parent()->get_uint( name() ) );
 			}
 			return false;
@@ -261,7 +262,7 @@
 			return 0;
 		}
 		
-		bool BEntity_int_property::apply( BEntity* const e )
+		bool BEntity_int_property::apply( BEntity* e )
 		{
 			if ( parent() )
 			{
@@ -295,7 +296,7 @@
 			return false;
 		}
 
-		bool BEntity_float::apply( BEntity* const e ) const
+		bool BEntity_float::apply( BEntity* e )
 		{
 // 			std::cout << "applying " << m_value << std::endl;
 			return e->set( m_value );
@@ -337,21 +338,11 @@
 			return 0.0f;
 		}
 		
-// 		Bfloat* BEntity_float_property::get_float()
-// 		{
-// 			std::cout << "get_float" << std::endl;
-// 			if ( parent() )
-// 				return parent()->get_float(name());
-// 			return 0;
-// 		}
-
-		bool BEntity_float_property::apply( BEntity* const e )
+		bool BEntity_float_property::apply( BEntity* e )
 		{
-			// std::cout << "BEntity_float_property::apply" << std::endl;
 			if ( parent() )
 			{
-// 				return e->set( m_value );
-				return e->set( parent()->get_float(name()) );
+				return e->set( (Bfloat)parent()->get_float( name() ) );
 			}
 			return false;
 		}
@@ -376,7 +367,7 @@
 			return false;
 		}
 
-		bool BEntity_double::apply( BEntity* const e ) const
+		bool BEntity_double::apply( BEntity* e )
 		{
 // 			std::cout << "applying " << m_value << std::endl;
 			return e->set( m_value );
@@ -404,7 +395,7 @@
 // 			return false;
 // 		}
 // 
-// 		bool BEntity_string::apply( BEntity* const e ) const
+// 		bool BEntity_string::apply( BEntity* e )
 // 		{
 // 			return e->set( m_value.c_str() );
 // 		}
@@ -448,7 +439,7 @@
 			return false;
 		}
 
-		bool BEntity_string::apply( BEntity* const e ) const
+		bool BEntity_string::apply( BEntity* e )
 		{
 			return e->set( m_value );
 		}
@@ -473,7 +464,7 @@
 // 			return false;
 // 		}
 // 
-// 		bool BEntity_string_property::apply( BEntity* const e )
+// 		bool BEntity_string_property::apply( BEntity* e )
 // 		{
 // 			// std::cout << "BEntity_string_property::apply" << std::endl;
 // 			if ( parent() )
@@ -509,7 +500,7 @@
 			return false;
 		}
 
-		bool BEntity_string_property::apply( BEntity* const e )
+		bool BEntity_string_property::apply( BEntity* e )
 		{
 			// std::cout << "BEntity_string_property::apply" << std::endl;
 			if ( parent() )

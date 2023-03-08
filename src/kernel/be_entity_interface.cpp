@@ -918,7 +918,7 @@
 			return 0;
 		}
 		
-		bool BEntity::apply( BEntity* const e ) const
+		bool BEntity::apply( BEntity* e )
 		{
 			(void)e; // this avoids a compile warning
 			return false;

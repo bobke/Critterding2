@@ -16,6 +16,7 @@
 
 				void construct();
 				void process();
+				void removeCritter( BEntity* entity );
 
 			private:
 				CdSpeciesSystem* m_species_system;
@@ -39,6 +40,7 @@
 				BEntity* m_dropzone_size_x;
 				BEntity* m_dropzone_size_y;
 				BEntity* m_dropzone_size_z;
+				BEntity* m_copy_random_position;
 		};
 
 	//  UNIT

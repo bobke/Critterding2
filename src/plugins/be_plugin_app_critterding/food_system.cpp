@@ -20,7 +20,7 @@
 		m_dropzone_size_y = dropzone->addChild( "size_y", new BEntity_float() );
 		m_dropzone_size_z = dropzone->addChild( "size_z", new BEntity_float() );
 		
-		m_number_of_units->set( Buint(500) );
+		m_number_of_units->set( Buint(1200) );
 		m_intitial_energy->set( Bfloat(1500.0f) );
 		m_maximum_age->set( Buint(16000) );
 		m_dropzone_position_x->set( Bfloat(-70.0f) );
@@ -41,7 +41,7 @@
 		// m_dropzone_size_z->set( Bfloat(190.0f) );
 		
 		m_insert_frame_interval = settings->addChild( "insert_frame_interval", new BEntity_uint() );
-		m_insert_frame_interval->set( (Buint)20 );
+		m_insert_frame_interval->set( (Buint)6 );
 
 		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
 	}

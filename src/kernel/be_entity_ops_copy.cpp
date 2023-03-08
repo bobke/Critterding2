@@ -10,98 +10,67 @@
 	// COPY
 	BEntity* BEntityCopy::copyEntity( BEntity* entity )
 	{
-		// std::cout << "COPY TOP: " << entity->id() << std::endl;
-		auto ret = copyEntity( entity, entity->parent() );
-// 		exit(0);
-		return ret;
-	}
-	
-	BEntity* BEntityCopy::copyEntity( BEntity* entity, BEntity* to_parent )
-	{
 		// PREPARE
 			m_translation_map.clear();
 
-		// FIXME FIRST RUN DON'T DO REFERENCES, DO THEM IN SECOND RUN
-		// if in 2nd run the referenced entity is not in m_translation_map, create it
-
 		// COPY
-			auto entity_new = _copyEntity( entity, to_parent, true );
-		// COPY CYCLE 2, here we do references
-			// auto entity_new = _copyEntity2( entity_new );
+			auto entity_new = _copyEntity( entity, entity->parent(), true );
 
 		// WIRE
 			_wireNewEntity();
 
 		// PRINT ORIGINAL
-		// entity_new->childHandler()->print( entity, 5 );
+			// entity_new->childHandler()->print( entity, 5 );
 			
 		// PRINT NEW
-		// entity_new->childHandler()->print( entity_new, 5 );
+			// entity_new->childHandler()->print( entity_new, 5 );
 			
 		// exit(0);
+		
 		return entity_new;
 	}
-
+	
 	BEntity* BEntityCopy::_copyEntity( BEntity* entity, BEntity* to_parent, bool force )
 	{
-		// if ( entity->name() != "weight" && entity->name() != "synapse" && entity->name() != "synapses" && entity->name() != "firing" && entity->name() != "neuron" && entity->name() != "firingThreshold" && entity->name() != "firingWeight" )
-			// std::cout << "COPY: " << entity->id() << " : " << entity->class_id() << " : " << entity->name() << std::endl;
-		
 		// IDENTIFY AND ADD NEW CHILD TO TO_PARENT
 		BEntity* entity_new(0);
 
 		// IF BUILTIN FIND IT
 		if ( !force && entity->isBuiltin() )
 		{
-			// std::cout << "built in" << std::endl;
-			// if ( entity->name() == "_external_child" )
-			// {
-// 				auto entity_referenced = entity->get_reference();
-// 				auto entity_reference_new = to_parent->addChild( entity->name(), new BEntity_reference() );
-// 				entity_new = _copyEntity( entity_referenced, entity_referenced->parent(), m_translation_map );
-// 				entity_reference_new->set( entity_new );
-			// }
-			// else
-			// {
-					entity_new = to_parent->getChild( entity->name().c_str(), 1 );
-			// }
+			entity_new = to_parent->getChild( entity->name().c_str(), 1 );  // FIXME
 		}
 		// IF NOT BUILTIN CREATE IT
 		else
 		{
 			// EXTERNAL CHILD
-			// if ( entity->name() == "_external_child" )
 			if ( dynamic_cast<BEntity_external*>( entity ) )
 			{
 				auto entity_referenced = entity->get_reference();
 
-				// std::cout << "EXTERNAL CHILD: " << entity_referenced->name() << std::endl;
 				entity_new = to_parent->addChild( entity->name(), new BEntity_external() );
-				auto entity_referenced_new = _copyEntity( entity_referenced, entity_referenced->parent() );
+				auto entity_referenced_new = _copyEntity( entity_referenced, entity_referenced->parent(), true );
+
 				entity_new->set( entity_referenced_new );
 			}
-			// else if ( entity->class_id() == "entity" )
-			// {
-			// 	entity_new = to_parent->addChild( entity->name(), new BEntity() );
-			// }
+
 			else if ( std::string(entity->class_id()) != "entity" )
 			{
-				// std::cout << "COPY '" << entity->class_id() << "'" << std::endl;
 				entity_new = to_parent->addChild( entity->name(), entity->class_id() );
-				// exit(0);
-				// std::cout << "COPY created: " << entity->id() << " : " << entity->class_id() << std::endl;
 			}
 
+			// HACK SPECIAL CASE
 			else if ( entity->name() == "body_fixed1" )
 			{
+				// std::cout << "body_fixed1 " << " of type " << entity->class_id() << std::endl;
+				// entity_new = entity->customCopy( to_parent, entity, m_translation_map );
+
+
 				entity_new = to_parent->addChild( entity->name(), "BodyFixed1" );
-				// entity_new->getChild( "constraints", 1 )->clearChildren();
-				// entity_new->getChild( "bodyparts", 1 )->clearChildren();
-				
-				// HACK SPECIAL CASE
+
 				// LOOP ENTITY & ENTITY_NEW TO ADD THEM TO THE TRANSLATION_MAP
 				m_translation_map.insert( std::make_pair( entity, entity_new ) );
-				
+
 				auto bodyparts = entity->getChild( "bodyparts", 1 );
 				auto constraints = entity->getChild( "constraints", 1 );
 				auto bodyparts_new = entity_new->getChild( "bodyparts", 1 );
@@ -141,39 +110,10 @@
 						child_new++;
 					}
 				}
-				
+
 				// MAKE SURE NOT NOT ADD CHILDREN
 				return entity_new;
-				
 			}
-
-			// REFERENCES
-			// else if ( entity->name() == "motor_neurons_ref" || entity->name() == "bullet_constraints" || entity->name() == "bodyA" || entity->name() == "bodyB" )
-			// {
-			// 	entity_new = to_parent->addChild( entity->name(), new BEntity_reference() );
-			// 	// auto found = m_translation_map[ entity->get_reference() ];
-			// 	// if ( found )
-			// 	{
-			// 		// std::cout << entity->name() << " : ref: found " << std::endl;
-			// 		// entity_new->set( found );
-			// 		// m_translation_map.insert( std::make_pair( entity->get_reference(), found ) );
-			// 	}
-			// 	// else
-			// 		// std::cout << entity->name() << " : ref: not found " << std::endl;
-			// }
-
-			// TRANSFORM ?
-			// else if ( entity->name() == "transform" )
-			// {
-			// 	if ( entity->getChild("scale_x", 1) )
-			// 	{
-			// 		entity_new = to_parent->addChild( entity->name(), "Transform" );
-			// 	}
-			// 	else
-			// 	{
-			// 		entity_new = to_parent->addChild( entity->name(), "Bullet_Transform_Emitter" );
-			// 	}
-			// }
 
 			else if ( std::string(entity->class_id()) == "entity" )
 			{
@@ -202,8 +142,15 @@
 				}
 			}
 
+			// // std::cout << "?? CREATED HINGE " << entity_new->name() << std::endl;
+			// if ( entity_new->name() == std::string("hinge") )
+			// {
+			// 	// pull create trigger
+			// 	std::cout << "CREATED HINGE " << entity_new->name() << std::endl;
+			// 	entity_new->set( "create_hinge", true );
+			// 	// m_translation_map.insert( std::make_pair( it->first, it->second ) );
+			// }
 
-			
 			// COPY VALUE
 // 			std::cout << "copying " << entity->name() << std::endl;
 // 			entity->apply( entity_new );
@@ -218,15 +165,12 @@
 
 	BEntity* BEntityCopy::_wireNewEntity()
 	{
-// 		std::cout << "WIRING: " << std::endl;
 		for ( auto it = m_translation_map.begin(); it != m_translation_map.end(); ++it )
 		{
 			auto copy = it->second;
 			if ( copy )
 			{
-// 				std::cout << "a" << std::endl;
 				auto original = it->first;
-	// 			std::cout << "copying connections for original " << original->id() << std::endl;
 
 				// exception for all references not named _external_child
 				// external child is already taken care of
@@ -235,21 +179,13 @@
 				// if ( original->name() != "_external_child" )
 				if ( !dynamic_cast<BEntity_external*>( original ) )
 				{
+					// APPLY REFERENCES
 					auto ref = dynamic_cast<BEntity_reference*>( original );
 					if ( ref )
 					{
 						BEntity* found = m_translation_map[ original->get_reference() ];
 						if ( found )
 						{
-							if ( copy->id() == found->id() )
-							{
-								std::cout << "BEntityCopy::_wireNewEntity() wtf it's the same" << std::endl;
-								exit(0);
-							}
-							else
-							{
-								// std::cout << "wiring: ok" << std::endl;
-							}
 							copy->set( found );
 						}
 						else
@@ -259,12 +195,14 @@
 							// std::cout << "wiring: not ok" << std::endl;
 						}
 					}
+					// APPLY VALUES
 					else
 					{
 						original->apply( copy );
 					}
 				}
 
+				// COPY CONNECTIONS
 				if ( original && original->hasOutput() ) // !original->isBuiltin()  || ! //  && original->isBuiltin()
 				{
 					auto t_output = original->getOutput();
@@ -273,22 +211,15 @@
 						auto connection = dynamic_cast<BEOutputConnectionBase*>(*conn_it);
 						if ( connection )
 						{
-// 							auto orig_connected_to = connection->getInputEntity()->parent();
 							auto orig_connected_to = connection->getInputEntity();
 							auto new_entity_to_connect_to = m_translation_map[orig_connected_to];
-							if ( new_entity_to_connect_to/* && copy->hasOutput() && new_id_ent->hasInput()*/ )
+							if ( new_entity_to_connect_to )
 							{
-// 								if ( copy->id() == new_entity_to_connect_to->id() )
-// 								{
-// 									std::cout << "BEntityCopy::_wireNewEntity() wtf it's the same" << std::endl;
-// 									exit(0);
-// 								}
 								copy->connectServerServer(new_entity_to_connect_to);
-// 								std::cout << "connection ok " << copy->name() << " = " << new_entity_to_connect_to->name() << std::endl;
 							}
 							else
 							{
-								std::cout << "connection not ok, copy of '" << orig_connected_to->name() << "' entity not found in translation_map" << std::endl;
+								std::cout << "connection not ok, copy of '" << orig_connected_to->name() << " " << orig_connected_to->class_id() << "' entity not found in translation_map" << std::endl;
 							}
 								
 						}
@@ -305,7 +236,7 @@
 				}
 			}
 		}
-		
+
 		// for ( auto it = m_translation_map.begin(); it != m_translation_map.end(); ++it )
 		// {
 		// 	auto copy = it->second;
@@ -314,14 +245,11 @@
 		// 		// FIXME POSTCOPY?
 		// 		if ( copy->name() == "hinge" )
 		// 		{
-		// 			// pull create trigger
+		// 			// std::cout << "CREATED HINGE " << copy->name() << std::endl;
 		// 			copy->set( "create_hinge", true );
 		// 		}
 		// 	}
 		// }
-
-// 		std::cout << "WIRING: done" << std::endl;
-
 
 		return 0;
 	}	

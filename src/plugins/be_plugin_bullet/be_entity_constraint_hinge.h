@@ -62,7 +62,7 @@ class btHingeConstraint;
 				const char* class_id() const { return "Bullet_Transform"; }
 				virtual ~BBulletTransform() {};
 				void construct();
-				virtual bool apply( BEntity* const e ) const
+				virtual bool apply( BEntity* e )
 				{
 					auto tr = dynamic_cast<BBulletTransform*>( e );
 					if ( tr )

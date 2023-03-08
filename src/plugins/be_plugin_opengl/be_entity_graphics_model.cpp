@@ -349,7 +349,7 @@
 
 		}
 
-		bool glTransform::apply( BEntity* const e ) const
+		bool glTransform::apply( BEntity* e )
 		{
 			return e->set( reinterpret_cast<const char*>(m_value) );
 		}

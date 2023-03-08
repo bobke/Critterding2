@@ -5,6 +5,7 @@
 #include "species_system.h"
 #include "critter_system.h"
 #include "control_panel.h"
+#include "population_controller.h"
 #include "commands.h"
 #include <iostream>
 
@@ -33,7 +34,7 @@
 		// settings
 			auto settings = addChild( "settings", new BEntity() );
 			m_eat_transfer_energy = settings->addChild( "eat_energy_transfer", new BEntity_float() );
-			m_eat_transfer_energy->set( 100.0f ),
+			m_eat_transfer_energy->set( 100.0f );
 
 		
 		pluginManager()->load( "system", "src/plugins/be_plugin_system", "be_plugin_system" );
@@ -289,6 +290,8 @@
 			// auto control_panel = addChild( "control_panel", "CdControlPanel" );
 			auto control_panel = addChild( "control_panel", new CdControlPanel() );
 			
+		// POPULATION CONTROLLER
+			addChild( "CdPopulationController", new CdPopulationController() );
 
 			
 // 		// BODY SETTINGS
@@ -390,13 +393,14 @@
 		, SCENE
 		, CRITTERDING
 		, CD_CONTROL_PANEL
+		, CD_POPULATION_CONTROL
 		, CD_CRITTER_SYSTEM
 		, CD_SPECIES_SYSTEM
 		, CD_CRITTER
 		, CD_FOOD_SYSTEM
 		, CD_FOOD
 		, CD_BODY_SYSTEM
-		, CD_BODY
+		, CD_BODY // FIXME REMOVE LEGACY
 		, CD_BODY_FIXED1
 	};
 
@@ -409,6 +413,7 @@
 					i.addClass( parent, CLASS::SCENE, "Scene" );
 					i.addClass( parent, CLASS::CRITTERDING, "Critterding" );
 					i.addClass( parent, CLASS::CD_CONTROL_PANEL, "CdControlPanel" );
+					i.addClass( parent, CLASS::CD_POPULATION_CONTROL, "CdPopulationController" );
 					i.addClass( parent, CLASS::CD_CRITTER_SYSTEM, "CdCritterSystem" );
 					i.addClass( parent, CLASS::CD_SPECIES_SYSTEM, "CdSpeciesSystem" );
 					i.addClass( parent, CLASS::CD_CRITTER, "CdCritter" );
@@ -431,6 +436,8 @@
 					i = new Critterding();
 				else if ( type == CLASS::CD_CONTROL_PANEL )
 					i = new CdControlPanel();
+				else if ( type == CLASS::CD_POPULATION_CONTROL )
+					i = new CdPopulationController();
 				else if ( type == CLASS::CD_CRITTER_SYSTEM )
 					i = new CdCritterSystem();
 				else if ( type == CLASS::CD_SPECIES_SYSTEM )
@@ -444,7 +451,7 @@
 				else if ( type == CLASS::CD_BODY_SYSTEM )
 					i = new BodySystem();
 				else if ( type == CLASS::CD_BODY )
-					i = new BBody();
+					i = new BEntity();
 				else if ( type == CLASS::CD_BODY_FIXED1 )
 					i = new BodyFixed1();
 

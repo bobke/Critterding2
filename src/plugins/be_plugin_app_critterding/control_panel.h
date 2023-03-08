@@ -6,7 +6,7 @@
 	class CdControlPanel: public BEntity
 	{
 		public:
-			CdControlPanel() : BEntity(), m_timer_frame(0)
+			CdControlPanel() : BEntity()
 			{
 				// SET PROCESSING BIT
 					setProcessing();

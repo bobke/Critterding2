@@ -83,20 +83,20 @@
 // 				t_body_eye_rays_max _maxentityType_UINT
 	}
 
-	void BodyFixed1::construct()
+	void BodyFixed1Maker::make( BEntity* entity_parent )
 	{
-		addChild( "bodyparts", new BEntity() );
-		auto t_constraints = addChild( "constraints", new BEntity() );
+		entity_parent->addChild( "bodyparts", new BEntity() );
+		auto t_constraints = entity_parent->addChild( "constraints", new BEntity() );
 		
 		if ( m_rng == 0)
 		{
-			m_rng = parent()->parent()->parent()->parent()->getChild( "random_number_generator" ); // FIXME PREFETCH
+			m_rng = entity_parent->parent()->parent()->parent()->parent()->getChild( "random_number_generator" ); // FIXME PREFETCH
 		}
 
-		auto physics_world = parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
-		auto settings = parent()->parent()->parent()->getChild( "settings", 1 );
+		auto physics_world = entity_parent->parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
+		auto settings = entity_parent->parent()->parent()->parent()->getChild( "settings", 1 );
 		auto bodypart_spacing = settings->getChild( "bodypart_spacing", 1 )->get_float();
-		auto dropzone = parent()->parent()->parent()->parent()->getChild( "critter_system", 1 )->getChild( "settings", 1 )->getChild( "dropzone", 1 );
+		auto dropzone = entity_parent->parent()->parent()->parent()->parent()->getChild( "critter_system", 1 )->getChild( "settings", 1 )->getChild( "dropzone", 1 );
 
 		// CENTRAL BODYPART  
 		
@@ -130,7 +130,7 @@
 		// 	central_bodypart_position_x, central_bodypart_position_y, central_bodypart_position_z, central_bodypart_scale_x, central_bodypart_scale_y, central_bodypart_scale_z,
 		// 	extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
 
-		auto central_bodypart1 = tergite2(
+		auto central_bodypart1 = tergite2( entity_parent, 
 			central_bodypart_position_x, central_bodypart_position_y, central_bodypart_position_z, central_bodypart_scale_x, central_bodypart_scale_y, central_bodypart_scale_z,
 			center_bodypart_scale_x, center_bodypart_scale_y, center_bodypart_scale_z,
 			extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
@@ -139,7 +139,7 @@
 		central_bodypart_scale_x = 1.0f;
 		central_bodypart_scale_z = 1.0f;
 
-		auto central_bodypart2 = tergite2(
+		auto central_bodypart2 = tergite2( entity_parent, 
 			central_bodypart_position_x, central_bodypart_position_y, central_bodypart_position_z, central_bodypart_scale_x, central_bodypart_scale_y, central_bodypart_scale_z,
 			center_bodypart_scale_x, center_bodypart_scale_y, center_bodypart_scale_z,
 			extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
@@ -182,127 +182,74 @@
 			// REFERENCE TO EXTERNAL CHILD
 			// FIXME needs to be in seperate "constraints" parent entity
 				t_constraints->addChild( "external_hinge", new BEntity_external() )->set( hinge_entity );
-
-		}		
+		}
 	}
 	
-	BEntity* BodyFixed1::tergite( float central_bodypart_position_x, float central_bodypart_position_y, float central_bodypart_position_z, float central_bodypart_scale_x, float central_bodypart_scale_y, float central_bodypart_scale_z, 
-								  float extra_bodypart_scale_x, float extra_bodypart_scale_y, float extra_bodypart_scale_z )
+	void BodyFixed1::construct()
 	{
-		auto t_constraints = getChild( "constraints", 1 );
-
-			// find physicsworld
-		auto physics_world = parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
-		auto settings = parent()->parent()->parent()->getChild( "settings", 1 );
-
-		if ( physics_world )
-		{
-			auto bodypart_spacing = settings->getChild( "bodypart_spacing", 1 )->get_float();
-			
-			float shift = (central_bodypart_scale_x/2) + (extra_bodypart_scale_x/2) + bodypart_spacing;
-			
-			// construct
-			auto central_bodypart     = constructBodypart( "bodypart_central", physics_world, central_bodypart_position_x, central_bodypart_position_y, central_bodypart_position_z, central_bodypart_scale_x, central_bodypart_scale_y, central_bodypart_scale_z );
-			auto extra_bodypart_right = constructBodypart( "bodypart_right", physics_world, central_bodypart_position_x + shift, central_bodypart_position_y, central_bodypart_position_z, extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
-			auto extra_bodypart_left  = constructBodypart( "bodypart_left", physics_world, central_bodypart_position_x - shift, central_bodypart_position_y, central_bodypart_position_z, extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
-
-			auto friction = settings->getChild( "bodypart_friction", 1 )->get_float();
-			central_bodypart->set("friction", friction);
-			extra_bodypart_right->set("friction", friction);
-			extra_bodypart_left->set("friction", friction);
-
-			auto restitution = settings->getChild( "bodypart_restitution", 1 )->get_float();
-			central_bodypart->set("restitution", restitution);
-			extra_bodypart_right->set("restitution", restitution);
-			extra_bodypart_left->set("restitution", restitution);
-			
-
-
-			// CONNECT RIGHT BODYPART
-			{
-				// a hinge
-				auto hinge_entity = physics_world->addChild( "hinge", "Constraint_Hinge" );
-
-				// set A bodypart
-				auto bodyA_ref = hinge_entity->addChild( "bodyA", new BEntity_reference() );
-				bodyA_ref->set( central_bodypart );
-
-				// set B bodypart
-				auto bodyB_ref = hinge_entity->addChild( "bodyB", new BEntity_reference() );
-				bodyB_ref->set( extra_bodypart_right );
-
-				// get A & B  transforms from hinge
-				auto t_a = hinge_entity->getChild( "localA", 1 );
-				auto t_b = hinge_entity->getChild( "localB", 1 );
-
-				// hinge position
-				t_a->set( "position_x", +central_bodypart->get_float( "scale_x") / 2 + bodypart_spacing / 2 );
-				t_b->set( "position_x", -extra_bodypart_right->get_float( "scale_x" ) / 2 - bodypart_spacing / 2 );
-				
-				// // hinge properties
-				// hinge_entity->getChild( "limit_low", 1 )->set( 0.4f );
-				// hinge_entity->getChild( "limit_high", 1 )->set( 0.9f );
-				// hinge_entity->getChild( "softness", 1 )->set( 0.9f );
-				// hinge_entity->getChild( "biasfactor", 1 )->set( 0.9f );
-				// hinge_entity->getChild( "relaxationfactor", 1 )->set( 1.0f );
-
-				// pull create trigger
-				hinge_entity->set( "create_hinge", true );
-				
-				// REFERENCE TO EXTERNAL CHILD
-					t_constraints->addChild( "external_hinge", new BEntity_external() )->set( hinge_entity );
-			}
-
-			// CONNECT LEFT BODYPART
-			{
-				// a hinge
-				auto hinge_entity = physics_world->addChild( "hinge", "Constraint_Hinge" );
-
-				// set A bodypart
-				auto bodyA_ref = hinge_entity->addChild( "bodyA", new BEntity_reference() );
-				bodyA_ref->set( central_bodypart );
-
-				// set B bodypart
-				auto bodyB_ref = hinge_entity->addChild( "bodyB", new BEntity_reference() );
-				bodyB_ref->set( extra_bodypart_left );
-
-				// get A & B  transforms from hinge
-				auto t_a = hinge_entity->getChild( "localA", 1 );
-				auto t_b = hinge_entity->getChild( "localB", 1 );
-
-				// hinge position, flip them to mirror (pitch)
-				t_a->set( "position_x", -central_bodypart->get_float( "scale_x") / 2 - bodypart_spacing / 2 );
-				t_a->set( "pitch", 3.141593f );
-				
-				t_b->set( "position_x", +extra_bodypart_right->get_float( "scale_x" ) / 2 + bodypart_spacing / 2 );
-				t_b->set( "pitch", 3.141593f );
-				
-				// // hinge properties
-				// hinge_entity->getChild( "limit_low", 1 )->set( 0.4f );
-				// hinge_entity->getChild( "limit_high", 1 )->set( 0.9f );
-				// hinge_entity->getChild( "softness", 1 )->set( 0.9f );
-				// hinge_entity->getChild( "biasfactor", 1 )->set( 0.9f );
-				// hinge_entity->getChild( "relaxationfactor", 1 )->set( 1.0f );
-
-				// pull create trigger
-				hinge_entity->set( "create_hinge", true );
-				
-				// REFERENCE TO EXTERNAL CHILD
-					t_constraints->addChild( "external_hinge", new BEntity_external() )->set( hinge_entity );
-			}
-			
-			return central_bodypart;
-		}
-		return 0;
+		BodyFixed1Maker m;
+		m.make( this );
 	}
-
-	BEntity* BodyFixed1::tergite2( float central_bodypart_position_x, float central_bodypart_position_y, float central_bodypart_position_z, float central_bodypart_scale_x, float central_bodypart_scale_y, float central_bodypart_scale_z, float center_bodypart_scale_x, float center_bodypart_scale_y, float center_bodypart_scale_z, float extra_bodypart_scale_x, float extra_bodypart_scale_y, float extra_bodypart_scale_z )
+	
+	BEntity* BodyFixed1::customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map )
 	{
-		auto t_constraints = getChild( "constraints", 1 );
+		std::cout << "!!!!!!!!!! CUSTOM COPY" << std::endl;
+		auto entity_new = to_parent->addChild( entity->name(), new BodyFixed1() );
+		
+		// HACK SPECIAL CASE
+		// LOOP ENTITY & ENTITY_NEW TO ADD THEM TO THE TRANSLATION_MAP
+		translation_map.insert( std::make_pair( entity, entity_new ) );
+		
+		auto bodyparts = entity->getChild( "bodyparts", 1 );
+		auto constraints = entity->getChild( "constraints", 1 );
+		auto bodyparts_new = entity_new->getChild( "bodyparts", 1 );
+		auto constraints_new = entity_new->getChild( "constraints", 1 );
+		translation_map.insert( std::make_pair( bodyparts, bodyparts_new ) );
+		translation_map.insert( std::make_pair( constraints, constraints_new ) );
+
+		// TRANSLATION_MAP: BODYPARTS
+		{
+			const auto& children_vector_new = bodyparts_new->children();
+			auto child_new = children_vector_new.begin();
+			for_all_children_of( bodyparts )
+			{
+				if ( child_new != children_vector_new.end() )
+				{
+					translation_map.insert( std::make_pair( *child, *child_new ) );
+					translation_map.insert( std::make_pair( (*child)->get_reference(), (*child_new)->get_reference() ) );
+				}
+				child_new++;
+			}
+		}
+		
+		// TRANSLATION_MAP: CONSTRAINTS
+		{
+			const auto& children_vector_new = constraints_new->children();
+			auto child_new = children_vector_new.begin();
+			for_all_children_of( constraints )
+			{
+				if ( child_new != children_vector_new.end() )
+				{
+					translation_map.insert( std::make_pair( *child, *child_new ) );
+					translation_map.insert( std::make_pair( (*child)->get_reference(), (*child_new)->get_reference() ) );
+					translation_map.insert( std::make_pair( (*child)->get_reference()->getChild("angle", 1), (*child_new)->get_reference()->getChild("angle", 1) ) );
+
+					// do body a and b here
+				}
+				child_new++;
+			}
+		}
+		return entity_new;
+	}
+	
+	
+	BEntity* BodyFixed1Maker::tergite2( BEntity* body, float central_bodypart_position_x, float central_bodypart_position_y, float central_bodypart_position_z, float central_bodypart_scale_x, float central_bodypart_scale_y, float central_bodypart_scale_z, float center_bodypart_scale_x, float center_bodypart_scale_y, float center_bodypart_scale_z, float extra_bodypart_scale_x, float extra_bodypart_scale_y, float extra_bodypart_scale_z )
+	{
+		auto t_constraints = body->getChild( "constraints", 1 );
 
 			// find physicsworld
-		auto physics_world = parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
-		auto settings = parent()->parent()->parent()->getChild( "settings", 1 );
+		auto physics_world = body->parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
+		auto settings = body->parent()->parent()->parent()->getChild( "settings", 1 );
 
 		if ( physics_world )
 		{
@@ -311,11 +258,11 @@
 			float shift = (central_bodypart_scale_x/2) + (extra_bodypart_scale_x/2) + bodypart_spacing;
 			
 			// construct
-			auto central_bodypart     = constructBodypart( "bodypart_central", physics_world, central_bodypart_position_x, central_bodypart_position_y, central_bodypart_position_z, central_bodypart_scale_x, central_bodypart_scale_y, central_bodypart_scale_z );
-			auto center_bodypart_right = constructBodypart( "center_bodypart_right", physics_world, central_bodypart_position_x + shift, central_bodypart_position_y, central_bodypart_position_z, center_bodypart_scale_x, center_bodypart_scale_y, center_bodypart_scale_z );
-			auto center_bodypart_left  = constructBodypart( "center_bodypart_left", physics_world, central_bodypart_position_x - shift, central_bodypart_position_y, central_bodypart_position_z, center_bodypart_scale_x, center_bodypart_scale_y, center_bodypart_scale_z );
-			auto extra_bodypart_right = constructBodypart( "bodypart_right", physics_world, central_bodypart_position_x + center_bodypart_scale_x + shift, central_bodypart_position_y, central_bodypart_position_z, extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
-			auto extra_bodypart_left  = constructBodypart( "bodypart_left", physics_world, central_bodypart_position_x - center_bodypart_scale_x - shift, central_bodypart_position_y, central_bodypart_position_z, extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
+			auto central_bodypart     = constructBodypart( body, "bodypart_central", physics_world, central_bodypart_position_x, central_bodypart_position_y, central_bodypart_position_z, central_bodypart_scale_x, central_bodypart_scale_y, central_bodypart_scale_z );
+			auto center_bodypart_right = constructBodypart( body, "center_bodypart_right", physics_world, central_bodypart_position_x + shift, central_bodypart_position_y, central_bodypart_position_z, center_bodypart_scale_x, center_bodypart_scale_y, center_bodypart_scale_z );
+			auto center_bodypart_left  = constructBodypart( body, "center_bodypart_left", physics_world, central_bodypart_position_x - shift, central_bodypart_position_y, central_bodypart_position_z, center_bodypart_scale_x, center_bodypart_scale_y, center_bodypart_scale_z );
+			auto extra_bodypart_right = constructBodypart( body, "bodypart_right", physics_world, central_bodypart_position_x + center_bodypart_scale_x + shift, central_bodypart_position_y, central_bodypart_position_z, extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
+			auto extra_bodypart_left  = constructBodypart( body, "bodypart_left", physics_world, central_bodypart_position_x - center_bodypart_scale_x - shift, central_bodypart_position_y, central_bodypart_position_z, extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
 
 			auto friction = settings->getChild( "bodypart_friction", 1 )->get_float();
 			central_bodypart->set("friction", friction);
@@ -331,7 +278,7 @@
 			extra_bodypart_right->set("restitution", restitution);
 			extra_bodypart_left->set("restitution", restitution);
 
-			// MAKE HINGES
+			// CONNECT RIGHT BODYPART
 			{
 				// HINGE INNER
 				{
@@ -467,9 +414,8 @@
 
 					// hinge position, flip them to mirror (pitch)
 					t_a->set( "position_x", -center_bodypart_left->get_float( "scale_x") / 2 - bodypart_spacing / 2 );
-					t_a->set( "pitch", 3.141593f );
-					
 					t_b->set( "position_x", +extra_bodypart_left->get_float( "scale_x" ) / 2 + bodypart_spacing / 2 );
+					t_a->set( "pitch", 3.141593f );
 					t_b->set( "pitch", 3.141593f );
 					
 					// // hinge properties
@@ -491,88 +437,128 @@
 		}
 		return 0;
 	}
-
-	BEntity* BBody::getChildCustom( BEntity* p, const char* name )
+	
+	BEntity* BodyFixed1Maker::tergite_simple(
+		BEntity* body,
+		float central_bodypart_position_x,
+		float central_bodypart_position_y,
+		float central_bodypart_position_z,
+		float central_bodypart_scale_x,
+		float central_bodypart_scale_y,
+		float central_bodypart_scale_z,
+		float extra_bodypart_scale_x,
+		float extra_bodypart_scale_y,
+		float extra_bodypart_scale_z )
 	{
-		// for now hide warning
-		(void)p;
-		
-		// find physicsworld
-		auto physics_world = parent()->parent()->parent()->getChild( "physicsworld", 1 );
-		auto settings = parent()->parent()->getChild( "settings", 1 );
+		auto t_constraints = body->getChild( "constraints", 1 );
 
-		if ( m_rng == 0)
+			// find physicsworld
+		auto physics_world = body->parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
+		auto settings = body->parent()->parent()->parent()->getChild( "settings", 1 );
+
+		if ( physics_world )
 		{
-			m_rng = parent()->parent()->parent()->getChild( "random_number_generator" ); // FIXME PREFETCH
-		}
-		
-		// if ( name == std::string("generate_fixed_1") )
-		// {
-		// 	return addChild("body_fixed1", new BodyFixed1() );
-  // 
-		// }
+			auto bodypart_spacing = settings->getChild( "bodypart_spacing", 1 )->get_float();
+			float shift = (central_bodypart_scale_x/2) + (extra_bodypart_scale_x/2) + bodypart_spacing;
+			
+			// construct
+			auto central_bodypart     = constructBodypart( body, "bodypart_central", physics_world, central_bodypart_position_x, central_bodypart_position_y, central_bodypart_position_z, central_bodypart_scale_x, central_bodypart_scale_y, central_bodypart_scale_z );
+			auto extra_bodypart_right = constructBodypart( body, "bodypart_right", physics_world, central_bodypart_position_x + shift, central_bodypart_position_y, central_bodypart_position_z, extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
+			auto extra_bodypart_left  = constructBodypart( body, "bodypart_left", physics_world, central_bodypart_position_x - shift, central_bodypart_position_y, central_bodypart_position_z, extra_bodypart_scale_x, extra_bodypart_scale_y, extra_bodypart_scale_z );
 
-		else if ( name == std::string("generate_random") )
-		{
-// 				BeEntity::ptr bodyparts_container = add_serverentity("critter_bodyparts", critter.get(), entityType_ENTITY);
-// 										BeEntity::ptr constraint_container = add_serverentity("critter_constraints", critter.get(), entityType_ENTITY);
-// 			auto bodyparts = p->addChild( "bodyparts", new BEntity() );
-// 			auto constraints = p->addChild( "constraints", new BEntity() );
+			auto friction = settings->getChild( "bodypart_friction", 1 )->get_float();
+			central_bodypart->set("friction", friction);
+			extra_bodypart_right->set("friction", friction);
+			extra_bodypart_left->set("friction", friction);
 
-			if ( m_rng && physics_world )
+			auto restitution = settings->getChild( "bodypart_restitution", 1 )->get_float();
+			central_bodypart->set("restitution", restitution);
+			extra_bodypart_right->set("restitution", restitution);
+			extra_bodypart_left->set("restitution", restitution);
+
+			// CONNECT RIGHT BODYPART
 			{
-				// POSITION
-
-				// CENTRAL BODYPART  
-				auto central_bodypart = addBodypart( physics_world );
-				
-				// EXTRA BODYPART
-				auto extra_bodypart = addBodypart( physics_world );
-				
-				// CONNECT BODYPARTS
+				// a hinge
 				auto hinge_entity = physics_world->addChild( "hinge", "Constraint_Hinge" );
+
+				// set A bodypart
 				auto bodyA_ref = hinge_entity->addChild( "bodyA", new BEntity_reference() );
 				bodyA_ref->set( central_bodypart );
-				auto bodyB_ref = hinge_entity->addChild( "bodyB", new BEntity_reference() );
-				bodyB_ref->set( extra_bodypart );
 
+				// set B bodypart
+				auto bodyB_ref = hinge_entity->addChild( "bodyB", new BEntity_reference() );
+				bodyB_ref->set( extra_bodypart_right );
+
+				// get A & B  transforms from hinge
 				auto t_a = hinge_entity->getChild( "localA", 1 );
 				auto t_b = hinge_entity->getChild( "localB", 1 );
-				
-				// HACK, do this in body_system
-				// move extrabodypart to the right
-				float shift = (central_bodypart->get_float( "scale_x" )/2) + (extra_bodypart->get_float( "scale_x" )/2) + settings->getChild( "bodypart_spacing", 1 )->get_float();
-				auto extra_tr = extra_bodypart->getChild( "transform", 1 );
-				extra_tr->set( "position_x", shift );
-				
-				t_a->set( "position_x", (+0.5f * central_bodypart->get_float( "scale_x" ) + (settings->getChild( "bodypart_spacing", 1 )->get_float())/2) );
-				t_b->set( "position_x", (-0.5f * extra_bodypart->get_float( "scale_x" )) - (settings->getChild( "bodypart_spacing", 1 )->get_float()/2) );
-				
-				hinge_entity->getChild( "limit_low", 1 )->set( -0.2f );
-				hinge_entity->getChild( "limit_high", 1 )->set( 0.8f );
-				hinge_entity->getChild( "softness", 1 )->set( 0.9f );
-				hinge_entity->getChild( "biasfactor", 1 )->set( 0.9f );
-				hinge_entity->getChild( "relaxationfactor", 1 )->set( 1.0f );
-				
+
+				// hinge position
+				t_a->set( "position_x", +central_bodypart->get_float( "scale_x") / 2 + bodypart_spacing / 2 );
+				t_b->set( "position_x", -extra_bodypart_right->get_float( "scale_x" ) / 2 - bodypart_spacing / 2 );
+
+				// pull create trigger
 				hinge_entity->set( "create_hinge", true );
 				
 				// REFERENCE TO EXTERNAL CHILD
-					addChild( "external_hinge", new BEntity_external() )->set( hinge_entity );
+					t_constraints->addChild( "external_hinge", new BEntity_external() )->set( hinge_entity );
 			}
+
+			// CONNECT LEFT BODYPART
+			{
+				// a hinge
+				auto hinge_entity = physics_world->addChild( "hinge", "Constraint_Hinge" );
+
+				// set A bodypart
+				auto bodyA_ref = hinge_entity->addChild( "bodyA", new BEntity_reference() );
+				bodyA_ref->set( central_bodypart );
+
+				// set B bodypart
+				auto bodyB_ref = hinge_entity->addChild( "bodyB", new BEntity_reference() );
+				bodyB_ref->set( extra_bodypart_left );
+
+				// get A & B  transforms from hinge
+				auto t_a = hinge_entity->getChild( "localA", 1 );
+				auto t_b = hinge_entity->getChild( "localB", 1 );
+
+				// hinge position, flip them to mirror (pitch)
+				t_a->set( "position_x", -central_bodypart->get_float( "scale_x") / 2 - bodypart_spacing / 2 );
+				t_a->set( "pitch", 3.141593f );
+				
+				t_b->set( "position_x", +extra_bodypart_right->get_float( "scale_x" ) / 2 + bodypart_spacing / 2 );
+				t_b->set( "pitch", 3.141593f );
+
+				// // hinge properties
+				// hinge_entity->getChild( "limit_low", 1 )->set( 0.4f );
+				// hinge_entity->getChild( "limit_high", 1 )->set( 0.9f );
+				// hinge_entity->getChild( "softness", 1 )->set( 0.9f );
+				// hinge_entity->getChild( "biasfactor", 1 )->set( 0.9f );
+				// hinge_entity->getChild( "relaxationfactor", 1 )->set( 1.0f );
+
+				// pull create trigger
+				hinge_entity->set( "create_hinge", true );
+				
+				// REFERENCE TO EXTERNAL CHILD
+					t_constraints->addChild( "external_hinge", new BEntity_external() )->set( hinge_entity );
+			}
+			
+			return central_bodypart;
 		}
 		return 0;
 	}
 
-	BEntity* BodyFixed1::constructBodypart( const char* name, BEntity* physics_world, float pos_x, float pos_y, float pos_z, float scale_x, float scale_y, float scale_z )
+	BEntity* BodyFixed1Maker::constructBodypart( BEntity* body, const char* name, BEntity* physics_world, float pos_x, float pos_y, float pos_z, float scale_x, float scale_y, float scale_z )
 	{
-		auto t_bodyparts = getChild( "bodyparts", 1 );
+		auto t_bodyparts = body->getChild( "bodyparts", 1 );
 		
 		// PHYSICS
 			auto new_bodypart = physics_world->addChild( name, "PhysicsEntity_Cube" );
 			new_bodypart->addChild( "weight", new BEntity_float_property() )->set( 1.0f ); // FIXME SETTING
 			// new_bodypart->set("weight", 1.0f); // FIXME SETTING
+			new_bodypart->addChild( "wants_deactivation", new BEntity_bool_property() )->set( false ); // FIXME SETTING
+			
 
-			parent()->parent()->getChild( "settings", 1 );
+			body->parent()->parent()->getChild( "settings", 1 );
 
 			new_bodypart->addChild( "scale_x", new BEntity_float_property() )->set( scale_x ); // FIXME SETTING
 			new_bodypart->addChild( "scale_y", new BEntity_float_property() )->set( scale_y ); // FIXME SETTING
@@ -593,7 +579,7 @@
 				
 		// GRAPHICS
 			BEntity* graphics_transform(0);
-			auto graphicsmodelsystem = topParent()->getChild("Scene", 1)->getChild("GraphicsModelSystem");
+			auto graphicsmodelsystem = body->topParent()->getChild("Scene", 1)->getChild("GraphicsModelSystem");
 			if ( graphicsmodelsystem )
 			{
 				// FIXME do the graphics entity upstairs in body_system, we're assuming we need a graphics entity for all anyway
@@ -627,77 +613,4 @@
 
 			return new_bodypart;
 	}
-	
-	
-	BEntity* BBody::addBodypart( BEntity* physics_world )
-	{
-		auto new_bodypart = physics_world->addChild( "bodypart", "PhysicsEntity_Cube" );
-		// new_bodypart->set("weight", 1.0f); // FIXME SETTING
-		new_bodypart->addChild( "weight", new BEntity_float_property() )->set( 1.0f ); // FIXME SETTING
 
-		auto settings = parent()->parent()->getChild( "settings", 1 );
-
-		m_rng->set( "min", Bint( 10*settings->getChild( "bodypart_scale_x_min", 1 )->get_float() ) );
-		m_rng->set( "max", Bint( 10*settings->getChild( "bodypart_scale_x_max", 1 )->get_float() ) );
-		float scale_x = 0.1f * m_rng->get_int();
-		m_rng->set( "min", Bint( 10*settings->getChild( "bodypart_scale_y_min", 1 )->get_float() ) );
-		m_rng->set( "max", Bint( 10*settings->getChild( "bodypart_scale_y_max", 1 )->get_float() ) );
-		float scale_y = 0.1f * m_rng->get_int();
-		m_rng->set( "min", Bint( 10*settings->getChild( "bodypart_scale_z_min", 1 )->get_float() ) );
-		m_rng->set( "max", Bint( 10*settings->getChild( "bodypart_scale_z_max", 1 )->get_float() ) );
-		float scale_z = 0.1f * m_rng->get_int();
-		
-		// new_bodypart->set("scale_x", scale_x); // FIXME SETTING
-		// new_bodypart->set("scale_y", scale_y); // FIXME SETTING
-		// new_bodypart->set("scale_z", scale_z); // FIXME SETTING
-		new_bodypart->addChild( "scale_x", new BEntity_float_property() )->set( scale_x ); // FIXME SETTING
-		new_bodypart->addChild( "scale_y", new BEntity_float_property() )->set( scale_y ); // FIXME SETTING
-		new_bodypart->addChild( "scale_z", new BEntity_float_property() )->set( scale_z ); // FIXME SETTING
-		
-		
-		auto physics_transform = new_bodypart->getChild( "transform", 1 );
-
-		physics_transform->getChild("position_x", 1)->set( 0.0f );
-		physics_transform->getChild("position_y", 1)->set( -10.0f );
-		physics_transform->getChild("position_z", 1)->set( -100.0f );
-		
-		// REFERENCE TO EXTERNAL CHILD
-			// auto external_reference = addChild( "_external_child", new BEntity_reference() );
-			// external_reference->set( new_bodypart );
-			addChild( "external_bodypart_physics", new BEntity_external() )->set( new_bodypart );
-		
-		// GRAPHICS ENTITY
-			BEntity* graphics_transform(0);
-			auto graphicsmodelsystem = topParent()->getChild("Scene", 1)->getChild("GraphicsModelSystem");
-			if ( graphicsmodelsystem )
-			{
-				// FIXME do the graphics entity upstairs in body_system, we're assuming we need a graphics entity for all anyway
-				// LOAD MODEL IF NEEDED, ADD TRANSFORM
-				auto graphics_entity_food = graphicsmodelsystem->getChild( "graphics_entity_critter", 1 );
-				if ( !graphics_entity_food )
-				{
-					graphics_entity_food = graphicsmodelsystem->addChild("graphics_entity_critter", "GraphicsModel");
-					graphics_transform = graphics_entity_food->addChild("transform", "Transform");
-					graphics_entity_food->set("filename", "../share/modules/cube-critter.obj");
-				}
-				else
-				{
-					graphics_transform = graphics_entity_food->addChild("transform", "Transform");
-				}
-				
-				graphics_transform->addChild( "scale_x", new BEntity_float )->set( scale_x );
-				graphics_transform->addChild( "scale_y", new BEntity_float )->set( scale_y );
-				graphics_transform->addChild( "scale_z", new BEntity_float )->set( scale_z );
-				
-
-				// REFERENCE TO EXTERNAL CHILD
-					addChild( "external_bodypart_graphics", new BEntity_external() )->set( graphics_transform );
-			}
-
-			physics_transform->connectServerServer(graphics_transform);
-			
-		return new_bodypart;
-	}
-	
-	
-	

@@ -142,20 +142,20 @@
 		bool BPhysicsEntity::set( const Bstring& id, const Bbool& value )
 		{
 // // 			std::cout << "BPhysicsEntity:bool: " << id << ":" << value << std::endl;
-// 			if ( id == "wants_deactivation" )
-// 			{
-// 				if ( m_wants_deactivation != value )
-// 				{
-// 					m_wants_deactivation = value;
-// // 					std::cout << "m_wants_deactivation:" << m_wants_deactivation << std::endl;
-// // 					std::cout << " id:" << id() << std::endl;
-// 					reconstruct();
-// // 						BeSignalHistory t_entity_history;
-// // 						setProperty("reconstruct", t_entity_history);
-// // 					std::cout << " m_wants_deactivation: done" << std::endl;
-// 					return true;
-// 				}
-// 			}
+			if ( id == "wants_deactivation" )
+			{
+				if ( m_wants_deactivation != value )
+				{
+					m_wants_deactivation = value;
+// 					std::cout << "m_wants_deactivation:" << m_wants_deactivation << std::endl;
+// 					std::cout << " id:" << id() << std::endl;
+					reconstruct();
+// 						BeSignalHistory t_entity_history;
+// 						setProperty("reconstruct", t_entity_history);
+// 					std::cout << " m_wants_deactivation: done" << std::endl;
+					return true;
+				}
+			}
 // 			else if ( id == "disable_worldtransform" )
 // 			{
 // 				if ( m_disable_worldtransform != value )

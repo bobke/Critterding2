@@ -7,6 +7,7 @@
 # ADD_SUBDIRECTORY(be_plugin_app_opengl)
 # ADD_SUBDIRECTORY(be_plugin_app_vulkan)
 # ADD_SUBDIRECTORY(be_plugin_app_attractors)
+# ADD_SUBDIRECTORY(be_plugin_alsa)
 
 ADD_SUBDIRECTORY(be_plugin_opengl)
 ADD_SUBDIRECTORY(be_plugin_qt6)

@@ -23,14 +23,15 @@
 		ENDIF (PTHREAD_LIBRARY)
 		
 	# DL
+	 # no "REQUIRED". On FreeBSD, NetBSD and OpenBSD there is no libdl, as the required functionality is already built into libc.
 		MESSAGE(CHECK_START "dl")
-		FIND_LIBRARY(DL_LIBRARY NAMES dl libdl REQUIRED )
+		FIND_LIBRARY(DL_LIBRARY NAMES dl libdl )
 		IF (DL_LIBRARY)
 			MESSAGE(CHECK_PASS "found " ${DL_LIBRARY})
 			SET(bengine_LIBS ${bengine_LIBS} ${DL_LIBRARY}) 
 		ELSE (DL_LIBRARY)
 			MESSAGE(CHECK_FAIL "not found ")
-			list(APPEND missingDependencies "dl")
+			# list(APPEND missingDependencies "dl")
 		ENDIF (DL_LIBRARY)
 
 	# LIST MISSING DEPENDENCIES

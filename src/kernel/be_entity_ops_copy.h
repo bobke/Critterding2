@@ -22,7 +22,6 @@
 				virtual ~BEntityCopy() {};
 
 				BEntity* copyEntity( BEntity* entity );
-				BEntity* copyEntity( BEntity* entity, BEntity* to_parent );
 
 			private:
 				BEntity* _copyEntity( BEntity* entity, BEntity* to_parent, bool force=false );

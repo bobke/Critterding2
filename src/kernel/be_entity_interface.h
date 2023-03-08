@@ -2,6 +2,7 @@
 #define BE_ENTITY_INTERFACE_H_INCLUDED
 
 	#include "be_types.h"
+	#include <map>
 
 	class BeLibHandler;
 	class BEntity_Plugin_Manager;
@@ -132,7 +133,7 @@
 
 				BEntity* getChild(const char* name, const unsigned int max_levels=100000000); // FIXME 1 seems best
 				virtual BEntity* getChildCustom( BEntity* parent, const char* name = "" ) { (void)parent; (void)name; return 0; };
-				virtual BEntity* genericFunction( const char* id, BEntity* entity ) { (void)id; (void)entity; return 0; }; // TO USE, can do anything?, FIXME but can be done through ::set(string id, entity*) too ???
+				// virtual BEntity* genericFunction( const char* id, BEntity* entity ) { (void)id; (void)entity; return 0; }; // TO USE, can do anything?, FIXME but can be done through ::set(string id, entity*) too ???
 
 				Buint numChildren() const; 
 				Buint numTotalChildren() const; 
@@ -185,7 +186,7 @@
 				void spawnInput();
 				BEInput* getInput() const;
 				BEOutput* getOutput() const;
-				virtual bool apply( BEntity* const e ) const;	// FIXME WHAT WAS THIS FOR?
+				virtual bool apply( BEntity* e );
 
 				void connectServerServer( BEntity* entity_with_input );
 				void conn( BEntity* entity_with_output, BEntity* entity_with_input );  // FIXME implement
@@ -196,6 +197,10 @@
 			protected:
 				Bbool getNthBit(const char packedValue, const int selectedBitIndex) const;
 				void setNthBit(char & packedValue, const int selectedBitIndex, const bool value=true) const;
+
+		// CUSTOM COPY COMMAND
+			public:
+				virtual BEntity* customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map ) { return 0; }
 
 		// COMMAND BUFFER
 			public:

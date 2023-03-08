@@ -41,7 +41,7 @@
 		// m_minimum_number_of_units->set( Buint(1) );
 		// m_intitial_energy->set( Bfloat(1500.0f) );
 		// m_procreate_minimum_energy->set( Bfloat(2501.0f) );
-		// m_maximum_age->set( Buint(16000) );
+		// m_maximum_age->set( Buint(16000000) );
 		// m_dropzone_position_x->set( Bfloat(-90.0f) );
 		// m_dropzone_position_y->set( Bfloat(-18.0f) );
 		// m_dropzone_position_z->set( Bfloat(-190.0f) );
@@ -52,6 +52,9 @@
 		m_insert_frame_interval = settings->addChild( "insert_frame_interval", new BEntity_uint() );
 		m_insert_frame_interval->set( (Buint)500 );
 
+		m_copy_random_position = settings->addChild( "copy_random_position", new BEntity_bool() );
+		m_copy_random_position->set( false );
+		
 		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
 	}
 	
@@ -81,23 +84,6 @@
 				|| frame_counter == offset+7000
 				|| frame_counter == offset+8000
 				|| frame_counter == offset+9000
-				// || frame_counter == offset+25000
-				// || frame_counter == offset+26000
-				// || frame_counter == offset+27000
-				// || frame_counter == offset+28000
-				// || frame_counter == offset+29000
-				// || frame_counter == offset+30000
-				// || frame_counter == offset+40000
-				// || frame_counter == offset+41000
-				// || frame_counter == offset+42000
-				// || frame_counter == offset+43000
-				// || frame_counter == offset+44000
-				// || frame_counter == offset+45000
-				// || frame_counter == offset+46000
-				// || frame_counter == offset+47000
-				// || frame_counter == offset+48000
-				// || frame_counter == offset+49000
-				// || frame_counter == offset+50000
 			)
 			{
 				m_entityLoad.loadEntity( m_unit_container );
@@ -121,7 +107,7 @@
 			
 			
 		// INSERT NEW RANDOM CRITTER, only check every 100 frames
-			if ( m_minimum_number_of_units->get_uint() > 0 && ++m_framecount == m_insert_frame_interval->get_uint() || m_insert_frame_interval->get_uint() == 0 )
+			if ( m_minimum_number_of_units->get_uint() > 0 && (++m_framecount == m_insert_frame_interval->get_uint() || m_insert_frame_interval->get_uint() == 0 ) )
 			{
 				// std::cout << "new random critter" << std::endl;
 				m_framecount = 0;
@@ -134,9 +120,16 @@
 					// generate random body
 					auto body_system = parent()->getChild( "body_system", 1 );
 					auto body_unit_system = body_system->getChild("unit_container", 1);
-					auto newBody = body_unit_system->addChild( "body", new BBody() );
-					auto fixed_1 = newBody->addChild( "body_fixed1", new BodyFixed1() );
-					// auto fixed_1 = newBody->getChildCustom( newBody, "generate_fixed_1" );
+					
+					// auto newBody = body_unit_system->addChild( "body", new BBody() );
+					auto newBody = body_unit_system->addChild( "body", new BEntity() );
+
+					auto fixed_1 = newBody->addChild( "body_fixed1", "BodyFixed1" );
+					// auto fixed_1 = newBody->addChild( "body_fixed1", new BEntity() );
+
+					// BodyFixed1Maker m;
+					// m.make( fixed_1 );
+					
 						
 					// REFERENCE TO EXTERNAL CHILD
 						critter_unit->addChild( "external_body", new BEntity_external() )->set( newBody );
@@ -217,14 +210,7 @@
 					// reached max age or energy is depleted
 					if ( critter_unit->age() >= m_maximum_age->get_uint() || critter_unit->energy() <= 0.0f )
 					{
-						// HACK first external child one is body
-						auto bodyparts = (*child2)->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-						while ( removeFromCollisions( bodyparts ) ) {;}
-
-						// species
-						m_species_system->removeFromSpecies( *child2 );
-
-						m_unit_container->removeChild( *child2 );
+						removeCritter( *child2 );
 						
 						// PREVENT FURTHER ACTIONS IN THIS FRAME
 							return; 
@@ -250,6 +236,8 @@
 						auto procreate = critter_unit->getChild( "motor_neurons", 1)->getChild( "procreate", 1);
 						if ( procreate->get_float() != 0.0f )
 						{
+							std::cout << "COPY: " << critter_unit->id() << " ad: " << critter_unit->getChild( "adam_distance", 1 )->get_uint() << " total:" << m_unit_container->numChildren() << "(h: " << t_highest << ")" << std::endl;
+
 							critter_unit->setEnergy( critter_unit->energy() / 2 );
 // 							critter_unit->setAge( Buint(0) );
 							procreate->set( 0.0f );
@@ -264,23 +252,32 @@
 									t_highest = m_unit_container->numChildren();
 								}
 								
-								std::cout << "COPY: " << critter_unit->id() << " ad: " << critter_unit->getChild( "adam_distance", 1 )->get_uint() << " total:" << m_unit_container->numChildren() << "(h: " << t_highest << ")" << std::endl;
 								
+							// CHANGE POSITION to above parent
+							if ( !m_copy_random_position->get_bool() )
+							{
+								auto bodyparts_old = critter_unit->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+								auto bodyparts_new = critter_new->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
 								
-							// CHANGE POSITION
-								// auto bodyparts = critter_new->getChild( "_external_child", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-								// for_all_children_of3( bodyparts )
-								// {
-								// 	auto t = (*child3)->get_reference()->getChild( "transform", 1 );
-								// 	if ( t )
-								// 	{
-								// 		// std::cout << "changing position" << std::endl;
-								// 		t->set("position_x", 0.0f);
-								// 		t->set("position_y", 10.0f);
-								// 		t->set("position_z", 0.0f);
-								// 	}
-								// }
-								
+								const auto& children_old = bodyparts_old->children();
+								auto old_child = children_old.begin();
+								// for ( auto child2(children_vector2.begin()); child2 != children_vector2.end(); ++child2 )
+
+								for_all_children_of3( bodyparts_new )
+								{
+									auto t = (*child3)->get_reference()->getChild( "transform", 1 );
+									auto oldt = (*old_child)->get_reference()->getChild( "transform", 1 );
+									if ( t )
+									{
+										// std::cout << "changing position" << std::endl;
+										t->set("position_x", oldt->get_float("position_x"));
+										t->set("position_y", oldt->get_float("position_y") + 0.75f);
+										t->set("position_z", oldt->get_float("position_z"));
+									}
+									old_child++;
+								}
+							}
+
 							// MUTATE CRITTER BRAIN
 								auto brain_system = parent()->getChild( "brain_system", 1 );
 
@@ -332,6 +329,19 @@
 		// }
 	}
 	
+	void CdCritterSystem::removeCritter( BEntity* entity )
+	{
+		// HACK first external child one is body
+		auto bodyparts = entity->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+		while ( removeFromCollisions( bodyparts ) ) {;}
+
+		// species
+		m_species_system->removeFromSpecies( entity );
+
+		m_unit_container->removeChild( entity );
+		
+	}
+	
 	bool CdCritterSystem::removeFromCollisions( BEntity* to_remove_list )
 	{
 		for_all_children_of( m_collisions )
@@ -361,47 +371,6 @@
 		m_energy = addChild( "energy", new BEntity_float() );
 		// m_species = addChild( "species_reference", new BEntity_reference() );
 		addChild( "adam_distance", new BEntity_uint() )->set( Buint(0) );
-
-
-
-// 		// generate random body
-// 		auto body_system = parent()->parent()->parent()->getChild( "body_system", 1 );
-// 		auto body_unit_system = body_system->getChild("unit_container", 1);
-// 		auto newBody = body_unit_system->addChild( "body", "CdBody" );
-// 		auto fixed_1 = newBody->getChildCustom( newBody, "generate_fixed_1" );
-// 			
-// 		// REFERENCE TO EXTERNAL CHILD
-// 			auto external_reference = addChild( "_external_child", new BEntity_reference() );
-// 			external_reference->set( newBody );
-// 			
-// 		// generate random brain
-// 		auto brain_system = parent()->parent()->parent()->getChild( "brain_system", 1 );
-// 		
-// 		m_brain = brain_system->getChild( "unit_container", 1)->addChild( "brain", "Brain" );
-// 		// reference body constraints as brain outputs
-// 		auto outputs = m_brain->getChild( "outputs", 1 );
-// 		auto constraints_ref = outputs->addChild( "bullet_constraints", new BEntity_reference() );
-// 		constraints_ref->set( fixed_1->getChild( "constraints", 1 ) );
-// 		
-// 		// motor neurons
-// 		// eat
-// 		auto motor_neurons = addChild( "motor_neurons", new BEntity() );
-// // 		auto motor_neuron_eat = motor_neurons->addChild( "eat", "Neuron" );
-// 		auto motor_neuron_eat = motor_neurons->addChild( "eat",new BEntity_float() );
-// 		auto motor_neuron_procreate = motor_neurons->addChild( "procreate",new BEntity_float() );
-// 
-// 		auto motor_neurons_ref = outputs->addChild( "motor_neurons", new BEntity_reference() );
-// 		motor_neurons_ref->set( motor_neurons );
-// 
-// 		
-// 		m_brain = brain_system->getChildCustom( m_brain, "new" );
-// 
-// 			// REFERENCE TO EXTERNAL CHILD
-// 				external_reference = addChild( "_external_child", new BEntity_reference() );
-// 				external_reference->set( m_brain );
-		
-
-		// glue brain & body input/outputs together
 	}
 	
 	

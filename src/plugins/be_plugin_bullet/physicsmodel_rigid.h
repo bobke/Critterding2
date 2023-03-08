@@ -20,7 +20,7 @@ class BEntity;
 				const char* class_id() const { return "Bullet_Transform_Emitter"; }
 				virtual ~transformEmitter() {};
 				void construct();
-				virtual bool apply( BEntity* const e ) const { return e->set( reinterpret_cast<const char*>(m_value) ); }
+				virtual bool apply( BEntity* e ) { return e->set( reinterpret_cast<const char*>(m_value) ); }
 				virtual const char* get_string() { return reinterpret_cast<const char*>(m_value); }
 				
 				virtual bool set( const Bstring& id, const Bfloat& value );

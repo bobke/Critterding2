@@ -34,7 +34,7 @@
 			const char* class_id() const { return "trigger"; }
 			virtual ~BEntity_trigger() {};
 			virtual bool set();
-			virtual bool apply( BEntity* const e ) const;
+			virtual bool apply( BEntity* e );
 	};
 	
 	// FIXME BEntity_trigger_property?
@@ -49,7 +49,7 @@
 
 			virtual bool set( const Bbool& value );
 			virtual Bbool get_bool();
-			virtual bool apply( BEntity* const e ) const;
+			virtual bool apply( BEntity* e );
 // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 		protected:
 			Bbool m_value;
@@ -63,7 +63,7 @@
 			virtual ~BEntity_bool_property() {};
 			virtual bool set( const Bbool& value );
 			virtual Bbool get_bool();
-			virtual bool apply( BEntity* const e );
+			virtual bool apply( BEntity* e );
 	};
 
 	class BEntity_uint : public BEntity
@@ -76,7 +76,7 @@
 			virtual bool set( const Buint& value );
 // 			virtual bool set( BEntity* entity );
 			virtual Buint get_uint();
-			virtual bool apply( BEntity* const e ) const;
+			virtual bool apply( BEntity* e );
 // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 		protected:
 			Buint m_value;
@@ -91,7 +91,7 @@
 			virtual bool set( const Buint& value );
 			virtual bool set( BEntity* entity );
 			virtual Buint get_uint();
-			virtual bool apply( BEntity* const e );
+			virtual bool apply( BEntity* e );
 		private:
 // 			Buint m_value;
 	};
@@ -106,7 +106,7 @@
 			virtual bool set( const Bint& value );
 // 			virtual bool set( BEntity* entity );
 			virtual Bint get_int() { return m_value; }
-			virtual bool apply( BEntity* const e ) const { return e->set( m_value ); };
+			virtual bool apply( BEntity* e ) { return e->set( m_value ); };
 // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 		protected:
 			Bint m_value;
@@ -121,7 +121,7 @@
 			virtual bool set( const Bint& value );
 			virtual bool set( BEntity* entity );
 			virtual Bint get_int();
-			virtual bool apply( BEntity* const e );
+			virtual bool apply( BEntity* e );
 	};
 
 	class BEntity_float : public BEntity
@@ -133,7 +133,7 @@
 
 			virtual bool set( const Bfloat& value );
 			virtual Bfloat get_float();
-			virtual bool apply( BEntity* const e ) const;
+			virtual bool apply( BEntity* e );
 // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 		protected:
 			Bfloat m_value;
@@ -147,7 +147,7 @@
 			virtual ~BEntity_float_property() {};
 			virtual bool set( const Bfloat& value );
 			virtual Bfloat get_float();
-			virtual bool apply( BEntity* const e );
+			virtual bool apply( BEntity* e );
 		private:
 // 			Bfloat m_value;
 	};
@@ -161,7 +161,7 @@
 
 			virtual bool set( const Bdouble& value );
 			virtual Bdouble get_double();
-			virtual bool apply( BEntity* const e ) const;
+			virtual bool apply( BEntity* e );
 // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 		protected:
 			Bdouble m_value;
@@ -175,7 +175,7 @@
 // 
 // 			virtual bool set( const char* value );
 // 			virtual Bstring* get_string();
-// 			virtual bool apply( BEntity* const e ) const;
+// 			virtual bool apply( BEntity* e );
 // // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 // 		private:
 // 			Bstring m_value;
@@ -191,7 +191,7 @@
 			virtual bool set( const char* value );
 // 			virtual Bstring* get_string();
 			virtual const char* get_string();
-			virtual bool apply( BEntity* const e ) const;
+			virtual bool apply( BEntity* e );
 // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 		protected:
 			char* m_value;
@@ -206,7 +206,7 @@
 			virtual ~BEntity_string_property() {};
 			virtual bool set( const char* value );
 			virtual const char* get_string();
-			virtual bool apply( BEntity* const e );
+			virtual bool apply( BEntity* e );
 		private:
 			// char* m_value;
 	};

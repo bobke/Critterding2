@@ -42,7 +42,7 @@
 				const char* class_id() const { return "Transform"; }
 				virtual ~glTransform() {};
 				void construct();
-				virtual bool apply( BEntity* const e ) const;
+				virtual bool apply( BEntity* e );
 				virtual bool set( const char* value );
 				virtual const char* get_string();
 				float m_value[16];

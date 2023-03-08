@@ -647,6 +647,7 @@
 							edit->set( "width", Buint(80) );
 							edit->set( "height", Buint(14) );
 							edit->set( t_floatp->get_float() );
+							std::cout << "FLOATP " << t_floatp->get_float() << std::endl;
 							t_floatp->connectServerServer( edit );
 							edit->connectServerServer( t_floatp );
 						}

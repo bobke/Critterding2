@@ -24,7 +24,6 @@
 		m_bidirectional->set( false );
 
 		m_angle = addChild( "angle", new BEntity_float() );
-		
 
 		// Calculate full and half range of hinge, HACK could be more efficient
 			float smallestLimit = getChild( "limit_low", 1 )->get_float();
@@ -53,7 +52,7 @@
 		{
 // 			std::cout << "input sum = " << m_input_sum << std::endl;
 			
-			float max_input_sum = 0.4f; // FIXME MAKE OPTION
+			float max_input_sum = 0.38f; // FIXME MAKE OPTION
 			if ( m_input_sum > max_input_sum )
 			{
 				m_input_sum = max_input_sum;

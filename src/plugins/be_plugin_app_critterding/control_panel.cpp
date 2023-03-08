@@ -1,6 +1,6 @@
 #include "control_panel.h"
-#include "kernel/be_timer.h"
-#include "kernel/be_lib_handler.h"
+// #include "kernel/be_timer.h"
+// #include "kernel/be_lib_handler.h"
 
 	void CdControlPanel::construct()
 	{
@@ -28,11 +28,11 @@
 			auto timer = found_sys->getChild("timer", 1);
 			m_timer_frame = timer->getChild("frame", 1);
 
-		// BASE TYPES
-			pluginManager()->load( "basetypes", "src/kernel", "be_base_entity_types" );
-			
-		// GUI
-			pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
+// 		// BASE TYPES
+// 			pluginManager()->load( "basetypes", "src/kernel", "be_base_entity_types" );
+// 			
+// 		// GUI
+// 			pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
 
 		// QWINDOW
 			auto qwindow = addChild( "QT MainWindow", "QMainWindow" );

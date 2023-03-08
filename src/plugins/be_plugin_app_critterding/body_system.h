@@ -56,6 +56,22 @@
 				
 		};
 
+		class BodyFixed1Maker
+		{
+			public:
+				BodyFixed1Maker() : m_rng(0) {};
+				// const char* class_id() const { return "BodyFixed1"; }
+				virtual ~BodyFixed1Maker() {};
+
+				void make( BEntity* entity_parent );
+				BEntity* tergite_simple( BEntity* body, float central_bodypart_position_x, float central_bodypart_position_y, float central_bodypart_position_z, float central_bodypart_scale_x, float central_bodypart_scale_y, float central_bodypart_scale_z, float extra_bodypart_scale_x, float extra_bodypart_scale_y, float extra_bodypart_scale_z );
+				BEntity* tergite2( BEntity* body, float central_bodypart_position_x, float central_bodypart_position_y, float central_bodypart_position_z, float central_bodypart_scale_x, float central_bodypart_scale_y, float central_bodypart_scale_z, float center_bodypart_scale_x, float center_bodypart_scale_y, float center_bodypart_scale_z, float extra_bodypart_scale_x, float extra_bodypart_scale_y, float extra_bodypart_scale_z );
+				BEntity* constructBodypart( BEntity* body, const char* name, BEntity* physics_world, float pos_x, float pos_y, float pos_z, float scale_x, float scale_y, float scale_z );
+// 				void process();
+				BEntity* m_rng;
+		};
+		
+		
 		class BodyFixed1 : public BEntity
 		{
 			public:
@@ -64,26 +80,13 @@
 				virtual ~BodyFixed1() {};
 
 				void construct();
-				BEntity* tergite( float central_bodypart_position_x, float central_bodypart_position_y, float central_bodypart_position_z, float central_bodypart_scale_x, float central_bodypart_scale_y, float central_bodypart_scale_z, float extra_bodypart_scale_x, float extra_bodypart_scale_y, float extra_bodypart_scale_z );
+				BEntity* tergite_simple( float central_bodypart_position_x, float central_bodypart_position_y, float central_bodypart_position_z, float central_bodypart_scale_x, float central_bodypart_scale_y, float central_bodypart_scale_z, float extra_bodypart_scale_x, float extra_bodypart_scale_y, float extra_bodypart_scale_z );
 				BEntity* tergite2( float central_bodypart_position_x, float central_bodypart_position_y, float central_bodypart_position_z, float central_bodypart_scale_x, float central_bodypart_scale_y, float central_bodypart_scale_z, float center_bodypart_scale_x, float center_bodypart_scale_y, float center_bodypart_scale_z, float extra_bodypart_scale_x, float extra_bodypart_scale_y, float extra_bodypart_scale_z );
 				BEntity* constructBodypart( const char* name, BEntity* physics_world, float pos_x, float pos_y, float pos_z, float scale_x, float scale_y, float scale_z );
 // 				void process();
 				BEntity* m_rng;
-		};
-	//  BODY
-		class BBody : public BEntity
-		{
-			public:
-				BBody() : m_rng(0) {};
-				const char* class_id() const { return "CdBody"; }
-				virtual ~BBody() {};
 
-				BEntity* getChildCustom( BEntity* parent, const char* name = "" );
-				
-			private:
-				BEntity* addBodypart( BEntity* physics_world );
-
-				BEntity* m_rng;
+				virtual BEntity* customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map );
 		};
 
 #endif
