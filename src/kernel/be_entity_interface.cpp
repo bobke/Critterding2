@@ -480,6 +480,9 @@
 		BEntity* BEntity::addChild( const std::string& name, const std::string& library, const std::string& entityClass )
 		{
 			// PRIMITIVES
+				if ( entityClass == "entity" )
+					return addChild(name, new BEntity());
+
 				if ( entityClass == "reference" )
 					return addChild(name, new BEntity_reference());
 
