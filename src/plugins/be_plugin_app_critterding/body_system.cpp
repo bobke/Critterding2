@@ -187,23 +187,13 @@
 	
 	void BodyFixed1::construct()
 	{
+		BodyFixed1Maker m;
+		m.make( this );
 	}
 
-	bool BodyFixed1::set( const char* value )
-	{
-		if ( value == "create_new" )
-		{
-			BodyFixed1Maker m;
-			m.make( this );
-			return true;
-		}
-	}
-	
-	
 	BEntity* BodyFixed1::customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map )
 	{
 		auto entity_new = to_parent->addChild( entity->name(), new BodyFixed1() );
-		entity_new->set( "create_new" );
 		
 		// HACK SPECIAL CASE
 		// LOOP ENTITY & ENTITY_NEW TO ADD THEM TO THE TRANSLATION_MAP

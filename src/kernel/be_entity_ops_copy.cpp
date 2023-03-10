@@ -611,8 +611,6 @@
 						else if ( e_name == "body_fixed1" )
 						{
 							this_entity = parent->addChild( "body_fixed1", "BodyFixed1" );
-							this_entity->set( "create_new" );
-
 
 							// this_entity = parent->addChild( e_name.c_str(), "BodyFixed1" );
 							// this_entity = parent->getChildCustom( parent, "generate_fixed_1" );
