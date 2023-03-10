@@ -123,9 +123,10 @@
 					
 					// auto newBody = body_unit_system->addChild( "body", new BBody() );
 					auto newBody = body_unit_system->addChild( "body", new BEntity() );
-
 					auto fixed_1 = newBody->addChild( "body_fixed1", "BodyFixed1" );
 
+					// auto fixed_1 = body_unit_system->addChild( "body_fixed1", "BodyFixed1" );
+					
 					// auto fixed_1 = newBody->addChild( "body_fixed1", new BEntity() );
 
 					// BodyFixed1Maker m;

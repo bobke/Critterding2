@@ -324,8 +324,10 @@
 						auto class_id_label = general_layout_H->addChild( "class_id_label", "QLabel" );
 						class_id_label->set( entity->class_id() );
 
-					// BUTTONS
+					// VALUE FIELDS
 						add_admin_genValueFields( general_layout_H, entity );
+
+					// GENERIC BUTTONS
 						add_admin_genButtons( general_layout_H, entity );
 				}
 				{
@@ -565,12 +567,12 @@
 					// drag and drop= reference to adminned entity
 					label->addChild( "reference", new BEntity_reference() )->set( entity );
 				}
-					
-				
-				add_admin_genValueFields( hboxlayout_entity, entity );
 
-				add_admin_genButtons( hboxlayout_entity, entity );
-				
+				// VALUE FIELDS
+					add_admin_genValueFields( hboxlayout_entity, entity );
+
+				// GENERIC BUTTONS
+					add_admin_genButtons( hboxlayout_entity, entity );
 			}
 		}
 	}	

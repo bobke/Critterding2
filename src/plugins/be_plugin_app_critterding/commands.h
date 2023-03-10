@@ -12,4 +12,14 @@
 			bool set();
 	};
 
+	class cmd_launchControlPanel: public BEntity_trigger
+	{
+		public:
+			cmd_launchControlPanel() { };
+			virtual ~cmd_launchControlPanel() {};
+			const char* class_id() const { return "cmd_launchControlPanel"; }
+			bool set();
+	};
+
+	
 #endif

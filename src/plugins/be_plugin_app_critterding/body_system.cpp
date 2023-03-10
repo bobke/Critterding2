@@ -88,15 +88,21 @@
 		entity_parent->addChild( "bodyparts", new BEntity() );
 		auto t_constraints = entity_parent->addChild( "constraints", new BEntity() );
 		
+		auto critterding = entity_parent->topParent()->getChild("Scene", 1)->getChild( "Critterding", 1 );
+		if ( critterding )
+		{
+			// exit (0);
+		}
+		
 		if ( m_rng == 0)
 		{
-			m_rng = entity_parent->parent()->parent()->parent()->parent()->getChild( "random_number_generator" ); // FIXME PREFETCH
+			m_rng = critterding->getChild( "random_number_generator" ); // FIXME PREFETCH
 		}
 
-		auto physics_world = entity_parent->parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
+		auto physics_world = critterding->getChild( "physicsworld", 1 );
 		auto settings = entity_parent->parent()->parent()->parent()->getChild( "settings", 1 );
 		auto bodypart_spacing = settings->getChild( "bodypart_spacing", 1 )->get_float();
-		auto dropzone = entity_parent->parent()->parent()->parent()->parent()->getChild( "critter_system", 1 )->getChild( "settings", 1 )->getChild( "dropzone", 1 );
+		auto dropzone = critterding->getChild( "critter_system", 1 )->getChild( "settings", 1 )->getChild( "dropzone", 1 );
 
 		// CENTRAL BODYPART  
 		

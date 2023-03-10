@@ -13,3 +13,14 @@
 		}
 		return false;
 	}
+
+	bool cmd_launchControlPanel::set()
+	{
+		auto qt_app = topParent()->getChild( "Scene", 1 )->getChild( "QT Application", 2 );
+		if ( qt_app )
+		{
+			qt_app->addChild( "CdControlPanel", "CdControlPanel" );
+			return true;
+		}
+		return false;
+	}
