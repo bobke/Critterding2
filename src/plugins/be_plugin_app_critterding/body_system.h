@@ -76,7 +76,7 @@
 		{
 			public:
 				BodyFixed1() : m_rng(0) {};
-				// const char* class_id() const { return "BodyFixed1"; }
+				const char* class_id() const { return "BodyFixed1"; }
 				virtual ~BodyFixed1() {};
 
 				void construct();
@@ -86,7 +86,9 @@
 // 				void process();
 				BEntity* m_rng;
 
-				// virtual BEntity* customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map );
+				virtual bool set( const char* value );
+				
+				virtual BEntity* customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map );
 		};
 
 #endif

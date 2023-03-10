@@ -18,7 +18,7 @@
 
 		// TIMER
 			m_interval_seconds = addChild( "interval_seconds", new BEntity_float() );
-			m_interval_seconds->set( 3.0f );
+			m_interval_seconds->set( 300.0f );
 			m_last_updated = 0.0f;
 			m_frame_counter_last = 0;
 			auto timer = topParent()->getChild("sys", 1)->getChild("timer", 1);

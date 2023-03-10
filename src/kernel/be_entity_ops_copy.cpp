@@ -53,77 +53,33 @@
 
 				entity_new->set( entity_referenced_new );
 			}
-
-			else if ( std::string(entity->class_id()) != "entity" )
-			{
-				entity_new = to_parent->addChild( entity->name(), entity->class_id() );
-			}
-
-			// HACK SPECIAL CASE
-			else if ( entity->name() == "body_fixed1" )
-			{
-				// std::cout << "body_fixed1 " << " of type " << entity->class_id() << std::endl;
-				// entity_new = entity->customCopy( to_parent, entity, m_translation_map );
-
-
-				entity_new = to_parent->addChild( entity->name(), "BodyFixed1" );
-
-				// LOOP ENTITY & ENTITY_NEW TO ADD THEM TO THE TRANSLATION_MAP
-				m_translation_map.insert( std::make_pair( entity, entity_new ) );
-
-				auto bodyparts = entity->getChild( "bodyparts", 1 );
-				auto constraints = entity->getChild( "constraints", 1 );
-				auto bodyparts_new = entity_new->getChild( "bodyparts", 1 );
-				auto constraints_new = entity_new->getChild( "constraints", 1 );
-				m_translation_map.insert( std::make_pair( bodyparts, bodyparts_new ) );
-				m_translation_map.insert( std::make_pair( constraints, constraints_new ) );
-
-				// TRANSLATION_MAP: BODYPARTS
-				{
-					const auto& children_vector_new = bodyparts_new->children();
-					auto child_new = children_vector_new.begin();
-					for_all_children_of( bodyparts )
-					{
-						if ( child_new != children_vector_new.end() )
-						{
-							m_translation_map.insert( std::make_pair( *child, *child_new ) );
-							m_translation_map.insert( std::make_pair( (*child)->get_reference(), (*child_new)->get_reference() ) );
-						}
-						child_new++;
-					}
-				}
-				
-				// TRANSLATION_MAP: CONSTRAINTS
-				{
-					const auto& children_vector_new = constraints_new->children();
-					auto child_new = children_vector_new.begin();
-					for_all_children_of( constraints )
-					{
-						if ( child_new != children_vector_new.end() )
-						{
-							m_translation_map.insert( std::make_pair( *child, *child_new ) );
-							m_translation_map.insert( std::make_pair( (*child)->get_reference(), (*child_new)->get_reference() ) );
-							m_translation_map.insert( std::make_pair( (*child)->get_reference()->getChild("angle", 1), (*child_new)->get_reference()->getChild("angle", 1) ) );
-
-							// do body a and b here
-						}
-						child_new++;
-					}
-				}
-
-				// MAKE SURE NOT NOT ADD CHILDREN
-				return entity_new;
-			}
-
-			else if ( std::string(entity->class_id()) == "entity" )
-			{
-				// std::cout << "'" << entity->name() << "'" << std::endl;
-				entity_new = to_parent->addChild( entity->name(), new BEntity() );
-			}
-
 			else
 			{
-				std::cout << "not copied: " << entity->name() << std::endl;
+				// ENTITY HANDLES CREATION
+				entity_new = entity->customCopy( to_parent, entity, m_translation_map );
+				// return it if created
+				if ( entity_new )
+				{
+					return entity_new;
+				}
+
+				// BASIC ENTITY
+				else if ( std::string(entity->class_id()) == "entity" )
+				{
+					// std::cout << "'" << entity->name() << "'" << std::endl;
+					entity_new = to_parent->addChild( entity->name(), new BEntity() );
+				}
+
+				// ENTITIES WITH CLASS ID
+				else if ( std::string(entity->class_id()) != "entity" )
+				{
+					entity_new = to_parent->addChild( entity->name(), entity->class_id() );
+				}
+
+				else
+				{
+					std::cout << "not copied: " << entity->name() << std::endl;
+				}
 			}
 		}
 
@@ -141,24 +97,7 @@
 					_copyEntity( *child, entity_new );
 				}
 			}
-
-			// // std::cout << "?? CREATED HINGE " << entity_new->name() << std::endl;
-			// if ( entity_new->name() == std::string("hinge") )
-			// {
-			// 	// pull create trigger
-			// 	std::cout << "CREATED HINGE " << entity_new->name() << std::endl;
-			// 	entity_new->set( "create_hinge", true );
-			// 	// m_translation_map.insert( std::make_pair( it->first, it->second ) );
-			// }
-
-			// COPY VALUE
-// 			std::cout << "copying " << entity->name() << std::endl;
-// 			entity->apply( entity_new );
-// 			entity_new->set( entity );
-// 			std::cout << "copying " << entity->name() << " ok" << std::endl;
 		}
-
-
 
 		return entity_new;
 	}
@@ -659,7 +598,6 @@
 			// 	}
 
 			// CREATE THE ENTITY
-				
 				BEntity* this_entity(0);
 				if ( scene_server_client == 1 )
 				{
@@ -673,6 +611,8 @@
 						else if ( e_name == "body_fixed1" )
 						{
 							this_entity = parent->addChild( "body_fixed1", "BodyFixed1" );
+							this_entity->set( "create_new" );
+
 
 							// this_entity = parent->addChild( e_name.c_str(), "BodyFixed1" );
 							// this_entity = parent->getChildCustom( parent, "generate_fixed_1" );

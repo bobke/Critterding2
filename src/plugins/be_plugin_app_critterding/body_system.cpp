@@ -187,60 +187,69 @@
 	
 	void BodyFixed1::construct()
 	{
-		BodyFixed1Maker m;
-		m.make( this );
+	}
+
+	bool BodyFixed1::set( const char* value )
+	{
+		if ( value == "create_new" )
+		{
+			BodyFixed1Maker m;
+			m.make( this );
+			return true;
+		}
 	}
 	
-// 	BEntity* BodyFixed1::customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map )
-// 	{
-// 		std::cout << "!!!!!!!!!! CUSTOM COPY" << std::endl;
-// 		auto entity_new = to_parent->addChild( entity->name(), new BodyFixed1() );
-// 		
-// 		// HACK SPECIAL CASE
-// 		// LOOP ENTITY & ENTITY_NEW TO ADD THEM TO THE TRANSLATION_MAP
-// 		translation_map.insert( std::make_pair( entity, entity_new ) );
-// 		
-// 		auto bodyparts = entity->getChild( "bodyparts", 1 );
-// 		auto constraints = entity->getChild( "constraints", 1 );
-// 		auto bodyparts_new = entity_new->getChild( "bodyparts", 1 );
-// 		auto constraints_new = entity_new->getChild( "constraints", 1 );
-// 		translation_map.insert( std::make_pair( bodyparts, bodyparts_new ) );
-// 		translation_map.insert( std::make_pair( constraints, constraints_new ) );
-// 
-// 		// TRANSLATION_MAP: BODYPARTS
-// 		{
-// 			const auto& children_vector_new = bodyparts_new->children();
-// 			auto child_new = children_vector_new.begin();
-// 			for_all_children_of( bodyparts )
-// 			{
-// 				if ( child_new != children_vector_new.end() )
-// 				{
-// 					translation_map.insert( std::make_pair( *child, *child_new ) );
-// 					translation_map.insert( std::make_pair( (*child)->get_reference(), (*child_new)->get_reference() ) );
-// 				}
-// 				child_new++;
-// 			}
-// 		}
-// 		
-// 		// TRANSLATION_MAP: CONSTRAINTS
-// 		{
-// 			const auto& children_vector_new = constraints_new->children();
-// 			auto child_new = children_vector_new.begin();
-// 			for_all_children_of( constraints )
-// 			{
-// 				if ( child_new != children_vector_new.end() )
-// 				{
-// 					translation_map.insert( std::make_pair( *child, *child_new ) );
-// 					translation_map.insert( std::make_pair( (*child)->get_reference(), (*child_new)->get_reference() ) );
-// 					translation_map.insert( std::make_pair( (*child)->get_reference()->getChild("angle", 1), (*child_new)->get_reference()->getChild("angle", 1) ) );
-// 
-// 					// do body a and b here
-// 				}
-// 				child_new++;
-// 			}
-// 		}
-// 		return entity_new;
-// 	}
+	
+	BEntity* BodyFixed1::customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map )
+	{
+		auto entity_new = to_parent->addChild( entity->name(), new BodyFixed1() );
+		entity_new->set( "create_new" );
+		
+		// HACK SPECIAL CASE
+		// LOOP ENTITY & ENTITY_NEW TO ADD THEM TO THE TRANSLATION_MAP
+		translation_map.insert( std::make_pair( entity, entity_new ) );
+		
+		auto bodyparts = entity->getChild( "bodyparts", 1 );
+		auto constraints = entity->getChild( "constraints", 1 );
+		auto bodyparts_new = entity_new->getChild( "bodyparts", 1 );
+		auto constraints_new = entity_new->getChild( "constraints", 1 );
+		translation_map.insert( std::make_pair( bodyparts, bodyparts_new ) );
+		translation_map.insert( std::make_pair( constraints, constraints_new ) );
+
+		// TRANSLATION_MAP: BODYPARTS
+		{
+			const auto& children_vector_new = bodyparts_new->children();
+			auto child_new = children_vector_new.begin();
+			for_all_children_of( bodyparts )
+			{
+				if ( child_new != children_vector_new.end() )
+				{
+					translation_map.insert( std::make_pair( *child, *child_new ) );
+					translation_map.insert( std::make_pair( (*child)->get_reference(), (*child_new)->get_reference() ) );
+				}
+				child_new++;
+			}
+		}
+		
+		// TRANSLATION_MAP: CONSTRAINTS
+		{
+			const auto& children_vector_new = constraints_new->children();
+			auto child_new = children_vector_new.begin();
+			for_all_children_of( constraints )
+			{
+				if ( child_new != children_vector_new.end() )
+				{
+					translation_map.insert( std::make_pair( *child, *child_new ) );
+					translation_map.insert( std::make_pair( (*child)->get_reference(), (*child_new)->get_reference() ) );
+					translation_map.insert( std::make_pair( (*child)->get_reference()->getChild("angle", 1), (*child_new)->get_reference()->getChild("angle", 1) ) );
+
+					// do body a and b here
+				}
+				child_new++;
+			}
+		}
+		return entity_new;
+	}
 	
 	
 	BEntity* BodyFixed1Maker::tergite2( BEntity* body, float central_bodypart_position_x, float central_bodypart_position_y, float central_bodypart_position_z, float central_bodypart_scale_x, float central_bodypart_scale_y, float central_bodypart_scale_z, float center_bodypart_scale_x, float center_bodypart_scale_y, float center_bodypart_scale_z, float extra_bodypart_scale_x, float extra_bodypart_scale_y, float extra_bodypart_scale_z )
