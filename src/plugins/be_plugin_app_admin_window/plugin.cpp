@@ -323,6 +323,10 @@
 					// CLASS ID
 						auto class_id_label = general_layout_H->addChild( "class_id_label", "QLabel" );
 						class_id_label->set( entity->class_id() );
+
+					// BUTTONS
+						add_admin_genValueFields( general_layout_H, entity );
+						add_admin_genButtons( general_layout_H, entity );
 				}
 				{
 					auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
@@ -560,220 +564,244 @@
 
 					// drag and drop= reference to adminned entity
 					label->addChild( "reference", new BEntity_reference() )->set( entity );
-
-					// BOOL
-						auto t_bool = dynamic_cast<BEntity_bool*>( entity );
-						if ( t_bool )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QCheckBox" );
-							// edit->set( "width", Buint(80) );
-							// edit->set( "height", Buint(14) );
-							edit->set( t_bool->get_bool() );
-							t_bool->connectServerServer( edit );
-							edit->connectServerServer( t_bool );
-						}
-
-					// BOOL_PROPERTY
-						auto t_boolp = dynamic_cast<BEntity_bool_property*>( entity );
-						if ( t_boolp )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QCheckBox" );
-							// edit->set( "width", Buint(80) );
-							// edit->set( "height", Buint(14) );
-							edit->set( t_boolp->get_bool() );
-							t_boolp->connectServerServer( edit );
-							edit->connectServerServer( t_boolp );
-						}
-
-					// UINT // FIXME LINEEDIT
-						auto t_uint = dynamic_cast<BEntity_uint*>( entity );
-						if ( t_uint )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit" );
-							edit->set( "width", Buint(80) );
-							edit->set( "height", Buint(14) );
-							edit->set( t_uint->get_uint() );
-							t_uint->connectServerServer( edit );
-							edit->connectServerServer( t_uint );
-						}
-
-					// UINT_PROPERTY // FIXME LINEEDIT
-						auto t_uintp = dynamic_cast<BEntity_uint_property*>( entity );
-						if ( t_uintp )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit" );
-							edit->set( "width", Buint(80) );
-							edit->set( "height", Buint(14) );
-							edit->set( t_uintp->get_uint() );
-							t_uintp->connectServerServer( edit );
-							edit->connectServerServer( t_uintp );
-						}
-
-					// INT
-						auto t_int = dynamic_cast<BEntity_int*>( entity );
-						if ( t_int )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit_int" );
-							edit->set( "width", Buint(80) );
-							edit->set( "height", Buint(14) );
-							edit->set( t_int->get_int() );
-							t_int->connectServerServer( edit );
-							edit->connectServerServer( t_int );
-						}
-
-					// INT_PROPERTY
-						auto t_intp = dynamic_cast<BEntity_int_property*>( entity );
-						if ( t_intp )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit_int" );
-							edit->set( "width", Buint(80) );
-							edit->set( "height", Buint(14) );
-							edit->set( t_intp->get_int() );
-							t_intp->connectServerServer( edit );
-							edit->connectServerServer( t_intp );
-						}
-
-					// FLOAT
-						auto t_float = dynamic_cast<BEntity_float*>( entity );
-						if ( t_float )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit_float" );
-							edit->set( "width", Buint(80) );
-							edit->set( "height", Buint(14) );
-							edit->set( t_float->get_float() );
-							t_float->connectServerServer( edit );
-							edit->connectServerServer( t_float );
-						}
-
-					// FLOAT_PROPERTY
-						auto t_floatp = dynamic_cast<BEntity_float_property*>( entity );
-						if ( t_floatp )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit_float" );
-							edit->set( "width", Buint(80) );
-							edit->set( "height", Buint(14) );
-							edit->set( t_floatp->get_float() );
-							std::cout << "FLOATP " << t_floatp->get_float() << std::endl;
-							t_floatp->connectServerServer( edit );
-							edit->connectServerServer( t_floatp );
-						}
-						
-					// STRING // FIXME???
-						auto t_string = dynamic_cast<BEntity_string*>( entity );
-						if ( t_string )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit_string" );
-							edit->set( "width", Buint(80) );
-							edit->set( "height", Buint(14) );
-							edit->set( t_string->get_string() );
-							t_string->connectServerServer( edit );
-							edit->connectServerServer( t_string );
-						}
-
-					// STRING_PROPERTY
-						auto t_stringp = dynamic_cast<BEntity_string_property*>( entity );
-						if ( t_stringp )
-						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit_string" );
-							edit->set( "width", Buint(80) );
-							edit->set( "height", Buint(14) );
-							edit->set( t_stringp->get_string() );
-							t_stringp->connectServerServer( edit );
-							edit->connectServerServer( t_stringp );
-						}
-						
-	// 									auto t_float = dynamic_cast<BEntity_float*>( *child );
-	// 									if ( t_float )
-	// 									{
-	// 										auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit" );
-	// 										edit->set( "width", Buint(80) );
-	// 										edit->set( "height", Buint(14) );
-	// 										auto value_property = edit->addChild( "value", new BEntity_float_property() );
-	// 										value_property->set( entity->get_float() );
-	// // 										entity->connectServerServer( value_property );
-	// 										value_property->connectServerServer( *child );
-	// 									}
+				}
 					
-				}
-
-				// RM
-				{
-					auto button = hboxlayout_entity->addChild("qt button", "QPushButton" );
-					button->set("text", "R");
-
-					// COMMAND
-						auto actions = button->addChild("_commands", new BEntity() );
-						auto command = actions->addChild("remove", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
-						command->set(entity);
-
-	// 										auto cmd_remove = button->addChild("remove", new BEntity_reference() );
-	// 										cmd_remove->set(entity);
-	// 										button->connectServerServer(cmd_remove);
-				}
-
-				// COPY
-				{
-					auto button = hboxlayout_entity->addChild("qt button", "QPushButton" );
-					button->set("text", "C");
-
-					// COMMAND
-						auto actions = button->addChild("_commands", new BEntity() );
-						auto command = actions->addChild("copy", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
-						command->set(entity);
-				}
-
-				// SAVE
-				{
-					auto button = hboxlayout_entity->addChild("qt button", "QPushButton" );
-					button->set("text", "S");
-
-					// COMMAND
-						auto actions = button->addChild("_commands", new BEntity() );
-						auto command = actions->addChild("save", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
-						command->set(entity);
-				}
-
-				// LOAD
-				{
-					auto button = hboxlayout_entity->addChild("qt button", "QPushButton" );
-					button->set("text", "L");
-
-					// COMMAND
-						auto actions = button->addChild("_commands", new BEntity() );
-						auto command = actions->addChild("admin_load_entity", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
-						command->set(entity);
-				}
-
-				// OPEN ADMIN WINDOW
-				{
-					auto button = hboxlayout_entity->addChild("qt button", "QPushButton" );
-					button->set("text", "W");
-
-					// COMMAND
-						auto actions = button->addChild("_commands", new BEntity() );
-						auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
-						command->set(entity);
-				}
 				
-				
-				// GRAPH FOR FLOAT
-				auto t_float = dynamic_cast<BEntity_float*>( entity );
-				if ( t_float )
-				{
-					auto button = hboxlayout_entity->addChild("qt button", "QPushButton" );
-					button->set("text", "G");
+				add_admin_genValueFields( hboxlayout_entity, entity );
 
-					// COMMAND
-						auto actions = button->addChild("_commands", new BEntity() );
-						auto command = actions->addChild("admin_entity_graph", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
-						command->set(entity);
-				}
-				
+				add_admin_genButtons( hboxlayout_entity, entity );
 				
 			}
 		}
 	}	
 
+	void BAdminWindow::add_admin_genValueFields( BEntity* to_layout, BEntity* entity )
+	{
+		// BOOL
+			auto t_bool = dynamic_cast<BEntity_bool*>( entity );
+			if ( t_bool )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QCheckBox" );
+				// edit->set( "width", Buint(80) );
+				// edit->set( "height", Buint(14) );
+				edit->set( t_bool->get_bool() );
+				t_bool->connectServerServer( edit );
+				edit->connectServerServer( t_bool );
+			}
+
+		// BOOL_PROPERTY
+			auto t_boolp = dynamic_cast<BEntity_bool_property*>( entity );
+			if ( t_boolp )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QCheckBox" );
+				// edit->set( "width", Buint(80) );
+				// edit->set( "height", Buint(14) );
+				edit->set( t_boolp->get_bool() );
+				t_boolp->connectServerServer( edit );
+				edit->connectServerServer( t_boolp );
+			}
+
+		// UINT // FIXME LINEEDIT
+			auto t_uint = dynamic_cast<BEntity_uint*>( entity );
+			if ( t_uint )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
+				edit->set( "width", Buint(80) );
+				edit->set( "height", Buint(14) );
+				edit->set( t_uint->get_uint() );
+				t_uint->connectServerServer( edit );
+				edit->connectServerServer( t_uint );
+			}
+
+		// UINT_PROPERTY // FIXME LINEEDIT
+			auto t_uintp = dynamic_cast<BEntity_uint_property*>( entity );
+			if ( t_uintp )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
+				edit->set( "width", Buint(80) );
+				edit->set( "height", Buint(14) );
+				edit->set( t_uintp->get_uint() );
+				t_uintp->connectServerServer( edit );
+				edit->connectServerServer( t_uintp );
+			}
+
+		// INT
+			auto t_int = dynamic_cast<BEntity_int*>( entity );
+			if ( t_int )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_int" );
+				edit->set( "width", Buint(80) );
+				edit->set( "height", Buint(14) );
+				edit->set( t_int->get_int() );
+				t_int->connectServerServer( edit );
+				edit->connectServerServer( t_int );
+			}
+
+		// INT_PROPERTY
+			auto t_intp = dynamic_cast<BEntity_int_property*>( entity );
+			if ( t_intp )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_int" );
+				edit->set( "width", Buint(80) );
+				edit->set( "height", Buint(14) );
+				edit->set( t_intp->get_int() );
+				t_intp->connectServerServer( edit );
+				edit->connectServerServer( t_intp );
+			}
+
+		// FLOAT
+			auto t_float = dynamic_cast<BEntity_float*>( entity );
+			if ( t_float )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_float" );
+				edit->set( "width", Buint(80) );
+				edit->set( "height", Buint(14) );
+				edit->set( t_float->get_float() );
+				t_float->connectServerServer( edit );
+				edit->connectServerServer( t_float );
+			}
+
+		// FLOAT_PROPERTY
+			auto t_floatp = dynamic_cast<BEntity_float_property*>( entity );
+			if ( t_floatp )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_float" );
+				edit->set( "width", Buint(80) );
+				edit->set( "height", Buint(14) );
+				edit->set( t_floatp->get_float() );
+				std::cout << "FLOATP " << t_floatp->get_float() << std::endl;
+				t_floatp->connectServerServer( edit );
+				edit->connectServerServer( t_floatp );
+			}
+			
+		// STRING // FIXME???
+			auto t_string = dynamic_cast<BEntity_string*>( entity );
+			if ( t_string )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_string" );
+				edit->set( "width", Buint(80) );
+				edit->set( "height", Buint(14) );
+				edit->set( t_string->get_string() );
+				t_string->connectServerServer( edit );
+				edit->connectServerServer( t_string );
+			}
+
+		// STRING_PROPERTY
+			auto t_stringp = dynamic_cast<BEntity_string_property*>( entity );
+			if ( t_stringp )
+			{
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_string" );
+				edit->set( "width", Buint(80) );
+				edit->set( "height", Buint(14) );
+				edit->set( t_stringp->get_string() );
+				t_stringp->connectServerServer( edit );
+				edit->connectServerServer( t_stringp );
+			}
+
+			// auto t_float = dynamic_cast<BEntity_float*>( *child );
+			// if ( t_float )
+			// {
+			// 	auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
+			// 	edit->set( "width", Buint(80) );
+			// 	edit->set( "height", Buint(14) );
+			// 	auto value_property = edit->addChild( "value", new BEntity_float_property() );
+			// 	value_property->set( entity->get_float() );
+			// 	// entity->connectServerServer( value_property );
+			// 	value_property->connectServerServer( *child );
+			// }
+		
+	}
+	
+	void BAdminWindow::add_admin_genButtons( BEntity* to_layout, BEntity* entity )
+	{
+			// RM
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "rm");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("remove", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					command->set(entity);
+
+					// auto cmd_remove = button->addChild("remove", new BEntity_reference() );
+					// cmd_remove->set(entity);
+					// button->connectServerServer(cmd_remove);
+			}
+
+			// COPY
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "cp");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("copy", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					command->set(entity);
+			}
+
+			// SAVE
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "sv");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("save", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					command->set(entity);
+			}
+
+			// LOAD
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "ld");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("admin_load_entity", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					command->set(entity);
+			}
+
+			// OPEN ADMIN WINDOW
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "wi");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					command->set(entity);
+			}
+			
+			// EXTERNAL || REFERENCE
+			{
+				if ( dynamic_cast<BEntity_external*>( entity ) || dynamic_cast<BEntity_reference*>( entity ) )
+				{
+					auto button = to_layout->addChild("qt button", "QPushButton" );
+					button->set("text", "rf");
+
+					// COMMAND
+						auto actions = button->addChild("_commands", new BEntity() );
+						auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+						command->set(entity->get_reference());
+				}
+			}
+			
+			// GRAPH FOR FLOAT
+			auto t_float = dynamic_cast<BEntity_float*>( entity );
+			if ( t_float )
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "gr");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("admin_entity_graph", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					command->set(entity);
+			}
+		
+	}
+	
 
 // ---- FACTORIES
 	enum CLASS
