@@ -293,9 +293,9 @@
 			
 			m_food_unit_container = food_system->getChild( "unit_container", 1 );
 
-		// CONTROL PANEL
-			// auto control_panel = addChild( "control_panel", "CdControlPanel" );
-			auto control_panel = addChild( "control_panel", new CdControlPanel() );
+		// // CONTROL PANEL
+			// // auto control_panel = addChild( "control_panel", "CdControlPanel" );
+			// auto control_panel = addChild( "control_panel", new CdControlPanel() );
 			
 		// POPULATION CONTROLLER
 			addChild( "CdPopulationController", new CdPopulationController() );
