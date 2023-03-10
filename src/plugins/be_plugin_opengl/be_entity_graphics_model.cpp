@@ -220,11 +220,19 @@
 		}
 	}
 
+	const char* BGraphicsModel::get_string( const Bstring& id )
+	{
+		if ( id == "filename" )
+		{
+			return m_loaded_path.c_str();
+		}
+		return 0;
+	}
 
 	bool BGraphicsModel::set( const Bstring& id, const char* value )
 	// bool BGraphicsModel::setProperty( const std::string& caller_name, const std::string& value, const bool do_update )
 	{
-		if ( id == "filename" && loaded_path != value )
+		if ( id == "filename" && m_loaded_path != value )
 		{
 	//	std::cout << "PATH CALLED!!!!!!!!!!!!!" << std::endl;
 	// 		BEVector3 scale(1.0f,1.0f,1.0f);
@@ -248,7 +256,7 @@
 				if ( new_model )
 				{
 					setModel( new_model );
-					loaded_path = value;
+					m_loaded_path = value;
 					return true;
 				}
 				else
@@ -273,7 +281,7 @@
 	// 					if ( new_model )
 	// 					{
 	// 						setModel( new_model );
-	// 						loaded_path = value;
+	// 						m_loaded_path = value;
 	// 						return true;
 	// 					}
 	// 					else
@@ -340,6 +348,18 @@
 
 		void glTransform::construct()
 		{
+			// Assume that transformMatrix is a float array of size 16 that contains the transform matrix
+			// float x = transformMatrix[12]; // Extract the x-coordinate from the last column, first row
+			// float y = transformMatrix[13]; // Extract the y-coordinate from the last column, second row
+			// float z = transformMatrix[14]; // Extract the z-coordinate from the last column, third row			
+			
+			addChild( "position_x", new BEntity_float_property() );
+			addChild( "position_y", new BEntity_float_property() );
+			addChild( "position_z", new BEntity_float_property() );
+			addChild( "rotation_euler_x", new BEntity_float_property() );
+			addChild( "rotation_euler_y", new BEntity_float_property() );
+			addChild( "rotation_euler_z", new BEntity_float_property() );
+
 			m_scale_x = addChild( "scale_x", new BEntity_float() );
 			m_scale_y = addChild( "scale_y", new BEntity_float() );
 			m_scale_z = addChild( "scale_z", new BEntity_float() );
@@ -349,6 +369,337 @@
 
 		}
 
+		
+	bool glTransform::set( const Bstring& id, const Bfloat& value )
+	{
+		
+		if ( id == "position_x" )
+		{
+			if ( m_value[12] != value )
+			{
+				m_value[12] = value;
+				onUpdate();
+				return true;
+			}
+		}
+		else if ( id == "position_y" )
+		{
+			if ( m_value[13] != value )
+			{
+				m_value[13] = value;
+				onUpdate();
+				return true;
+			}
+		}
+		else if ( id == "position_z" )
+		{
+			if ( m_value[14] != value )
+			{
+				m_value[14] = value;
+				onUpdate();
+				return true;
+			}
+		}
+		
+		else if ( id == "rotation_euler_x" )
+		{
+			// Assume that the existing transform matrix is stored in a float array called "transformMatrix" of size 16
+			// Also assume that the new rotation angles around x, y, and z axes are stored in variables "angleX", "angleY", and "angleZ" (in radians)
+			auto x = get_float( "rotation_euler_x" );
+			auto y = get_float( "rotation_euler_y" );
+			auto z = get_float( "rotation_euler_z" );
+
+			// set identity on our matrix first;
+			m_value[0] = 1.0f;
+			m_value[1] = 0.0f;
+			m_value[2] = 0.0f;
+			m_value[4] = 0.0f;
+			m_value[5] = 1.0f;
+			m_value[6] = 0.0f;
+			m_value[8] = 0.0f;
+			m_value[9] = 0.0f;
+			m_value[10] = 1.0f;			
+
+			float cosX = cos( value );
+			float sinX = sin( value );
+			float cosY = cos( y );
+			float sinY = sin( y );
+			float cosZ = cos( z );
+			float sinZ = sin( z );
+
+			// Create a rotation matrix for each axis
+			float rotX[16] = {
+				1.0f, 0.0f, 0.0f, 0.0f,
+				0.0f, cosX, -sinX, 0.0f,
+				0.0f, sinX, cosX, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			float rotY[16] = {
+				cosY, 0.0f, sinY, 0.0f,
+				0.0f, 1.0f, 0.0f, 0.0f,
+				-sinY, 0.0f, cosY, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			float rotZ[16] = {
+				cosZ, -sinZ, 0.0f, 0.0f,
+				sinZ, cosZ, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			// Compose the new rotation matrix by multiplying the rotation matrices for each axis
+			float newRotationMatrix[16];
+			memcpy(newRotationMatrix, rotX, sizeof(float) * 16);
+			matMul(newRotationMatrix, rotY);
+			matMul(newRotationMatrix, rotZ);
+
+			// Multiply the new rotation matrix with the existing transform matrix to get the updated transform matrix
+			matMul(m_value, newRotationMatrix);
+			return true;
+
+		}
+		else if ( id == "rotation_euler_y" )
+		{
+			// Assume that the existing transform matrix is stored in a float array called "transformMatrix" of size 16
+			// Also assume that the new rotation angles around x, y, and z axes are stored in variables "angleX", "angleY", and "angleZ" (in radians)
+			auto x = get_float( "rotation_euler_x" );
+			auto y = get_float( "rotation_euler_y" );
+			auto z = get_float( "rotation_euler_z" );
+
+			// set identity on our matrix first;
+			m_value[0] = 1.0f;
+			m_value[1] = 0.0f;
+			m_value[2] = 0.0f;
+			m_value[4] = 0.0f;
+			m_value[5] = 1.0f;
+			m_value[6] = 0.0f;
+			m_value[8] = 0.0f;
+			m_value[9] = 0.0f;
+			m_value[10] = 1.0f;
+
+			float cosX = cos( x );
+			float sinX = sin( x );
+			float cosY = cos( value );
+			float sinY = sin( value );
+			float cosZ = cos( z );
+			float sinZ = sin( z );
+
+			// Create a rotation matrix for each axis
+			float rotX[16] = {
+				1.0f, 0.0f, 0.0f, 0.0f,
+				0.0f, cosX, -sinX, 0.0f,
+				0.0f, sinX, cosX, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			float rotY[16] = {
+				cosY, 0.0f, sinY, 0.0f,
+				0.0f, 1.0f, 0.0f, 0.0f,
+				-sinY, 0.0f, cosY, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			float rotZ[16] = {
+				cosZ, -sinZ, 0.0f, 0.0f,
+				sinZ, cosZ, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			// Compose the new rotation matrix by multiplying the rotation matrices for each axis
+			float newRotationMatrix[16];
+			memcpy(newRotationMatrix, rotX, sizeof(float) * 16);
+			matMul(newRotationMatrix, rotY);
+			matMul(newRotationMatrix, rotZ);
+
+			// Multiply the new rotation matrix with the existing transform matrix to get the updated transform matrix
+			matMul(m_value, newRotationMatrix);
+			return true;
+		}
+		else if ( id == "rotation_euler_z" )
+		{
+			// Assume that the existing transform matrix is stored in a float array called "transformMatrix" of size 16
+			// Also assume that the new rotation angles around x, y, and z axes are stored in variables "angleX", "angleY", and "angleZ" (in radians)
+			auto x = get_float( "rotation_euler_x" );
+			auto y = get_float( "rotation_euler_y" );
+			auto z = get_float( "rotation_euler_z" );
+
+			// set identity on our matrix first;
+			m_value[0] = 1.0f;
+			m_value[1] = 0.0f;
+			m_value[2] = 0.0f;
+			m_value[4] = 0.0f;
+			m_value[5] = 1.0f;
+			m_value[6] = 0.0f;
+			m_value[8] = 0.0f;
+			m_value[9] = 0.0f;
+			m_value[10] = 1.0f;
+
+			float cosX = cos( x );
+			float sinX = sin( x );
+			float cosY = cos( y );
+			float sinY = sin( y );
+			float cosZ = cos( value );
+			float sinZ = sin( value );
+
+			// Create a rotation matrix for each axis
+			float rotX[16] = {
+				1.0f, 0.0f, 0.0f, 0.0f,
+				0.0f, cosX, -sinX, 0.0f,
+				0.0f, sinX, cosX, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			float rotY[16] = {
+				cosY, 0.0f, sinY, 0.0f,
+				0.0f, 1.0f, 0.0f, 0.0f,
+				-sinY, 0.0f, cosY, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			float rotZ[16] = {
+				cosZ, -sinZ, 0.0f, 0.0f,
+				sinZ, cosZ, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			};
+
+			// Compose the new rotation matrix by multiplying the rotation matrices for each axis
+			float newRotationMatrix[16];
+			memcpy(newRotationMatrix, rotX, sizeof(float) * 16);
+			matMul(newRotationMatrix, rotY);
+			matMul(newRotationMatrix, rotZ);
+
+			// Multiply the new rotation matrix with the existing transform matrix to get the updated transform matrix
+			matMul(m_value, newRotationMatrix);
+			return true;
+		}
+
+		return false;
+	}
+
+	void glTransform::matMul(float* a, float* b)
+	{
+		float result[16];
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				result[i*4 + j] = 0.0f;
+				for (int k = 0; k < 4; k++) {
+					result[i*4 + j] += a[i*4 + k] * b[k*4 + j];
+				}
+			}
+		}
+		memcpy(a, result, sizeof(float) * 16);
+	}
+	
+	Bfloat glTransform::get_float( const Bstring& id )
+	{
+		if ( id == "position_x" )
+		{
+			return m_value[12];
+		}
+		else if ( id == "position_y" )
+		{
+			return m_value[13];
+		}
+		else if ( id == "position_z" )
+		{
+			return m_value[14];
+		}
+		else if ( id == "rotation_euler_x" )
+		{
+			// Calculate the rotation for x
+			float sinX = m_value[9];
+			if (sinX >= 1.0f) {
+				// Special case: if sin(x) is 1, then x = 90 degrees and cos(x) = 0
+				return M_PI / 2.0f; // x is in radians
+			}
+			else if (sinX <= -1.0f) {
+				// Special case: if sin(x) is -1, then x = -90 degrees and cos(x) = 0
+				return -M_PI / 2.0f; // x is in radians
+			}
+			else {
+				// General case
+				return asin(sinX);
+			}
+   // 
+			// float sx, sy, sz;
+			// sy = asinf(m_value[8]);
+			// if (sy < M_PI / 2) {
+			// 	if (sy > -M_PI / 2) {
+			// 		sx = atan2f(-m_value[9], m_value[10]);
+			// 		sz = atan2f(-m_value[4], m_value[0]);
+			// 	} else {
+			// 		sx = -atan2f(m_value[6], m_value[5]);
+			// 		sz = 0;
+			// 	}
+			// } else {
+			// 	sx = atan2f(m_value[6], m_value[5]);
+			// 	sz = 0;
+			// }
+			// return sx;
+		}
+		else if ( id == "rotation_euler_y" )
+		{
+			// Calculate the rotation for y
+			float sinY = -m_value[8];
+			float cosY = m_value[10];
+			return atan2(sinY, cosY);
+
+			// float sx, sy, sz;
+			// sy = asinf(m_value[8]);
+			// if (sy < M_PI / 2) {
+			// 	if (sy > -M_PI / 2) {
+			// 		sx = atan2f(-m_value[9], m_value[10]);
+			// 		sz = atan2f(-m_value[4], m_value[0]);
+			// 	} else {
+			// 		sx = -atan2f(m_value[6], m_value[5]);
+			// 		sz = 0;
+			// 	}
+			// } else {
+			// 	sx = atan2f(m_value[6], m_value[5]);
+			// 	sz = 0;
+			// }
+			// return sy;
+		}
+		else if ( id == "rotation_euler_z" )
+		{
+			// Calculate the rotation for z
+			float sinZ = m_value[4];
+			if (sinZ >= 1.0f) {
+				// Special case: if sin(z) is 1, then z = 90 degrees and cos(z) = 0
+				return M_PI / 2.0f; // z is in radians
+			}
+			else if (sinZ <= -1.0f) {
+				// Special case: if sin(z) is -1, then z = -90 degrees and cos(z) = 0
+				return -M_PI / 2.0f; // z is in radians
+			}
+			else {
+				// General case
+				return asin(sinZ);
+			}
+
+			// float sx, sy, sz;
+			// sy = asinf(m_value[8]);
+			// if (sy < M_PI / 2) {
+			// 	if (sy > -M_PI / 2) {
+			// 		sx = atan2f(-m_value[9], m_value[10]);
+			// 		sz = atan2f(-m_value[4], m_value[0]);
+			// 	} else {
+			// 		sx = -atan2f(m_value[6], m_value[5]);
+			// 		sz = 0;
+			// 	}
+			// } else {
+			// 	sx = atan2f(m_value[6], m_value[5]);
+			// 	sz = 0;
+			// }
+			// return sz;
+		}
+		return 0.0f;
+	}
+		
 		bool glTransform::apply( BEntity* e )
 		{
 			return e->set( reinterpret_cast<const char*>(m_value) );

@@ -104,8 +104,7 @@
 				m_timer_s_total = timer->getChild("s_total", 1);
 				m_timer_frame = timer->getChild("frame", 1);
 			}
-		
-		
+
 		// BASE TYPES
 			pluginManager()->load( "basetypes", "src/kernel", "be_base_entity_types" );
 			

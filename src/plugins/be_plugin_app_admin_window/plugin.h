@@ -3,6 +3,7 @@
 
 #include "kernel/be_plugin_interface.h"
 #include "admin_lookup_buffer.h"
+#include "kernel/be_entity_ops_copy.h"
 
 	// SCENE
 		class Scene: public BEntity
@@ -32,6 +33,7 @@
 				void add_admin_item( BEntity* parent, BEntity* entity );
 			
 				BAdminLookupBuffer m_lookup_buffer;
+				BEntityLoad m_entityLoad;
 		};
 
 

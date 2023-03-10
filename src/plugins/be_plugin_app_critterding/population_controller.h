@@ -24,6 +24,10 @@
 			BEntity* m_population_reduce_to;
 			BEntity* m_critter_unit_container;
 			CdCritterSystem* m_critter_system;
+			
+			BEntity* m_energy_reduce_by;
+			BEntity* m_food_number_of_units;
+			
 	};
 
 #endif

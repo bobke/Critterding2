@@ -40,7 +40,7 @@
 		// m_dropzone_size_y->set( Bfloat(2.2f) );
 		// m_dropzone_size_z->set( Bfloat(190.0f) );
 		
-		m_insert_frame_interval = settings->addChild( "insert_frame_interval", new BEntity_uint() );
+		m_insert_frame_interval = settings->addChild( "insert_frame_interval", new BEntity_uint() ); // FIXME why?
 		m_insert_frame_interval->set( (Buint)6 );
 
 		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);

@@ -17,6 +17,8 @@
 		control_panel.h
 		population_controller.cpp
 		population_controller.h
+		critter_exchanger.cpp
+		critter_exchanger.h
 	)
 
 	ADD_LIBRARY( be_plugin_app_critterding SHARED ${plugin_SRCS} )

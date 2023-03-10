@@ -505,7 +505,7 @@
 			// std::cout << "BEntity_string_property::apply" << std::endl;
 			if ( parent() )
 			{
-				return e->set( parent()->get_string(name()) );
+				return e->set( parent()->get_string( name()) );
 			}
 			return false;
 		}		

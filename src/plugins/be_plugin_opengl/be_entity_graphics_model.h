@@ -18,6 +18,7 @@
 			void setModel( boost::shared_ptr<BeGraphicsModelResource> model );
 			boost::shared_ptr<BeGraphicsModelResource> getModel() const;
 			virtual bool set( const Bstring& id, const char* value );
+			virtual const char* get_string( const Bstring& id );
 // 			virtual bool set( const Bstring& id, const Bfloat& value );
 
 			virtual void process();
@@ -26,7 +27,7 @@
 
 		private:
 			boost::shared_ptr<BeGraphicsModelResource> m_model;
-			std::string loaded_path;
+			std::string m_loaded_path;
 // 			btVector3 m_pre_scale;
 // 			btVector3 m_pre_position;
 // 			btVector3 m_pre_rotation;
@@ -44,7 +45,10 @@
 				void construct();
 				virtual bool apply( BEntity* e );
 				virtual bool set( const char* value );
+				bool set( const Bstring& id, const Bfloat& value );
 				virtual const char* get_string();
+				Bfloat get_float( const Bstring& id );
+				void matMul(float* a, float* b);
 				float m_value[16];
 				BEntity* m_scale_x;
 				BEntity* m_scale_y;

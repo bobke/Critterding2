@@ -108,6 +108,7 @@
 		void BPhysicsEntity::construct() // FIME not BEntity::construct, name conflict, can be removed
 		{
 // 			std::cout << "construct" << std::endl;
+			auto filename = addChild( "filename", new BEntity_string_property() );
 			auto transform = addChild( "transform", new transformEmitter() );
 // 			std::cout << "construct done" << std::endl;
 			

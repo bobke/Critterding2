@@ -73,37 +73,37 @@
 				}
 			}
 
-		// LOAD CRITTER
-		if ( 1 == 0 )
-		{
-			static unsigned int frame_counter( 0 );
-			const unsigned int offset( 0 );
-			if ( 
-				++frame_counter == offset+1000
-				|| frame_counter == offset+6000
-				|| frame_counter == offset+7000
-				|| frame_counter == offset+8000
-				|| frame_counter == offset+9000
-			)
-			{
-				m_entityLoad.loadEntity( m_unit_container );
-				
-				// pick the last entity from m_unit_container
-				auto it = m_unit_container->children().rbegin();
-				if ( it != m_unit_container->children().rend() )
-				{
-					// if it doesn't have a species_reference, create a new species
-					auto species_reference = (*it)->getChild("species_reference", 1);
-					if ( !species_reference )
-					{
-						// species
-						m_species_system->addNewSpecies( (*it) );
-					}
-				}
-
-				// frame_counter = 1001;
-			}
-		}
+// 		// LOAD CRITTER
+// 		if ( 1 == 0 )
+// 		{
+// 			static unsigned int frame_counter( 0 );
+// 			const unsigned int offset( 0 );
+// 			if ( 
+// 				++frame_counter == offset+1000
+// 				|| frame_counter == offset+6000
+// 				|| frame_counter == offset+7000
+// 				|| frame_counter == offset+8000
+// 				|| frame_counter == offset+9000
+// 			)
+// 			{
+// 				m_entityLoad.loadEntity( m_unit_container );
+// 				
+// 				// pick the last entity from m_unit_container
+// 				auto it = m_unit_container->children().rbegin();
+// 				if ( it != m_unit_container->children().rend() )
+// 				{
+// 					// if it doesn't have a species_reference, create a new species
+// 					auto species_reference = (*it)->getChild("species_reference", 1);
+// 					if ( !species_reference )
+// 					{
+// 						// species
+// 						m_species_system->addNewSpecies( (*it) );
+// 					}
+// 				}
+// 
+// 				// frame_counter = 1001;
+// 			}
+// 		}
 			
 			
 		// INSERT NEW RANDOM CRITTER, only check every 100 frames
@@ -315,6 +315,22 @@
 				}
 			}
 		}
+		
+		// GIVE SPECIES SPECIES
+		// pick the last entity from m_unit_container
+		auto it = m_unit_container->children().rbegin();
+		if ( it != m_unit_container->children().rend() )
+		{
+			// if it doesn't have a species_reference, create a new species
+			auto species_reference = (*it)->getChild("species_reference", 1);
+			if ( !species_reference )
+			{
+				// species
+				m_species_system->addNewSpecies( (*it) );
+			}
+		}
+	
+		
 		
 		// // DIE BECAUSE CRITTER LIMIT REACHED
 		// if ( m_unit_container->numChildren() >= 150 )

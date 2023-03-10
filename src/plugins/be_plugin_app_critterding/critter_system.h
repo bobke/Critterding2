@@ -24,7 +24,7 @@
 				bool removeFromCollisions( BEntity* to_remove );
 				BEntity* m_collisions;
 				BEntityCopy m_entityCopy;
-				BEntityLoad m_entityLoad;
+				// BEntityLoad m_entityLoad;
 				
 				BEntity* m_insert_frame_interval;
 				unsigned int m_framecount;

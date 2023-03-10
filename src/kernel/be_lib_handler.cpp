@@ -179,7 +179,7 @@
 			}
 		}
 		
-		std::cout << "ERROR: entity '" << library << " " << name << "' was not found" << std::endl;
+		std::cout << "ERROR: entity '" << name << "' was not found" << std::endl;
 		
 		return 0;
 	}

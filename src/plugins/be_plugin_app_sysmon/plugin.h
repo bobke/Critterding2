@@ -44,10 +44,8 @@
 				BEntity* m_line_edit_uptime;
 				BEntity* m_line_edit_memory;
 				
-				// BeTimer m_timer;
 				BEntity* m_timer_s_total;
 				BEntity* m_timer_frame;
-				// Buint64 m_frame_counter;
 				Buint64 m_frame_counter_last;
 				Bfloat m_last_updated;
 

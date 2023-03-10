@@ -48,7 +48,7 @@
 				BEntityLoad() {};
 				virtual ~BEntityLoad() {};
 
-				void loadEntity( BEntity* parent );
+				void loadEntity( BEntity* parent, const std::string& filename );
 				void loadExternalParentFromXML( BEntity* parent, const TiXmlElement& element, std::map<unsigned int, BEntity*>& external_entity_list);
 				void loadEntityFromXML(BEntity* parent, const TiXmlElement& element, std::map<unsigned int, BEntity*>& translation_map, std::map<unsigned int, BEntity*>& external_entity_list, const unsigned int scene_server_client);
 				void loadEntityFromXMLConnections(const TiXmlElement& element, std::map<unsigned int, BEntity*>& translation_map);

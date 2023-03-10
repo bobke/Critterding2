@@ -280,18 +280,8 @@
 									m_entitySave.saveEntity( entity );
 								}
 							}
-							
-							else if ( c->name() == "load_entity" )
-							{
-								std::cout << "command: load_entity" << std::endl;
-								auto entity = c->get_reference();
-								if ( entity )
-								{
-									m_entitySave.saveEntity( entity );
-								}
-							}
 
-							else if ( c->name() == "admin_entity_group_expand" || c->name() == "admin_entity_group_contract" || c->name() == "admin_entity_add" || c->name() == "admin_entity_open_window" || c->name() == "admin_entity_graph" )
+							else if ( c->name() == "admin_load_entity" || c->name() == "admin_entity_group_expand" || c->name() == "admin_entity_group_contract" || c->name() == "admin_entity_add" || c->name() == "admin_entity_open_window" || c->name() == "admin_entity_graph" )
 							{
 								// if it has an admin window now, execute
 								if ( getAdminWindow() )

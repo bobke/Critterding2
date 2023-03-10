@@ -458,26 +458,22 @@
 
 
 	// LOADING
-		void BEntityLoad::loadEntity( BEntity* parent )
+		void BEntityLoad::loadEntity( BEntity* parent, const std::string& filename )
 		{
 			std::cout << "::LOAD TOP: " << parent->id() << std::endl;
 			
 			// std::stringstream t_filenamestream;
-			// t_filenamestream << "./entity_" << msg.m_filename << ".ent";
-			// std::string t_filename(t_filenamestream.str());
-
-			std::stringstream t_filenamestream;
-			t_filenamestream << "./entity_load.ent";
-			std::string t_filename(t_filenamestream.str());
+			// t_filenamestream << "./entity_load.ent";
+			// std::string filename(t_filenamestream.str());
 			
 			// BeFile befile;
-			// if ( m_fileSystem.load(befile, t_filename) )
+			// if ( m_fileSystem.load(befile, filename) )
 			{
 				TiXmlDocument document;
-				const bool result = document.LoadFile( t_filename.c_str() );
+				const bool result = document.LoadFile( filename.c_str() );
 				if(result)
 				{
-					// std::cout << "::FILE FOUND: " << t_filename << std::endl;
+					// std::cout << "::FILE FOUND: " << filename << std::endl;
 					
 					const TiXmlElement* const rootElementPtr=document.RootElement();
 					if(rootElementPtr)
@@ -537,13 +533,13 @@
 					}
 					else
 					{
-						std::cout << "FILE NOT FOUND: '" << t_filename << "'" << std::endl;
+						std::cout << "FILE NOT FOUND: '" << filename << "'" << std::endl;
 						std::cout << document.ErrorDesc() << std::endl;
 						std::cout << "error on row: " << document.ErrorRow() << std::endl;
 					}
 				}
 				else
-					std::cout << "SERVER::WARNING file could not be found: " << t_filename << std::endl;
+					std::cout << "SERVER::WARNING file could not be found: " << filename << std::endl;
 			}
 
 

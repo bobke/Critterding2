@@ -20,6 +20,7 @@
 #include "qlabel.h"
 #include "qcheckbox.h"
 #include "qpen.h"
+#include "qfiledialog.h"
 
 #include <iostream>
 #include <QApplication>
@@ -62,6 +63,8 @@
 		, QLABEL_DROPPABLE
 		, QCHECKBOX
 		, QPEN
+		, QFILEDIALOG
+		
 	};
 
 	extern "C" BEntity* create( BEntity* parent, const Buint type )
@@ -103,6 +106,7 @@
 					i.addClass( parent, CLASS::QLABEL_DROPPABLE, "QLabelDroppable" );
 					i.addClass( parent, CLASS::QCHECKBOX, "QCheckBox" );
 					i.addClass( parent, CLASS::QPEN, "QPen" );
+					i.addClass( parent, CLASS::QFILEDIALOG, "QFileDialog" );
 				return 0;
 			}
 
@@ -175,6 +179,8 @@
 					i = new BQCheckBox();
 				else if ( type == CLASS::QPEN )
 					i = new BQPen();
+				else if ( type == CLASS::QFILEDIALOG )
+					i = new BQFileDialog();
 				
 				
 

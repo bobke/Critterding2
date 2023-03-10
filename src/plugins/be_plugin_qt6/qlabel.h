@@ -11,10 +11,10 @@
 				BQLabel();
 				virtual ~BQLabel() {};
 				const char* class_id() const { return "QLabel"; }
-// 				bool set( const Buint& value );
-				bool set( const Bstring& id, const Buint& value );
-				bool set( const Bstring& id, const char* value );
-// 				bool set( const Bstring& value );
+				virtual bool set( const Bstring& id, const Buint& value );
+				virtual bool set( const Bstring& id, const char* value );
+				virtual bool set( const char* value );
+				virtual bool set( const Buint& value );
 		};
 
 	// QLABELDROPPABLE

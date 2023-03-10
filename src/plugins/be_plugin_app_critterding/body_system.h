@@ -86,7 +86,7 @@
 // 				void process();
 				BEntity* m_rng;
 
-				virtual BEntity* customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map );
+				// virtual BEntity* customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map );
 		};
 
 #endif

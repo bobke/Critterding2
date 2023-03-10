@@ -2,7 +2,7 @@
 #define BE_ENTITY_INTERFACE_H_INCLUDED
 
 	#include "be_types.h"
-	#include <map>
+	// #include <map>
 
 	class BeLibHandler;
 	class BEntity_Plugin_Manager;
@@ -199,8 +199,8 @@
 				void setNthBit(char & packedValue, const int selectedBitIndex, const bool value=true) const;
 
 		// CUSTOM COPY COMMAND
-			public:
-				virtual BEntity* customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map ) { return 0; }
+			// public:
+				// virtual BEntity* customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map ) { return 0; }
 
 		// COMMAND BUFFER
 			public:

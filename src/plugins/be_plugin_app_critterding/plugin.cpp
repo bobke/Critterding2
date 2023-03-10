@@ -6,6 +6,7 @@
 #include "critter_system.h"
 #include "control_panel.h"
 #include "population_controller.h"
+#include "critter_exchanger.h"
 #include "commands.h"
 #include <iostream>
 
@@ -170,7 +171,8 @@
 
 			// PHYSICS map
 			auto physics_entity = m_physics_world->addChild( "physics_entity_map", "PhysicsEntity" );
-				physics_entity->set("filename", map_location);
+				// physics_entity->set("filename", map_location);
+				physics_entity->getChild( "filename", 1 )->set( map_location );
 				map->addChild( "external_physics", new BEntity_external() )->set(physics_entity);
 
 				auto physics_scale_x = physics_entity->addChild("scale_x", new BEntity_float_property());
@@ -186,8 +188,9 @@
 			// GRAPHICS
 				// map
 				auto t_graphicsModel = t_graphicsModelSystem->addChild("graphics_entity_map", "GraphicsModel");
+				t_graphicsModel->addChild( "filename", new BEntity_string_property() )->set( map_location );
 				auto graphics_transform = t_graphicsModel->addChild("transform", "Transform");
-				t_graphicsModel->set("filename", map_location);
+				// t_graphicsModel->set("filename", map_location);
 				map->addChild( "external_graphics", new BEntity_external() )->set(t_graphicsModel);
 
 			// CONNECT AND POSITION
@@ -293,6 +296,8 @@
 		// POPULATION CONTROLLER
 			addChild( "CdPopulationController", new CdPopulationController() );
 
+		// POPULATION CONTROLLER
+			// addChild( "CdCritterExchanger", new CdCritterExchanger() );
 			
 // 		// BODY SETTINGS
 // 			auto body_settings = addChild( "body_settings", new BEntity() );
@@ -394,6 +399,7 @@
 		, CRITTERDING
 		, CD_CONTROL_PANEL
 		, CD_POPULATION_CONTROL
+		, CD_CRITTER_EXCHANGER
 		, CD_CRITTER_SYSTEM
 		, CD_SPECIES_SYSTEM
 		, CD_CRITTER
@@ -414,6 +420,7 @@
 					i.addClass( parent, CLASS::CRITTERDING, "Critterding" );
 					i.addClass( parent, CLASS::CD_CONTROL_PANEL, "CdControlPanel" );
 					i.addClass( parent, CLASS::CD_POPULATION_CONTROL, "CdPopulationController" );
+					i.addClass( parent, CLASS::CD_CRITTER_EXCHANGER, "CdCritterExchanger" );
 					i.addClass( parent, CLASS::CD_CRITTER_SYSTEM, "CdCritterSystem" );
 					i.addClass( parent, CLASS::CD_SPECIES_SYSTEM, "CdSpeciesSystem" );
 					i.addClass( parent, CLASS::CD_CRITTER, "CdCritter" );
@@ -438,6 +445,8 @@
 					i = new CdControlPanel();
 				else if ( type == CLASS::CD_POPULATION_CONTROL )
 					i = new CdPopulationController();
+				else if ( type == CLASS::CD_CRITTER_EXCHANGER )
+					i = new CdCritterExchanger();
 				else if ( type == CLASS::CD_CRITTER_SYSTEM )
 					i = new CdCritterSystem();
 				else if ( type == CLASS::CD_SPECIES_SYSTEM )

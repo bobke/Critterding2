@@ -49,6 +49,8 @@
 		qcheckbox.cpp
 		qpen.h
 		qpen.cpp
+		qfiledialog.h
+		qfiledialog.cpp
 		
 		plugin.h
 		plugin.cpp

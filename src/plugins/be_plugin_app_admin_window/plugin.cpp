@@ -311,20 +311,32 @@
 				qwindow->addChild( "width", "uint_property" )->set(Buint(430));
 				qwindow->addChild( "height", "uint_property" )->set(Buint(350));
 
-				auto general_layout_H = qwindow->addChild( "QT HBoxlayout", "QHBoxLayout" );
-				
-				// CREATE LEFT ENTITIES
-					auto entity_groupbox = general_layout_H->addChild( "Entity Groupbox", "QGroupBox" );
-					entity_groupbox->addChild( "title", "string_property" )->set("Entities");
-					auto groupVbox = entity_groupbox->addChild( "QT VBoxlayout", "QVBoxLayout" );
+				auto general_layout_V = qwindow->addChild( "QT VBoxlayout", "QVBoxLayout" );
 
-					add_admin_entity_groupbox(groupVbox, entity);
+				{
+					auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
 
-					m_lookup_buffer.registerAdminEntity( entity, groupVbox );
-					m_lookup_buffer.registerAdminEntity( entity, qwindow );
+					// ID
+						auto id_label = general_layout_H->addChild( "id_label", "QLabel" );
+						id_label->set( (Buint)entity->id() );
 
-				// add groupbox
-				// add_admin_entity_groupbox(layout_to_work_on, entity);
+					// CLASS ID
+						auto class_id_label = general_layout_H->addChild( "class_id_label", "QLabel" );
+						class_id_label->set( entity->class_id() );
+				}
+				{
+					auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
+					
+					// CREATE LEFT ENTITIES
+						auto entity_groupbox = general_layout_H->addChild( "Entity Groupbox", "QGroupBox" );
+						entity_groupbox->addChild( "title", "string_property" )->set("Entities");
+						auto groupVbox = entity_groupbox->addChild( "QT VBoxlayout", "QVBoxLayout" );
+
+						add_admin_entity_groupbox(groupVbox, entity);
+
+						m_lookup_buffer.registerAdminEntity( entity, groupVbox );
+						m_lookup_buffer.registerAdminEntity( entity, qwindow );
+				}
 
 				return true;
 			}
@@ -375,46 +387,40 @@
 			
 			else if ( value->name() == "admin_entity_add" )
 			{
-				// FIXME THIS MIGHT REQUIRE A NEW FUNCTION
-				// SHOULD ADD ADMIN LIST HERE
-				// std::cout << "admin_entity_add" << std::endl;
-				
 				// get entity
 				auto entity = value->get_reference();
-				
-				// FIXME FIND THE ENTITY WITH THE ID AND NAME OF THE PARENT
-				
-				// std::stringstream stream;
-				// stream << "admin_section_" << entity->parent()->id() << "_" << entity->parent()->name();
-				// auto admin_section = getChild( stream.str().c_str() );
-				
 				auto vlayout = value->getChild("vlayout", 1)->get_reference();
 				if ( vlayout )
 				{
-					// auto groupbox = admin_section->getChild("qt groupbox entities", 1);
-					// if ( groupbox )
-					// {
-					// 	auto vlayout = groupbox->getChild("qt vboxlayout", 1);
-					// 	if ( vlayout )
-					// 	{
-							// std::cout << "SHOULD ADD, PARENT: " << stream.str() << std::endl;
-							// std::cout << "SHOULD ADD " << entity->name() << " to parent " << vlayout->name() << std::endl;
-							add_admin_item( vlayout, entity );
-						// }
-					// }
-					
-
+					add_admin_item( vlayout, entity );
 				}
-				
-				
-
-				// std::stringstream stream;
-				// stream << "admin_section_" << entity_to_expand->id() << "_" << entity_to_expand->name();
-
-				// FIXME THIS IS FUCKED
-				// std::cout << "SHOULD ADD " << stream.str() << " to parent " << entity_to_expand->parent()->name() << std::endl;
-				// std::cout << "SHOULD ADD " << entity_to_expand->name() << " to parent " << entity_to_expand->name() << std::endl;
 			}
+			
+			else if ( value->name() == "admin_load_entity" )
+			{
+				auto to_parent = value->get_reference();
+				auto file_dialog = addChild("file_dialog", "QFileDialog");
+				
+				m_entityLoad.loadEntity( to_parent, file_dialog->getChild("selected_file")->get_string() );
+				
+				removeChild( file_dialog );
+
+				// FIXME SPECIES
+				// // pick the last entity from m_unit_container
+				// auto it = to_parent->children().rbegin();
+				// if ( it != to_parent->children().rend() )
+				// {
+				// 	// if it doesn't have a species_reference, create a new species
+				// 	auto species_reference = (*it)->getChild("species_reference", 1);
+				// 	if ( !species_reference )
+				// 	{
+				// 		// species
+				// 		m_species_system->addNewSpecies( (*it) );
+				// 	}
+				// }
+			}
+			
+			
 		}
 
 		
@@ -727,6 +733,17 @@
 						command->set(entity);
 				}
 
+				// LOAD
+				{
+					auto button = hboxlayout_entity->addChild("qt button", "QPushButton" );
+					button->set("text", "L");
+
+					// COMMAND
+						auto actions = button->addChild("_commands", new BEntity() );
+						auto command = actions->addChild("admin_load_entity", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+						command->set(entity);
+				}
+
 				// OPEN ADMIN WINDOW
 				{
 					auto button = hboxlayout_entity->addChild("qt button", "QPushButton" );
@@ -737,7 +754,8 @@
 						auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
 						command->set(entity);
 				}
-
+				
+				
 				// GRAPH FOR FLOAT
 				auto t_float = dynamic_cast<BEntity_float*>( entity );
 				if ( t_float )

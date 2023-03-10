@@ -11,7 +11,7 @@
 // 			setText("label");
 // 			setSizeConstraint(QLayout::SetMinimumSize);
 			setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-// 			setContentsMargins(10,5,5,5); // HACK
+			// setContentsMargins(10,5,5,5); // HACK
 		}
 
 		bool BQLabel::set( const Bstring& id, const Buint& value )
@@ -20,7 +20,7 @@
 			{
 				if ( value != text().toUInt() )
 				{
-// 					setAlignment(Qt::AlignRight);
+					// setAlignment(Qt::AlignRight);
 					QString s;
 					s.setNum(value);
 					setText(s);
@@ -50,18 +50,37 @@
 		{
 			if ( id == "text" )
 			{
-				QString s(value);
-				if ( s != text() )
+				if ( value != text() )
 				{
 					setAlignment(Qt::AlignLeft);
-					setText(s);
+					setText(value);
 					return true;
 				}
 			}
 			return false;
 		}
 		
+		bool BQLabel::set( const char* value )
+		{
+			if ( value != text() )
+			{
+				setAlignment(Qt::AlignLeft);
+				setText( value );
+				return true;
+			}
+		}
 
+		bool BQLabel::set( const Buint& value )
+		{
+			if ( value != text().toUInt() )
+			{
+				setAlignment(Qt::AlignLeft);
+				QString s;
+				s.setNum(value);
+				setText(s);
+				return true;
+			}
+		}
 		
 
 	// QLABELDROPPABLE
