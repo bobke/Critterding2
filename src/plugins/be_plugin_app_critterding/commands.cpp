@@ -27,3 +27,17 @@
 		}
 		return false;
 	}
+
+	bool cmd_launchSystemMonitor::set()
+	{
+		auto qt_app = topParent()->getChild( "Scene", 1 )->getChild( "QT Application", 2 );
+		if ( qt_app )
+		{
+			if ( !qt_app->getChild( "SystemMonitor", 1 ) )
+			{
+				qt_app->addChild( "SystemMonitor", "SystemMonitor" );
+			}
+			return true;
+		}
+		return false;
+	}

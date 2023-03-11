@@ -8,7 +8,6 @@
 		public:
 			cmd_launchAdminWindow() { };
 			virtual ~cmd_launchAdminWindow() {};
-			const char* class_id() const { return "cmd_launchAdminWindow"; }
 			bool set();
 	};
 
@@ -17,9 +16,15 @@
 		public:
 			cmd_launchControlPanel() { };
 			virtual ~cmd_launchControlPanel() {};
-			const char* class_id() const { return "cmd_launchControlPanel"; }
 			bool set();
 	};
 
+		class cmd_launchSystemMonitor: public BEntity_trigger
+	{
+		public:
+			cmd_launchSystemMonitor() { };
+			virtual ~cmd_launchSystemMonitor() {};
+			bool set();
+	};
 	
 #endif

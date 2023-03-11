@@ -89,17 +89,22 @@
 			auto commands = glscene->addChild( "commands", new BEntity() );
 			auto launchAdminWindow = commands->addChild( "launchAdminWindow", new cmd_launchAdminWindow() );
 			auto launchControlPanel = commands->addChild( "launchControlPanel", new cmd_launchControlPanel() );
+			auto launchSystemMonitor = commands->addChild( "launchSystemMonitor", new cmd_launchSystemMonitor() );
 			
 			
 		// BINDINGS FIXME load adminwindow command
 			
 			
 			auto bindings = glscene->getChild( "bindings", 1 );
+
 			auto binding_f1 = bindings->addChild( "f1", new BEntity_trigger() );
 			binding_f1->connectServerServer( launchAdminWindow );
 
 			auto binding_f2 = bindings->addChild( "f2", new BEntity_trigger() );
 			binding_f2->connectServerServer( launchControlPanel );
+
+			auto binding_f3 = bindings->addChild( "f3", new BEntity_trigger() );
+			binding_f3->connectServerServer( launchSystemMonitor );
 			
 			// bindings to movements
 			auto movement = camera->getChild("movement", 1);

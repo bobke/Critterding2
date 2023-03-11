@@ -21,6 +21,7 @@ KEYS
 ----
 	F1      open admin window
 	F2      open control panel
+	F3      open system monitor
 
 	up      move forward
 	down    move backwards
