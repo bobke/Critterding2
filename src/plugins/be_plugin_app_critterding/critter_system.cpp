@@ -238,7 +238,7 @@
 						auto procreate = critter_unit->getChild( "motor_neurons", 1)->getChild( "procreate", 1);
 						if ( procreate->get_float() != 0.0f )
 						{
-							std::cout << "COPY: " << critter_unit->id() << " ad: " << critter_unit->getChild( "adam_distance", 1 )->get_uint() << " total:" << m_unit_container->numChildren() << "(h: " << t_highest << ")" << std::endl;
+							std::cout << "COPY: " << critter_unit->id() << " ad: " << critter_unit->getChild( "adam_distance", 1 )->get_uint() << " total:" << m_unit_container->numChildren()+1 << "(h: " << t_highest << ")" << std::endl;
 
 							critter_unit->setEnergy( critter_unit->energy() / 2 );
 // 							critter_unit->setAge( Buint(0) );
