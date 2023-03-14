@@ -45,62 +45,15 @@
 			if ( elapsed_seconds >= m_interval_seconds->get_float() ) //FIXME an line edit input for this
 			{
 				int sum = m_weight_save->get_uint() + m_weight_load->get_uint();
+
 				// PICK SAVE OR LOAD
 				m_rng->set( "min", Bint(0) );
 				m_rng->set( "max", sum );
 
-				// SAVING
-				if ( m_rng->get_int() < m_weight_save->get_uint() )
-				{
-					if ( m_critter_unit_container->hasChildren() )
-					{
-						// std::cout << "elapsed_seconds: " << elapsed_seconds << std::endl;
-
-						// PICK RANDOM CRITTER
-							m_rng->set( "min", Bint(0) );
-							m_rng->set( "max", Bint( m_critter_unit_container->numChildren())-1 );
-							auto randomChild = m_critter_unit_container->children()[m_rng->get_int()];
-
-						// CREATE TEMPORARY FILENAME
-							auto ms_start = topParent()->getChild("sys", 1)->getChild("timer", 1)->getChild("ms_start")->get_uint();
-							std::string filename_to_save_to = std::to_string(ms_start);
-							filename_to_save_to.append(".ent");
-							
-						// SAVE CRITTER
-							std::cout << "to save " << randomChild->id() << " " << filename_to_save_to << std::endl;
-							BEntitySave b;
-							b.saveEntity( randomChild, filename_to_save_to );
-
-						// FIND FILENAME
-							std::string filename_to_rename_to;
-							unsigned int count(0);
-							filename_to_rename_to = "critter_exchange_unit_";
-							filename_to_rename_to.append(std::to_string(count));
-							filename_to_rename_to.append(".ent");
-
-							while (access(filename_to_rename_to.c_str(), F_OK) == 0)
-							{
-								// file exists
-								filename_to_rename_to = "critter_exchange_unit_";
-								filename_to_rename_to.append(std::to_string(++count));
-								filename_to_rename_to.append(".ent");
-							}
-
-						// RENAME
-							if ( rename( filename_to_save_to.c_str(), filename_to_rename_to.c_str() ) != 0 )
-							{
-								std::cout << "Error renaming file" << std::endl;
-							}
-							else
-							{
-								std::cout << "File successfully renamed" << std::endl;
-							}
-
-					}
-				}
+				// NOTE: complex loading/saving if's, but it works out
 
 				// LOADING
-				else
+				if ( m_rng->get_int() < m_weight_load->get_uint() )
 				{
 					// CREATE FILENAME
 						std::string filename;
@@ -122,20 +75,68 @@
 						// found
 						if ( count < countmax )
 						{
-							std::cout << "to load " << filename << std::endl;
-							// lOAD CRITTER
-							BEntityLoad b;
-							b.loadEntity(m_critter_unit_container, filename);
+							// LOAD CRITTER
+								std::cout << "to load " << filename << std::endl;
+								BEntityLoad b;
+								b.loadEntity(m_critter_unit_container, filename);
 
-							// REMOVE FILE
-							if( remove( filename.c_str() ) != 0 )
-							{
-								std::cout << "Error deleting file" << std::endl;
-							}
-							else
-							{
-								std::cout << "File successfully deleted" << std::endl;
-							}
+								// REMOVE FILE
+								if( remove( filename.c_str() ) != 0 )
+								{
+									std::cout << "Error deleting file" << std::endl;
+								}
+								else
+								{
+									std::cout << "File successfully deleted" << std::endl;
+								}
+
+							return;
+						}
+				}
+
+				// SAVING
+				if ( m_critter_unit_container->hasChildren() )
+				{
+					// std::cout << "elapsed_seconds: " << elapsed_seconds << std::endl;
+
+					// PICK RANDOM CRITTER
+						m_rng->set( "min", Bint(0) );
+						m_rng->set( "max", Bint( m_critter_unit_container->numChildren())-1 );
+						auto randomChild = m_critter_unit_container->children()[m_rng->get_int()];
+
+					// CREATE TEMPORARY FILENAME
+						auto ms_start = topParent()->getChild("sys", 1)->getChild("timer", 1)->getChild("ms_start")->get_uint();
+						std::string filename_to_save_to = std::to_string(ms_start);
+						filename_to_save_to.append(".ent");
+						
+					// SAVE CRITTER
+						std::cout << "to save " << randomChild->id() << " " << filename_to_save_to << std::endl;
+						BEntitySave b;
+						b.saveEntity( randomChild, filename_to_save_to );
+
+					// FIND FILENAME
+						std::string filename_to_rename_to;
+						unsigned int count(0);
+						filename_to_rename_to = "critter_exchange_unit_";
+						filename_to_rename_to.append(std::to_string(count));
+						filename_to_rename_to.append(".ent");
+
+						while (access(filename_to_rename_to.c_str(), F_OK) == 0)
+						{
+							// file exists
+							filename_to_rename_to = "critter_exchange_unit_";
+							filename_to_rename_to.append(std::to_string(++count));
+							filename_to_rename_to.append(".ent");
+						}
+
+					// RENAME
+						if ( rename( filename_to_save_to.c_str(), filename_to_rename_to.c_str() ) != 0 )
+						{
+							std::cout << "Error renaming file" << std::endl;
+						}
+						else
+						{
+							std::cout << "File successfully renamed" << std::endl;
 						}
 				}
 
