@@ -44,7 +44,6 @@
 			const Buint elapsed_frames = m_timer_frame->get_uint() - m_frame_counter_last;
 			if ( elapsed_seconds >= m_interval_seconds->get_float() ) //FIXME an line edit input for this
 			{
-
 				int sum = m_weight_save->get_uint() + m_weight_load->get_uint();
 				// PICK SAVE OR LOAD
 				m_rng->set( "min", Bint(0) );
@@ -55,7 +54,7 @@
 				{
 					if ( m_critter_unit_container->hasChildren() )
 					{
-							std::cout << "elapsed_seconds: " << elapsed_seconds << std::endl;
+						// std::cout << "elapsed_seconds: " << elapsed_seconds << std::endl;
 
 						// PICK RANDOM CRITTER
 							m_rng->set( "min", Bint(0) );
@@ -72,7 +71,7 @@
 							BEntitySave b;
 							b.saveEntity( randomChild, filename_to_save_to );
 
-						// CREATE FILENAME
+						// FIND FILENAME
 							std::string filename_to_rename_to;
 							unsigned int count(0);
 							filename_to_rename_to = "critter_exchange_unit_";
@@ -90,11 +89,11 @@
 						// RENAME
 							if ( rename( filename_to_save_to.c_str(), filename_to_rename_to.c_str() ) != 0 )
 							{
-								perror("Error renaming file");
+								std::cout << "Error renaming file" << std::endl;
 							}
 							else
 							{
-								std::cout << "File renamed successfully";
+								std::cout << "File successfully renamed" << std::endl;
 							}
 
 					}
@@ -130,14 +129,20 @@
 
 							// REMOVE FILE
 							if( remove( filename.c_str() ) != 0 )
-								perror( "Error deleting file" );
+							{
+								std::cout << "Error deleting file" << std::endl;
+							}
 							else
-								puts( "File successfully deleted" );
+							{
+								std::cout << "File successfully deleted" << std::endl;
+							}
 						}
 				}
+
 			// SET VALUES NEEDED FOR NEXT UPDATE
 				m_last_updated = m_timer_s_total->get_float();
 				m_frame_counter_last = m_timer_frame->get_uint();
+
 			}
 		}
 	}
