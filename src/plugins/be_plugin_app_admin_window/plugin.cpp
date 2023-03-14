@@ -629,7 +629,7 @@
 
 		// INT
 			auto t_int = dynamic_cast<BEntity_int*>( entity );
-			if ( t_int )
+			if ( t_int && entity->name() != "random_number_generator" )  // HACK "random_number_generator", this ensures the clockwork universe when scrolling admin window
 			{
 				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_int" );
 				edit->set( "width", Buint(80) );

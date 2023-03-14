@@ -7,8 +7,9 @@
 // #include "be_timer.h"
 
 #include "tinyxml/tinyxml.h"
-#include <sstream>
+// #include <sstream>
 #include <map>
+#include <string>
 
 	class BEntity;
 	// class TiXmlElement;
@@ -37,7 +38,7 @@
 				BEntitySave() {};
 				virtual ~BEntitySave() {};
 
-				void saveEntity( BEntity* entity );
+				void saveEntity( BEntity* entity, const std::string& filename );
 			private:
 				void save_entity(BEntity* entity_to_save, std::stringstream& file_content, std::map<unsigned int, BEntity*>& external_entity_list, const bool isBuiltin, const bool isExternal, const unsigned int level);
 	};

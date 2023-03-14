@@ -277,7 +277,11 @@
 								auto entity = c->get_reference();
 								if ( entity )
 								{
-									m_entitySave.saveEntity( entity );
+									std::string t_filename = "entity_";
+									t_filename.append(std::to_string(entity->id()));
+									t_filename.append(".ent");
+									
+									m_entitySave.saveEntity( entity, t_filename );
 								}
 							}
 

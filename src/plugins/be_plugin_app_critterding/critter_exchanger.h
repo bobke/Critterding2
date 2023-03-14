@@ -30,6 +30,10 @@
 			BEntity* m_timer_frame;
 			Buint64 m_frame_counter_last;
 			Bfloat m_last_updated;
+			
+			// WEIGHTS
+			BEntity* m_weight_save;
+			BEntity* m_weight_load;
 		
 	};
 

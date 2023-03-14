@@ -3,6 +3,7 @@
 #include "be_entity_io_handler.h"
 // #include "be_entity_children_handler.h"
 // #include <iostream>
+#include <sstream>
 #include <fstream>
 // #include <iostream>
 // #include <typeinfo>
@@ -193,7 +194,7 @@
 	}	
 
 	// SAVING
-		void BEntitySave::saveEntity( BEntity* entity )
+		void BEntitySave::saveEntity( BEntity* entity, const std::string& filename )
 		{
 			std::cout << "SAVE TOP: " << entity->id() << std::endl;
 			
@@ -228,10 +229,11 @@
 			
 		// 	std::cout << file_content.str() << std::endl;
 
-			std::stringstream t_filename;
-			t_filename << "entity_" << entity->id() << ".ent";
+			// std::stringstream t_filename;
+			// t_filename << "entity_" << entity->id() << ".ent";
 			
-			std::fstream file_op(t_filename.str(),std::ios::out);
+			// std::fstream file_op(t_filename.str(),std::ios::out);
+			std::fstream file_op(filename,std::ios::out);
 			file_op << "<root>" << std::endl;
 			file_op << std::endl;
 			file_op << file_external_parents_content.str();

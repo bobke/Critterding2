@@ -50,6 +50,10 @@
 
 		// RANDOM NUMBER GENERATOR
 			auto rng = addChild( "random_number_generator", "Brng" );
+
+		// SEED
+			// FIXME FIX TIMER
+			// auto startTimeMs = topParent()->getChild("sys", 1)->getChild( "timer",1 )->?? ;
 			rng->set( "seed", Bint( 111 ) );
 		
 		// BULLET

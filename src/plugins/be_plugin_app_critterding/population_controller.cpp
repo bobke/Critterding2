@@ -8,9 +8,9 @@
 		m_active = addChild( "active", new BEntity_bool() );
 		m_active->set( true );
 		m_population_trigger = addChild( "population_trigger", new BEntity_uint() );
-		m_population_trigger->set( Buint(200) );
+		m_population_trigger->set( Buint(250) );
 		m_population_reduce_to = addChild( "population_reduce_to", new BEntity_uint() );
-		m_population_reduce_to->set( Buint(160) );
+		m_population_reduce_to->set( Buint(200) );
 
 		m_critter_system = dynamic_cast<CdCritterSystem*>( topParent()->getChild("critter_system") );
 		m_critter_unit_container = m_critter_system->getChild("unit_container");
