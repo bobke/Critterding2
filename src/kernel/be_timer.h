@@ -22,6 +22,7 @@
 			BEntity* m_elapsedSeconds;
 			BEntity* m_elapsedFrames;
 			BEntity* m_target_fps;
+			BEntity* m_startMilliSeconds;
 			
 			struct timeval m_start;
 			struct timeval m_now;

@@ -1,9 +1,8 @@
 #include "critter_exchanger.h"
 #include "kernel/be_entity_core_types.h"
-#include "kernel/be_entity_ops_copy.h"
+// #include "kernel/be_entity_ops_copy.h"
 #include <iostream>
 #include <unistd.h>
-
 
 	void CdCritterExchanger::construct()
 	{
@@ -63,26 +62,41 @@
 							m_rng->set( "max", Bint( m_critter_unit_container->numChildren())-1 );
 							auto randomChild = m_critter_unit_container->children()[m_rng->get_int()];
 
-						// CREATE FILENAME
-							std::string filename_to_save;
-							unsigned int count(0);
-							filename_to_save = "critter_exchange_unit_";
-							filename_to_save.append(std::to_string(count));
-							filename_to_save.append(".ent");
+						// CREATE TEMPORARY FILENAME
+							auto ms_start = topParent()->getChild("sys", 1)->getChild("timer", 1)->getChild("ms_start")->get_uint();
+							std::string filename_to_save_to = std::to_string(ms_start);
+							filename_to_save_to.append(".ent");
+							
+						// SAVE CRITTER
+							std::cout << "to save " << randomChild->id() << " " << filename_to_save_to << std::endl;
+							BEntitySave b;
+							b.saveEntity( randomChild, filename_to_save_to );
 
-							while (access(filename_to_save.c_str(), F_OK) == 0)
+						// CREATE FILENAME
+							std::string filename_to_rename_to;
+							unsigned int count(0);
+							filename_to_rename_to = "critter_exchange_unit_";
+							filename_to_rename_to.append(std::to_string(count));
+							filename_to_rename_to.append(".ent");
+
+							while (access(filename_to_rename_to.c_str(), F_OK) == 0)
 							{
 								// file exists
-								filename_to_save = "critter_exchange_unit_";
-								filename_to_save.append(std::to_string(++count));
-								filename_to_save.append(".ent");
+								filename_to_rename_to = "critter_exchange_unit_";
+								filename_to_rename_to.append(std::to_string(++count));
+								filename_to_rename_to.append(".ent");
 							}
 
-						// SAVE CRITTER
-							std::cout << "to save " << randomChild->id() << " " << filename_to_save << std::endl;
+						// RENAME
+							if ( rename( filename_to_save_to.c_str(), filename_to_rename_to.c_str() ) != 0 )
+							{
+								perror("Error renaming file");
+							}
+							else
+							{
+								std::cout << "File renamed successfully";
+							}
 
-							BEntitySave b;
-							b.saveEntity( randomChild, filename_to_save );
 					}
 				}
 

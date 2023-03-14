@@ -233,7 +233,7 @@
 			// t_filename << "entity_" << entity->id() << ".ent";
 			
 			// std::fstream file_op(t_filename.str(),std::ios::out);
-			std::fstream file_op(filename,std::ios::out);
+			std::fstream file_op( filename, std::ios::out );
 			file_op << "<root>" << std::endl;
 			file_op << std::endl;
 			file_op << file_external_parents_content.str();

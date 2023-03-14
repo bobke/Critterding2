@@ -13,7 +13,9 @@
 		m_totalSeconds = addChild( "s_total", new BEntity_float() );
 		m_elapsedSeconds = addChild( "s_elapsed", new BEntity_float() );
 		m_elapsedFrames = addChild( "frame", new BEntity_uint() );
+		m_startMilliSeconds = addChild( "ms_start", new BEntity_uint() );
 		reset();
+		m_startMilliSeconds->set( (Buint)(((m_start.tv_sec) * 1000 + (m_start.tv_usec)/1000.0)) );
 	}
 
 	void BTimer::process()
