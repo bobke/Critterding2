@@ -52,6 +52,7 @@
 				// PICK SAVE OR LOAD
 				m_rng->set( "min", Bint(0) );
 				m_rng->set( "max", sum );
+				bool loaded(false);
 
 				// NOTE: complex loading/saving if's, but it works out
 
@@ -96,7 +97,6 @@
 								auto critter = m_critter_unit_container->children().rbegin();
 								m_species_system->addNewSpecies( *critter );
 
-								
 								// reset age
 									(*critter)->getChild("age", 1)->set( Buint(0) );
      
@@ -111,12 +111,14 @@
 									std::cout << "File successfully deleted" << std::endl;
 								}
 								std::cout << "  removing done" << std::endl;
+
+								loaded = true;
 						}
 					std::cout << " LOADING done " << std::endl;
 				}
 
 				// SAVING
-				else
+				if ( !loaded )
 				{
 					if ( m_critter_unit_container->hasChildren() )
 					{
