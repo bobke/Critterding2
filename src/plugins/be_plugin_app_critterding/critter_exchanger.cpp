@@ -44,8 +44,7 @@
 			const float elapsed_seconds = m_timer_s_total->get_float() - m_last_updated;
 			if ( elapsed_seconds >= m_interval_seconds->get_float() )
 			{
-				std::cout << std::endl;
-				std::cout << "EXCHANGER: " << std::endl;
+				std::cout << std::endl << "Critter Exchanger: " << std::endl;
 				
 				int sum = m_weight_save->get_uint() + m_weight_load->get_uint();
 
@@ -59,7 +58,7 @@
 				// LOADING // FIXME RESET AGE
 				if ( m_rng->get_int() < m_weight_load->get_uint() )
 				{
-					std::cout << " LOADING: " << std::endl;
+					std::cout << " LOADING: ";
 					
 					// CREATE TEMPORARY FILENAME
 						auto ms_start = topParent()->getChild("sys", 1)->getChild("timer", 1)->getChild("ms_start")->get_uint();
@@ -75,7 +74,6 @@
 						filename.append(std::to_string(count));
 						filename.append(".ent");
      
-						std::cout << "  finding candidate" << std::endl;
 						while ( rename( filename.c_str(), filename_to_rename_to.c_str() ) != 0 && count++ < countmax )
 						{
 							// file exists
@@ -83,16 +81,14 @@
 							filename.append(std::to_string(count));
 							filename.append(".ent");
 						}
-						std::cout << "  finding candidate done" << std::endl;
      
 						// found
 						if ( count < countmax )
 						{
 							// LOAD CRITTER
-								std::cout << "  loading " << filename << std::endl;
+								std::cout << filename << std::endl;
 								BEntityLoad b;
 								b.loadEntity(m_critter_unit_container, filename_to_rename_to);
-								std::cout << "  loading " << filename << " done" << std::endl;
 
 								auto critter = m_critter_unit_container->children().rbegin();
 								m_species_system->addNewSpecies( *critter );
@@ -101,28 +97,24 @@
 									(*critter)->getChild("age", 1)->set( Buint(0) );
      
 								// REMOVE FILE
-								std::cout << "  removing" << std::endl;
 								if( remove( filename_to_rename_to.c_str() ) != 0 )
 								{
 									std::cout << "Error deleting file" << std::endl;
 								}
-								else
-								{
-									std::cout << "File successfully deleted" << std::endl;
-								}
-								std::cout << "  removing done" << std::endl;
-
 								loaded = true;
 						}
-					std::cout << " LOADING done " << std::endl;
+						else
+						{
+							std::cout << "none found" << std::endl;
+						}
 				}
 
 				// SAVING
-				if ( !loaded )
+				if ( !loaded && m_weight_save->get_uint() > 0 )
 				{
 					if ( m_critter_unit_container->hasChildren() )
 					{
-						std::cout << " SAVING: " << std::endl;
+						std::cout << " SAVING: ";
 						// std::cout << "elapsed_seconds: " << elapsed_seconds << std::endl;
 
 						// PICK RANDOM CRITTER
@@ -136,10 +128,8 @@
 							filename_to_save_to.append(".ent");
 							
 						// SAVE CRITTER
-							std::cout << "  saving to " << filename_to_save_to << std::endl;
 							BEntitySave b;
 							b.saveEntity( randomChild, filename_to_save_to );
-							std::cout << "  saving to " << filename_to_save_to << "done" << std::endl;
 
 						// FIND FILENAME
 							std::string filename_to_rename_to;
@@ -148,7 +138,6 @@
 							filename_to_rename_to.append(std::to_string(count));
 							filename_to_rename_to.append(".ent");
 
-							std::cout << "  checking existing files" << std::endl;
 							while (access(filename_to_rename_to.c_str(), F_OK) == 0)
 							{
 								// file exists
@@ -156,28 +145,21 @@
 								filename_to_rename_to.append(std::to_string(++count));
 								filename_to_rename_to.append(".ent");
 							}
-							std::cout << "  checking existing files done" << std::endl;
 
 						// RENAME
-							std::cout << "  renaming" << std::endl;
 							if ( rename( filename_to_save_to.c_str(), filename_to_rename_to.c_str() ) != 0 )
 							{
 								std::cout << "Error renaming file" << std::endl;
 							}
-							else
-							{
-								std::cout << "File successfully renamed" << std::endl;
-							}
-							std::cout << "  renaming done" << std::endl;
 
-						std::cout << " SAVING done " << std::endl;
+						// PRINT
+							std::cout << filename_to_rename_to << std::endl;
 					}
 				}
 
 				// SET VALUES NEEDED FOR NEXT UPDATE
 					m_last_updated = m_timer_s_total->get_float();
 
-				std::cout << "EXCHANGER done " << std::endl;
 				std::cout << std::endl;
 			}
 
