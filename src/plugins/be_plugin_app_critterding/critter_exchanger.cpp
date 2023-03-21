@@ -1,7 +1,6 @@
 #include "critter_exchanger.h"
 #include "species_system.h"
 #include "kernel/be_entity_core_types.h"
-// #include "kernel/be_entity_ops_copy.h"
 #include <iostream>
 #include <unistd.h>
 
@@ -38,6 +37,8 @@
 
 	void CdCritterExchanger::process()
 	{
+		unsigned int max_critters_on_exchange(100);
+		
 		if ( m_active->get_bool() )
 		{
 			// CHECK TIME
@@ -46,35 +47,35 @@
 			{
 				std::cout << std::endl << "Critter Exchanger: " << std::endl;
 				
+				// SUM OF ALL WEIGHTS
 				int sum = m_weight_save->get_uint() + m_weight_load->get_uint();
 
 				// PICK SAVE OR LOAD
 				m_rng->set( "min", Bint(0) );
 				m_rng->set( "max", sum );
+
+				// this bool helps us decide if we want to save later
 				bool loaded(false);
 
-				// NOTE: complex loading/saving if's, but it works out
-
-				// LOADING // FIXME RESET AGE
+				// LOADING
 				if ( m_rng->get_int() < m_weight_load->get_uint() )
 				{
 					std::cout << " LOADING: ";
-					
+
 					// CREATE TEMPORARY FILENAME
 						auto ms_start = topParent()->getChild("sys", 1)->getChild("timer", 1)->getChild("ms_start")->get_uint();
 						std::string filename_to_rename_to = std::to_string(ms_start);
 						filename_to_rename_to.append(".ent");
-					
+
 					// CREATE FILENAME
 						std::string filename;
 						unsigned int count(0);
-						unsigned int countmax(100);
      
 						filename = "critter_exchange_unit_";
 						filename.append(std::to_string(count));
 						filename.append(".ent");
      
-						while ( rename( filename.c_str(), filename_to_rename_to.c_str() ) != 0 && count++ < countmax )
+						while ( rename( filename.c_str(), filename_to_rename_to.c_str() ) != 0 && count++ < max_critters_on_exchange )
 						{
 							// file exists
 							filename= "critter_exchange_unit_";
@@ -83,10 +84,12 @@
 						}
      
 						// found
-						if ( count < countmax )
+						if ( count < max_critters_on_exchange )
 						{
-							// LOAD CRITTER
+							// PRINT
 								std::cout << filename << std::endl;
+
+							// LOAD CRITTER
 								BEntityLoad b;
 								b.loadEntity(m_critter_unit_container, filename_to_rename_to);
 
@@ -138,11 +141,11 @@
 							filename_to_rename_to.append(std::to_string(count));
 							filename_to_rename_to.append(".ent");
 
-							while (access(filename_to_rename_to.c_str(), F_OK) == 0)
+							while (access(filename_to_rename_to.c_str(), F_OK) == 0 && ++count < max_critters_on_exchange)
 							{
 								// file exists
 								filename_to_rename_to = "critter_exchange_unit_";
-								filename_to_rename_to.append(std::to_string(++count));
+								filename_to_rename_to.append(std::to_string(count));
 								filename_to_rename_to.append(".ent");
 							}
 
