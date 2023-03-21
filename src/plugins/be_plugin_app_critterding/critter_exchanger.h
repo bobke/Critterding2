@@ -3,6 +3,8 @@
 
 #include "critter_system.h"
 
+	class CdSpeciesSystem;
+
 	class CdCritterExchanger: public BEntity
 	{
 		public:
@@ -22,13 +24,13 @@
 			BEntity* m_active;
 			BEntity* m_critter_unit_container;
 			CdCritterSystem* m_critter_system;
+			CdSpeciesSystem* m_species_system;
 			BEntity* m_rng;
 	
 			// TIMER
 			BEntity* m_interval_seconds;
 			BEntity* m_timer_s_total;
 			BEntity* m_timer_frame;
-			Buint64 m_frame_counter_last;
 			Bfloat m_last_updated;
 			
 			// WEIGHTS

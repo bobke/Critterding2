@@ -303,14 +303,13 @@
 			m_food_unit_container = food_system->getChild( "unit_container", 1 );
 
 		// // CONTROL PANEL
-			// // auto control_panel = addChild( "control_panel", "CdControlPanel" );
 			// auto control_panel = addChild( "control_panel", new CdControlPanel() );
 			
 		// POPULATION CONTROLLER
 			addChild( "CdPopulationController", new CdPopulationController() );
 
-		// POPULATION CONTROLLER
-			// addChild( "CdCritterExchanger", new CdCritterExchanger() );
+		// CRITTER EXCHANGER
+			addChild( "CdCritterExchanger", new CdCritterExchanger() );
 			
 // 		// BODY SETTINGS
 // 			auto body_settings = addChild( "body_settings", new BEntity() );

@@ -5,6 +5,10 @@
 // #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <iostream>
+#include <fstream>
+#include <unistd.h>
+#include <fcntl.h>
 // #include <iostream>
 // #include <typeinfo>
 
@@ -231,17 +235,54 @@
 
 			// std::stringstream t_filename;
 			// t_filename << "entity_" << entity->id() << ".ent";
+
+			// Open the file for reading and writing
+			int fileDescriptor = open(filename.c_str(), O_RDWR | O_CREAT, 0666);
+
+			// Acquire a lock on the file
+			struct flock fileLock;
+			fileLock.l_type = F_WRLCK;
+			fileLock.l_start = 0;
+			fileLock.l_whence = SEEK_SET;
+			fileLock.l_len = 0;
+			fcntl(fileDescriptor, F_SETLKW, &fileLock);
+
+			// Read from and write to the file
+			// string line;
+			// getline(cin, line);
 			
-			// std::fstream file_op(t_filename.str(),std::ios::out);
-			std::fstream file_op( filename, std::ios::out );
-			file_op << "<root>" << std::endl;
-			file_op << std::endl;
-			file_op << file_external_parents_content.str();
-			file_op << std::endl;
-			file_op << file_content.str();
-			file_op << std::endl;
-			file_op << "</root>" << std::endl;
-			file_op.close();
+			std::stringstream file_contents;
+			file_contents << "<root>" << std::endl;
+			file_contents << std::endl;
+			file_contents << file_external_parents_content.str();
+			file_contents << std::endl;
+			file_contents << file_content.str();
+			file_contents << std::endl;
+			file_contents << "</root>" << std::endl;
+
+			write(fileDescriptor, file_contents.str().c_str(), file_contents.str().length());
+
+			// As well as being removed by an explicit F_UNLCK, record locks are automatically released when the process terminates or if it closes any file descriptor referring to a file on which locks are held.
+			// Release the lock on the file
+			// fileLock.l_type = F_UNLCK;
+			// fcntl(fileDescriptor, F_SETLK, &fileLock);
+
+			// Flush the output buffer to disk and close the file
+			fsync(fileDescriptor);
+			close(fileDescriptor);
+
+			
+			
+			
+			// std::fstream file_op( filename, std::ios::out );
+			// file_op << "<root>" << std::endl;
+			// file_op << std::endl;
+			// file_op << file_external_parents_content.str();
+			// file_op << std::endl;
+			// file_op << file_content.str();
+			// file_op << std::endl;
+			// file_op << "</root>" << std::endl;
+			// file_op.close();
 			
 		}
 

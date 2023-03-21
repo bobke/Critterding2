@@ -60,6 +60,20 @@
 	
 	void CdCritterSystem::process()
 	{
+		// GIVE SPECIES SPECIES, FIXME this is a fix for a manually loaded critter
+			// pick the last entity from m_unit_container
+			auto it = m_unit_container->children().rbegin();
+			if ( it != m_unit_container->children().rend() )
+			{
+				// if it doesn't have a species_reference, create a new species
+				auto species_reference = (*it)->getChild("species_reference", 1);
+				if ( !species_reference )
+				{
+					// species
+					m_species_system->addNewSpecies( (*it) );
+				}
+			}
+		
 		// AGE ALL UNITS WITH A DAY, COUNT UP ALL ENERGY FROM UNITS (FIXME ACCOUNT FOR CRITTERS, MAKE GLOBAL VARIABLE FOR TOTAL ENERGY)
 			float total_energy_in_entities(0.0f);
 			for_all_children_of( m_unit_container )
@@ -284,23 +298,7 @@
 				}
 			}
 		}
-		
-		// GIVE SPECIES SPECIES
-		// pick the last entity from m_unit_container
-		auto it = m_unit_container->children().rbegin();
-		if ( it != m_unit_container->children().rend() )
-		{
-			// if it doesn't have a species_reference, create a new species
-			auto species_reference = (*it)->getChild("species_reference", 1);
-			if ( !species_reference )
-			{
-				// species
-				m_species_system->addNewSpecies( (*it) );
-			}
-		}
-	
-		
-		
+
 		// // DIE BECAUSE CRITTER LIMIT REACHED
 		// if ( m_unit_container->numChildren() >= 150 )
 		// {
