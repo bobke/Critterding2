@@ -14,9 +14,11 @@
 		m_create_plugin = 0;
 		m_destroy_plugin = 0;
 
-		// COMMENTING THIS FIXES (<unknown module>) IN DEBUGGING
-		// if ( m_sceneLibHandle != 0 )
-			// dlclose(m_sceneLibHandle);
+		#ifndef NDEBUG
+			// NOTE COMMENTING THIS FIXES (<unknown module>) IN DEBUGGING
+			if ( m_sceneLibHandle != 0 )
+				dlclose(m_sceneLibHandle);
+		#endif
 	}
 
 	const std::string& BEntity_Plugin::error() const
