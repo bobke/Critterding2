@@ -7,15 +7,16 @@
 		typedef BEntity* create_t( BEntity* parent, const Buint type );
 		typedef void destroy_t( BEntity* );
 
-	class BeLibHandler
+	class BEntity_Plugin : public BEntity
 	{
 		public:
-			BeLibHandler();
-			virtual ~BeLibHandler();
-
+			BEntity_Plugin();
+			virtual ~BEntity_Plugin();
+			
 			bool open( const std::string& dir, const std::string& lib );
 			BEntity* create( BEntity* parent, const Buint id );
 			void destroy( BEntity* e );
+			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager ) { (void)hboxlayout; (void) plugin_manager; }
 			const std::string& error() const;
 		private:
 			bool open( const std::string& location );
@@ -25,25 +26,11 @@
 			std::string m_error;
 	};
 
-	class BEntity_Plugin : public BEntity
-	{
-		public:
-			BEntity_Plugin() {};
-			virtual ~BEntity_Plugin() {};
-			
-			bool open( const std::string& dir, const std::string& lib );
-			BEntity* create( BEntity* parent, const Buint id );
-			void destroy( BEntity* e );
-			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager ) { (void)hboxlayout; (void) plugin_manager; }
-		private:
-			BeLibHandler m_libHandler;
-	};
-
 	class BEntity_Plugin_Manager : public BEntity
 	{
 		public:
-			BEntity_Plugin_Manager();
-			virtual ~BEntity_Plugin_Manager();
+			BEntity_Plugin_Manager() {};
+			virtual ~BEntity_Plugin_Manager() {};
 			BEntity_Plugin* load( const std::string& name, const std::string& dir, const std::string& lib );
 			BEntity* create( BEntity* parent, const std::string& name );
 			BEntity* create( BEntity* parent, const std::string& library, const std::string& name );
