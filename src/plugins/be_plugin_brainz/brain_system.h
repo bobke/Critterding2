@@ -65,7 +65,6 @@
 				virtual ~BBrain() {};
 				void construct();
 				BEntity* m_neurons;
-				BEntity* m_outputs;
 		};
 		
 	//  NEURON

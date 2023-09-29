@@ -1,13 +1,14 @@
 #include "plugin.h"
 #include "kernel/be_plugin_interface.h"
 #include <QPen>
+#include <iostream>
 
 	// PLOT
 		BeEntityQwtPlot::BeEntityQwtPlot()
 		 : QwtPlot()
 		{
 			QWidget::setVisible( true );
-			setAutoReplot(true);
+			// setAutoReplot(true);
 			// resize ( 100, 100 );
 		}
 
@@ -36,21 +37,26 @@
 			setPaintAttribute(FilterPoints, true);
 			setPaintAttribute(MinimizeMemory, true);
 			setPaintAttribute(ImageBuffer, true);
-			// setPaintAttribute(FilterPointsAggressive, true);
 
-			setStyle( Steps ); // NoCurve, Lines , Sticks , Steps , Dots , UserCurve
+			setStyle( Lines ); // NoCurve, Lines , Sticks , Steps , Dots , UserCurve
 		}
 		
 		void BeEntityQwtPlotCurve::construct()
 		{
 			m_size_max = addChild("size_max", new BEntity_uint());
-			m_size_max->set( (Buint)3600 ); // FIXME   parent -> setAxisScale( Position::yRight, min, max, stepsize )
+			m_size_max->set( (Buint)4000 ); // FIXME   parent -> setAxisScale( Position::yRight, min, max, stepsize )
 		}
 
-		BeEntityQwtPlotCurve::~BeEntityQwtPlotCurve()
+		bool BeEntityQwtPlotCurve::set()
 		{
-		};
-
+			// REPLOT
+			auto plot = dynamic_cast<QwtPlot*>(parent());
+			QwtPlotCurve::setSamples( m_list );
+			plot->replot();
+			return true;
+		}
+		
+		
 		Bbool BeEntityQwtPlotCurve::onAddChild( BEntity* entity )
 		{ 
 			auto qpen = dynamic_cast<QPen*>(entity);
@@ -92,17 +98,20 @@
 			else
 			{
 				m_list[m_count] = value;
-				
-				const unsigned int clear_distance(5);
+
+				// CLEAR DISTANCE
+				const unsigned int clear_distance(20);
+				// const unsigned int clear_distance(10);
 				for ( unsigned int i(1); i <= clear_distance; ++i )
 				{
 					if ( m_count+i < (unsigned int)m_list.size() )
-						m_list[m_count+i] = 0.0;
+						m_list[m_count+i] = value;
+						// m_list[m_count+i] = 0.0;
 				}
 			}
-			QwtPlotCurve::setSamples( m_list );
 			++m_count;
 			resizeList();
+			set();
 		}
 		
 
@@ -193,45 +202,3 @@
 // 		std::cout << "LIB DESTROY:: " << p->id() << std::endl;
 		delete p;
 	}
-
-// // ---- FACTORIES
-// 
-// 	enum CLASS
-// 	{
-// 		  PLUGIN_INFO
-// 		, PLOT
-// 		, CURVE
-// 	};
-// 
-// 	extern "C" BEntity* create( const Buint type )
-// 	{
-// 		// PLUGIN DESCRIPTION ENTITY
-// 			if ( type == PLUGIN_INFO )
-// 			{
-// 				BEntityClasses* i = new BEntityClasses();
-// 					i->addClass( CLASS::PLOT, "qwt_plot" );
-// 					i->addClass( CLASS::CURVE, "qwt_curve" );
-// 				return i;
-// 			}
-// 
-// 		// ENTITIES
-// 			else
-// 			{
-// 				BEntity* i(0); // FIXME HACK DON'T NEED THIS SHIT LOOK AT IT, or does it cause problems for libloader?
-// 				
-// 				if ( type == CLASS::PLOT )
-// 					i = new BeEntityQwtPlot();
-// 			
-// 				else if ( type == CLASS::CURVE )
-// 					i = new BeEntityQwtPlotCurve_Float();
-// 
-// 
-// 				return i;
-// 			}
-// 	}
-// 
-// 	extern "C" void destroy(BEntity* p)
-// 	{
-// 		delete p;
-// 	}
-		

@@ -2,17 +2,24 @@
 #include "kernel/be_entity_core_types.h"
 #include "species_system.h"
 #include "body_system.h"
+#include "vision_system.h"
 #include <iostream>
  
 	void CdCritterSystem::construct()
 	{
 		auto settings = addChild( "settings", new BEntity() );
 
+		// VISION SYSTEM
+			m_vision_system = new CdVisionSystem();
+			addChild( "vision_system", m_vision_system );
+			addChild("SDLSwapBuffers", "SDLSwapBuffers");
+
 		// SPECIES SYSTEM
 			m_species_system = new CdSpeciesSystem();
 			addChild( "species_system", m_species_system );
 
 		m_unit_container = addChild( "unit_container", new BEntity() );
+		m_vision_system->m_unit_container = m_unit_container;
 		
 		m_minimum_number_of_units = settings->addChild( "minimum_number_of_units", new BEntity_uint() );
 		m_maximum_age = settings->addChild( "maximum_age", new BEntity_uint() );
@@ -50,12 +57,14 @@
 		// m_dropzone_size_z->set( Bfloat(180.0f) );
 		
 		m_insert_frame_interval = settings->addChild( "insert_frame_interval", new BEntity_uint() );
-		m_insert_frame_interval->set( (Buint)500 );
+		m_insert_frame_interval->set( (Buint)100 );
 
 		m_copy_random_position = settings->addChild( "copy_random_position", new BEntity_bool() );
 		m_copy_random_position->set( false );
 		
 		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
+		
+		
 	}
 	
 	void CdCritterSystem::process()
@@ -98,31 +107,30 @@
 					m_unit_container->addChild( "critter_unit", critter_unit );
 					critter_unit->setEnergy( m_intitial_energy->get_float() );
 
-					// generate random body
-					auto body_system = parent()->getChild( "body_system", 1 );
-					auto body_unit_system = body_system->getChild("unit_container", 1);
-					
-					// auto newBody = body_unit_system->addChild( "body", new BBody() );
-					auto newBody = body_unit_system->addChild( "body", new BEntity() );
-					auto fixed_1 = newBody->addChild( "body_fixed1", "BodyFixed1" );
-
-					// auto fixed_1 = body_unit_system->addChild( "body_fixed1", "BodyFixed1" );
-					
-					// auto fixed_1 = newBody->addChild( "body_fixed1", new BEntity() );
-
-					// BodyFixed1Maker m;
-					// m.make( fixed_1 );
-					
+					// BODY
+						auto body_system = parent()->getChild( "body_system", 1 );
+						auto body_unit_system = body_system->getChild("unit_container", 1);
 						
-					// REFERENCE TO EXTERNAL CHILD
-						critter_unit->addChild( "external_body", new BEntity_external() )->set( newBody );
+						// auto newBody = body_unit_system->addChild( "body", new BBody() );
+						auto newBody = body_unit_system->addChild( "body", new BEntity() );
+						auto fixed_1 = newBody->addChild( "body_fixed1", "BodyFixed1" );
 
-					// generate random brain
-					auto brain_system = parent()->getChild( "brain_system", 1 );
+						// auto fixed_1 = body_unit_system->addChild( "body_fixed1", "BodyFixed1" );
+						
+						// auto fixed_1 = newBody->addChild( "body_fixed1", new BEntity() );
 
-					critter_unit->m_brain = brain_system->getChild( "unit_container", 1)->addChild( "brain", "Brain" );
+						// BodyFixed1Maker m;
+						// m.make( fixed_1 );
+						
+							
+						// REFERENCE TO EXTERNAL CHILD
+							critter_unit->addChild( "external_body", new BEntity_external() )->set( newBody );
 
-					// OUTPUTS
+					// BRAIN
+						auto brain_system = parent()->getChild( "brain_system", 1 );
+						critter_unit->m_brain = brain_system->getChild( "unit_container", 1)->addChild( "brain", "Brain" );
+					
+						// OUTPUTS
 						// reference body constraints as brain outputs
 						auto outputs = critter_unit->m_brain->getChild( "outputs", 1 );
 						auto constraints_ref = outputs->addChild( "bullet_constraints", new BEntity_reference() );
@@ -132,42 +140,50 @@
 						// motor neurons
 						// eat
 						auto motor_neurons = critter_unit->addChild( "motor_neurons", new BEntity() );
-				// 		auto motor_neuron_eat = motor_neurons->addChild( "eat", "Neuron" );
 						auto motor_neuron_eat = motor_neurons->addChild( "eat",new BEntity_float() );
 						auto motor_neuron_procreate = motor_neurons->addChild( "procreate",new BEntity_float() );
 
 						auto motor_neurons_ref = outputs->addChild( "motor_neurons_ref", new BEntity_reference() );
 						motor_neurons_ref->set( motor_neurons );
 						
-					// INPUTS
-						auto inputs = critter_unit->m_brain->getChild( "inputs", 1 );
+						// INPUTS
+							auto inputs = critter_unit->m_brain->getChild( "inputs", 1 );
 
-						// ALWAYS FIRING NEURON
-							// critter_unit->m_always_firing_input = inputs->addChild( "always_firing_input", new BEntity_float() );
+							// ALWAYS FIRING NEURON
+								// critter_unit->m_always_firing_input = inputs->addChild( "always_firing_input", new BEntity_float() );
 
-						// CONSTRAINTS
-							for_all_children_of3( constraints )
-							{
-								auto constraint_angle_input = inputs->addChild( "constraint_angle", new BEntity_float() );
-								auto angle = (*child3)->get_reference()->getChild("angle", 1);
-								if ( angle )
+							// CONSTRAINTS
+								for_all_children_of3( constraints )
 								{
-									if ( constraint_angle_input )
+									auto constraint_angle_input = inputs->addChild( "constraint_angle", new BEntity_float() );
+									auto angle = (*child3)->get_reference()->getChild("angle", 1);
+									if ( angle )
 									{
-										// std::cout << "connecting" << std::endl;
-										angle->connectServerServer( constraint_angle_input );
+										if ( constraint_angle_input )
+										{
+											// std::cout << "connecting" << std::endl;
+											angle->connectServerServer( constraint_angle_input );
+										}
+										else
+										{
+											std::cout << "error: constraint_angle not found" << std::endl;
+										}
 									}
 									else
 									{
-										std::cout << "error: constraint_angle not found" << std::endl;
+										std::cout << "error: angle not found" << std::endl;
 									}
 								}
-								else
-								{
-									std::cout << "error: angle not found" << std::endl;
-								}
-							}
 
+							// VISION
+								unsigned int retinasize = 8;
+								do_times( retinasize*retinasize )
+								{
+									inputs->addChild( "vision_value_R", new BEntity_float() );
+									inputs->addChild( "vision_value_G", new BEntity_float() );
+									inputs->addChild( "vision_value_B", new BEntity_float() );
+									inputs->addChild( "vision_value_A", new BEntity_float() );
+								}
 
 					
 					critter_unit->m_brain = brain_system->getChildCustom( critter_unit->m_brain, "new" );
@@ -219,7 +235,7 @@
 						auto procreate = critter_unit->getChild( "motor_neurons", 1)->getChild( "procreate", 1);
 						if ( procreate->get_float() != 0.0f )
 						{
-							std::cout << "COPY: " << critter_unit->id() << " ad: " << critter_unit->getChild( "adam_distance", 1 )->get_uint() << " total:" << m_unit_container->numChildren()+1 << "(h: " << t_highest << ")" << std::endl;
+							std::cout << "ad: " << critter_unit->getChild( "adam_distance", 1 )->get_uint() << " total:" << m_unit_container->numChildren()+1 << "(h: " << t_highest << ")" << ": " << critter_unit->id() << std::endl;
 
 							critter_unit->setEnergy( critter_unit->energy() / 2 );
 // 							critter_unit->setAge( Buint(0) );
@@ -354,6 +370,8 @@
 		m_energy = addChild( "energy", new BEntity_float() );
 		// m_species = addChild( "species_reference", new BEntity_reference() );
 		addChild( "adam_distance", new BEntity_uint() )->set( Buint(0) );
+		
+		m_physics_component = 0;
 	}
 	
 	

@@ -490,11 +490,11 @@
 			glEnable ( GL_ALPHA_TEST );
 			glAlphaFunc ( GL_GREATER, 0.5f ) ;
 
-			GLfloat v[4];
-			v[0] = 0.5f;
-			v[1] = 0.5f;
-			v[2] = 0.5f;
-			v[3] = 1.0f;
+			// GLfloat v[4];
+			// v[0] = 0.5f;
+			// v[1] = 0.5f;
+			// v[2] = 0.5f;
+			// v[3] = 1.0f;
 
 			// glEnable(GL_LIGHTING);
 			glEnable(GL_NORMALIZE);
@@ -531,12 +531,14 @@
 		}		
 		
 // 		std::cout << w_width << " " << w_height << std::endl;
-// 				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-// 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
 		
+				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+				glViewport(0,0,w_width,w_height);
+
 				// // 	glViewport(0,0,640,480);
-				// 	glViewport(0,0,w_width,w_height);
+					// glViewport(0,0,w_width,w_height);
 				// 	glEnable(GL_DEPTH_TEST);
 				// 	glEnable(GL_BLEND);
 				// 	glEnable(GL_ALPHA_TEST);

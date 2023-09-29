@@ -5,6 +5,8 @@
 #include "kernel/be_entity_ops_copy.h"
 
 	class CdSpeciesSystem;
+	class CdVisionSystem;
+	class BeRigidBody;
 
 	//  SYSTEM
 		class CdCritterSystem : public BEntity
@@ -41,6 +43,8 @@
 				BEntity* m_dropzone_size_y;
 				BEntity* m_dropzone_size_z;
 				BEntity* m_copy_random_position;
+				
+				CdVisionSystem* m_vision_system;
 		};
 
 	//  UNIT
@@ -59,6 +63,7 @@
 				void setSpecies( BEntity* species ) { m_species->set( species ); }
 				BEntity* m_brain;
 
+				BEntity* m_physics_component;
 				// BEntity* m_always_firing_input;
 		private:
 				// PROPERTIES

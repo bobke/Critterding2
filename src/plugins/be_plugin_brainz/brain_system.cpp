@@ -38,7 +38,7 @@
 		
 		m_mutation_chance->set( Buint(8) );
 		m_mutationruns_min->set( Buint(1) );
-		m_mutationruns_max->set( Buint(10) );
+		m_mutationruns_max->set( Buint(16) );
 		// m_mutation_chance->set( Buint(30) );
 		// m_mutationruns_min->set( Buint(1) );
 		// m_mutationruns_max->set( Buint(20) );
@@ -89,11 +89,10 @@
 		for_all_children_of( m_unit_container )
 		{
 			auto brain = dynamic_cast<BBrain*>(*child);
-			auto neurons = brain->m_neurons;
 			bool first( true );
 
 			// loop through all neurons, check if threshold breached
-			for_all_children_of2( neurons )
+			for_all_children_of2( brain->m_neurons )
 			{
 				auto neuron = dynamic_cast<BNeuron*>( *child2 );
 
@@ -137,7 +136,7 @@
 			}
 
 			// loop through all neurons, if threshold breaches send signal
-			for_all_children_of3( neurons )
+			for_all_children_of3( brain->m_neurons )
 			{
 				auto neuron =  dynamic_cast<BNeuron*>(*child3);
 				if ( neuron )
@@ -289,6 +288,20 @@
 
 						// add synapse to randomly picked neuron
 						auto synapse = addSynapse( random_neuron );
+						
+						// VISION WEIGHT HACK
+						if ( (*child3)->name() == "vision_value_R" || (*child3)->name() == "vision_value_G" || (*child3)->name() == "vision_value_B" || (*child3)->name() == "vision_value_A" )
+						{
+							// std::cout << "vision input " << std::endl;
+							
+							auto weightEntity = synapse->getChild("weight", 1);
+							if ( weightEntity )
+							{
+								// std::cout << "from: " << weightEntity->get_float();
+								weightEntity->set( 0.2f * weightEntity->get_float() );
+								// std::cout << "  to: " << weightEntity->get_float() << std::endl;
+							}
+						}
 
 						// connect input to neuron
 						(*child3)->connectServerServer( synapse );
@@ -421,9 +434,9 @@
 									// add synapses
 									do_times( (unsigned int)number_synapses )
 									{
-										// THIS GIVES A 1/10 CHANCE THE SYNAPSE IS CONNECTED FROM AN INPUT
+										// THIS GIVES A 1/7 CHANCE THE SYNAPSE IS CONNECTED FROM AN INPUT
 										m_rng->set( "min", 1 );
-										m_rng->set( "max", 10 );
+										m_rng->set( "max", 7 );
 										
 										// CONNECT FROM AN INPUT
 										if ( m_rng->get_int() == 1 )
@@ -955,8 +968,8 @@
 	
 	void BBrain::construct()
 	{
-		m_outputs = addChild( "outputs", new BEntity() );
-		m_outputs = addChild( "inputs", new BEntity() );
+		addChild( "outputs", new BEntity() );
+		addChild( "inputs", new BEntity() );
 		m_neurons = addChild( "neurons", new BEntity() );
 	}
 	

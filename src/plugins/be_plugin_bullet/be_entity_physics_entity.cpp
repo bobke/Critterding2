@@ -746,29 +746,29 @@
 // 		}
 
 
-		void BPhysicsEntityMesh::process( const float timeDelta )
-		{
-// 			m_last_send_time_ago += timeDelta;
-			
-			if ( getPhysicsComponent() )
-			{
-				if ( m_impulse != BEVector3(0.0f, 0.0f, 0.0f) )
-				{
-					// FIXME DISABLED FOR NOW
-// 					btTransform t( getChild(this, "transform", 1)->getProperty_Transform() );
-// 					getPhysicsComponent()->getBody()->applyCentralImpulse(t.getBasis() * m_impulse * timeDelta * 30);
-						
-				}
-				
-				if ( m_angular_impulse != BEVector3(0.0f, 0.0f, 0.0f) )
-				{
-					// FIXME DISABLED FOR NOW
-// 					btTransform t( get("transform", 1)->getProperty_Transform() );
-// 					btVector3 test = t.getBasis() * m_angular_impulse * timeDelta * 30;
-// 					getPhysicsComponent()->getBody()->applyTorqueImpulse(test);
-				}
-			}
-		};
+// 		void BPhysicsEntityMesh::process( const float timeDelta )
+// 		{
+// // 			m_last_send_time_ago += timeDelta;
+// 			
+// 			if ( getPhysicsComponent() )
+// 			{
+// 				if ( m_impulse != BEVector3(0.0f, 0.0f, 0.0f) )
+// 				{
+// 					// FIXME DISABLED FOR NOW
+// // 					btTransform t( getChild(this, "transform", 1)->getProperty_Transform() );
+// // 					getPhysicsComponent()->getBody()->applyCentralImpulse(t.getBasis() * m_impulse * timeDelta * 30);
+// 						
+// 				}
+// 				
+// 				if ( m_angular_impulse != BEVector3(0.0f, 0.0f, 0.0f) )
+// 				{
+// 					// FIXME DISABLED FOR NOW
+// // 					btTransform t( get("transform", 1)->getProperty_Transform() );
+// // 					btVector3 test = t.getBasis() * m_angular_impulse * timeDelta * 30;
+// // 					getPhysicsComponent()->getBody()->applyTorqueImpulse(test);
+// 				}
+// 			}
+// 		};
 
 		BeRigidBody::ptr BPhysicsEntityTriangleMesh::getNewlyConstructedPhysicsComponent()
 		{

@@ -1,6 +1,7 @@
 #ifndef BE_ENTITY_GRAPHICS_MODEL_H_INCLUDED
 #define BE_ENTITY_GRAPHICS_MODEL_H_INCLUDED
 
+#include "be_entity_graphics_model_system.h"
 #include "kernel/be_entity_interface.h"
 #include "LinearMath/btVector3.h"
 #include <boost/shared_ptr.hpp>
@@ -22,7 +23,8 @@
 // 			virtual bool set( const Bstring& id, const Bfloat& value );
 
 			virtual void process();
-			
+			virtual void processWhenInSight( const btVector3* position );
+			virtual void processWhenInSight( const btTransform* transformHead, float sightrange );
 // 			void onAdd(BEntity* entity);
 
 		private:
@@ -33,6 +35,10 @@
 // 			btVector3 m_pre_rotation;
 // 			btScalar m_matrix[16];
 // 			btVector3 m_scale;
+
+			// GLuint m_vao;
+			// GLuint m_transformBuffer;
+			// GLuint m_scaleBuffer;
 	}; 
 
 	// TRANSFORM
@@ -55,5 +61,6 @@
 				BEntity* m_scale_z;
 			private:
 // 				char m_value_chars[64];
+				
 		};	
 #endif

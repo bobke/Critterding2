@@ -90,7 +90,6 @@ class BEntityTop : public BEntity
 // 				virtual void process_local();
 		// ----- COMMAND HANDLING
 // 			public:
-// 				BEntity_Plugin_Manager* getPluginManager() { return m_plugin_manager; }
 // 			virtual bool process_command(BEntityPt command);
 			private:
 				BEntity_Plugin_Manager* m_plugin_manager;

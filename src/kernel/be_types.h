@@ -1,7 +1,7 @@
 #ifndef BE_TYPES_H_INCLUDED
 #define BE_TYPES_H_INCLUDED
 
-// #include <cstdint>
+#include <cstdint>
 #include <cmath>
 #include <vector>
 #include <string>

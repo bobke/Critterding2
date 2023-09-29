@@ -27,7 +27,6 @@
 			
 			BEntity* m_energy_reduce_by;
 			BEntity* m_food_number_of_units;
-			
 	};
 
 #endif

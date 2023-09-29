@@ -25,17 +25,18 @@
 		{
 			public:
 				BeEntityQwtPlotCurve();
-				virtual ~BeEntityQwtPlotCurve();
+				virtual ~BeEntityQwtPlotCurve() {};
 				void construct();
 
 				virtual Bbool onAddChild( BEntity* entity );
 				void addValue( float value );
+				bool set();
 			protected:
 				// QVector<QPointF> m_list;
 				QVector<double> m_list;
 				unsigned int m_count;
 				BEntity* m_size_max;
-				void resizeList();
+				inline void resizeList();
 		};
 
 

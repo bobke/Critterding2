@@ -27,7 +27,8 @@
 
 		// SHADERS
 // 		m_effect.reset(new BeGraphicsEffect(m_filesystem, "/projects/bengine-new/share/sandbox/shaders/crittervision_new.vert", "/projects/bengine-new/share/sandbox/shaders/crittervision_new.frag"));
-		m_effect.reset(new BeGraphicsEffect(m_filesystem, "/projects/bengine3/share/instancing.vert", "/projects/bengine3/share/instancing.frag"));
+		// m_effect.reset(new BeGraphicsEffect(m_filesystem, "/projects/bengine3/share/instancing.vert", "/projects/bengine3/share/instancing.frag"));
+		m_effect.reset(new BeGraphicsEffect(m_filesystem, "/projects/bengine3/share/vertex_shader.glsl", "/projects/bengine3/share/fragment_shader.glsl"));
 		{
 			glUseProgram( m_effect->m_program.get()->handle() );
 		}

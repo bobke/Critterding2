@@ -111,10 +111,12 @@
 
 			void setGeometry( const boost::shared_ptr<BeGeometry>& geometry ) { m_geometry=geometry; }
 
-			virtual void process( const float timeDelta );
+			// virtual void process( const float timeDelta );
 
 // 			virtual bool setProperty( const std::string& caller_name, BeSignalHistory& entity_history, const std::string& value, const bool do_update=true );
+
 			virtual bool set( const Bstring& id, const char* value );
+			
 // 			virtual const std::string& getProperty_String(const std::string& caller_name) const;
 // 			virtual Bstring* get_string( const Bstring& id );
 			virtual const char* get_string( const Bstring& id );

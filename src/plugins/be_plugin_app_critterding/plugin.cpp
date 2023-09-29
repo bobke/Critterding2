@@ -176,11 +176,14 @@
 			light->getChild( "color_specular_b", 1 )->set( 0.2f );
 			light->getChild( "color_specular_a", 1 )->set( 0.0f );
 		}
-			
+
 		// MAP
 		{
 			auto map = addChild( "map", new BEntity() );
-			const char* map_location = "../share/modules/cube-floor-100-1.obj";
+			// const char* map_location = "../share/modules/cube-floor-100-1.obj";
+			const char* map_location = "../share/modules/easy.obj";
+			// const char* map_location = "../share/modules/medium.obj";
+			// const char* map_location = "../share/modules/hard.obj";
 
 			// PHYSICS map
 			auto physics_entity = m_physics_world->addChild( "physics_entity_map", "PhysicsEntity" );
@@ -191,12 +194,12 @@
 				auto physics_scale_x = physics_entity->addChild("scale_x", new BEntity_float_property());
 				auto physics_scale_y = physics_entity->addChild("scale_y", new BEntity_float_property());
 				auto physics_scale_z = physics_entity->addChild("scale_z", new BEntity_float_property());
-					physics_scale_x->set( 1.25f );
-					physics_scale_y->set( 1.0f );
-					physics_scale_z->set( 1.25f );
-					// physics_scale_x->set( 1.8f );
+					// physics_scale_x->set( 1.25f );
 					// physics_scale_y->set( 1.0f );
-					// physics_scale_z->set( 1.8f );
+					// physics_scale_z->set( 1.25f );
+					physics_scale_x->set( 6.0f );
+					physics_scale_y->set( 10.0f );
+					physics_scale_z->set( 10.0f );
 
 			// GRAPHICS
 				// map
@@ -221,12 +224,12 @@
 					physics_scale_y->connectServerServer( graphics_transform->getChild("scale_y", 1) );
 					physics_scale_z->connectServerServer( graphics_transform->getChild("scale_z", 1) );
 					
-					graphics_transform->getChild("scale_x", 1)->set( 1.25f );
-					graphics_transform->getChild("scale_y", 1)->set( 1.0f );
-					graphics_transform->getChild("scale_z", 1)->set( 1.25f );
-					// graphics_transform->getChild("scale_x", 1)->set( 1.8f );
+					// graphics_transform->getChild("scale_x", 1)->set( 1.25f );
 					// graphics_transform->getChild("scale_y", 1)->set( 1.0f );
-					// graphics_transform->getChild("scale_z", 1)->set( 1.8f );
+					// graphics_transform->getChild("scale_z", 1)->set( 1.25f );
+					graphics_transform->getChild("scale_x", 1)->set( 6.0f );
+					graphics_transform->getChild("scale_y", 1)->set( 10.0f );
+					graphics_transform->getChild("scale_z", 1)->set( 10.0f );
 
 					// CONNECT
 					physics_entity_transform->connectServerServer( graphics_transform );
@@ -279,6 +282,8 @@
 
 		// skydome
 			auto t_graphicsModelSkyDome = t_graphicsModelSystem->addChild("GraphicsModel_SkyDome", "GraphicsModel");
+			// t_graphicsModelSkyDome->getChild("active", 1)->set( false );
+
 			
 			t_graphicsModelSkyDome->set("filename", "../share/modules/skydome3.obj");
 			// t_graphicsModelSkyDome->set("filename", "/projects/critterding-beta14/share/critterding/skies/round/skydome3.obj");
@@ -332,6 +337,7 @@
 			// std::cout << "collision e1: " << e1->name() << "(" << e1->id() << ")" << std::endl;
 			// std::cout << "collision e2: " << e2->name() << "(" << e2->id() << ")" << std::endl;
 
+			// FIXME BUGGY WHEN DELETING CRITTERS
 			// EAT: TRANSFER ENERGY FROM FOOD TO CRITTER 
 				auto critter = findCritter( e1, e2 );
 				if ( critter )

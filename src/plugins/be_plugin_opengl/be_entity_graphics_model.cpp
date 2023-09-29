@@ -21,126 +21,86 @@
 		void BGraphicsModel::setModel( boost::shared_ptr<BeGraphicsModelResource> model )
 		{
 			m_model=model;
+			
+			// // Create the VAO
+			// glGenVertexArrays(1, &m_vao);
+			// glBindVertexArray(m_vao);
+// 
+// 			// Create the VBO for transforms
+// 			auto maxInstances  = 10000;
+// 			glGenBuffers(1, &m_transformBuffer);
+// 			glBindBuffer(GL_ARRAY_BUFFER, m_transformBuffer);
+// 			glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(float[16]), nullptr, GL_DYNAMIC_DRAW);
+// 			
+// 			// Set up vertex attribute pointers for the transform matrix
+// 			for (int i = 0; i < 4; ++i) {
+// 				glEnableVertexAttribArray(3 + i);
+// 				glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(float[16]), (void*)(i * sizeof(float[16])));
+// 				glVertexAttribDivisor(3 + i, 1);
+// 			}
+// 
+// 			// Create the VBO for scales
+// 			glGenBuffers(1, &m_scaleBuffer);
+// 			glBindBuffer(GL_ARRAY_BUFFER, m_scaleBuffer);
+// 			glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(float[3]), nullptr, GL_DYNAMIC_DRAW);
+// 			
+// 			// Set up vertex attribute pointer for the scale vector
+// 			glEnableVertexAttribArray(7);
+// 			glVertexAttribPointer(7, 3, GL_FLOAT, GL_FALSE, sizeof(float[3]), (void*)0);
+// 			glVertexAttribDivisor(7, 1);
+// 
+// 			// Unbind
+// 			glBindBuffer(GL_ARRAY_BUFFER, 0);
+// 			glBindVertexArray(0);
 		}
+
 		boost::shared_ptr<BeGraphicsModelResource> BGraphicsModel::getModel() const
 		{
 			return m_model;
 		}
 
-// 		bool BGraphicsModel::setProperty( const std::string& caller_name, const btVector3& value, const bool do_update )
-// 		{
-//  			// std::cout << "BeServerEntityPhysicsMesh:VECTOR3: " << caller_name << ":" << value.x() << std::endl;
-// 			if ( caller_name == "pre_scale" )
-// 			{
-// 				if ( m_pre_scale != value )
-// 				{
-// 					m_pre_scale = value;
-// 					if ( do_update )
-// 						onUpdate(entity_history);
-// 					return true;
-// 				}
-// 			}
-// 			else if ( caller_name == "pre_position" )
-// 			{
-// 				if ( m_pre_position != value )
-// 				{
-// 					m_pre_position = value;
-// 					if ( do_update )
-// 						onUpdate(entity_history);
-// 					return true;
-// 				}
-// 			}
-// 			else if ( caller_name == "pre_rotation" )
-// 			{
-// 				if ( m_pre_rotation != value )
-// 				{
-// 					m_pre_rotation = value;
-// 					if ( do_update )
-// 						onUpdate(entity_history);
-// 					return true;
-// 				}
-// 			}
-// 			return false;
-// 		}
-	
-	
-	
-	
-	
-
-// 		void BGraphicsModel::onAdd(BEntity* entity)
-// 		{
-// 			if ( entity->name() == "sight_distance" )
-// 			{
-// 				m_sight_distance = entity;
-// 			}
-// 		}
-
-
-// 	bool BGraphicsModel::set( const Bstring& id, const Bfloat& value )
-// 	{
-// 		if ( id == "scale_x" )
-// 		{
-// 			if ( m_scale.x() != value )
-// 			{
-// 				m_scale.setX( value );
-// // 				onUpdate();
-// 				return true;
-// 			}
-// 		}
-// 		else if ( id == "scale_y" )
-// 		{
-// 			if ( m_scale.y() != value )
-// 			{
-// 				std::cout << "setting y " << value << std::endl;
-// 				m_scale.setY( value );
-// // 				onUpdate();
-// 				return true;
-// 			}
-// 		}
-// 		else if ( id == "scale_z" )
-// 		{
-// 			if ( m_scale.z() != value )
-// 			{
-// 				m_scale.setZ( value );
-// // 				onUpdate();
-// 				return true;
-// 			}
-// 		}
-// 		return false;
-// 	}
-
 	void BGraphicsModel::process()
 	{
+		// FIXME add a bool "update_instanced_vector" so we only update vector all once  per frame (important when crittervision is implemented)
 		
-// 		btTransform t1;
-// 		t1.setIdentity();
-// 		t1.setOrigin(btVector3(0.0f, -1.0f, -4.5f));
-// 		t1.getOpenGLMatrix( m_matrix );
+		// HACK COLORS HACK
+		
+		glEnable(GL_LIGHTING);
 
-		// FIXME COLORS HACK
-		// std::cout << name() << std::endl;
-		if ( name() == "graphics_entity_critter" )
-		{
-			glEnable(GL_LIGHTING);
-			glColor4f(0.0f, 0.0f, 0.1f, 1.0f);
-		}
-		else if ( name() == "graphics_entity_food" )
-		{
-			glEnable(GL_LIGHTING);
-			glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
-		}
-		else if ( name() == "GraphicsModel_SkyDome" )
-		{
-			glDisable(GL_LIGHTING);
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		}
-		else
-		{
-			glEnable(GL_LIGHTING);
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		}
+		// if ( m_lighting->get_bool() )
+		// {
+		// 	glEnable(GL_LIGHTING);
+		// 	glColor4f( m_light_r->get_float(), m_light_g->get_float(), m_light_b->get_float(), m_light_a->get_float() );
+		// 	// std::cout <<  name() << " : " <<  m_light_r->get_float() << " " << m_light_g->get_float() << " " << m_light_b->get_float() << " " << m_light_a->get_float() << std::endl;;
+		// }
+		// else
+		// {
+		// 	glDisable(GL_LIGHTING);
+		// 	glColor4f( m_light_r->get_float(), m_light_g->get_float(), m_light_b->get_float(), m_light_a->get_float() );
+		// }
 
+		// // std::cout << name() << std::endl;
+		// if ( name() == "graphics_entity_critter" )
+		// {
+		// 	glEnable(GL_LIGHTING);
+		// 	glColor4f(0.1f, 0.0f, 0.1f, 1.0f);
+		// }
+		// else if ( name() == "graphics_entity_food" )
+		// {
+		// 	glEnable(GL_LIGHTING);
+		// 	glColor4f(0.0f, 0.5f, 0.5f, 1.0f);
+		// }
+		// else if ( name() == "GraphicsModel_SkyDome" )
+		// {
+		// 	glDisable(GL_LIGHTING);
+		// 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		// }
+		// else
+		// {
+		// 	glEnable(GL_LIGHTING);
+		// 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // FIXME entities yeah
+		// }
+  
 		if( getModel() && getModel()->isReady() )
 		{
 			bool found_child(false);
@@ -165,7 +125,7 @@
 					found_child = true;
 				}
 			}
-			
+
 			// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
 			if ( !found_child )
 			{
@@ -173,53 +133,123 @@
 					getModel()->get()->draw();
 				glPopMatrix();
 			}
-			
-			
-			
-// 			// MAKE IT ROTATE FIXME so yeah a transform entity and do this elsewhere
-// 				btTransform tr;
-// 				tr.setIdentity();
-// 	// 			tr.setOrigin(btVector3(-600.0f, -40.0f, 0.0f));
-// 	// 			tr.setOrigin(btVector3(-570.0f, -40.0f, -20.0f));
-// 	// 			tr.getBasis().setEulerZYX( 2.14f, -0.0f, 0.0f );
-// 
-// 				
-// 				// debug counter
-// // 					std::cout << f_count << std::endl;
-// 
-// 				// FIXME using timer does not seem to smooth opengl...
-// 					t.mark();
-// 					f_count++;
-// 
-// 				// archer + Medieval_City3
-// 					tr.setOrigin(btVector3(0.0f, -1.0f, -4.5f));
-// 					tr.getBasis().setEulerZYX( 0.0f, 0.001f * t.getTotalMilliSeconds(), 0.0f );
-// // 					tr.getBasis().setEulerZYX( 0.0f, 0.0001f * f_count, 0.0f );
-// 				
-// 					
-// 				// FIXME difference to last frame, 
-// 				// frame time debug, at 60 should not be more than 17 with only opengl running, come on
-// // 					if ( (t.getTotalMilliSeconds() - t_diff) > 20 )
-// // 						std::cout << "DIFF MODEL" << id() << " " << (t.getTotalMilliSeconds() - t_diff) << std::endl;
-// // 					t_diff = t.getTotalMilliSeconds();
-// 					
-// 				// Sirius
-// // 					tr.setOrigin(btVector3(0.0f, -70.0f, -4.5f));
-// // 					tr.getBasis().setEulerZYX( 0.0f, -0.002f * f_count, 0.0f );
-// 					
-// 				// PARIS
-// // 					tr.setOrigin(btVector3(-125, -100.0f, -125.0f));
-// // 					tr.getBasis().setEulerZYX( 0.0f, -0.0001f * t.getTotalMilliSeconds(), 0.0f );
-// 					
-// 				tr.getOpenGLMatrix( m_matrix );
-// 
-// 			glPushMatrix();
-// 				glMultMatrixf( m_matrix );
-// 				getModel()->get()->draw();
-// 			glPopMatrix();
 		}
 	}
 
+	void BGraphicsModel::processWhenInSight( const btVector3* position ){};
+	void BGraphicsModel::processWhenInSight( const btTransform* transformHead, float sightrange )	
+	{
+		if ( name() == "GraphicsModel_SkyDome" )
+		{
+			return;
+		}
+
+			// FIXME add a bool "update_instanced_vector" so we only update vector all once  per frame (important when crittervision is implemented)
+
+			if( getModel() && getModel()->isReady() )
+			{
+				
+				// HACK COLORS HACK
+				// std::cout << name() << std::endl;
+				
+				// if ( m_lighting->get_bool() )
+				// {
+				// 	glEnable(GL_LIGHTING);
+				// 	glColor4f( m_light_r->get_float(), m_light_g->get_float(), m_light_b->get_float(), m_light_a->get_float() );
+				// }
+				// else
+				// {
+				// 	glDisable(GL_LIGHTING);
+				// }
+
+				bool always_render(false);
+				if ( name() == "graphics_entity_map" )
+				{
+					always_render = true;
+				}
+				
+				
+				// if ( name() == "graphics_entity_critter" )
+				// {
+				// 	glEnable(GL_LIGHTING);
+				// 	glColor4f(0.0f, 0.0f, 0.1f, 1.0f);
+				// }
+				// else if ( name() == "graphics_entity_food" )
+				// {
+				// 	glEnable(GL_LIGHTING);
+				// 	glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
+				// }
+				// else if ( name() == "graphics_entity_map" )
+				// {
+				// 	always_render = true;
+				// 	glEnable(GL_LIGHTING);
+				// 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // FIXME entities yeah
+				// }
+				// else if ( name() == "GraphicsModel_SkyDome" )
+				// {
+				// 	glDisable(GL_LIGHTING);
+				// 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+				// }
+				// else
+				// {
+				// 	glEnable(GL_LIGHTING);
+				// 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // FIXME entities yeah
+				// }
+
+				bool found_child(false);
+				btVector3 position = transformHead->getOrigin();
+				btVector3 positionB;
+				for_all_children
+				{
+					auto t = dynamic_cast<glTransform*>(*child);
+					if ( (t) )
+					{
+						positionB = btVector3( t->m_value[12], t->m_value[13], t->m_value[14] );
+						
+						// check if position is in vicinity of mouth
+						if ( position.distance( positionB ) < sightrange || always_render )
+						{
+							// check if position is in front of mouth
+							positionB -=  position;
+							positionB.normalize();
+
+							btVector3 forwardVector = btVector3( transformHead->getBasis()[0][2], transformHead->getBasis()[1][2], transformHead->getBasis()[2][2] );
+							float dotProduct = positionB.dot( forwardVector );
+
+							if( dotProduct >= 0.5 || always_render )
+							{
+								// std::cout << "  drawing : " << t->name() << std::endl;
+								glPushMatrix();
+									glMultMatrixf( t->m_value );
+									
+									if ( t->m_scale_x->get_float() != 1.0f || t->m_scale_y->get_float() != 1.0f || t->m_scale_z->get_float() != 1.0f )
+									{
+										glScalef( t->m_scale_x->get_float(),  t->m_scale_y->get_float(),  t->m_scale_z->get_float() );
+									}
+									getModel()->get()->draw();
+								glPopMatrix();
+							}
+							// else
+							// {
+								// std::cout << "skip" << std::endl;
+							// }
+						}
+						found_child = true;
+					}
+				}
+
+				// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
+				if ( !found_child )
+				{
+					glPushMatrix();
+						getModel()->get()->draw();
+					glPopMatrix();
+				}
+			}
+	}
+	
+	
+	
 	const char* BGraphicsModel::get_string( const Bstring& id )
 	{
 		if ( id == "filename" )

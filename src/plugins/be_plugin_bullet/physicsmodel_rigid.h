@@ -3,7 +3,7 @@
 
 // #include "kernel/be_entity_interface.h"
 #include "be_physics_material.h"
-#include "btBulletDynamicsCommon.h"
+#include "bullet3/src/btBulletDynamicsCommon.h"
 #include <boost/shared_ptr.hpp>
 #include <iostream>
 #include "kernel/be_entity_interface.h"
