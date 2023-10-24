@@ -17,6 +17,9 @@ class BRaycast : public BEntity
 
 	private:
 		btDynamicsWorld*	btDynWorld;
+		
+		BEntity* m_hit_entity;
+		
 		BEntity* m_source_x;
 		BEntity* m_source_y;
 		BEntity* m_source_z;

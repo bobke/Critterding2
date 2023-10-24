@@ -19,12 +19,21 @@
 			bool set();
 	};
 
-		class cmd_launchSystemMonitor: public BEntity_trigger
+	class cmd_launchSystemMonitor: public BEntity_trigger
 	{
 		public:
 			cmd_launchSystemMonitor() { };
 			virtual ~cmd_launchSystemMonitor() {};
 			bool set();
 	};
+	
+	class cmd_launchSelectionWindow: public BEntity_trigger
+	{
+		public:
+			cmd_launchSelectionWindow() { };
+			virtual ~cmd_launchSelectionWindow() {};
+			bool set();
+	};
+
 	
 #endif

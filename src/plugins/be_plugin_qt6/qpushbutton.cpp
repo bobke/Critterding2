@@ -49,7 +49,6 @@
 					{
 						auto cmdref = cmdbuffer->addChild("reference", new BEntity_reference() ); // FIXME make this a reference when adding to the actions too
 						cmdref->set(*child);
-
 					}
 				}
 			}

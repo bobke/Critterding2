@@ -88,9 +88,9 @@
 // 			action_open->connectServerServer(command_open_config_libraries);
 // 
 // 			// // COMMAND
-// 			// auto command = actions->addChild("load_entity", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+// 			// auto command = actions->addChild("load_entity", new BEntity_reference() );
 // 			// command->set(entity);
-// 			// auto layout_target = command->addChild("layout_target", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+// 			// auto layout_target = command->addChild("layout_target", new BEntity_reference() );
 // 			// layout_target->set(vboxlayout_entity);
 
 			auto general_layout_H = qwindow->addChild( "QT HBoxlayout", "QHBoxLayout" );
@@ -168,9 +168,9 @@
 								// COMMAND
 								{
 									auto actions = button_expand->addChild("_commands", new BEntity() );
-									auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+									auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() );
 									command->set( value->parent() );
-									auto layout_target = command->addChild("layout_target", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+									auto layout_target = command->addChild("layout_target", new BEntity_reference() );
 									layout_target->set( i );
 								}
 							}
@@ -224,9 +224,9 @@
 								if ( !commands )
 								{
 									commands = button_expand->addChild("_commands", new BEntity() );
-									auto command = commands->addChild("admin_entity_group_expand", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+									auto command = commands->addChild("admin_entity_group_expand", new BEntity_reference() );
 									command->set( value->parent() );
-									auto layout_target = command->addChild("layout_target", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+									auto layout_target = command->addChild("layout_target", new BEntity_reference() );
 									layout_target->set( i );
 								}
         // 
@@ -493,7 +493,7 @@
 	// 
 	// 									// COMMAND
 	// 										auto actions = button_add->addChild("_commands", new BEntity() );
-	// 										auto command = actions->addChild("admin_entity_window_open", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+	// 										auto command = actions->addChild("admin_entity_window_open", new BEntity_reference() );
 	// 										command->set(entity);
 	// 								}
 
@@ -508,9 +508,9 @@
 
 						// COMMAND
 							auto actions = button_add->addChild("_commands", new BEntity() );
-							auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+							auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() );
 							command->set(entity);
-							auto layout_target = command->addChild("layout_target", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+							auto layout_target = command->addChild("layout_target", new BEntity_reference() );
 							layout_target->set(vboxlayout_entity);
 					}
 					else
@@ -522,9 +522,9 @@
 
 							// COMMAND
 								auto actions = button_add->addChild("_commands", new BEntity() );
-								auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+								auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() );
 								command->set( entity->get_reference() );
-								auto layout_target = command->addChild("layout_target", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+								auto layout_target = command->addChild("layout_target", new BEntity_reference() );
 								layout_target->set(vboxlayout_entity);
 						}
 						else
@@ -533,9 +533,9 @@
 
 							// COMMAND
 								auto actions = button_add->addChild("_commands", new BEntity() );
-								auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+								auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() );
 								command->set( entity );
-								auto layout_target = command->addChild("layout_target", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+								auto layout_target = command->addChild("layout_target", new BEntity_reference() );
 								layout_target->set(vboxlayout_entity);
 						}
 					}
@@ -723,7 +723,7 @@
 
 				// COMMAND
 					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("remove", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					auto command = actions->addChild("remove", new BEntity_reference() );
 					command->set(entity);
 
 					// auto cmd_remove = button->addChild("remove", new BEntity_reference() );
@@ -738,7 +738,7 @@
 
 				// COMMAND
 					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("copy", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					auto command = actions->addChild("copy", new BEntity_reference() );
 					command->set(entity);
 			}
 
@@ -749,7 +749,7 @@
 
 				// COMMAND
 					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("save", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					auto command = actions->addChild("save", new BEntity_reference() );
 					command->set(entity);
 			}
 
@@ -760,7 +760,7 @@
 
 				// COMMAND
 					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("admin_load_entity", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					auto command = actions->addChild("admin_load_entity", new BEntity_reference() );
 					command->set(entity);
 			}
 
@@ -771,7 +771,7 @@
 
 				// COMMAND
 					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() );
 					command->set(entity);
 			}
 			
@@ -784,7 +784,7 @@
 
 					// COMMAND
 						auto actions = button->addChild("_commands", new BEntity() );
-						auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+						auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() );
 						command->set(entity->get_reference());
 				}
 			}
@@ -798,7 +798,7 @@
 
 				// COMMAND
 					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("admin_entity_graph", new BEntity_reference() ); // FIXME INTO A REFERENCE TO THE CONCERNING OBJECT
+					auto command = actions->addChild("admin_entity_graph", new BEntity_reference() );
 					command->set(entity);
 			}
 		

@@ -94,11 +94,9 @@
 			auto launchAdminWindow = commands->addChild( "launchAdminWindow", new cmd_launchAdminWindow() );
 			auto launchControlPanel = commands->addChild( "launchControlPanel", new cmd_launchControlPanel() );
 			auto launchSystemMonitor = commands->addChild( "launchSystemMonitor", new cmd_launchSystemMonitor() );
-			
-			
-		// BINDINGS FIXME load adminwindow command
-			
-			
+			auto launchSelectionWindow = commands->addChild( "launchSelectionWindow", new cmd_launchSelectionWindow() );
+
+		// BINDINGS
 			auto bindings = glscene->getChild( "bindings", 1 );
 
 			auto binding_f1 = bindings->addChild( "f1", new BEntity_trigger() );
@@ -109,6 +107,10 @@
 
 			auto binding_f3 = bindings->addChild( "f3", new BEntity_trigger() );
 			binding_f3->connectServerServer( launchSystemMonitor );
+
+			// bindings to mouse
+			auto binding_mouse_2 = bindings->addChild( "mousebutton_down_2", new BEntity_trigger() );  // FIXME CONNECT TO bool under std_window
+			binding_mouse_2->connectServerServer( launchSelectionWindow );
 			
 			// bindings to movements
 			auto movement = m_camera->getChild("movement", 1);

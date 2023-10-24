@@ -1,6 +1,7 @@
 #include "kernel/be_entity_core_types.h"
 #include "plugin.h"
 #include <iostream>
+#include <sstream>
 #include <GL/glew.h>
 
 	void Scene::construct()
@@ -383,25 +384,9 @@
 								binding->set();
 							}
 						}
-						
-						// auto binding = bindings->getChild( SDL_GetKeyName( event.key.keysym.sym ), 1 );
-						// if ( binding && binding->get_bool() == false )
-						// {
-						// 	binding->set( true );
-						// }
-						
-						
-						// // HACK DEBUG STUFF to show buttons pressed
-						// if ( (binding && binding->get_bool() == false) || !binding ) 
-							// std::cout << "pressed '" << SDL_GetKeyName( event.key.keysym.sym ) << "'" << std::endl;
 					}
-
-						
-					
-	// 				const std::string& key = SDL_GetKeyName( event.key.keysym.sym );
-	// 				if ( !m_canvas || !m_canvas->keyPress( key ) )
-	// 					m_eventsystem->activateKeystate( key );
 				}
+
 				else if(event.type == SDL_KEYUP)
 				{
 					auto bindings = getChild( "bindings", 1 );
@@ -418,23 +403,63 @@
 								}
 							}
 						}
-		// 				const std::string& key = SDL_GetKeyName( event.key.keysym.sym );
-		// 				if ( !m_canvas || !m_canvas->keyRelease( key ) )
-		// 					m_eventsystem->deactivateKeystate( key );
-		// 	// 			m_eventsystem->deactivateKeystate( SDL_GetKeyName( event.key.keysym.sym ) );
 					}
 				}
-				
 				
 				else if(event.type == SDL_MOUSEMOTION)
 				{
 					m_mouse_x->set( (int)event.motion.x );
 					m_mouse_y->set( (int)event.motion.y );
-					
-					// std::cout << "x: " << m_mouse_x->get_int()  << "y: " << m_mouse_y->get_int() << std::endl;
-					
 				}
 				
+				else if (event.type == SDL_MOUSEBUTTONDOWN)
+				{
+					std::stringstream mouseButton_name;
+					mouseButton_name << "mousebutton_down_" << (int)event.button.button;
+					
+					auto bindings = getChild( "bindings", 1 );
+					if( bindings )
+					{
+						auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
+						if ( binding )
+						{
+							if ( binding->class_id() == std::string("bool") )
+							{
+								if ( binding->get_bool() == false )
+								{
+									binding->set( true );
+								}
+							}
+							else if ( binding->class_id() == std::string("trigger") )
+							{
+								binding->set();
+							}
+						}
+					}
+				}
+
+				else if (event.type == SDL_MOUSEBUTTONUP)
+				{
+					std::stringstream mouseButton_name;
+					mouseButton_name << "mousebutton_up_" << (int)event.button.button;
+					
+					auto bindings = getChild( "bindings", 1 );
+					if( bindings )
+					{
+						auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
+						if ( binding )
+						{
+							if ( binding->class_id() == std::string("bool") )
+							{
+								if ( binding->get_bool() == true )
+								{
+									binding->set( false );
+								}
+							}
+						}
+					}
+				}
+
 			}
 			
 
@@ -445,17 +470,7 @@
 // 					m_eventsystem->activateKeystate( key );
 // 			}
 // 
-// 			else if (event.type == SDL_MOUSEBUTTONDOWN)
-// 			{
-// 	// 			std::cout << (int)event.button.button << std::endl;
-// 				if ( !m_canvas || !m_canvas->buttonPress(event.button.button) )
-// 					m_eventsystem->activateKeystate( event.button.button+2048 );
-// 			}
-// 			else if (event.type == SDL_MOUSEBUTTONUP)
-// 			{
-// 				if ( m_canvas ) m_canvas->buttonRelease(event.button.button);
-// 					m_eventsystem->deactivateKeystate( event.button.button+2048 );
-// 			}
+
 // 
 // 			else if (event.type == SDL_JOYBUTTONDOWN)
 // 			{
