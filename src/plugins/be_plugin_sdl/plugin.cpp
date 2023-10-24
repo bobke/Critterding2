@@ -16,8 +16,8 @@
 	BGLWindow::BGLWindow() :
 // 	m_eventsystem(eventsystem),
 	w_bpp(0),
-	w_width(0),
-	w_height(0),
+	// w_width(0),
+	// w_height(0),
 	n_width(0),
 	n_height(0),
 	fs(0),
@@ -26,8 +26,6 @@
 	vidFlags(0),
 	hwaccel(0),
 	settingsfs(0),
-	mousex(0),
-	mousey(0),
 	m_resized(false),
 	m_resizable(false)
 	, m_destroy_entity_on_close(this)
@@ -38,13 +36,17 @@
 // 		m_eventsystem->registerEvent( DOWN, "glwindow-quit", boost::shared_ptr<Event>(new Event(BeCommand("quit"), EVENT_NOREPEAT, 0)) );	
 		setProcessing();
 		
-		create("SDL WINDOW", 1224, 768);
-		
 	} 
 
 	void BGLWindow::construct()
 	{
 		addChild( "bindings", new BEntity() );
+		m_width = addChild("width", new BEntity_int());
+		m_height = addChild("height", new BEntity_int());
+		m_mouse_x = addChild("mouse_x", new BEntity_int());
+		m_mouse_y = addChild("mouse_y", new BEntity_int());
+
+		create("SDL WINDOW", 1224, 768);
 	}
 	
 	void BGLWindow::create(const std::string& title, const unsigned int t_width, const unsigned int t_height)
@@ -161,8 +163,11 @@
 
 				//Hacky
 				w_bpp = colorBits;
-				w_width = width;
-				w_height = height;
+				
+				m_width->set( (int)width );
+				m_height->set( (int)height );
+				// w_width = width;
+				// w_height = height;
 				n_width = width;
 				n_height = height;
 
@@ -173,7 +178,7 @@
 				setTitle(title);
 
 				//Create window
-				m_surface = SDL_SetVideoMode(w_width, w_height, w_bpp, videoFlags);
+				m_surface = SDL_SetVideoMode(m_width->get_int(), m_height->get_int(), w_bpp, videoFlags);
 				glewInit();
 
 // 				m_logDebug << "::WINDOW SDL subsystem initialized\n";
@@ -243,8 +248,10 @@
 		// 	SDL_WM_SetIcon(SDL_LoadBMP(pixmappath.c_str()), 0);
 		// 	SDL_WM_SetIcon(SDL_LoadBMP("/projects/lessons/lesson20/data/image2.bmp"), 0);
 
-		w_width = width;
-		w_height = height;
+		m_width->set( (int)width );
+		m_height->set( (int)height );
+		// w_width = width;
+		// w_height = height;
 		n_width = width;
 		n_height = height;
 
@@ -255,9 +262,9 @@
 		fs = 1;
 
 		if ( fs == 1 )
-			m_surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_FULLSCREEN );
+			m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_FULLSCREEN );
 		else
-			m_surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_RESIZABLE );
+			m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_RESIZABLE );
 		glewInit();
 // 		m_logDebug << "::WINDOW SDL subsystem initialized\n";
 		// 	std::cerr << "Video " << front.width() << "x" << front.height() << "x" << int(front.getSurface()->format->BitsPerPixel) << "\n";
@@ -279,12 +286,14 @@
 	{
 		m_resized = true;
 
-		if ( w_height == 0 ) w_height = 1;
-		if ( w_width == 0 ) w_width = 1;
+		if ( m_width->get_int() == 0 ) m_width->set( (int)1 );
+		if ( m_height->get_int() == 0 ) m_height->set( (int)1 );
+		// if ( w_height == 0 ) w_height = 1;
+		// if ( w_width == 0 ) w_width = 1;
 	// 	std::cout << "resize" << std::endl;
 		
 		SDL_FreeSurface(m_surface);
-		m_surface = SDL_SetVideoMode( w_width, w_height, w_bpp, vidFlags | SDL_RESIZABLE );
+		m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_RESIZABLE );
 		
 	}
 
@@ -295,23 +304,27 @@
 		Uint32 videoFlags=vidFlags;
 		if ( fs )
 		{
-			if ( w_height == 0 ) w_height = 1;
-			if ( w_width == 0 ) w_width = 1;
-			n_width = w_width;
-			n_height = w_height;
+			if ( m_width->get_int() == 0 ) m_width->set( (int)1 );
+			if ( m_height->get_int() == 0 ) m_height->set( (int)1 );
+			// if ( w_height == 0 ) w_height = 1;
+			// if ( w_width == 0 ) w_width = 1;
+			n_width = m_width->get_int();
+			n_height = m_height->get_int();
 // 			w_width = Settings::Instance()->getCVar("fsX");
 // 			w_height = Settings::Instance()->getCVar("fsY");
 			videoFlags |= SDL_FULLSCREEN;
 		}
 		else
 		{
-			w_width = n_width;
-			w_height = n_height;
+			m_width->set( (int)n_width );
+			m_height->set( (int)n_height );
+			// w_width = n_width;
+			// w_height = n_height;
 			if ( m_resizable )
 				videoFlags |= SDL_RESIZABLE;
 		}
 		SDL_FreeSurface(m_surface);
-		m_surface = SDL_SetVideoMode( w_width, w_height, w_bpp, videoFlags );
+		m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, videoFlags );
 		glewInit();
 // 		if ( m_canvas )
 // 			m_canvas->resize(w_width, w_height);
@@ -329,8 +342,10 @@
 		{
 			if(event.type == SDL_VIDEORESIZE)
 			{
-				w_width = event.resize.w;
-				w_height = event.resize.h;
+				// w_width = event.resize.w;
+				// w_height = event.resize.h;
+				m_width->set( (int)event.resize.w );
+				m_height->set( (int)event.resize.h );
 				resize();
 				continue;
 			}
@@ -408,6 +423,16 @@
 		// 					m_eventsystem->deactivateKeystate( key );
 		// 	// 			m_eventsystem->deactivateKeystate( SDL_GetKeyName( event.key.keysym.sym ) );
 					}
+				}
+				
+				
+				else if(event.type == SDL_MOUSEMOTION)
+				{
+					m_mouse_x->set( (int)event.motion.x );
+					m_mouse_y->set( (int)event.motion.y );
+					
+					// std::cout << "x: " << m_mouse_x->get_int()  << "y: " << m_mouse_y->get_int() << std::endl;
+					
 				}
 				
 			}
@@ -533,9 +558,10 @@
 // 		std::cout << w_width << " " << w_height << std::endl;
 		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
 		
+		// FIXME MOVE TO CAMERA
 				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-				glViewport(0,0,w_width,w_height);
+				glViewport( 0, 0, m_width->get_int(), m_height->get_int() );
 
 				// // 	glViewport(0,0,640,480);
 					// glViewport(0,0,w_width,w_height);

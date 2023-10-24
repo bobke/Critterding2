@@ -60,6 +60,8 @@
 		physicsmodel_rigid_convexmesh.h
 		be_entity_constraint_hinge.cpp
 		be_entity_constraint_hinge.h
+		be_entity_raycast.h
+		be_entity_raycast.cpp
 
 		be_types_extra.cpp
 		be_types_extra.h

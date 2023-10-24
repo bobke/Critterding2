@@ -44,7 +44,7 @@
 		void BeEntityQwtPlotCurve::construct()
 		{
 			m_size_max = addChild("size_max", new BEntity_uint());
-			m_size_max->set( (Buint)4000 ); // FIXME   parent -> setAxisScale( Position::yRight, min, max, stepsize )
+			m_size_max->set( (Buint)7200 ); // FIXME   parent -> setAxisScale( Position::yRight, min, max, stepsize )
 		}
 
 		bool BeEntityQwtPlotCurve::set()
@@ -100,13 +100,13 @@
 				m_list[m_count] = value;
 
 				// CLEAR DISTANCE
-				const unsigned int clear_distance(20);
+				const unsigned int clear_distance(500);
 				// const unsigned int clear_distance(10);
 				for ( unsigned int i(1); i <= clear_distance; ++i )
 				{
 					if ( m_count+i < (unsigned int)m_list.size() )
-						m_list[m_count+i] = value;
-						// m_list[m_count+i] = 0.0;
+						// m_list[m_count+i] = value;
+						m_list[m_count+i] = 0.0;
 				}
 			}
 			++m_count;

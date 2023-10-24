@@ -8,6 +8,7 @@
 #include "population_controller.h"
 #include "critter_exchanger.h"
 #include "commands.h"
+#include "plugins/be_plugin_opengl/be_entity_camera.h"
 #include <iostream>
 
 	void Scene::construct()
@@ -56,7 +57,7 @@
 			// auto startTimeMs = topParent()->getChild("sys", 1)->getChild( "timer",1 )->?? ;
 			rng->set( "seed", Bint( 111 ) );
 		
-		// BULLET
+		// BULLET PHYSICS
 			m_physics_world = addChild( "physicsworld", "PhysicsWorld" );
 			m_physics_world_collisions = m_physics_world->getChild( "collisions", 1 );
 			// m_physics_world->setFps(60);
@@ -64,28 +65,27 @@
 		// SDL & OPENGL
 			auto glscene = addChild( "SDL GLWindow", "SDLWindow" );
 			// glscene->setFps(60);
+			
+			m_win_width = glscene->getChild( "width", 1 );
+			m_win_height = glscene->getChild( "height", 1 );
+			m_mouse_x = glscene->getChild( "mouse_x", 1 );
+			m_mouse_y = glscene->getChild( "mouse_y", 1 );
 
 			// SDL SWAPBUFFER, making sure this runs right after sdl_window and it's children are done processing
 				addChild("SDLSwapBuffers", "SDLSwapBuffers");
 			
 			auto t_graphicsModelSystem = glscene->addChild("GraphicsModelSystem", "GraphicsModelSystem");
 			glscene->set("on_close_destroy_entity", this);
-			
 
 		// CAMERA
-			auto camera = t_graphicsModelSystem->addChild("Camera", "Camera");
-			auto transform = camera->getChild( "transform", 1 );
-// 			transform->getChild( "position_x" )->set( 0.0f );
-// 			transform->getChild( "position_y" )->set( 30.0f );
-// 			transform->getChild( "position_z" )->set( -70.0f );
-// 			transform->getChild( "rotation_euler_x" )->set( -0.9f );
-// 			transform->getChild( "rotation_euler_y" )->set( 0.0f );
-// 			transform->getChild( "rotation_euler_z" )->set( 0.0f );
+			m_camera = new BCamera();
+			t_graphicsModelSystem->addChild("Camera", m_camera);
+			auto transform = m_camera->getChild( "transform", 1 );
 
 			transform->getChild( "position_x" )->set( 0.0f );
 			transform->getChild( "position_y" )->set( -15.0f );
 			transform->getChild( "position_z" )->set( -88.0f );
-			transform->getChild( "rotation_euler_x" )->set( -0.0f );
+			transform->getChild( "rotation_euler_x" )->set( 0.0f );
 			transform->getChild( "rotation_euler_y" )->set( 0.0f );
 			transform->getChild( "rotation_euler_z" )->set( 0.0f );
 			
@@ -111,7 +111,7 @@
 			binding_f3->connectServerServer( launchSystemMonitor );
 			
 			// bindings to movements
-			auto movement = camera->getChild("movement", 1);
+			auto movement = m_camera->getChild("movement", 1);
 			auto forward = movement->getChild( "forward", 1 );
 			auto backward = movement->getChild( "backward", 1 );
 			auto left = movement->getChild( "left", 1 );
@@ -132,7 +132,7 @@
 			binding_end->connectServerServer( down );
 			
 			// bindings to looking
-			auto looking = camera->getChild("looking", 1);
+			auto looking = m_camera->getChild("looking", 1);
 			auto look_left = looking->getChild( "left", 1 );
 			auto look_right = looking->getChild( "right", 1 );
 			auto look_up = looking->getChild( "up", 1 );
@@ -307,6 +307,18 @@
 			
 			m_food_unit_container = food_system->getChild( "unit_container", 1 );
 
+		// RAYCAST
+			m_bullet_raycast = m_physics_world->addChild( "raycaster", "Bullet_Raycast" );
+			auto source = m_bullet_raycast->getChild( "source", 1 );
+			m_raycast_source_x = source->getChild( "x", 1 );
+			m_raycast_source_y = source->getChild( "y", 1 );
+			m_raycast_source_z = source->getChild( "z", 1 );
+			auto target = m_bullet_raycast->getChild( "target", 1 );
+			m_raycast_target_x = target->getChild( "x", 1 );
+			m_raycast_target_y = target->getChild( "y", 1 );
+			m_raycast_target_z = target->getChild( "z", 1 );
+
+			
 		// // CONTROL PANEL
 			// auto control_panel = addChild( "control_panel", new CdControlPanel() );
 			
@@ -330,45 +342,59 @@
 	void Critterding::process()
 	{
 		// CHECK PHYSICS COLLISIONS
-		for_all_children_of( m_physics_world_collisions )
-		{
-			auto e1 = (*child)->getChild( "entity1", 1 )->get_reference();
-			auto e2 = (*child)->getChild( "entity2", 1 )->get_reference();
-			// std::cout << "collision e1: " << e1->name() << "(" << e1->id() << ")" << std::endl;
-			// std::cout << "collision e2: " << e2->name() << "(" << e2->id() << ")" << std::endl;
+			for_all_children_of( m_physics_world_collisions )
+			{
+				auto e1 = (*child)->getChild( "entity1", 1 )->get_reference();
+				auto e2 = (*child)->getChild( "entity2", 1 )->get_reference();
+				// std::cout << "collision e1: " << e1->name() << "(" << e1->id() << ")" << std::endl;
+				// std::cout << "collision e2: " << e2->name() << "(" << e2->id() << ")" << std::endl;
 
-			// FIXME BUGGY WHEN DELETING CRITTERS
-			// EAT: TRANSFER ENERGY FROM FOOD TO CRITTER 
-				auto critter = findCritter( e1, e2 );
-				if ( critter )
-				{
-					// CHECK MOTOR NEURON FIXME OPTIMIZE
-					auto eat = critter->getChild("motor_neurons", 1)->getChild("eat", 1);
-					if ( eat->get_float() != 0.0f ) // FIXME
+				// FIXME BUGGY WHEN DELETING CRITTERS
+				// EAT: TRANSFER ENERGY FROM FOOD TO CRITTER 
+					auto critter = findCritter( e1, e2 );
+					if ( critter )
 					{
-						eat->set( 0.0f );
-
-						auto food = findFood( e1, e2 );
-						if ( food )
+						// CHECK MOTOR NEURON FIXME OPTIMIZE
+						auto eat = critter->getChild("motor_neurons", 1)->getChild("eat", 1);
+						if ( eat->get_float() != 0.0f ) // FIXME
 						{
-							// ENERGY TRANSFER
-							auto critter_energy = critter->getChild("energy", 1);
-							auto food_energy = food->getChild("energy", 1);
+							eat->set( 0.0f );
 
-							if ( food_energy->get_float() < m_eat_transfer_energy->get_float() )
+							auto food = findFood( e1, e2 );
+							if ( food )
 							{
-								critter_energy->set( critter_energy->get_float() + food_energy->get_float() );
-								food_energy->set( 0.0f );
-							}
-							else
-							{
-								critter_energy->set( critter_energy->get_float() + m_eat_transfer_energy->get_float() );
-								food_energy->set( food_energy->get_float() - m_eat_transfer_energy->get_float() );
+								// ENERGY TRANSFER
+								auto critter_energy = critter->getChild("energy", 1);
+								auto food_energy = food->getChild("energy", 1);
+
+								if ( food_energy->get_float() < m_eat_transfer_energy->get_float() )
+								{
+									critter_energy->set( critter_energy->get_float() + food_energy->get_float() );
+									food_energy->set( 0.0f );
+								}
+								else
+								{
+									critter_energy->set( critter_energy->get_float() + m_eat_transfer_energy->get_float() );
+									food_energy->set( food_energy->get_float() - m_eat_transfer_energy->get_float() );
+								}
 							}
 						}
 					}
-				}
-		}
+			}
+
+		// CAST RAY FROM MOUSE
+			auto camera_position = m_camera->m_transform->m_transform.getOrigin();
+			m_raycast_source_x->set( camera_position.x() );
+			m_raycast_source_y->set( camera_position.y() );
+			m_raycast_source_z->set( camera_position.z() );
+
+			btVector3 rayDirection = m_camera->getScreenDirection( m_win_width->get_int(), m_win_height->get_int(), m_mouse_x->get_int(), m_mouse_y->get_int() );
+			m_raycast_target_x->set( rayDirection.x() );
+			m_raycast_target_y->set( rayDirection.y() );
+			m_raycast_target_z->set( rayDirection.z() );
+			
+			m_bullet_raycast->process();
+
 	}
 
 	BEntity* Critterding::findCritter( BEntity* e1, BEntity* e2 )

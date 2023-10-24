@@ -10,14 +10,13 @@
 		m_print = addChild("print", new BEntity_bool());
 		// m_print->set( true );
 		m_critter_sightrange = addChild("sight_range", new BEntity_float());
-		m_critter_sightrange->set( 5.0f );
+		m_critter_sightrange->set( 7.0f );
 		
 		m_drawEntities = topParent()->getChild("Scene", 1)->getChild("Critterding", 1)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
 		m_turn_180 = btTransform( btQuaternion( SIMD_PI, 0.0f, 0.0f ) );
 
 		m_critter_retinasize = 6; // FIXME max 8?
 		m_retinasperrow = 2048 / m_critter_retinasize;
-		// m_critter_sightrange = 10.0f;
 
 		// vision retina allocation
 		unsigned int items = 4 * 2048 * 2048;
@@ -59,14 +58,11 @@
 		unsigned int pos = 0;
 		for_all_children_of( m_unit_container )
 		{
-			// std::cout << "head: " << pos+1 << std::endl;
 			calcFramePos(pos);
-			
+
 			empty = false;
-			// std::cout << (*child)->name() << " " << (*child)->id() << std::endl;
-			// auto bodypart_to_attach_cam = (*child)->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_graphics", 1)->get_reference();
-			
 			CdCritter* critter = dynamic_cast<CdCritter*>( (*child) );
+
 			if ( critter->m_physics_component == 0 )
 			{
 				 critter->m_physics_component = critter->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference();
@@ -98,18 +94,8 @@
 							auto model = dynamic_cast<BGraphicsModel*>( (*child2) );
 							if ( model )
 							{
-								// std::cout << " drawentity: " << (*child2)->name() << std::endl;
-								
 								// (*child2)->process();
 								model->processWhenInSight( &bodypart_to_attach_cam->getTransform(), m_critter_sightrange->get_float() );
-
-								// auto t = (*child2)->getChild("transform", 1);
-								// if ( t )
-								// {
-								// 	btVector3 v = btVector3( t->get_float("position_x"), t->get_float("position_y"), t->get_float("position_z") );
-								// 	dynamic_cast<BGraphicsModel*>( (*child2) )->processWhenInSight( &v );
-								// 	// (*child2)->process();
-								// }
 							}
 						}
 					}
@@ -121,19 +107,6 @@
 		// Read pixels into retina
 		if ( !empty )
 		{
-			// glReadBuffer(GL_BACK);
-			// glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-   // 
-			// // figure out how many rows, if rows is 1 then columns = 0 else it's retinasperrow
-			// unsigned int t_rows = (pos / m_retinasperrow) + 1;
-			// unsigned int t_columns = m_retinasperrow;
-			// if ( t_rows == 1 )
-			// {
-			// 	t_columns = pos;
-			// }
-			// glReadPixels(0, 0, t_columns * m_critter_retinasize, t_rows * m_critter_retinasize, GL_RGBA, GL_UNSIGNED_BYTE, retina);
-
-			
 			unsigned int picwidth = m_retinasperrow * (m_critter_retinasize);
 			unsigned int picheight = m_critter_retinasize;
 			unsigned int rows = m_unit_container->numChildren();
@@ -149,6 +122,8 @@
 			
 			// FEED TO BRAIN
 			unsigned int critter_counter = 0;
+			float value;
+			float fvalue;
 			for_all_children_of( m_unit_container )
 			{
 				// while vision_value_R not found
@@ -171,22 +146,17 @@
 				{
 					for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+(m_critter_retinasize*4); ++w )
 					{
-						const int value = (int)retina[w];
+						value = (int)retina[w];
 						if ( value > 0 )
 						{
-							const float fvalue = (float)value / 255;
+							fvalue = (float)value / 255;
 							// std::cout << "setting brain_input " << (*brain_input)->name() << " to " << ((float)(int)retina[w]) / 255 << std::endl;
 
 							// if it's the same, force update to outputs
-							if ( (*brain_input)->get_float() == fvalue )
+							if ( !(*brain_input)->set( fvalue ) )
 							{
 								(*brain_input)->onUpdate();
 							}
-							else
-							{
-								(*brain_input)->set( fvalue );
-							}
-							
 						}
 						++brain_input;
 					}
@@ -225,12 +195,6 @@
 					critter_counter++;
 				}
 			}
-			
-
-			// if ( (int)retina[0] != 0 )
-			// {
-			// 	std::cout << (int)retina[0] << " : " << (int)retina[1] << " : " << (int)retina[2] << " : " << (int)retina[3] << std::endl;
-			// }
 		}
 
 		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
@@ -264,11 +228,7 @@
 			target -= m_retinasperrow;
 		}
 		retinaColumnStart = target * m_critter_retinasize * 4;
-
-	// cerr << framePosX << " : " << framePosY << endl;
-	// usleep (1000);
-
-	}	
+	}
 
 	CdVisionSystem::~CdVisionSystem()
 	{

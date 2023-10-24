@@ -2,6 +2,7 @@
 #include "be_entity_physicsworld.h"
 #include "be_entity_physics_entity.h"
 #include "be_entity_constraint_hinge.h"
+#include "be_entity_raycast.h"
 #include "physicsmodel_rigid.h"
 
 // ---- FACTORIES
@@ -12,6 +13,7 @@
 		, PHYSICSENTITY
 		, PHYSICSENTITY_CUBE
 		, CONSTRAINT_HINGE
+		, BULLET_RAYCAST
 		, BULLET_TRANSFORM
 		, BULLET_TRANSFORM_EMITTER
 	};
@@ -26,6 +28,7 @@
 					i.addClass( parent, CLASS::PHYSICSENTITY, "PhysicsEntity" );
 					i.addClass( parent, CLASS::PHYSICSENTITY_CUBE, "PhysicsEntity_Cube" );
 					i.addClass( parent, CLASS::CONSTRAINT_HINGE, "Constraint_Hinge" );
+					i.addClass( parent, CLASS::BULLET_RAYCAST, "Bullet_Raycast" );
 					i.addClass( parent, CLASS::BULLET_TRANSFORM, "Bullet_Transform" );
 					i.addClass( parent, CLASS::BULLET_TRANSFORM_EMITTER, "Bullet_Transform_Emitter" );
 				return 0;
@@ -44,6 +47,8 @@
 					i = new BPhysicsEntityCube();
 				else if ( type == CLASS::CONSTRAINT_HINGE )
 					i = new BConstraintHinge();
+				else if ( type == CLASS::BULLET_RAYCAST )
+					i = new BRaycast();
 				else if ( type == CLASS::BULLET_TRANSFORM )
 					i = new BBulletTransform();
 				else if ( type == CLASS::BULLET_TRANSFORM_EMITTER )

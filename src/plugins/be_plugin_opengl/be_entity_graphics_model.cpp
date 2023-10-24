@@ -136,7 +136,6 @@
 		}
 	}
 
-	void BGraphicsModel::processWhenInSight( const btVector3* position ){};
 	void BGraphicsModel::processWhenInSight( const btTransform* transformHead, float sightrange )	
 	{
 		if ( name() == "GraphicsModel_SkyDome" )

@@ -23,7 +23,6 @@
 // 			virtual bool set( const Bstring& id, const Bfloat& value );
 
 			virtual void process();
-			virtual void processWhenInSight( const btVector3* position );
 			virtual void processWhenInSight( const btTransform* transformHead, float sightrange );
 // 			void onAdd(BEntity* entity);
 

@@ -57,11 +57,16 @@
 		// m_synapse_adam_min->set( Buint(5) );
 		// m_synapse_adam_max->set( Buint(10) );
 
-		m_neuron_adam_min->set( Buint(20) );
-		m_neuron_adam_max->set( Buint(40) );
-		m_synapse_adam_min->set( Buint(4) );
-		m_synapse_adam_max->set( Buint(10) );
+		// m_neuron_adam_min->set( Buint(20) );
+		// m_neuron_adam_max->set( Buint(40) );
+		// m_synapse_adam_min->set( Buint(4) );
+		// m_synapse_adam_max->set( Buint(10) );
 
+		m_neuron_adam_min->set( Buint(30) );
+		m_neuron_adam_max->set( Buint(60) );
+		m_synapse_adam_min->set( Buint(1) );
+		m_synapse_adam_max->set( Buint(6) );
+		
 		m_mutationweight_neuron_add->set( Buint(25) );
 		m_mutationweight_neuron_remove->set( Buint(25) );
 		m_mutationweight_neuron_alter_firingweight->set( Buint(25) );

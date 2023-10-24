@@ -98,13 +98,12 @@
 				// m_angle->set( percentAngle );
 
 				// if it's the same, force update to outputs
-				if ( m_angle->get_float() == m_hinge->getHingeAngle() )
+				if ( m_hinge->getHingeAngle() != 0.0f )
 				{
-					m_angle->onUpdate();
-				}
-				else
-				{
-					m_angle->set( m_hinge->getHingeAngle() );
+					if ( !m_angle->set( m_hinge->getHingeAngle() ) )
+					{
+						m_angle->onUpdate();
+					}
 				}
 		}
 	}
@@ -153,9 +152,9 @@
 				return true;
 			}
 			std::cout << "failed creating hinge, supply 2 bodies as references" << std::endl;
-			return false;
 		}
 
+		return false;
 	}
 
 
