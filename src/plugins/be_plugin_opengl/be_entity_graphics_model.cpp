@@ -65,7 +65,15 @@
 		
 		// HACK COLORS HACK
 		
-		glEnable(GL_LIGHTING);
+		if ( name() == "GraphicsModel_SkyDome" )
+		{
+			glDisable(GL_LIGHTING);
+			// glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		}
+		else
+		{
+			glEnable(GL_LIGHTING);
+		}
 
 		// if ( m_lighting->get_bool() )
 		// {
@@ -89,11 +97,6 @@
 		// {
 		// 	glEnable(GL_LIGHTING);
 		// 	glColor4f(0.0f, 0.5f, 0.5f, 1.0f);
-		// }
-		// else if ( name() == "GraphicsModel_SkyDome" )
-		// {
-		// 	glDisable(GL_LIGHTING);
-		// 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		// }
 		// else
 		// {
@@ -147,6 +150,15 @@
 
 			if( getModel() && getModel()->isReady() )
 			{
+				if ( name() == "GraphicsModel_SkyDome" )
+				{
+					glDisable(GL_LIGHTING);
+					// glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+				}
+				else
+				{
+					glEnable(GL_LIGHTING);
+				}
 				
 				// HACK COLORS HACK
 				// std::cout << name() << std::endl;
@@ -183,11 +195,6 @@
 				// 	always_render = true;
 				// 	glEnable(GL_LIGHTING);
 				// 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // FIXME entities yeah
-				// }
-				// else if ( name() == "GraphicsModel_SkyDome" )
-				// {
-				// 	glDisable(GL_LIGHTING);
-				// 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 				// }
 				// else
 				// {
