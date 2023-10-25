@@ -62,6 +62,34 @@
 			m_physics_world_collisions = m_physics_world->getChild( "collisions", 1 );
 			// m_physics_world->setFps(60);
 
+		// RAYCAST
+			m_bullet_raycast = m_physics_world->addChild( "raycaster", "Bullet_Raycast" );
+			auto source = m_bullet_raycast->getChild( "source", 1 );
+			m_raycast_source_x = source->getChild( "x", 1 );
+			m_raycast_source_y = source->getChild( "y", 1 );
+			m_raycast_source_z = source->getChild( "z", 1 );
+			auto target = m_bullet_raycast->getChild( "target", 1 );
+			m_raycast_target_x = target->getChild( "x", 1 );
+			m_raycast_target_y = target->getChild( "y", 1 );
+			m_raycast_target_z = target->getChild( "z", 1 );
+			addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast );
+			
+		// MOUSE PICKER
+			auto mousepicker = m_physics_world->addChild( "mousepicker", "Bullet_MousePicker" );
+			addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker );
+		
+		// CONNECT RAYCAST AND MOUSEPICKER VALUES
+			auto ray_source = m_bullet_raycast->getChild("source", 1);
+			auto mouse_source = mousepicker->getChild("source", 1);
+			ray_source->getChild("x")->connectServerServer( mouse_source->getChild("x") );
+			ray_source->getChild("y")->connectServerServer( mouse_source->getChild("y") );
+			ray_source->getChild("z")->connectServerServer( mouse_source->getChild("z") );
+			auto ray_target = m_bullet_raycast->getChild("target", 1);
+			auto mouse_target = mousepicker->getChild("target", 1);
+			ray_target->getChild("x")->connectServerServer( mouse_target->getChild("x") );
+			ray_target->getChild("y")->connectServerServer( mouse_target->getChild("y") );
+			ray_target->getChild("z")->connectServerServer( mouse_target->getChild("z") );
+
 		// SDL & OPENGL
 			auto glscene = addChild( "SDL GLWindow", "SDLWindow" );
 			// glscene->setFps(60);
@@ -95,6 +123,8 @@
 			auto launchControlPanel = commands->addChild( "launchControlPanel", new cmd_launchControlPanel() );
 			auto launchSystemMonitor = commands->addChild( "launchSystemMonitor", new cmd_launchSystemMonitor() );
 			auto launchSelectionWindow = commands->addChild( "launchSelectionWindow", new cmd_launchSelectionWindow() );
+			auto mousePickBody = commands->addChild( "mousePickBody", new cmd_mousePickBody() );
+			auto mouseUnpickBody = commands->addChild( "mouseUnpickBody", new cmd_mouseUnpickBody() );
 
 		// BINDINGS
 			auto bindings = glscene->getChild( "bindings", 1 );
@@ -111,6 +141,11 @@
 			// bindings to mouse
 			auto binding_mouse_2 = bindings->addChild( "mousebutton_down_2", new BEntity_trigger() );  // FIXME CONNECT TO bool under std_window
 			binding_mouse_2->connectServerServer( launchSelectionWindow );
+
+			auto binding_mouse_3_down = bindings->addChild( "mousebutton_down_3", new BEntity_trigger() );  // FIXME CONNECT TO bool under std_window
+			binding_mouse_3_down->connectServerServer( mousePickBody );
+			auto binding_mouse_3_up = bindings->addChild( "mousebutton_up_3", new BEntity_trigger() );  // FIXME CONNECT TO bool under std_window
+			binding_mouse_3_up->connectServerServer( mouseUnpickBody );
 			
 			// bindings to movements
 			auto movement = m_camera->getChild("movement", 1);
@@ -309,18 +344,6 @@
 			
 			m_food_unit_container = food_system->getChild( "unit_container", 1 );
 
-		// RAYCAST
-			m_bullet_raycast = m_physics_world->addChild( "raycaster", "Bullet_Raycast" );
-			auto source = m_bullet_raycast->getChild( "source", 1 );
-			m_raycast_source_x = source->getChild( "x", 1 );
-			m_raycast_source_y = source->getChild( "y", 1 );
-			m_raycast_source_z = source->getChild( "z", 1 );
-			auto target = m_bullet_raycast->getChild( "target", 1 );
-			m_raycast_target_x = target->getChild( "x", 1 );
-			m_raycast_target_y = target->getChild( "y", 1 );
-			m_raycast_target_z = target->getChild( "z", 1 );
-
-			
 		// // CONTROL PANEL
 			// auto control_panel = addChild( "control_panel", new CdControlPanel() );
 			
@@ -384,6 +407,7 @@
 					}
 			}
 
+		// FIXME CONNECT THESE UP
 		// CAST RAY FROM MOUSE
 			auto camera_position = m_camera->m_transform->m_transform.getOrigin();
 			m_raycast_source_x->set( camera_position.x() );

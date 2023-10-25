@@ -1,7 +1,7 @@
 #ifndef BE_ENTITY_PHYSICS_ENTITY_H_INCLUDED
 #define BE_ENTITY_PHYSICS_ENTITY_H_INCLUDED
 
-#include "kernel/be_plugin_interface.h"
+#include "kernel/be_entity_interface.h"
 #include "be_types_extra.h"
 #include <boost/shared_ptr.hpp>
 
@@ -116,7 +116,7 @@
 // 			virtual bool setProperty( const std::string& caller_name, BeSignalHistory& entity_history, const std::string& value, const bool do_update=true );
 
 			virtual bool set( const Bstring& id, const char* value );
-			
+
 // 			virtual const std::string& getProperty_String(const std::string& caller_name) const;
 // 			virtual Bstring* get_string( const Bstring& id );
 			virtual const char* get_string( const Bstring& id );

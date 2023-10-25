@@ -161,10 +161,10 @@
 							{
 								copy->connectServerServer(new_entity_to_connect_to);
 							}
-							else
-							{
-								std::cout << "connection not ok, copy of '" << orig_connected_to->name() << "' or type '" << orig_connected_to->class_id() << "' entity not found in translation_map" << std::endl;
-							}
+							// else
+							// {
+							// 	std::cout << "connection not ok, copy of '" << orig_connected_to->name() << "' or type '" << orig_connected_to->class_id() << "' entity not found in translation_map" << std::endl;
+							// }
 						}
 // 						if ( connection->m_isLocal )
 // 						{

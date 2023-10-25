@@ -95,7 +95,6 @@
 			{
 				BEntity* filename( getChild("filename", 1) );
 				{
-					
 					if ( parent() )
 						parent()->onRemoveChild(this);
 
@@ -165,7 +164,7 @@
 // 					return true;
 // 				}
 // 			}
-// 			return false;
+			return false;
 		}
 
 // 		bool BPhysicsEntity::setProperty( const std::string& id, BeSignalHistory& entity_history, const BETransform& value, const bool do_update )
@@ -608,6 +607,7 @@
 				
 				if ( !std::string(value).empty() && m_filename_value != value )
 				{
+					std::cout << "HELLLOO" << std::endl;
 					m_filename_value = value;
 
 					btTransform geometry_transform;

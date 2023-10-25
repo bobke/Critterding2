@@ -124,7 +124,7 @@
 
 								if ( selectedEntity )
 								{
-									// LAUNCH ADMIN WINDO
+									// LAUNCH ADMIN WINDOW
 										// if ( !getAdminWindow() )
 										// {
 										// 	auto qt_app = scene->getChild( "QT Application", 2 );
@@ -151,3 +151,42 @@
 		}
 		return false;
 	}
+
+	bool cmd_mousePickBody::set()
+	{
+		auto scene = topParent()->getChild( "Scene", 1 );
+		if ( scene )
+		{
+			auto cd_app = scene->getChild( "Critterding", 1 );
+			if ( cd_app )
+			{
+				auto mousepicker = cd_app->getChild( "physicsworld", 1 )->getChild( "mousepicker", 1 );
+				if ( mousepicker )
+				{
+					mousepicker->set( true );
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	bool cmd_mouseUnpickBody::set()
+	{
+		auto scene = topParent()->getChild( "Scene", 1 );
+		if ( scene )
+		{
+			auto cd_app = scene->getChild( "Critterding", 1 );
+			if ( cd_app )
+			{
+				auto mousepicker = cd_app->getChild( "physicsworld", 1 )->getChild( "mousepicker", 1 );
+				if ( mousepicker )
+				{
+					mousepicker->set( false );
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	

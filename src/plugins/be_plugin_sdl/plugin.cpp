@@ -402,6 +402,10 @@
 									binding->set( false );
 								}
 							}
+							else if ( binding->class_id() == std::string("trigger") )
+							{
+								binding->set();
+							}
 						}
 					}
 				}
@@ -455,6 +459,10 @@
 								{
 									binding->set( false );
 								}
+							}
+							else if ( binding->class_id() == std::string("trigger") )
+							{
+								binding->set();
 							}
 						}
 					}

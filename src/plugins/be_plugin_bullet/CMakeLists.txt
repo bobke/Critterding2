@@ -62,6 +62,8 @@
 		be_entity_constraint_hinge.h
 		be_entity_raycast.h
 		be_entity_raycast.cpp
+		be_entity_mousepicker.cpp
+		be_entity_mousepicker.h
 
 		be_types_extra.cpp
 		be_types_extra.h

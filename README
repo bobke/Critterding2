@@ -40,5 +40,6 @@ KEYS
 MOUSE
 -----
 	button 2    entity admin window
+	button 3    grab critter / food
 
 bobke...

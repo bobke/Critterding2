@@ -369,21 +369,24 @@
 				// entity->connectServerServer( curve );
 				
 				auto threshold = entity->getChild("firingThreshold", 1);
-				auto curve2 = qwt_plot->addChild( "curve", "QwtCurve_Poll" );
-				curve2->set( "poll_entity", threshold );
-				auto qpen = curve2->addChild( "pen", "QPen" );
+				if ( threshold )
+				{
+					auto curve2 = qwt_plot->addChild( "curve", "QwtCurve_Poll" );
+					curve2->set( "poll_entity", threshold );
+					auto qpen = curve2->addChild( "pen", "QPen" );
 
-				if ( threshold->get_float() > 0.0f )
-				{
-					qpen->set( "color_r", Buint(0) );
-					qpen->set( "color_g", Buint(200) );
-					qpen->set( "color_b", Buint(0) );
-				}
-				else
-				{
-					qpen->set( "color_r", Buint(200) );
-					qpen->set( "color_g", Buint(0) );
-					qpen->set( "color_b", Buint(0) );
+					if ( threshold->get_float() > 0.0f )
+					{
+						qpen->set( "color_r", Buint(0) );
+						qpen->set( "color_g", Buint(200) );
+						qpen->set( "color_b", Buint(0) );
+					}
+					else
+					{
+						qpen->set( "color_r", Buint(200) );
+						qpen->set( "color_g", Buint(0) );
+						qpen->set( "color_b", Buint(0) );
+					}
 				}
 
 				m_lookup_buffer.registerAdminEntity( entity, qwindow );
@@ -671,7 +674,7 @@
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_floatp->get_float() );
-				std::cout << "FLOATP " << t_floatp->get_float() << std::endl;
+				// std::cout << "FLOATP " << t_floatp->get_float() << std::endl;
 				t_floatp->connectServerServer( edit );
 				edit->connectServerServer( t_floatp );
 			}

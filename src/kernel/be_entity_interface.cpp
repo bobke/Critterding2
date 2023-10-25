@@ -689,6 +689,7 @@
 
 		BEntity* BEntity::getChild(const char* name, const unsigned int max_levels)
 		{
+			// std::cout << "getChild::" << name << " " << std::endl;
 			if ( max_levels > 0 && hasChildren() )
 			{
 				// first try to find on this level

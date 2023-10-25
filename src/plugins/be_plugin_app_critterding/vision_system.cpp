@@ -127,6 +127,7 @@
 			for_all_children_of( m_unit_container )
 			{
 				// while vision_value_R not found
+				// FIXME OPTIMIZE
 				auto brain_inputs = (*child)->getChild("external_brain", 1)->get_reference()->getChild("inputs", 1);
 				
 				// setup inputs and cycle through to the correct input
@@ -139,7 +140,7 @@
 					// std::cout << (*brain_input)->name() << std::endl;
 					++brain_input;
 				}
-				
+
 				// FEED
 				calcFramePos(critter_counter);
 				for ( unsigned int h=retinaRowStart; h < retinaRowStart+(m_critter_retinasize*retinaRowLength); h += retinaRowLength )

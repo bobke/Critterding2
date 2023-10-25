@@ -100,7 +100,7 @@
 				m_list[m_count] = value;
 
 				// CLEAR DISTANCE
-				const unsigned int clear_distance(500);
+				const unsigned int clear_distance(180);
 				// const unsigned int clear_distance(10);
 				for ( unsigned int i(1); i <= clear_distance; ++i )
 				{

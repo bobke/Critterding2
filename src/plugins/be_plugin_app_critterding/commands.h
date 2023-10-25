@@ -35,5 +35,20 @@
 			bool set();
 	};
 
+	class cmd_mousePickBody: public BEntity_trigger
+	{
+		public:
+			cmd_mousePickBody() { };
+			virtual ~cmd_mousePickBody() {};
+			bool set();
+	};
+
+	class cmd_mouseUnpickBody: public BEntity_trigger
+	{
+		public:
+			cmd_mouseUnpickBody() { };
+			virtual ~cmd_mouseUnpickBody() {};
+			bool set();
+	};
 	
 #endif

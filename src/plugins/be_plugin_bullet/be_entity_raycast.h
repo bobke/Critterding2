@@ -13,12 +13,13 @@ class BRaycast : public BEntity
 		void construct();
 		void process();
 
-		// castResult cast(const btVector3& rayFrom, const btVector3& rayTo);
-
 	private:
 		btDynamicsWorld*	btDynWorld;
 		
 		BEntity* m_hit_entity;
+		BEntity* m_hit_position_x;
+		BEntity* m_hit_position_y;
+		BEntity* m_hit_position_z;
 		
 		BEntity* m_source_x;
 		BEntity* m_source_y;

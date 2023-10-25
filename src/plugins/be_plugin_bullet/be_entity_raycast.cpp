@@ -7,6 +7,11 @@
 	{
 		m_hit_entity = addChild( "hit_entity", new BEntity_reference() );
 
+		auto hit_position = addChild( "hit_position", new BEntity() );
+		m_hit_position_x = hit_position->addChild( "x", new BEntity_float() );
+		m_hit_position_y = hit_position->addChild( "y", new BEntity_float() );
+		m_hit_position_z = hit_position->addChild( "z", new BEntity_float() );
+
 		auto source = addChild( "source", new BEntity() );
 		m_source_x = source->addChild( "x", new BEntity_float() );
 		m_source_y = source->addChild( "y", new BEntity_float() );
@@ -40,6 +45,9 @@
 					if ( e1 )
 					{
 						m_hit_entity->set( e1 );
+						m_hit_position_x->set( resultCallback.m_hitPointWorld.x() );
+						m_hit_position_y->set( resultCallback.m_hitPointWorld.y() );
+						m_hit_position_z->set( resultCallback.m_hitPointWorld.z() );
 						return;
 					}
 				}
@@ -48,9 +56,3 @@
 
 		m_hit_entity->set( (BEntity*)0 );
 	}
-	
-	// castResult BRaycast::cast(const btVector3& rayFrom, const btVector3& rayTo)
-	// {
- // 
-	// 	return result;
-	// }
