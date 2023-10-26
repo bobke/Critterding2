@@ -371,6 +371,7 @@
 		// m_species = addChild( "species_reference", new BEntity_reference() );
 		addChild( "adam_distance", new BEntity_uint() )->set( Buint(0) );
 		
+		m_brain_inputs = 0;
 		m_physics_component = 0;
 	}
 	

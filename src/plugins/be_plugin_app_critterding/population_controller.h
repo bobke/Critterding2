@@ -22,7 +22,7 @@
 			BEntity* m_active;
 			BEntity* m_population_trigger;
 			BEntity* m_population_reduce_to;
-			BEntity* m_y_trigger;
+			BEntity* m_below_y_trigger;
 			CdCritterSystem* m_critter_system;
 			BEntity* m_critter_unit_container;
 			BEntity* m_food_unit_container;

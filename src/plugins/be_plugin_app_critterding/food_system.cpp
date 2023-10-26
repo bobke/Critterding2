@@ -30,7 +30,7 @@
 		m_dropzone_size_y->set( Bfloat(2.2f) );
 		m_dropzone_size_z->set( Bfloat(140.0f) );
 		
-		// m_number_of_units->set( Buint(20) );
+		// m_number_of_units->set( Buint(1) );
 		// m_intitial_energy->set( Bfloat(1500.0f) );
 		// m_maximum_age->set( Buint(16000) );
 		// m_dropzone_position_x->set( Bfloat(-95.0f) );
@@ -176,7 +176,7 @@
 		m_energy = addChild( "energy", new BEntity_float() );
 
 		// PHYSICS ENTITY
-			auto physicsworld = topParent()->getChild("physicsworld");
+			auto physicsworld = parent()->parent()->parent()->getChild("physicsworld", 1);
 			BEntity* physics_transform(0);
 			if ( physicsworld )
 			{
@@ -199,7 +199,7 @@
 
 		// GRAPHICS ENTITY
 			BEntity* graphics_transform(0);
-			auto graphicsmodelsystem = topParent()->getChild("Scene", 1)->getChild("GraphicsModelSystem");
+			auto graphicsmodelsystem = topParent()->getChild("Scene", 1)->getChild("Critterding", 1)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
 			if ( graphicsmodelsystem )
 			{
 				// LOAD MODEL IF NEEDED, ADD TRANSFORM

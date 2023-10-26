@@ -62,6 +62,7 @@
 				void setEnergy( Bfloat energy ) { m_energy->set( energy ); }
 				void setSpecies( BEntity* species ) { m_species->set( species ); }
 				BEntity* m_brain;
+				BEntity* m_brain_inputs;
 
 				BEntity* m_physics_component;
 				// BEntity* m_always_firing_input;

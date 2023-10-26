@@ -632,7 +632,9 @@
 				
 		// GRAPHICS
 			BEntity* graphics_transform(0);
-			auto graphicsmodelsystem = body->topParent()->getChild("Scene", 1)->getChild("GraphicsModelSystem");
+			// auto graphicsmodelsystem = body->topParent()->getChild("Scene", 1)->getChild("GraphicsModelSystem");
+			auto graphicsmodelsystem = body->topParent()->getChild("Scene", 1)->getChild("Critterding", 1)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
+
 			if ( graphicsmodelsystem )
 			{
 				// FIXME do the graphics entity upstairs in body_system, we're assuming we need a graphics entity for all anyway

@@ -126,12 +126,16 @@
 			float fvalue;
 			for_all_children_of( m_unit_container )
 			{
+				CdCritter* critter = dynamic_cast<CdCritter*>( (*child) );
+
 				// while vision_value_R not found
-				// FIXME OPTIMIZE
-				auto brain_inputs = (*child)->getChild("external_brain", 1)->get_reference()->getChild("inputs", 1);
+				if ( critter->m_brain_inputs == 0 )
+				{
+					critter->m_brain_inputs = (*child)->getChild("external_brain", 1)->get_reference()->getChild("inputs", 1);
+				}
 				
 				// setup inputs and cycle through to the correct input
-				const auto& brain_inputs_children_vector = brain_inputs->children();
+				const auto& brain_inputs_children_vector = critter->m_brain_inputs->children();
 				const auto& brain_inputs_begin = brain_inputs_children_vector.begin();
 				const auto& brain_inputs_end = brain_inputs_children_vector.end();
 				auto brain_input = brain_inputs_begin;
