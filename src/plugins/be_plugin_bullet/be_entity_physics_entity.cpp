@@ -607,7 +607,7 @@
 				
 				if ( !std::string(value).empty() && m_filename_value != value )
 				{
-					std::cout << "HELLLOO" << std::endl;
+					// std::cout << "HELLLOO" << std::endl;
 					m_filename_value = value;
 
 					btTransform geometry_transform;

@@ -63,8 +63,8 @@
 		qwindow->addChild( "title", "string_property" )->set("Admin Window");
 		qwindow->addChild( "x", "uint_property" )->set(Buint(1000));
 		qwindow->addChild( "y", "uint_property" )->set(Buint(30));
-		qwindow->addChild( "width", "uint_property" )->set(Buint(550));
-		qwindow->addChild( "height", "uint_property" )->set(Buint(700));
+		qwindow->addChild( "width", "uint_property" )->set(Buint(500));
+		qwindow->addChild( "height", "uint_property" )->set(Buint(500));
 		qwindow->set("on_close_destroy_entity", this);
 
 // 		// CREATE MENUS
@@ -308,7 +308,7 @@
 				qwindow->addChild( "title", "string_property" )->set( entity->name().c_str() );
 				qwindow->addChild( "x", "uint_property" )->set(Buint(1000));
 				qwindow->addChild( "y", "uint_property" )->set(Buint(300));
-				qwindow->addChild( "width", "uint_property" )->set(Buint(430));
+				qwindow->addChild( "width", "uint_property" )->set(Buint(460));
 				qwindow->addChild( "height", "uint_property" )->set(Buint(350));
 
 				auto general_layout_V = qwindow->addChild( "QT VBoxlayout", "QVBoxLayout" );
@@ -317,8 +317,8 @@
 					auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
 
 					// ID
-						auto id_label = general_layout_H->addChild( "id_label", "QLabel" );
-						id_label->set( (Buint)entity->id() );
+						// auto id_label = general_layout_H->addChild( "id_label", "QLabel" );
+						// id_label->set( (Buint)entity->id() );
 
 					// CLASS ID
 						auto class_id_label = general_layout_H->addChild( "class_id_label", "QLabel" );
@@ -328,7 +328,10 @@
 						add_admin_genValueFields( general_layout_H, entity );
 
 					// GENERIC BUTTONS
-						add_admin_genButtons( general_layout_H, entity );
+						if ( entity->id() != 0 )
+						{
+							add_admin_genButtonsWindow( general_layout_H, entity );
+						}
 				}
 				{
 					auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
@@ -356,7 +359,7 @@
 				qwindow->addChild( "title", "string_property" )->set( "Graph" );
 				qwindow->addChild( "x", "uint_property" )->set(Buint(1000));
 				qwindow->addChild( "y", "uint_property" )->set(Buint(300));
-				qwindow->addChild( "width", "uint_property" )->set(Buint(430));
+				qwindow->addChild( "width", "uint_property" )->set(Buint(460));
 				qwindow->addChild( "height", "uint_property" )->set(Buint(350));
 
 				auto general_layout_H = qwindow->addChild( "QT HBoxlayout", "QHBoxLayout" );
@@ -565,7 +568,7 @@
 					auto label = hboxlayout_entity->addChild("qt label", "QPushButtonDragAndDroppable" );
 					// std::cout << entity->name().c_str() << std::endl;
 					label->set( "text", entity->name().c_str() );
-					label->set( "width", Buint(350) );
+					label->set( "width", Buint(220) );
 
 					// drag and drop= reference to adminned entity
 					label->addChild( "reference", new BEntity_reference() )->set( entity );
@@ -719,29 +722,40 @@
 	
 	void BAdminWindow::add_admin_genButtons( BEntity* to_layout, BEntity* entity )
 	{
-			// RM
+// 			// RM
+// 			{
+// 				auto button = to_layout->addChild("qt button", "QPushButton" );
+// 				button->set("text", "rm");
+//    
+// 				// COMMAND
+// 					auto actions = button->addChild("_commands", new BEntity() );
+// 					auto command = actions->addChild("remove", new BEntity_reference() );
+// 					command->set(entity);
+//    
+// 					// auto cmd_remove = button->addChild("remove", new BEntity_reference() );
+// 					// cmd_remove->set(entity);
+// 					// button->connectServerServer(cmd_remove);
+// 			}
+//    
+// 			// COPY
+// 			{
+// 				auto button = to_layout->addChild("qt button", "QPushButton" );
+// 				button->set("text", "cp");
+//    
+// 				// COMMAND
+// 					auto actions = button->addChild("_commands", new BEntity() );
+// 					auto command = actions->addChild("copy", new BEntity_reference() );
+// 					command->set(entity);
+// 			}
+
+			// LOAD
 			{
 				auto button = to_layout->addChild("qt button", "QPushButton" );
-				button->set("text", "rm");
+				button->set("text", "ld");
 
 				// COMMAND
 					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("remove", new BEntity_reference() );
-					command->set(entity);
-
-					// auto cmd_remove = button->addChild("remove", new BEntity_reference() );
-					// cmd_remove->set(entity);
-					// button->connectServerServer(cmd_remove);
-			}
-
-			// COPY
-			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
-				button->set("text", "cp");
-
-				// COMMAND
-					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("copy", new BEntity_reference() );
+					auto command = actions->addChild("admin_load_entity", new BEntity_reference() );
 					command->set(entity);
 			}
 
@@ -753,17 +767,6 @@
 				// COMMAND
 					auto actions = button->addChild("_commands", new BEntity() );
 					auto command = actions->addChild("save", new BEntity_reference() );
-					command->set(entity);
-			}
-
-			// LOAD
-			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
-				button->set("text", "ld");
-
-				// COMMAND
-					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("admin_load_entity", new BEntity_reference() );
 					command->set(entity);
 			}
 
@@ -798,6 +801,97 @@
 			{
 				auto button = to_layout->addChild("qt button", "QPushButton" );
 				button->set("text", "gr");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("admin_entity_graph", new BEntity_reference() );
+					command->set(entity);
+			}
+		
+	}
+
+	void BAdminWindow::add_admin_genButtonsWindow( BEntity* to_layout, BEntity* entity )
+	{
+			// OPEN PARENT
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "parent");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() );
+					command->set( entity->parent() );
+			}
+
+			// COPY
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "copy");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("copy", new BEntity_reference() );
+					command->set(entity);
+			}
+
+			// SAVE
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "save");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("save", new BEntity_reference() );
+					command->set(entity);
+			}
+
+			// LOAD
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "load");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("admin_load_entity", new BEntity_reference() );
+					command->set(entity);
+			}
+
+			// RM
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "remove");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("remove", new BEntity_reference() );
+					command->set(entity);
+
+					// auto cmd_remove = button->addChild("remove", new BEntity_reference() );
+					// cmd_remove->set(entity);
+					// button->connectServerServer(cmd_remove);
+			}
+
+			
+			// EXTERNAL || REFERENCE
+			{
+				if ( dynamic_cast<BEntity_external*>( entity ) || dynamic_cast<BEntity_reference*>( entity ) )
+				{
+					auto button = to_layout->addChild("qt button", "QPushButton" );
+					button->set("text", "referenced");
+
+					// COMMAND
+						auto actions = button->addChild("_commands", new BEntity() );
+						auto command = actions->addChild("admin_entity_open_window", new BEntity_reference() );
+						command->set(entity->get_reference());
+				}
+			}
+			
+			// GRAPH FOR FLOAT
+			auto t_float = dynamic_cast<BEntity_float*>( entity );
+			if ( t_float )
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "graph");
 
 				// COMMAND
 					auto actions = button->addChild("_commands", new BEntity() );

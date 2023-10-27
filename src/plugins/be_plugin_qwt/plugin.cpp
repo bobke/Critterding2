@@ -104,8 +104,8 @@
 				for ( unsigned int i(1); i <= clear_distance; ++i )
 				{
 					if ( m_count+i < (unsigned int)m_list.size() )
-						m_list[m_count+i] = value;
-						// m_list[m_count+i] = 0.0;
+						// m_list[m_count+i] = value; // it's really not that clear
+						m_list[m_count+i] = 0.0;
 				}
 			}
 			++m_count;

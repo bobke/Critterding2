@@ -81,7 +81,7 @@
 		m_mutationweight_synapse_alter_weight->set( Buint(80) );
 		m_mutationweight_synapse_alter_weight_slightly->set( Buint(200) );
 
-		m_slightly_percent->set( Buint(2) );
+		m_slightly_percent->set( Buint(5) );
 		
 		m_unit_container = addChild( "unit_container", new BEntity() );
 		
