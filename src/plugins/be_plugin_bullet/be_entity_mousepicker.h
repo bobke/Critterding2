@@ -14,6 +14,7 @@
 			void process();
 
 			virtual bool set( const Bbool& value );
+			bool removeGrabbedEntity( BEntity* to_remove );
 		private:
 
 			// btVector3			direction;
@@ -23,12 +24,15 @@
 			btVector3 m_previous_rayFrom;
 			btVector3 m_previous_rayDirection;
 
+			BEntity* m_grabbed_entity;
 			BEntity* m_source_x;
 			BEntity* m_source_y;
 			BEntity* m_source_z;
 			BEntity* m_target_x;
 			BEntity* m_target_y;
 			BEntity* m_target_z;		
+			
+			
 	};
 
 #endif

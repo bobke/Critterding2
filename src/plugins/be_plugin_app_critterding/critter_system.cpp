@@ -3,6 +3,7 @@
 #include "species_system.h"
 #include "body_system.h"
 #include "vision_system.h"
+#include "plugins/be_plugin_bullet/be_entity_mousepicker.h"
 #include <iostream>
  
 	void CdCritterSystem::construct()
@@ -63,7 +64,8 @@
 		m_copy_random_position->set( false );
 		
 		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
-		
+		m_mouse_picker = dynamic_cast<BMousePicker*>( parent()->getChild("external_mousepicker", 1)->get_reference() );
+
 		
 	}
 	
@@ -314,33 +316,28 @@
 				}
 			}
 		}
-
-		// // DIE BECAUSE CRITTER LIMIT REACHED
-		// if ( m_unit_container->numChildren() >= 150 )
-		// {
-		// 	for_all_children_of2( m_unit_container )
-		// 	{
-		// 		m_unit_container->removeChild( *child2 );
-  // 
-		// 		// PREVENT FURTHER ACTIONS IN THIS FRAME
-		// 			break;
-		// 	}
-		// }
 	}
 	
 	void CdCritterSystem::removeCritter( BEntity* entity )
 	{
-		// HACK first external child one is body
 		auto bodyparts = entity->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-		while ( removeFromCollisions( bodyparts ) ) {;}
-
-		// species
-		m_species_system->removeFromSpecies( entity );
-
-		m_unit_container->removeChild( entity );
 		
+		// COLLISIONS
+			while ( removeFromCollisions( bodyparts ) ) {;}
+
+		// MOUSEPICKER, loop all bodyparts
+			for_all_children_of3( bodyparts )
+			{
+				m_mouse_picker->removeGrabbedEntity( (*child3)->get_reference() );
+			}
+
+		// SPECIES
+			m_species_system->removeFromSpecies( entity );
+
+		// ACTUAL REMOVAL
+			m_unit_container->removeChild( entity );
 	}
-	
+
 	bool CdCritterSystem::removeFromCollisions( BEntity* to_remove_list )
 	{
 		for_all_children_of( m_collisions )
@@ -362,7 +359,6 @@
 		}
 		return false;
 	}
-	
 
 	void CdCritter::construct()
 	{

@@ -7,6 +7,7 @@
 	class CdSpeciesSystem;
 	class CdVisionSystem;
 	class BeRigidBody;
+	class BMousePicker;
 
 	//  SYSTEM
 		class CdCritterSystem : public BEntity
@@ -22,6 +23,7 @@
 
 			private:
 				CdSpeciesSystem* m_species_system;
+				BMousePicker* m_mouse_picker;
 				BEntity* m_unit_container;
 				bool removeFromCollisions( BEntity* to_remove );
 				BEntity* m_collisions;

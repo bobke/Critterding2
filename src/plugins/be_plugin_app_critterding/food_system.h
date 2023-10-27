@@ -12,6 +12,8 @@
 // 				const int get(const int minimum, const int maximum) const;
 // 		};
 
+		class BMousePicker;
+
 	//  SYSTEM
 		class CdFoodSystem : public BEntity
 		{
@@ -23,9 +25,12 @@
 				void construct();
 				void process();
 				
+				void removeFood( BEntity* entity );
+
 			private:
 				// FOOD CONTAINER
 				BEntity* m_unit_container;
+				BMousePicker* m_mouse_picker;
 				bool removeFromCollisions( BEntity* to_remove );
 				BEntity* m_collisions;
 				BEntity* m_insert_frame_interval;

@@ -2,6 +2,7 @@
 #include "critter_system.h"
 #include "kernel/be_entity_core_types.h"
 #include <iostream>
+#include "plugins/be_plugin_bullet/be_entity_mousepicker.h"
  
 	void CdFoodSystem::construct()
 	{
@@ -44,6 +45,7 @@
 		m_insert_frame_interval->set( (Buint)2 );
 
 		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
+		m_mouse_picker = dynamic_cast<BMousePicker*>( parent()->getChild("external_mousepicker", 1)->get_reference() );
 	}
 	
 	void CdFoodSystem::process()
@@ -139,19 +141,30 @@
 					// reached max age or energy is depleted
 					if ( food_unit->age() >= m_maximum_age->get_uint() || food_unit->energy() <= 0.0f )
 					{
-						// HACK first external child one is body
-						auto bodypart = (*child2)->getChild( "external_physics", 1 )->get_reference();
-						while ( removeFromCollisions( bodypart ) ) {;}
+						removeFood( food_unit );
 
-						m_unit_container->removeChild( *child2 );
-						
 						// PREVENT FURTHER DELETION OR INSERTION OF FOOD IN THIS FRAME
 							return; 
 					}
 				}
 			}
 	}
-	
+
+	void CdFoodSystem::removeFood( BEntity* entity )
+	{
+		// HACK first external child one is body
+		auto bodypart = entity->getChild( "external_physics", 1 )->get_reference();
+		
+		// COLLISIONS
+			while ( removeFromCollisions( bodypart ) ) {;}
+
+		// MOUSEPICKER
+			m_mouse_picker->removeGrabbedEntity( bodypart );
+
+		// ACTUAL REMOVAL
+			m_unit_container->removeChild( entity );
+	}
+
 	bool CdFoodSystem::removeFromCollisions( BEntity* to_remove )
 	{
 		for_all_children_of( m_collisions )

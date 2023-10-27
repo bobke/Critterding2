@@ -22,6 +22,8 @@
 		m_target_x = target->addChild( "x", new BEntity_float() );
 		m_target_y = target->addChild( "y", new BEntity_float() );
 		m_target_z = target->addChild( "z", new BEntity_float() );
+		
+		m_grabbed_entity = addChild( "grabbed_entity", new BEntity_reference() );
 	}	
 
 	void BMousePicker::process()
@@ -55,28 +57,30 @@
 				auto hit_entity = raycaster->getChild("hit_entity", 1);
 				if ( hit_entity && hit_entity->get_reference() != 0 )
 				{
-					auto btbody = dynamic_cast<BPhysicsEntity*>( hit_entity->get_reference() )->getPhysicsComponent()->getBody();
-					btbody->setActivationState(DISABLE_DEACTIVATION);
-
-					auto hit_position = raycaster->getChild("hit_position", 1);
-					btVector3 attachPosition = btVector3( hit_position->getChild("x", 1)->get_float(), hit_position->getChild("y", 1)->get_float(), hit_position->getChild("z", 1)->get_float() );
-					btVector3 localPivot = btbody->getCenterOfMassTransform().inverse() * attachPosition;
-
-					// create constraint and add it to bulletworld
-					m_constraint = new btPoint2PointConstraint(*btbody,localPivot);
-					m_constraint->m_setting.m_impulseClamp = 100.f;
-					m_constraint->m_setting.m_tau = 0.9f;
-
 					auto physics_world = dynamic_cast<BPhysicsWorld*>( parent()) ;
 					if ( physics_world )
 					{
+						auto btbody = dynamic_cast<BPhysicsEntity*>( hit_entity->get_reference() )->getPhysicsComponent()->getBody();
+						btbody->setActivationState(DISABLE_DEACTIVATION);
+
+						auto hit_position = raycaster->getChild("hit_position", 1);
+						btVector3 attachPosition = btVector3( hit_position->getChild("x", 1)->get_float(), hit_position->getChild("y", 1)->get_float(), hit_position->getChild("z", 1)->get_float() );
+						btVector3 localPivot = btbody->getCenterOfMassTransform().inverse() * attachPosition;
+
+						// create constraint and add it to bulletworld
+						m_constraint = new btPoint2PointConstraint(*btbody,localPivot);
+						m_constraint->m_setting.m_impulseClamp = 100.f;
+						m_constraint->m_setting.m_tau = 0.9f;
+
 						physics_world->m_physics_world->addConstraint( m_constraint );
+
+						btVector3 rayFrom = btVector3( m_source_x->get_float(), m_source_y->get_float(), m_source_z->get_float() );
+						m_picking_distance = (attachPosition - rayFrom).length();
+
+						m_grabbed_entity->set( hit_entity->get_reference() );
+
+						return true;
 					}
-
-					btVector3 rayFrom = btVector3( m_source_x->get_float(), m_source_y->get_float(), m_source_z->get_float() );
-					m_picking_distance = (attachPosition - rayFrom).length();
-
-					return true;
 				}
 			}
 		}
@@ -94,10 +98,25 @@
 					delete m_constraint;
 					m_constraint = 0;
 
+					m_grabbed_entity->set( (BEntity*)0 );
+
 					return true;
 				}
 			}
 		}
 
+		return false;
+	}
+
+	bool BMousePicker::removeGrabbedEntity( BEntity* to_remove )
+	{
+		if ( m_constraint != 0 )
+		{
+			if ( to_remove == m_grabbed_entity->get_reference() )
+			{
+				// std::cout << "removing connection" << std::endl;
+				return set( false );
+			}
+		}
 		return false;
 	}
