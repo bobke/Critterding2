@@ -24,6 +24,8 @@
 		population_controller.h
 		critter_exchanger.cpp
 		critter_exchanger.h
+		critter_thread_mesher.cpp
+		critter_thread_mesher.h
 	)
 
 	ADD_LIBRARY( be_plugin_app_critterding SHARED ${plugin_SRCS} )

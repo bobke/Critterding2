@@ -38,33 +38,22 @@
 // 				(*child)->process_post();
 // 			}
 		}
-		
-	// CHILDREN
-// 		bool B_Children_Handler::hasChildren(BEntity* const entity)
-// 		{
-// 			return hasChildren( entity->id() );
-// 		}
-	
-// 		bool B_Children_Handler::hasChildren(const BEntity* entity)
-// 		{
-// // 			std::cout << " -- " << entity->id() << std::endl;
-// 			if ( m_children_map.contains( entity->id() ) )
-// 			{
-// // 				std::cout << " -- > " << entity->id() << " has children" << std::endl;
-// 				return true;
-// 			}
-// 			return false;
-// 		}
 
 		BEntityVector& B_Children_Handler::children(const BEntity* entity)
 		{
-			return m_children_map[entity->id()];
+			m_mutex_children.lock();
+			BEntityVector& r = m_children_map[entity->id()];
+			m_mutex_children.unlock();
+			
+			return r;
 		}
 
 		bool B_Children_Handler::addChild( BEntity* parent, BEntity* child )
 		{
 			if ( child != 0 )
 			{
+				m_mutex_children.lock();
+				
 				// if parent doesn't have a children vector, create one
 					if ( !parent->hasChildren() )
 					{
@@ -78,7 +67,9 @@
 
 				child->setIDRecyclable();
 				child->setID( spawnId() );
-				child->setParent(parent);
+				// std::cout << "setting parent of " << child->id() << " to " << parent->id() << std::endl;
+				child->setParent( parent );
+				// std::cout << "ok" << std::endl;
 				// child->setStartTime(parent->getTimer()->getTotalMilliSeconds());
 				
 	// 			std::cout << "B_Children_Handler::addChild: " << child->id() << " : " << parent->id() << std::endl;
@@ -111,82 +102,8 @@
 // 						child->addProcessing(child);
 						// std::cout << "done adding" << child->id() << " tot the processor" << std::endl;
 					}
-				
-				// ADD TO ADMIN WINDOW, IF EXISTS, add the command to the command buffer
-				
-					// // if ( m_admin_app_search_entity == 0 )
-					// {
-					// 	auto scene = child->topParent()->getChild("Scene", 1);
-					// 	if ( scene )
-					// 	{
-					// 		auto admin_app = scene->getChild("Admin App", 2);
-					// 		if ( admin_app )
-					// 		{
-					// 			// std::cout << "to add" << std::endl;
-					// 			admin_app->set( "add", child );
-					// 		}
-					// 	}
-					// }
-				
-				// FIXME SLOW AF
-// 					if ( m_admin_app_search_entity == 0 )
-// 					{
-// 						auto scene = child->topParent()->getChild("Scene", 1);
-// 						if ( scene )
-// 						{
-// 							auto admin_app = scene->getChild("Admin App", 2);
-// 							if ( admin_app )
-// 							{
-// 								m_admin_app_search_entity = admin_app->getChild("qt vboxlayout", 6);
-// 							}
-// 						}
-// 					}
-// 
-// 					if ( m_cmdbuffer == 0 )
-// 					{
-// 						m_cmdbuffer = child->topParent()->getChild("_command_buffer", 1);
-// 					}
-// 					
-// 					// FAILS BECAUSE NAME NOT IN ORDER YET
-// 					// if ( m_admin_app_search_entity )
-// 					// {
-// 					// 	std::stringstream stream;
-// 					// 	stream << "admin_section_" << parent->id() << "_" << parent->name();
-// 					// 	auto admin_section = m_admin_app_search_entity->getChild( stream.str().c_str() );
-// 					// 	if ( admin_section )
-// 					// 	{
-// 					// 		auto r = new BEntity_reference();
-// 					// 		r->set( child );
-// 					// 		m_admin_app_search_entity->set("command_execute", r);
-// 					// 	}
-// 					// }
-// 					
-// 					if ( m_admin_app_search_entity && m_cmdbuffer )
-// 					{
-// 						// FIXME SLOW AF
-// 						std::stringstream stream;
-// 						stream << "admin_section_" << parent->id() << "_" << parent->name();
-// 						auto admin_section = m_admin_app_search_entity->getChild( stream.str().c_str() );
-// 						if ( admin_section )
-// 						{
-// 							auto groupbox = admin_section->getChild("qt groupbox entities", 1);
-// 							if ( groupbox )
-// 							{
-// 								auto vlayout = groupbox->getChild("qt vboxlayout", 1);
-// 								if ( vlayout )
-// 								{
-// 									auto cmdref = m_cmdbuffer->addChild("admin_entity_add", new BEntity_reference() );
-// 									cmdref->set( child );
-// 									cmdref->addChild("vlayout", new BEntity_reference() )->set( vlayout );
-// 								}
-// 							}
-// 						}
-// 					}
-					
 
-				
-				
-				
+				m_mutex_children.unlock();
 				return true;
 			}
 			return false;
@@ -203,7 +120,6 @@
 
 				removeChild( parent, it );
 			}
-
 		}
 		
 		// WRAPPER FUNCTION, LOOKS UP THE MAP ITERATOR TO PASS ON TO REAL REMOVE
@@ -221,11 +137,14 @@
 						return removeChild( parent, it );
 					}
 				}
+
+			// m_mutex.unlock();
 			return false;
 		}
 
 		bool B_Children_Handler::removeChild( BEntity* parent, const BEntityVector::iterator& entity_iterator )
 		{
+			// m_mutex.lock();
 // 			std::cout << "B_Children_Handler::removeChild: " << (*entity_iterator)->id() << std::endl;
 			BEntity* entity = (*entity_iterator);
 
@@ -283,6 +202,7 @@
 			// REMOVE CHILDREN
 				clearChildren( entity );
 
+				m_mutex.lock();
 			// DESTRUCT
 				entity->destruct();
 
@@ -323,15 +243,18 @@
 				recycleID(entity);
 
 			// REALLY REMOVE CHILD FROM PARENT VECTOR
+				// m_mutex_children.lock();
 				BEntityVector& children_vector = children( parent );
 				children_vector.erase(entity_iterator);
 
 			// IF NO CHILDREN LEFT, REMOVE PARENT VECTOR ENTIRELY
+				m_mutex_children.lock();
 				if ( children_vector.empty() )
 				{
 					m_children_map.erase( parent->id() );
 					parent->setHasChildren(false);
 				}
+				m_mutex_children.unlock();
 
 			// IF ADMIT SEARCH SHORTCUT IS REMOVED RESET IT
 				if ( m_admin_app_search_entity == entity )
@@ -341,10 +264,13 @@
 				
 			// REMOVE NAME
 				entity->removeName();
+				m_mutex.unlock();
 
 			// DEBUG OUTPUT
 				// std::cout << "B_Children_Handler::delete: " << entity->id() << " : " << entity->name() << std::endl;
 				
+			// m_mutex.unlock();
+
 			// FINALLY DELETE ENTITY
 				delete entity;
 

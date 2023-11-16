@@ -2,6 +2,8 @@
 #define FOOD_SYSTEM_H_INCLUDED
 
 #include "kernel/be_entity_interface.h"
+#include <thread>
+#include <mutex>
 
 // 	// RANDOMIZER
 // 		class BeRand
@@ -25,6 +27,7 @@
 				void construct();
 				void process();
 				
+				virtual bool set( const Bstring& id, BEntity* value );
 				void removeFood( BEntity* entity );
 
 			private:
@@ -35,6 +38,7 @@
 				BEntity* m_collisions;
 				BEntity* m_insert_frame_interval;
 				unsigned int m_framecount;
+				BEntity* m_command_buffer;
 				
 				// SETTINGS
 				BEntity* m_number_of_units;
@@ -50,6 +54,10 @@
 				BEntity* m_rng;
 // 				BeRand m_randomizer;
 				BEntity* m_critter_unit_container;
+				
+			// MUTEX
+				std::mutex m_mutex;
+				
 		};
 
 	//  UNIT

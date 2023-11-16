@@ -48,9 +48,10 @@
 	// PROCESS
 	void BConstraintHinge::process(  )
 	{
+		// std::cout << "BConstraintHinge::process" << std::endl;
 		if ( m_hinge && m_input_sum != 0.0f )
 		{
-// 			std::cout << "input sum = " << m_input_sum << std::endl;
+			// std::cout << "input sum = " << m_input_sum << std::endl;
 			
 			// float max_input_sum = 0.38f; // FIXME MAKE OPTION
 			float max_input_sum = 0.42f; // FIXME MAKE OPTION

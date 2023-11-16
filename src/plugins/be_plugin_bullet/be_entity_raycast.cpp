@@ -44,6 +44,7 @@
 					auto e1 = static_cast<BEntity*>(resultCallback.m_collisionObject->getUserPointer());
 					if ( e1 )
 					{
+						// std::cout << e1->name() << std::endl;
 						m_hit_entity->set( e1 );
 						m_hit_position_x->set( resultCallback.m_hitPointWorld.x() );
 						m_hit_position_y->set( resultCallback.m_hitPointWorld.y() );

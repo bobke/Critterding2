@@ -85,10 +85,12 @@
 
 	void BodyFixed1Maker::make( BEntity* entity_parent )
 	{
+		auto body_system = entity_parent->parent()->parent()->parent();
+		auto critter_system = entity_parent->parent()->parent()->parent()->parent();
 		entity_parent->addChild( "bodyparts", new BEntity() );
 		auto t_constraints = entity_parent->addChild( "constraints", new BEntity() );
 		
-		auto critterding = entity_parent->topParent()->getChild("Scene", 1)->getChild( "Critterding", 1 );
+		auto critterding = entity_parent->topParent()->getChild("bin", 1)->getChild( "Critterding", 1 );
 		if ( critterding )
 		{
 			// exit (0);
@@ -99,10 +101,10 @@
 			m_rng = critterding->getChild( "random_number_generator" ); // FIXME PREFETCH
 		}
 
-		auto physics_world = critterding->getChild( "physicsworld", 1 );
+		auto physics_world = critter_system->parent()->getChild( "physicsworld", 1 );
 		auto settings = entity_parent->parent()->parent()->parent()->getChild( "settings", 1 );
 		auto bodypart_spacing = settings->getChild( "bodypart_spacing", 1 )->get_float();
-		auto dropzone = critterding->getChild( "critter_system", 1 )->getChild( "settings", 1 )->getChild( "dropzone", 1 );
+		auto dropzone = critter_system->getChild( "settings", 1 )->getChild( "dropzone", 1 );
 
 		// CENTRAL BODYPART  
 			m_rng->set( "min", (Bint)0 );
@@ -301,7 +303,7 @@
 		auto t_constraints = body->getChild( "constraints", 1 );
 
 			// find physicsworld
-		auto physics_world = body->parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
+		auto physics_world = body->parent()->parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
 		auto settings = body->parent()->parent()->parent()->getChild( "settings", 1 );
 
 		if ( physics_world )
@@ -506,7 +508,7 @@
 		auto t_constraints = body->getChild( "constraints", 1 );
 
 			// find physicsworld
-		auto physics_world = body->parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
+		auto physics_world = body->parent()->parent()->parent()->parent()->parent()->getChild( "physicsworld", 1 );
 		auto settings = body->parent()->parent()->parent()->getChild( "settings", 1 );
 
 		if ( physics_world )
@@ -633,7 +635,7 @@
 		// GRAPHICS
 			BEntity* graphics_transform(0);
 			// auto graphicsmodelsystem = body->topParent()->getChild("Scene", 1)->getChild("GraphicsModelSystem");
-			auto graphicsmodelsystem = body->topParent()->getChild("Scene", 1)->getChild("Critterding", 1)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
+			auto graphicsmodelsystem = body->topParent()->getChild("bin", 1)->getChild("Critterding", 1)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
 
 			if ( graphicsmodelsystem )
 			{
@@ -665,7 +667,7 @@
 					// external_reference->set( graphics_transform );
 					t_bodyparts->addChild( "external_bodypart_graphics", new BEntity_external() )->set( graphics_transform );
 			}
-			physics_transform->connectServerServer(graphics_transform);
+			physics_transform->connectServerServer(graphics_transform, true);
 
 			return new_bodypart;
 	}

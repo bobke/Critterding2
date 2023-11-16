@@ -3,9 +3,10 @@
 
 #include "kernel/be_entity_interface.h"
 #include "kernel/be_entity_ops_copy.h"
+#include <thread>
+#include <mutex>
 
 	class CdSpeciesSystem;
-	class CdVisionSystem;
 	class BeRigidBody;
 	class BMousePicker;
 
@@ -20,15 +21,17 @@
 				void construct();
 				void process();
 				void removeCritter( BEntity* entity );
+				// bool set( const char* value );
+				virtual bool set( const Bstring& id, BEntity* value );
 
 			private:
-				CdSpeciesSystem* m_species_system;
 				BMousePicker* m_mouse_picker;
 				BEntity* m_unit_container;
 				bool removeFromCollisions( BEntity* to_remove );
 				BEntity* m_collisions;
 				BEntityCopy m_entityCopy;
 				// BEntityLoad m_entityLoad;
+				BEntity* m_command_buffer;
 				
 				BEntity* m_insert_frame_interval;
 				unsigned int m_framecount;
@@ -46,7 +49,12 @@
 				BEntity* m_dropzone_size_z;
 				BEntity* m_copy_random_position;
 				
-				CdVisionSystem* m_vision_system;
+				CdSpeciesSystem* m_species_system;
+				BEntity* m_body_system_unit_container;
+				BEntity* m_brain_system;
+
+			// MUTEX
+				std::mutex m_mutex;
 		};
 
 	//  UNIT

@@ -4,9 +4,11 @@
 #include "body_system.h"
 #include "species_system.h"
 #include "critter_system.h"
+#include "vision_system.h"
 #include "control_panel.h"
 #include "population_controller.h"
 #include "critter_exchanger.h"
+#include "critter_thread_mesher.h"
 #include "commands.h"
 #include "plugins/be_plugin_opengl/be_entity_camera.h"
 #include <iostream>
@@ -110,13 +112,23 @@
 			t_graphicsModelSystem->addChild("Camera", m_camera);
 			auto transform = m_camera->getChild( "transform", 1 );
 
+			// transform->getChild( "position_x" )->connectServerServer( m_raycast_source_x );
+			// transform->getChild( "position_y" )->connectServerServer( m_raycast_source_y );
+			// transform->getChild( "position_z" )->connectServerServer( m_raycast_source_z );
+
 			transform->getChild( "position_x" )->set( 0.0f );
-			transform->getChild( "position_y" )->set( -15.0f );
-			transform->getChild( "position_z" )->set( -88.0f );
-			transform->getChild( "rotation_euler_x" )->set( 0.0f );
+			transform->getChild( "position_y" )->set( 156.0f );
+			transform->getChild( "position_z" )->set( -100.0f );
+			transform->getChild( "rotation_euler_x" )->set( -0.5f * 3.141592f );
 			transform->getChild( "rotation_euler_y" )->set( 0.0f );
 			transform->getChild( "rotation_euler_z" )->set( 0.0f );
-			
+			// transform->getChild( "position_x" )->set( 0.0f );
+			// transform->getChild( "position_y" )->set( -15.0f );
+			// transform->getChild( "position_z" )->set( -88.0f );
+			// transform->getChild( "rotation_euler_x" )->set( 0.0f );
+			// transform->getChild( "rotation_euler_y" )->set( 0.0f );
+			// transform->getChild( "rotation_euler_z" )->set( 0.0f );
+
 		// COMMANDS
 			auto commands = glscene->addChild( "commands", new BEntity() );
 			auto launchAdminWindow = commands->addChild( "launchAdminWindow", new cmd_launchAdminWindow() );
@@ -203,9 +215,9 @@
 			light->getChild( "color_ambient_b", 1 )->set( 0.2f );
 			light->getChild( "color_ambient_a", 1 )->set( 0.0f );
 			
-			light->getChild( "color_diffuse_r", 1 )->set( 0.2f );
-			light->getChild( "color_diffuse_g", 1 )->set( 0.2f );
-			light->getChild( "color_diffuse_b", 1 )->set( 0.2f );
+			light->getChild( "color_diffuse_r", 1 )->set( 0.4f );
+			light->getChild( "color_diffuse_g", 1 )->set( 0.4f );
+			light->getChild( "color_diffuse_b", 1 )->set( 0.4f );
 			light->getChild( "color_diffuse_a", 1 )->set( 0.0f );
 
 			light->getChild( "color_specular_r", 1 )->set( 0.2f );
@@ -228,14 +240,17 @@
 				physics_entity->getChild( "filename", 1 )->set( map_location );
 				map->addChild( "external_physics", new BEntity_external() )->set(physics_entity);
 
+				auto physics_weight = physics_entity->addChild("weight", new BEntity_float_property());
+					physics_weight->set( 0.0f );
+
 				auto physics_scale_x = physics_entity->addChild("scale_x", new BEntity_float_property());
 				auto physics_scale_y = physics_entity->addChild("scale_y", new BEntity_float_property());
 				auto physics_scale_z = physics_entity->addChild("scale_z", new BEntity_float_property());
 					// physics_scale_x->set( 1.25f );
 					// physics_scale_y->set( 1.0f );
 					// physics_scale_z->set( 1.25f );
-					physics_scale_x->set( 6.0f );
-					physics_scale_y->set( 10.0f );
+					physics_scale_x->set( 8.0f );
+					physics_scale_y->set( 1.0f );
 					physics_scale_z->set( 10.0f );
 
 			// GRAPHICS
@@ -264,8 +279,8 @@
 					// graphics_transform->getChild("scale_x", 1)->set( 1.25f );
 					// graphics_transform->getChild("scale_y", 1)->set( 1.0f );
 					// graphics_transform->getChild("scale_z", 1)->set( 1.25f );
-					graphics_transform->getChild("scale_x", 1)->set( 6.0f );
-					graphics_transform->getChild("scale_y", 1)->set( 10.0f );
+					graphics_transform->getChild("scale_x", 1)->set( 8.0f );
+					graphics_transform->getChild("scale_y", 1)->set( 1.0f );
 					graphics_transform->getChild("scale_z", 1)->set( 10.0f );
 
 					// CONNECT
@@ -317,36 +332,28 @@
 // 				
 // 		}
 
-		// skydome
+		// SKY DOME
 			auto t_graphicsModelSkyDome = t_graphicsModelSystem->addChild("GraphicsModel_SkyDome", "GraphicsModel");
 			// t_graphicsModelSkyDome->getChild("active", 1)->set( false );
-
-			
 			t_graphicsModelSkyDome->set("filename", "../share/modules/skydome3.obj");
 			// t_graphicsModelSkyDome->set("filename", "/projects/critterding-beta14/share/critterding/skies/round/skydome3.obj");
 
-
-		// BRAINZ SYSTEM
-			auto brain_system = addChild( "brain_system", "BrainSystem" );
-
-		// BODY SYSTEM
-			auto body_system = addChild( "body_system", new BodySystem() );
-			// auto body_system = addChild( "body_system", "CdBodySystem" );
+		// VISION SYSTEM
+			auto vision_system = addChild( "vision_system", "CdVisionSystem" );
+			addChild("SDLSwapBuffers", "SDLSwapBuffers");
 
 		// CRITTER SYSTEM
-			// auto critter_system = addChild( "critter_system", "CdCritterSystem" );
 			auto critter_system = addChild( "critter_system", new CdCritterSystem() );
 			m_critter_unit_container = critter_system->getChild( "unit_container", 1 );
 
+		// REGISTER UNIT CONTAINER IN VISION SYSTEM
+			vision_system->set("register_container", m_critter_unit_container);
+
 		// FOOD SYSTEM
-			// auto food_system = addChild( "food_system", "CdFoodSystem" );
 			auto food_system = addChild( "food_system", new CdFoodSystem() );
-			
+
 			m_food_unit_container = food_system->getChild( "unit_container", 1 );
 
-		// // CONTROL PANEL
-			// auto control_panel = addChild( "control_panel", new CdControlPanel() );
-			
 		// POPULATION CONTROLLER
 			addChild( "CdPopulationController", new CdPopulationController() );
 
@@ -420,7 +427,6 @@
 			m_raycast_target_z->set( rayDirection.z() );
 			
 			m_bullet_raycast->process();
-
 	}
 
 	BEntity* Critterding::findCritter( BEntity* e1, BEntity* e2 )
@@ -458,7 +464,7 @@
 			}
 		}
 		return 0;
-	}	
+	}
 	
 	
 // ---- FACTORIES
@@ -471,7 +477,9 @@
 		, CD_POPULATION_CONTROL
 		, CD_CRITTER_EXCHANGER
 		, CD_CRITTER_SYSTEM
+		, CD_CRITTER_THREAD_MESHER
 		, CD_SPECIES_SYSTEM
+		, CD_VISION_SYSTEM
 		, CD_CRITTER
 		, CD_FOOD_SYSTEM
 		, CD_FOOD
@@ -492,7 +500,9 @@
 					i.addClass( parent, CLASS::CD_POPULATION_CONTROL, "CdPopulationController" );
 					i.addClass( parent, CLASS::CD_CRITTER_EXCHANGER, "CdCritterExchanger" );
 					i.addClass( parent, CLASS::CD_CRITTER_SYSTEM, "CdCritterSystem" );
+					i.addClass( parent, CLASS::CD_CRITTER_THREAD_MESHER, "CdCritterThreadMesher" );
 					i.addClass( parent, CLASS::CD_SPECIES_SYSTEM, "CdSpeciesSystem" );
+					i.addClass( parent, CLASS::CD_VISION_SYSTEM, "CdVisionSystem" );
 					i.addClass( parent, CLASS::CD_CRITTER, "CdCritter" );
 					i.addClass( parent, CLASS::CD_FOOD_SYSTEM, "CdFoodSystem" );
 					i.addClass( parent, CLASS::CD_FOOD, "CdFood" );
@@ -519,8 +529,12 @@
 					i = new CdCritterExchanger();
 				else if ( type == CLASS::CD_CRITTER_SYSTEM )
 					i = new CdCritterSystem();
+				else if ( type == CLASS::CD_CRITTER_THREAD_MESHER )
+					i = new CdCritterThreadMesher();
 				else if ( type == CLASS::CD_SPECIES_SYSTEM )
 					i = new CdSpeciesSystem();
+				else if ( type == CLASS::CD_VISION_SYSTEM )
+					i = new CdVisionSystem();
 				else if ( type == CLASS::CD_CRITTER )
 					i = new CdCritter();
 				else if ( type == CLASS::CD_FOOD_SYSTEM )

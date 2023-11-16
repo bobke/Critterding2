@@ -250,7 +250,7 @@
 						m_line_edit_memory->set("height", Buint(28));
 					}
 
-			if (false)
+			if ( false )
 			{
 				// SYSTEM OBJECTS
 					pluginManager()->load( "system", "src/plugins/be_plugin_system", "be_plugin_system" );
@@ -262,54 +262,54 @@
 
 					// CREATE A RASTER WINDOW
 					auto rasterWindow = system_objects->addChild( "RasterWindow", new RasterWindow() );
-			// 		auto rasterWindow = t_qtapp->addChild( "RasterWindow", new RasterWindow() );
+					// auto rasterWindow = t_qtapp->addChild( "RasterWindow", new RasterWindow() );
 					rasterWindow->set("title", "CPU logical cores"); // FIXME
 					rasterWindow->getChild("QT RasterWindow", 1)->set("on_close_destroy_entity", system_objects);
 
 						
-			// CPU FREQUENCY LINEEDITS
-				// V LAYOUT
-				if (false)
-				{
-					BEntity* mhz_layout_V = general_layout_H->addChild( "QT VBoxlayout for mhz", "QVBoxLayout" );
-					BEntity* mhz_highest_layout_V = general_layout_H->addChild( "QT VBoxlayout for mhz-highest", "QVBoxLayout" );
-
-	// 						BEntity* freq = t_CPUInfo->getChild(t_CPUInfo, "frequencies", 3);
-					bool first(true);
-	// 						for_all_children_of(freq)
-					for_all_children_of(t_CPUInfo)
+				// CPU FREQUENCY LINEEDITS
+					// V LAYOUT
+					if ( false )
 					{
-	// 							std::cout << "*** " << (*child)->name() << std::endl;
-						
-						BEntity* line_edit = mhz_layout_V->addChild( (*child)->name(), "QLineEdit" );
-						line_edit->set("width", Buint(40));
+						BEntity* mhz_layout_V = general_layout_H->addChild( "QT VBoxlayout for mhz", "QVBoxLayout" );
+						BEntity* mhz_highest_layout_V = general_layout_H->addChild( "QT VBoxlayout for mhz-highest", "QVBoxLayout" );
 
-						BEntity* line_edit_highest = mhz_highest_layout_V->addChild( (*child)->name(), "QLineEdit" );
-						line_edit_highest->set("width", Buint(40));
+						// BEntity* freq = t_CPUInfo->getChild(t_CPUInfo, "frequencies", 3);
+						bool first(true);
+						// for_all_children_of(freq)
+						for_all_children_of(t_CPUInfo)
+						{
+							// std::cout << "*** " << (*child)->name() << std::endl;
+							
+							BEntity* line_edit = mhz_layout_V->addChild( (*child)->name(), "QLineEdit" );
+							line_edit->set("width", Buint(40));
 
-						if ( first )
-						{
-							first=false;
-							line_edit->set("composite");
-						}
-						else
-						{
-							BEntity* mhz = (*child)->getChild("mhz");
-							line_edit->set( mhz->get_uint() );
-							mhz->connectServerServer(line_edit);
-							
-							BEntity* mhz_highest = (*child)->getChild("mhz_highest");
-							line_edit_highest->set( mhz_highest->get_uint() );
-							mhz_highest->connectServerServer(line_edit_highest);
-							
+							BEntity* line_edit_highest = mhz_highest_layout_V->addChild( (*child)->name(), "QLineEdit" );
+							line_edit_highest->set("width", Buint(40));
+
+							if ( first )
+							{
+								first=false;
+								line_edit->set("composite");
+							}
+							else
+							{
+								BEntity* mhz = (*child)->getChild("mhz");
+								line_edit->set( mhz->get_uint() );
+								mhz->connectServerServer(line_edit);
+								
+								BEntity* mhz_highest = (*child)->getChild("mhz_highest");
+								line_edit_highest->set( mhz_highest->get_uint() );
+								mhz_highest->connectServerServer(line_edit_highest);
+								
+							}
 						}
 					}
-				}
 
 
 			// CPU STATS LINEEDITS
 				// V LAYOUT
-				if (false)
+				if ( false )
 				{
 					BEntity* deco_layout_V = general_layout_H->addChild( "QT VBoxlayout for decorations", "QVBoxLayout" );
 

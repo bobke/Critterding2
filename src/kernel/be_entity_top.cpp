@@ -1,7 +1,9 @@
 #include "be_entity_top.h"
 #include "be_lib_handler.h"
 #include "be_entity_children_handler.h"
+#include "be_entity_core_types.h"
 #include <iostream>
+#include <algorithm>
 
 		BEntityTop::BEntityTop(bool connection_type)
 		: m_processor(new BProcessor())
@@ -20,21 +22,6 @@
 
 		void BEntityTop::construct() 
 		{
-				// CHILD HANDLER
-// 					m_child_handler = new B_Children_Handler(m_timer);
-
-				// FIXME this shit is from previously "scene"
-				// sort this out what comes in the main executable and what goes here
-
-				// COMMAND MANAGER
-// 					m_command_buffer = addChild("_command_buffer", new BEntity());
-// // 					m_command_buffer = addChildEvent( this, BAddChildEvent("_command_buffer", new BEntity()) );
-
-// 				// PLUGIN MANAGER // FIXME SPAWN ON THE FLY
-// 					m_plugin_manager = new BEntity_Plugin_Manager();
-// 					addChild("Libraries", m_plugin_manager);
-// // 					addChildEvent( this, BAddChildEvent("Libraries", m_plugin_manager) );
-// // 					m_plugin_manager->load( this, "basetypes", "src/kernel", "be_base_entity_types" );
 		}
 
 		BEntityTop::~BEntityTop()
@@ -50,10 +37,10 @@
 		// MOVE RECONSTRUCT FLAG TO PROCESSOR
 		void BEntityTop::reConstructProcessList( BEntity* entity )
 		{
-// 			std::cout << " BEntityTop::constructProcessList " << entity->name() << std::endl;
 // 			m_processor->constructList( entity, false );
 			if ( m_reconstruct_list )
 			{
+				// std::cout << " BEntityTop::constructProcessList " << entity->name() << std::endl;
 				m_processor->reConstructList( entity, true );
 				m_reconstruct_list = false;
 			}
@@ -83,7 +70,7 @@
 			// when loopmanager exists we expect the scene to remove itself
 			else 
 			{
-				BEntity* scene = getChild("Scene", 1);
+				BEntity* scene = getChild("bin", 1);
 
 				// WHILE SCENE HAS NOT BEEN DELETED
 					while ( scene )
@@ -104,7 +91,7 @@
 							process_and_clear_command_buffer();
 
 						// TRY TO REFIND SCENE TO CHECK IF STILL EXISTS
-							scene = getChild("Scene", 1);
+							scene = getChild("bin", 1);
 
 						// NUM LOOPS
 							++m_numLoops;
@@ -195,22 +182,33 @@
 	// COMMAND BUFFER
 		void BEntityTop::spawnCommandBuffer()
 		{
-			m_command_buffer = addChild("_command_buffer", new BEntity());
+			m_command_buffer = new BEntity();
+			// m_command_buffer = new BECommandBuffer();
+			addChild( "_command_buffer", m_command_buffer );
 		}
 
+		bool BEntityTop::is_not_in_removed_entities( BEntity* entity )
+		{
+			if ( std::find( m_removed_entities.begin(), m_removed_entities.end(), entity ) == m_removed_entities.end() )
+			{
+				return true;
+			}
+			return false;
+		}
+		
 		void BEntityTop::process_and_clear_command_buffer()
 		{
-			// std::cout << "BEntityTop::process_and_clear_command_buffer() " << id() << std::endl;
-			
 			if ( m_command_buffer != 0 && m_command_buffer->hasChildren() )
 			{
+				// std::cout << "- process_and_clear_command_buffer() " << id() << std::endl;
+
 				// while ( !childrenvector.empty() )
 				while ( m_command_buffer->hasChildren() )
 				{
 					// std::cout << "BEntityTop::process_and_clear_command_buffer::command " << "x" << std::endl;
 					auto childrenvector = m_command_buffer->children();
 					auto command_it(childrenvector.begin());
-
+   
 					// PASS THROUGH SCENE
 					// if not processed run basic command
 					{
@@ -218,6 +216,8 @@
 						// if ( !process_command(*command_it) )
 						{
 							auto c = (*command_it);
+							// std::string name = c->name();
+							// std::cout << "  name: " << c->name() << std::endl;
 
 							// if our c is named reference then load the referenced command
 							if ( c->name() == "reference" )
@@ -226,7 +226,10 @@
 								auto ref_c = c->get_reference();
 								if ( ref_c )
 								{
+									// std::cout << "  reference " << std::endl;
 									c = ref_c;
+									// overwrite name too
+									// name = c->name();
 								}
 							}
 
@@ -235,11 +238,43 @@
 							// FIXME WHEN HAMMERING "R" (REMOVE) IN ADMIN (IN VALGRIND) WE CAN MAKE IT CRASH HERE, SINCE c WAS REPLACED ABOVE WITH A REFERENCE THAT'S GONE?
 							if ( c->name() == "commitValue" )
 							{
-								auto entity_with_output = c->get_reference();
-								auto entity_with_input = c->getChild("entity_with_input")->get_reference();
+								// std::cout << c->get_reference()->name() << std::endl;
+								if ( c->getChild("entity_with_input") )
+								{
+									// std::cout << c->getChild("entity_with_input")->get_reference() << std::endl;
+									auto entity_with_output = c->get_reference();
+									auto entity_with_input = c->getChild("entity_with_input")->get_reference();
+									
+									// FORCE APPLY // HACK name() != "transform" portion
+
+									if ( is_not_in_removed_entities( entity_with_output ) && is_not_in_removed_entities( entity_with_input ) )
+									{
+										// std::cout << "apply " << entity_with_output->name() << " to " << entity_with_input->name() << std::endl;
+										entity_with_output->apply( entity_with_input );
+									}
+									
+									// if ( !entity_with_output->apply( entity_with_input ) && entity_with_output->name() != "transform" )
+									// {
+									// 	entity_with_output->onUpdate();
+									// }
+								}
+							}
+
+							else if ( c->name() == "pass_command" )
+							{
+								auto pass_entity = c->get_reference();
+								auto command = c->getChild("command", 1);
 								
-								std::cout << "should apply " << entity_with_output->name() << " to " << entity_with_input->name() << std::endl;
-								entity_with_output->apply( entity_with_input );
+ 								BEntity_string* cmd_string = dynamic_cast<BEntity_string*>( command );
+								if ( cmd_string )
+								{
+									auto entity = command->getChild("entity", 1);
+									if ( !entity || is_not_in_removed_entities( entity->get_reference() ) )
+									{
+										// std::cout << "  target: " << pass_entity->name() << " command: " << cmd_string->get_string() << std::endl;
+										pass_entity->set( cmd_string->get_string(), command );
+									}
+								}
 							}
 
 							else if ( c->name() == "remove" )
@@ -247,60 +282,75 @@
 								// std::cout << "BEntityTop::process_and_clear_command_buffer::command remove " << std::endl;
 								// get reference
 								auto entity = c->get_reference();
-								if ( entity )
+								
+								// FIXME DOES NOT CATCH MIGRATED CRITTERS: SO DO THE CHECKS AT INPUTTING TO THE COMMAND BUFFER
+								// if it was already removed earlier, do nothing
+								if ( is_not_in_removed_entities( entity ) )
 								{
-									if ( entity != m_command_buffer && entity->name() != "Libraries" )
+									m_removed_entities.push_back( entity );
+									if ( entity )
 									{
-// 										std::cout << "removing" << entity->id() << std::endl;
-										entity->parent()->removeChild(entity);
-									}
-									else 
-									{
-										std::cout << "best not removed: " << entity->id() << std::endl;
+										if ( entity != m_command_buffer && entity->name() != "lib" )
+										{
+											// std::cout << "removing: " << entity->id() << std::endl;
+											entity->parent()->removeChild(entity);
+										}
+										else 
+										{
+											// std::cout << "best not removed: " << entity->id() << std::endl;
+										}
 									}
 								}
 							}
 
 							else if ( c->name() == "copy" )
 							{
-								std::cout << "command: copy" << std::endl;
+								// std::cout << "command: copy" << std::endl;
 								auto entity = c->get_reference();
 								if ( entity )
 								{
-									m_entityCopy.copyEntity( entity );
+									if ( is_not_in_removed_entities( entity ) )
+									{
+										// std::cout << "copying: " << entity->id() << std::endl;
+										m_entityCopy.copyEntity( entity );
+									}
 								}
 							}
 
 							else if ( c->name() == "save" )
 							{
-								std::cout << "command: save" << std::endl;
 								auto entity = c->get_reference();
 								if ( entity )
 								{
-									std::string t_filename = "entity_";
-									t_filename.append(std::to_string(entity->id()));
-									t_filename.append(".ent");
-									
-									m_entitySave.saveEntity( entity, t_filename );
+									if ( is_not_in_removed_entities( entity ) )
+									{
+										// std::cout << "saving: " << entity->id() << std::endl;
+										std::string t_filename = "entity_";
+										t_filename.append(std::to_string(entity->id()));
+										t_filename.append(".ent");
+										
+										m_entitySave.saveEntity( entity, t_filename );
+									}
 								}
 							}
 
 							else if ( c->name() == "admin_load_entity" || c->name() == "admin_entity_group_expand" || c->name() == "admin_entity_group_contract" || c->name() == "admin_entity_add" || c->name() == "admin_entity_open_window" || c->name() == "admin_entity_graph" )
 							{
 								// if it has an admin window now, execute
-								if ( getAdminWindow() )
+								auto admin_window = getAdminWindow();
+								if ( admin_window )
 								{
-									getAdminWindow()->set("command_execute", c);
+									admin_window->set("command_execute", c);
 								}
 							}
 
 							else
 							{
 								std::cout << "WARNING::unknown command: " << c->id() << " " << c->name() << std::endl;
-								if ( c->name() == "" )
-								{
-									exit(0);
-								}
+								// if ( name == "" )
+								// {
+								// 	exit(0);
+								// }
 							}
 
 // 							// BASIC COMMANDS
@@ -312,9 +362,11 @@
 						}
 					}
 
-					// REMOVE COMMAND FROM COMMAND BUFFER
-						m_command_buffer->removeChild(*command_it);
+					// std::cout << BEntity::name().c_str() << " :: removing name " << (*command_it)->name() << std::endl;
+					m_command_buffer->removeChild( *command_it );
 				}
+				// m_command_buffer->clearChildren();
+				m_removed_entities.clear();
 			}
 		}
 
@@ -332,7 +384,7 @@
 		void BEntityTop::spawnPluginManager()
 		{
 			m_plugin_manager = new BEntity_Plugin_Manager();
-			addChild("Libraries", m_plugin_manager);
+			addChild("lib", m_plugin_manager);
 		}
 
 		BEntity_Plugin_Manager* BEntityTop::pluginManager() const
@@ -357,3 +409,16 @@
 			m_admin_window = entity;
 		}
 
+
+		
+		// BEntity* BECommandBuffer::addChild( const std::string& name, BEntity* const entity )
+		// {
+		// 	if ( entity != 0 )
+		// 	{
+		// 		std::cout << "name: " << name << " being added to " << this->name() << std::endl;
+  // 
+		// 		m_command_buffer.push_back( entity );
+		// 		m_name_buffer.push_back( name );
+		// 	}
+		// 	return entity;
+		// }		

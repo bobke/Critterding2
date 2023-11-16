@@ -110,8 +110,7 @@ class BEOutput;
 					BEOutput* getOutput() const { return m_output; }
 					void process();
 
-// 					BEOutputConnectionLocal* connectServerServer( BEntity* entity_with_output, BEntity* entity_with_input );
-					void connectServerServer( BEntity* entity_with_output, BEntity* entity_with_input );
+					void connectServerServer( BEntity* entity_with_output, BEntity* entity_with_input, const bool force_local=false );
 // 					void disconnectServerServer( BEntity* entity_with_output, BEntity* entity_with_input );
 
 				BEInput* m_input;

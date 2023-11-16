@@ -23,13 +23,12 @@
 				virtual ~BEntityCopy() {};
 
 				BEntity* copyEntity( BEntity* entity );
-
+				BEntity* copyEntity( BEntity* entity, BEntity* to_parent );
 			private:
 				BEntity* _copyEntity( BEntity* entity, BEntity* to_parent, bool force=false );
 				BEntity* _wireNewEntity();
 				
 				Btranslation_map m_translation_map;
-
 	};
 
 	class BEntitySave

@@ -155,23 +155,30 @@
 							if ( !groupbox )
 							{
 								// search for button
-								auto button_expand = i->getChild("qt hboxlayout", 1)->getChild("admin_button_expand", 1);
-								button_expand->set( "text", " " );
-
-								// find commands
-								auto commands = button_expand->getChild("_commands" );
-								if ( commands )
+								auto hbox = i->getChild("qt hboxlayout", 1);
+								if ( hbox )
 								{
-									commands->parent()->removeChild(commands);
-								}
+									auto button_expand = hbox->getChild("admin_button_expand", 1);
+									if ( button_expand )
+									{
+										button_expand->set( "text", " " );
 
-								// COMMAND
-								{
-									auto actions = button_expand->addChild("_commands", new BEntity() );
-									auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() );
-									command->set( value->parent() );
-									auto layout_target = command->addChild("layout_target", new BEntity_reference() );
-									layout_target->set( i );
+										// find commands
+										auto commands = button_expand->getChild("_commands" );
+										if ( commands )
+										{
+											commands->parent()->removeChild(commands);
+										}
+
+										// COMMAND
+										{
+											auto actions = button_expand->addChild("_commands", new BEntity() );
+											auto command = actions->addChild("admin_entity_group_expand", new BEntity_reference() );
+											command->set( value->parent() );
+											auto layout_target = command->addChild("layout_target", new BEntity_reference() );
+											layout_target->set( i );
+										}
+									}
 								}
 							}
 						}
@@ -194,7 +201,6 @@
 				{
 					for( auto i : search->second )
 					{
-						// std::cout << "add" << std::endl;
 						auto groupbox = i->getChild("qt groupbox entities", 1);
 						if ( groupbox )
 						{
@@ -204,6 +210,7 @@
 							{
 								// std::cout << "add " << value->name() << std::endl;
 								add_admin_item( vlayout, value );
+								// std::cout << "add done" << std::endl;
 								// auto cmdref = m_cmdbuffer->addChild("admin_entity_add", new BEntity_reference() );
 								// cmdref->set( child );
 								// cmdref->addChild("vlayout", new BEntity_reference() )->set( vlayout );
@@ -216,23 +223,29 @@
 								// entity is not collapsed
 								// search for button
 								auto qt_hboxlayout = i->getChild("qt hboxlayout", 1);
-								auto button_expand = qt_hboxlayout->getChild("admin_button_expand", 1);
-								button_expand->set( "text", "+" );
-
-								// find commands
-								auto commands = button_expand->getChild("_commands" );
-								if ( !commands )
+								if ( qt_hboxlayout )
 								{
-									commands = button_expand->addChild("_commands", new BEntity() );
-									auto command = commands->addChild("admin_entity_group_expand", new BEntity_reference() );
-									command->set( value->parent() );
-									auto layout_target = command->addChild("layout_target", new BEntity_reference() );
-									layout_target->set( i );
+									auto button_expand = qt_hboxlayout->getChild("admin_button_expand", 1);
+									if ( button_expand )
+									{
+										button_expand->set( "text", "+" );
+
+										// find commands
+										auto commands = button_expand->getChild("_commands" );
+										if ( !commands )
+										{
+											commands = button_expand->addChild("_commands", new BEntity() );
+											auto command = commands->addChild("admin_entity_group_expand", new BEntity_reference() );
+											command->set( value->parent() );
+											auto layout_target = command->addChild("layout_target", new BEntity_reference() );
+											layout_target->set( i );
+										}
+				// 
+										// // change it's command
+										// auto command = commands->getChild("admin_entity_group_contract"); // FIXME INTO A REFERENCE TO THE CONCERNING
+										// command->setName("admin_entity_group_expand");
+									}
 								}
-        // 
-								// // change it's command
-								// auto command = commands->getChild("admin_entity_group_contract"); // FIXME INTO A REFERENCE TO THE CONCERNING
-								// command->setName("admin_entity_group_expand");
 							}
 						}
 						
@@ -471,7 +484,7 @@
 	
 	void BAdminWindow::add_admin_item( BEntity* parent, BEntity* entity )
 	{
-		if ( entity->name() != "_command_buffer" /*&& entity->name() != "Libraries"*/ )
+		if ( entity->name() != "_command_buffer" /*&& entity->name() != "lib"*/ )
 		{
 			// VBOX (for expanding into)
 			// CONSTRUCT UNIQUE NAME for removal purpuses

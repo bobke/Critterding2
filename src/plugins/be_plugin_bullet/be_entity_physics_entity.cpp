@@ -10,7 +10,7 @@
 		BPhysicsEntity::BPhysicsEntity()
 		 : BEntity()
 		 , m_drawCall(0)
-		 , m_mass(0.0f)
+		 , m_mass(1.0f)
 		 , m_damping_linear(0.01f)
 		 , m_damping_angular(0.01f)
 		 , m_friction(1.0f)
@@ -93,38 +93,19 @@
 		{
 			if ( getPhysicsComponent() )
 			{
-				BEntity* filename( getChild("filename", 1) );
-				{
-					if ( parent() )
-						parent()->onRemoveChild(this);
+				if ( parent() )
+					parent()->onRemoveChild(this);
 
-				
-						setPhysicsComponent( getNewlyConstructedPhysicsComponent() );
-				}
+				setPhysicsComponent( getNewlyConstructedPhysicsComponent() );
 			}
 		}
-		
+
 		void BPhysicsEntity::construct() // FIME not BEntity::construct, name conflict, can be removed
 		{
-// 			std::cout << "construct" << std::endl;
 			auto filename = addChild( "filename", new BEntity_string_property() );
 			auto transform = addChild( "transform", new transformEmitter() );
-// 			std::cout << "construct done" << std::endl;
-			
-// 			setPhysicsComponent( getNewlyConstructedPhysicsComponent() );
-			
-
-// 			getPhysicsComponent()->getMotionState()->setTransformEntity(get("transform", 1));
-
-// 			getPhysicsComponent()->getBody()->setWorldTransform( m_transform );
-// 			get("transform", 1)->setProperty(m_transform);
-// 			// HACK LINK
-// 			if ( m_mass > 0.0f )
-// 			getPhysicsComponent()->getMotionState()->setTransformEntity(get("transform", 1));
 		}
-		
-		
-// 		const bool BPhysicsEntity::getProperty_Bool(const std::string& id) const
+
 		Bbool BPhysicsEntity::get_bool( const Bstring& id )
 		{
 			if ( id == "wants_deactivation" )
@@ -137,93 +118,21 @@
 			}
 			return false;
 		}
-		
-// 		bool BPhysicsEntity::setProperty( const std::string& id, BeSignalHistory& entity_history, const bool value, const bool do_update )
+
 		bool BPhysicsEntity::set( const Bstring& id, const Bbool& value )
 		{
-// // 			std::cout << "BPhysicsEntity:bool: " << id << ":" << value << std::endl;
 			if ( id == "wants_deactivation" )
 			{
 				if ( m_wants_deactivation != value )
 				{
 					m_wants_deactivation = value;
-// 					std::cout << "m_wants_deactivation:" << m_wants_deactivation << std::endl;
-// 					std::cout << " id:" << id() << std::endl;
 					reconstruct();
-// 						BeSignalHistory t_entity_history;
-// 						setProperty("reconstruct", t_entity_history);
-// 					std::cout << " m_wants_deactivation: done" << std::endl;
 					return true;
 				}
 			}
-// 			else if ( id == "disable_worldtransform" )
-// 			{
-// 				if ( m_disable_worldtransform != value )
-// 				{
-// 					m_disable_worldtransform = value;
-// 					return true;
-// 				}
-// 			}
 			return false;
 		}
 
-// 		bool BPhysicsEntity::setProperty( const std::string& id, BeSignalHistory& entity_history, const BETransform& value, const bool do_update )
-// 		{
-// // 			std::cout << "BPhysicsEntity:setProperty: " << name() << "  " << id() << "  " << id << ":" << std::endl;
-// // 				std::cout << " " << "  p: x: " << value.getOrigin().x() << ", y: " << value.getOrigin().y() << ", z: " << value.getOrigin().z() << std::endl;
-// // 				std::cout << " " << "  r: x: " << value.getRotation().x() << ", y: " << value.getRotation().y() << ", z: " << value.getRotation().z() << ", w: " << value.getRotation().w() << std::endl;
-// // 			std::stringstream to_post;
-// // 			to_post << "BPhysicsEntity::setProperty: type:" << BEntityTypeManager::Instance()->getEntityID(entityType()) << "'";
-// // 			to_post << ", name:" << name() << "'";
-// // 			value.postInvalid( to_post.str(), true );
-// 
-// 			if ( m_transform != value )
-// 			{
-// 				m_transform = value;
-// 
-// 				if ( !m_disable_worldtransform && getPhysicsComponent() )
-// 				{
-// // std::cout << "  entity set" << std::endl;
-// // 					getPhysicsComponent()->getBody()->setWorldTransform( m_transform ); // FIXME NOW
-// 					getPhysicsComponent()->setTransform( m_transform ); // FIXME NOW
-// // std::cout << "  entity set done" << std::endl;
-// 				}
-// 				return true;
-// 			}
-// // 			else
-// // 			{
-// // 				std::cout << "NO MAN DOES NOT HAVE IT" << std::endl;
-// // 				BEntity* submesh( get("submesh_1") );
-// // 				if ( submesh )
-// // 				{
-// // 					submesh->setProperty( id, entity_history, value );
-// // 				}
-// // 			}
-// 			return false;
-// 		}
-// 		const BETransform& BPhysicsEntity::getProperty_Transform(const std::string& id) const
-// 		{
-// // 			if ( getPhysicsComponent() )
-// // 			{
-// // 				std::stringstream to_post;
-// // 				to_post << "BPhysicsEntity::getProperty_Transform(getPhysicsComponent()): type:" << BEntityTypeManager::Instance()->getEntityID(entityType()) << "'";
-// // 				to_post << ", name:" << name() << "'";
-// // 				BETransform t(getPhysicsComponent()->getTransform());
-// // 				t.postInvalid( to_post.str(), true );
-// // 
-// // 				return getPhysicsComponent()->getTransform();
-// // 			}
-// // 			else
-// // 			{
-// // 				std::stringstream to_post;
-// // 				to_post << "BPhysicsEntity::getProperty_Transform: type:" << BEntityTypeManager::Instance()->getEntityID(entityType()) << "'";
-// // 				to_post << ", name:" << name() << "'";
-// // 				m_transform.postInvalid( to_post.str(), true );
-// 				return m_transform;
-// // 			}
-// 		}
-
-// 		const Bfloat BPhysicsEntity::getProperty_Float(const std::string& id) const
 		Bfloat BPhysicsEntity::get_float( const Bstring& id )
 		{
 			if ( id == "weight" )
@@ -245,14 +154,6 @@
 			return 0.0f;
 		}
 
-// 		void BPhysicsEntity::setDrawCall( const unsigned int drawCall )
-// 		{
-// 			m_drawCall = drawCall;
-// 		}
-		
-		
-		
-		
 		void BPhysicsEntity::setPhysicsComponent( BeRigidBody::ptr physics_component )
 		{
 // 				std::cout << "-------------------------------------------------------------" << std::endl;
@@ -262,7 +163,52 @@
 // 				std::cout << "  m_damping_linear: " << m_damping_linear << std::endl;
 // 				std::cout << "  m_damping_angular: " << m_damping_angular << std::endl;
 				
-	// 			BETransform t( m_transform );
+			float position_x(0.0f);
+			float position_y(0.0f);
+			float position_z(0.0f);
+			float rotation_euler_x(0.0f);
+			float rotation_euler_y(0.0f);
+			float rotation_euler_z(0.0f);
+			if ( m_physics_component )
+			{
+				auto t = getChild("transform");
+				if ( t )
+				{
+					auto x = t->getChild("position_x", 1);
+					auto y = t->getChild("position_y", 1);
+					auto z = t->getChild("position_z", 1);
+					if ( x )
+					{
+						position_x = x->get_float();
+					}
+					if ( y )
+					{
+						position_y = y->get_float();
+					}
+					if ( z )
+					{
+						position_z = z->get_float();
+					}
+					auto r_x = t->getChild("rotation_euler_x", 1);
+					auto r_y = t->getChild("rotation_euler_y", 1);
+					auto r_z = t->getChild("rotation_euler_z", 1);
+					if ( r_x )
+					{
+						rotation_euler_x = r_x->get_float();
+					}
+					if ( r_y )
+					{
+						rotation_euler_y = r_y->get_float();
+					}
+					if ( r_z )
+					{
+						rotation_euler_z = r_z->get_float();
+					}
+				}
+			}
+			
+				
+			
 				m_physics_component = physics_component;
 				btCollisionShape* shape(m_physics_component->getShape());
 
@@ -272,12 +218,6 @@
 					if (m_mass != 0.f) // weight of non zero = dynamic
 						physics_component->setMotionState( boost::shared_ptr<BeEventDrivenMotionState>(new BeEventDrivenMotionState( m_transform )) );
 
-
-// 					btVector3 localInertia(0,0,0);
-// 					if (m_mass != 0.f) // weight of non zero = dynamic
-					
-				// 	btVector3 localInertia2(0.0f,0.0f,0.0f);
-					
 					if (m_mass != 0.f) // weight of non zero = dynamic
 					{
 // 						shape->calculateLocalInertia( m_mass, localInertia );
@@ -303,12 +243,10 @@
 						else
 							rigidBody->setActivationState(DISABLE_DEACTIVATION);
 					}
-					
-					
-		// 			if ( m_scale.x() != 0.0f && m_scale.y() != 0.0f && m_scale.z() != 0.0f )
-		// 				physics_component->getShape()->setLocalScaling(m_scale);
-					
-					
+
+					// if ( m_scale.x() != 0.0f && m_scale.y() != 0.0f && m_scale.z() != 0.0f )
+					// 	physics_component->getShape()->setLocalScaling(m_scale);
+
 					rigidBody->setFriction(m_friction);
 					rigidBody->setRestitution(m_restitution);
 					rigidBody->setDamping(m_damping_linear, m_damping_angular);
@@ -318,14 +256,11 @@
 					// do not insert them when the id is still 1
 					if ( id() != 1 )
 					{
-						{
-// 							if ( parent() )
-								parent()->onAddChild(this);
-							rigidBody->setGravity(m_gravity);
-						}
+						parent()->onAddChild(this);
+						rigidBody->setGravity(m_gravity);
 
 						// DISABLED FOR NOW
-// 						// HACK LINK
+						// HACK LINK
 // 						if ( m_mass > 0.0f )
 // 							getPhysicsComponent()->getMotionState()->setTransformEntity(get("transform", 1)/*.get()*/);
 
@@ -343,11 +278,46 @@
 					}
 				}
 				
+			if ( m_physics_component )
+			{
+				auto t = getChild("transform");
+				if ( t )
+				{
+					auto x = t->getChild("position_x", 1);
+					auto y = t->getChild("position_y", 1);
+					auto z = t->getChild("position_z", 1);
+					if ( x )
+					{
+						x->set( position_x );
+					}
+					if ( y )
+					{
+						y->set( position_y );
+					}
+					if ( z )
+					{
+						z->set( position_z );
+					}
+					auto r_x = t->getChild("rotation_euler_x", 1);
+					auto r_y = t->getChild("rotation_euler_y", 1);
+					auto r_z = t->getChild("rotation_euler_z", 1);
+					if ( r_x )
+					{
+						r_x->set( rotation_euler_x );
+					}
+					if ( r_y )
+					{
+						r_y->set( rotation_euler_y );
+					}
+					if ( r_z )
+					{
+						r_z->set( rotation_euler_z );
+					}
+				}
+			}
 				
 		}
 
-		
-// 		bool BPhysicsEntity::setProperty( const std::string& id, BeSignalHistory& entity_history, const Bfloat value, const bool do_update )
 		bool BPhysicsEntity::set( const Bstring& id, const Bfloat& value )
 		{
 // 			std::cout << "BPhysicsEntity:Bfloat: " << id << ":" << value << std::endl;
@@ -491,113 +461,16 @@
 			return false;
 		}
 
-// 		bool BPhysicsEntity::setProperty( const std::string& id, BeSignalHistory& entity_history, const BEVector3& value, const bool do_update )
-// 		{
-// // 			std::cout << "BPhysicsEntity:VECTOR3: " << id << ":" << value.x() << std::endl;
-// 			if ( id == "scale" )
-// 			{
-// 				if ( m_scale != value )
-// 				{
-// // 					std::cout << "scale:" << m_scale.x() << std::endl;
-// // 					std::cout << " id:" << id() << std::endl;
-// 
-// 					m_scale = value;
-// 					
-// 					if ( m_scale.x() != 0.0f && m_scale.y() != 0.0f && m_scale.z() != 0.0f )
-// 						reconstruct();
-// 					
-// // 					std::cout << "  scale: done" << std::endl;
-// 					return true;
-// 				}
-// 			}
-// 			else if ( id == "gravity" )
-// 			{
-// 				if ( m_gravity != value )
-// 				{
-// 					m_gravity = value;
-// 					if ( getPhysicsComponent() )
-// 						reconstruct();
-// // 						getPhysicsComponent()->getBody()->setGravity(m_gravity);
-// 					return true;
-// 				}
-// 			}
-// 			else if ( id == "impulse" )
-// 			{
-// 				if ( m_impulse != value )
-// 				{
-// 					m_impulse = value;
-// 					return true;
-// 				}
-// 			}
-// 			else if ( id == "angular_impulse" )
-// 			{
-// 				if ( m_angular_impulse != value )
-// 				{
-// 					m_angular_impulse = value;
-// 					return true;
-// 				}
-// 			}
-// 			return false;
-// 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 		BPhysicsEntityMesh::BPhysicsEntityMesh()
-// 		BPhysicsEntityMesh::BPhysicsEntityMesh(BeFilesystem& filesystem, const boost::shared_ptr<BeGeometrySystem>& modelsystem)
 		 : BPhysicsEntity()
-// 		 , m_filesystem(filesystem)
-// 		 , m_modelsystem(modelsystem)
 		 , m_pre_scale(1.0f, 1.0f, 1.0f)
 		 , m_pre_position(0.0f, 0.0f, 0.0f)
 		 , m_pre_rotation(0.0f, 0.0f, 0.0f)
 		{
-			// FILENAME PROPERTY
-// 				m_filename = addNew( "filename", BEntity*(new BEntity_Property_String()) );
-
-// 			// TRANSFORM
-// 				BEntity* t = addNew( "transform", BEntity*(new BEntity_Property_Transform()) );
-// 				getPhysicsComponent()->getMotionState()->setTransformEntity(t); // HACK
 		}
 
-// 		bool BPhysicsEntityMesh::setProperty( const std::string& id, BeSignalHistory& entity_history, const std::string& value, const bool do_update )
 		bool BPhysicsEntityMesh::set( const Bstring& id, const char* value )
 		{
 // 			std::cout << "BPhysicsEntity:string: " << id << ":" << value << std::endl;
@@ -624,15 +497,29 @@
 					{
 						setGeometry(geometry);
 					}
-// 
-// // 					BeServerPhysicsFactory factory;
-// // 					factory.loadPhysicsMesh(this, m_filesystem, value, m_modelsystem, m_pre_scale, m_pre_position, m_pre_rotation, m_mass, m_damping_linear, m_damping_angular, "triangle");
 
-					setPhysicsComponent( getNewlyConstructedPhysicsComponent() );
+					if ( getPhysicsComponent() )
+					{
+						// if ( m_mass == 0.0f )
+						{
+							// std::cout << "  CHANGING MODELS: " << name() << " " << id() << "  weight: " << m_mass << std::endl;;
+							reconstruct();
+						}
+						// else
+						// {
+						// 	// std::cout << "  KEEPING MODELS: " << name() << " " << id() << "  weight: " << m_mass << std::endl;
+						// 	btVector3 localInertia(0,0,0);
+						// 	if (m_mass != 0.f) // weight of non zero = dynamic
+						// 	{
+						// 		getPhysicsComponent()->getShape()->calculateLocalInertia( m_mass, localInertia );
+						// 	}
+						// 	getPhysicsComponent()->getBody()->setMassProps(m_mass, localInertia);
+						// }
+						return true;
+					}
 					
-					// redo parent's onAddChild
-// 					parent()->onAddChild(this);
-// 					construct();
+					
+					setPhysicsComponent( getNewlyConstructedPhysicsComponent() );
 
 					return true;
 				}
@@ -640,14 +527,6 @@
 			return false;
 		}
 
-// 		const std::string& BPhysicsEntityMesh::getProperty_String(const std::string& id) const
-// 		Bstring* BPhysicsEntityMesh::get_string( const Bstring& id )
-// 		{
-// 			if ( id == "filename" )
-// 				return &m_filename_value;
-// 
-// 			return 0;
-// 		}
 		const char* BPhysicsEntityMesh::get_string( const Bstring& id )
 		{
 			if ( id == "filename" )
@@ -672,103 +551,6 @@
 			}
 		}
 
-// 		bool BPhysicsEntityMesh::setProperty( const std::string& id, BeSignalHistory& entity_history, const BEVector3& value, const bool do_update )
-// 		{
-// // 			std::cout << "BPhysicsEntityMesh:VECTOR3: " << id << ":" << value.x() << std::endl;
-// 			if ( id == "scale" )
-// 			{
-// 				if ( m_scale != value )
-// 				{
-// 					m_scale = value;
-// // 					std::cout << "scale:" << m_scale.x() << std::endl;
-// // 					std::cout << " id:" << id() << std::endl;
-// 					if ( m_scale.x() != 0.0f && m_scale.y() != 0.0f && m_scale.z() != 0.0f )
-// 						reconstruct();
-// // 					std::cout << "scale: done" << std::endl;
-// 					return true;
-// 				}
-// 			}
-// 			else if ( id == "pre_scale" )
-// 			{
-// 				if ( m_pre_scale != value )
-// 				{
-// 					m_pre_scale = value;
-// 					reconstruct();
-// 					return true;
-// 				}
-// 			}
-// 			else if ( id == "pre_position" )
-// 			{
-// 				if ( m_pre_position != value )
-// 				{
-// 					m_pre_position = value;
-// 					reconstruct();
-// 					return true;
-// 				}
-// 			}
-// 			else if ( id == "pre_rotation" )
-// 			{
-// 				if ( m_pre_rotation != value )
-// 				{
-// 					m_pre_rotation = value;
-// 					reconstruct();
-// 					return true;
-// 				}
-// 			}
-// 			else if ( id == "gravity" )
-// 			{
-// 				if ( m_gravity != value )
-// 				{
-// 					m_gravity = value;
-// 					if ( getPhysicsComponent() )
-// 						reconstruct();
-// // 						getPhysicsComponent()->getBody()->setGravity(m_gravity);
-// 					return true;
-// 				}
-// 			}
-// 			else if ( id == "impulse" )
-// 			{
-// 				if ( m_impulse != value )
-// 				{
-// 					m_impulse = value;
-// 					return true;
-// 				}
-// 			}
-// 			else if ( id == "angular_impulse" )
-// 			{
-// 				if ( m_angular_impulse != value )
-// 				{
-// 					m_angular_impulse = value;
-// 					return true;
-// 				}
-// 			}
-// 			return false;
-// 		}
-
-
-// 		void BPhysicsEntityMesh::process( const float timeDelta )
-// 		{
-// // 			m_last_send_time_ago += timeDelta;
-// 			
-// 			if ( getPhysicsComponent() )
-// 			{
-// 				if ( m_impulse != BEVector3(0.0f, 0.0f, 0.0f) )
-// 				{
-// 					// FIXME DISABLED FOR NOW
-// // 					btTransform t( getChild(this, "transform", 1)->getProperty_Transform() );
-// // 					getPhysicsComponent()->getBody()->applyCentralImpulse(t.getBasis() * m_impulse * timeDelta * 30);
-// 						
-// 				}
-// 				
-// 				if ( m_angular_impulse != BEVector3(0.0f, 0.0f, 0.0f) )
-// 				{
-// 					// FIXME DISABLED FOR NOW
-// // 					btTransform t( get("transform", 1)->getProperty_Transform() );
-// // 					btVector3 test = t.getBasis() * m_angular_impulse * timeDelta * 30;
-// // 					getPhysicsComponent()->getBody()->applyTorqueImpulse(test);
-// 				}
-// 			}
-// 		};
 
 		BeRigidBody::ptr BPhysicsEntityTriangleMesh::getNewlyConstructedPhysicsComponent()
 		{

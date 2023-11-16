@@ -165,7 +165,7 @@
 						// SPAWN NEW ENTITY
 //						std::cout << id() << " " << BEntity::parent()->BEntity::parent()->name() << ": spawn ";
 //						ref_entity->addChild(piece.toStdString(), piece.toStdString());
-						topParent()->getChild("Scene", 3)->addChild(piece.toStdString(), piece.toStdString());
+						topParent()->getChild("bin", 1)->addChild(piece.toStdString(), piece.toStdString());
 
 	// 					DragLabel *newLabel = new DragLabel(piece, this);
 	// 					newLabel->move(position - hotSpot);

@@ -1,6 +1,5 @@
 #include "be_entity_io_handler.h"
 #include "be_entity_core_types.h"
-// #include <iostream>
 
 	// CONSTRUCTORS / DESTRUCTOR
 
@@ -171,7 +170,7 @@
 		}
 
 	// CONNECTING
-		void B_IO_Handler::connectServerServer(BEntity* entity_with_output, BEntity* entity_with_input)
+		void B_IO_Handler::connectServerServer(BEntity* entity_with_output, BEntity* entity_with_input, const bool force_local)
 		{
 			// checks
 				if ( entity_with_output == entity_with_input )
@@ -193,23 +192,15 @@
 			// create connection
 				BEOutputConnectionBase* conn;
 				
-				// match NearestTop entities
-				
+				// !!!!!!!!!
 				// FIXME THIS IS NOT ENOUGH, IF A COMES BEFORE B IT SHOULD BE A LOCAL CONNECTION
+				// !!!!!!!!!
 
-				
+				// auto output_is_top = dynamic_cast<BEntityTop*>( entity_with_output->getNearestTop() );
 
-				// IF A IS IN FRONT AND B IS A THREAD
-				// LOCAL CONNECTION
-				
-				// IF A IS A THREAD AND B IS IN THE BACK
-				// REMOVE CONNECTION
-				
-				// SAME TOPS
-				if ( entity_with_output->getNearestTop() == entity_with_input->getNearestTop() )
+				// force_local OR TOPS ARE THE SAME OR OUTPUT IS NOT THREAD
+				if ( force_local || entity_with_output->getNearestTop() == entity_with_input->getNearestTop() || entity_with_output->class_id() != std::string("thread")  )
 				{
-					// std::cout << "tops match, local connection ";
-					// BEOutputConnectionLocal* conn( new BEOutputConnectionLocal( entity_with_output->getOutput(), entity_with_input->getInput() ) );
 					conn = new BEOutputConnectionLocal( entity_with_output, entity_with_input );
 				}
 				// DIFFERENT TOPS

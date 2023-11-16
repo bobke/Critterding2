@@ -529,6 +529,8 @@
 		{
 			if ( entity != 0 )
 			{
+				// std::cout << "name: " << name << " being added to " << this->name() << std::endl;
+
 				addChild( entity );
 				if (!name.empty())
 				{
@@ -854,14 +856,14 @@
 			}
 		}
 
-		void BEntity::connectServerServer(BEntity* entity_with_input)
+		void BEntity::connectServerServer(BEntity* entity_with_input, const bool force_local)
 		{
 			// CREATE AN OUTPUT HERE
 				if ( m_io_handler == 0 )
 				{
 					m_io_handler = new B_IO_Handler();
 				}
-				m_io_handler->connectServerServer(this, entity_with_input);
+				m_io_handler->connectServerServer(this, entity_with_input, force_local);
 		}
 		
 // 		void BEntity::disconnectServerServer( BEntity* entity_with_input )

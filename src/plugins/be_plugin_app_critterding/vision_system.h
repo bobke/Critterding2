@@ -14,9 +14,13 @@
 
 			virtual void construct();
 			virtual void process();
+			
+			bool set ( const Bstring& id, BEntity* value );
 
-			BEntity* m_unit_container;
 		private:
+			
+			BEntity* m_critter_containers;
+
 			void calcFramePos(unsigned int pos);
 			unsigned char *retina;
 			unsigned int fb;

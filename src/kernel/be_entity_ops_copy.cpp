@@ -1,6 +1,7 @@
 #include "be_entity_ops_copy.h"
 #include "be_entity_core_types.h"
 #include "be_entity_io_handler.h"
+#include "be_entity_top.h"
 // #include "be_entity_children_handler.h"
 // #include <iostream>
 #include <sstream>
@@ -32,6 +33,28 @@
 			
 		// exit(0);
 		
+		// reConstructProcessList()
+			auto top = dynamic_cast<BEntityTop*>( entity_new->getNearestTop() );
+			top->reConstructProcessList( top );
+			
+		return entity_new;
+	}
+
+	BEntity* BEntityCopy::copyEntity( BEntity* entity, BEntity* to_parent )
+	{
+		// PREPARE
+			m_translation_map.clear();
+
+		// COPY
+			auto entity_new = _copyEntity( entity, to_parent, true );
+
+		// WIRE
+			_wireNewEntity();
+			
+		// reConstructProcessList()
+			auto top = dynamic_cast<BEntityTop*>( to_parent->getNearestTop() );
+			top->reConstructProcessList( top );
+
 		return entity_new;
 	}
 	
@@ -45,6 +68,7 @@
 		{
 			entity_new = to_parent->getChild( entity->name().c_str(), 1 );  // FIXME
 		}
+
 		// IF NOT BUILTIN CREATE IT
 		else
 		{
@@ -54,9 +78,42 @@
 				auto entity_referenced = entity->get_reference();
 
 				entity_new = to_parent->addChild( entity->name(), new BEntity_external() );
-				auto entity_referenced_new = _copyEntity( entity_referenced, entity_referenced->parent(), true );
+				
+				// SEEK BEST PARENT
+				// loop through all parents, try to find a child matching name of external parent
+				BEntity* found_matching_external_parent = to_parent->parent();
+				
+				const std::string& name_to_look_for( entity_referenced->parent()->parent()->name() );
 
-				entity_new->set( entity_referenced_new );
+				auto found_parent = found_matching_external_parent->getChild( name_to_look_for.c_str(), 1 );
+				// auto found_parent = found_matching_external_parent->getChild( entity_referenced->parent()->name().c_str(), 1 );
+
+				while ( !found_parent )
+				{
+					found_matching_external_parent = found_matching_external_parent->parent();
+					found_parent = found_matching_external_parent->getChild( name_to_look_for.c_str(), 1 );
+				}
+
+				if ( found_parent )
+				{
+					auto found_actual_parent = found_parent->getChild( entity_referenced->parent()->name().c_str(), 1 );
+					
+					if ( found_actual_parent )
+					{
+						auto entity_referenced_new = _copyEntity( entity_referenced, found_actual_parent, true );
+						// auto entity_referenced_new = _copyEntity( entity_referenced, entity_referenced->parent(), true );
+
+						entity_new->set( entity_referenced_new );
+					}
+					else
+					{
+						std::cout << "BWARNING::EntityCopy::_copyEntity:: shit's fucked up1" << std::endl;
+					}
+				}
+				else
+				{
+					std::cout << "BWARNING::EntityCopy::_copyEntity:: shit's fucked up2" << std::endl;
+				}
 			}
 			else
 			{
@@ -550,7 +607,7 @@
 
 			// EXTERNAL PARENT
 			// parent parent by id
-			auto Scene = parent->topParent()->getChild( "Scene", 1 );
+			auto Scene = parent->topParent()->getChild( "bin", 1 );
 			bool parent_parent_found(false);
 			BEntity* external_parent_parent(0);
 			// BEntity* external_parent_parent = parent->topParent()->getChild( (unsigned int)external_parent_id) ;

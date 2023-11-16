@@ -69,12 +69,12 @@
 		
 		// CREATE LEFT ENTITIES
 			auto entity_groupbox = general_layout_H->addChild( "Entity Groupbox", "QGroupBox" );
-			entity_groupbox->addChild( "title", "string_property" )->set("Libraries");
+			entity_groupbox->addChild( "title", "string_property" )->set("lib");
 			auto groupVbox = entity_groupbox->addChild( "QT VBoxlayout", "QVBoxLayout" );
 // 			auto edit = groupVbox->addChild( "edit test", "QLineEdit" );
 			// ENTITIES
 			{
-				add_config_libraries_groupbox( groupVbox, topParent()->getChild("Libraries", 1) );
+				add_config_libraries_groupbox( groupVbox, topParent()->getChild("lib", 1) );
 			}
 
 
@@ -139,7 +139,7 @@
 	
 	void BConfigLibraries::add_config_libraries_item( BEntity* parent, BEntity* entity )
 	{
-		if ( entity->name() != "_command_buffer" /*&& entity->name() != "Libraries"*/ )
+		if ( entity->name() != "_command_buffer" /*&& entity->name() != "lib"*/ )
 		{
 			// VBOX (for expanding into)
 			// CONSTRUCT UNIQUE NAME for removal purpuses

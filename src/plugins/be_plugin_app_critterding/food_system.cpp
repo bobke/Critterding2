@@ -21,13 +21,13 @@
 		m_dropzone_size_y = dropzone->addChild( "size_y", new BEntity_float() );
 		m_dropzone_size_z = dropzone->addChild( "size_z", new BEntity_float() );
 		
-		m_number_of_units->set( Buint(1200) );
+		m_number_of_units->set( Buint(1500) );
 		m_intitial_energy->set( Bfloat(1500.0f) );
 		m_maximum_age->set( Buint(16000) );
-		m_dropzone_position_x->set( Bfloat(-70.0f) );
+		m_dropzone_position_x->set( Bfloat(-100.0f) );
 		m_dropzone_position_y->set( Bfloat(-17.0f) );
 		m_dropzone_position_z->set( Bfloat(-170.0f) );
-		m_dropzone_size_x->set( Bfloat(140.0f) );
+		m_dropzone_size_x->set( Bfloat(200.0f) );
 		m_dropzone_size_y->set( Bfloat(2.2f) );
 		m_dropzone_size_z->set( Bfloat(140.0f) );
 		
@@ -45,7 +45,13 @@
 		m_insert_frame_interval->set( (Buint)2 );
 
 		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
-		m_mouse_picker = dynamic_cast<BMousePicker*>( parent()->getChild("external_mousepicker", 1)->get_reference() );
+		
+		m_mouse_picker = 0;
+		auto ext = parent()->getChild("external_mousepicker", 1);
+		if ( ext )
+			m_mouse_picker = dynamic_cast<BMousePicker*>( ext->get_reference() );
+
+		m_command_buffer = getCommandBuffer();
 	}
 	
 	void CdFoodSystem::process()
@@ -66,7 +72,11 @@
 
 			if ( m_critter_unit_container == 0 )
 			{
-				m_critter_unit_container = parent()->getChild( "critter_system", 1 )->getChild( "unit_container", 1 );
+				auto c_system = parent()->getChild( "critter_system", 1 );
+				if ( c_system )
+				{
+					m_critter_unit_container = parent()->getChild( "critter_system", 1 )->getChild( "unit_container", 1 );
+				}
 			}
 
 			if ( ++m_framecount == m_insert_frame_interval->get_uint() || m_insert_frame_interval->get_uint() == 0 )
@@ -74,6 +84,7 @@
 				// std::cout << "yes" << std::endl;
 				m_framecount = 0;
 				// FIXME OPTIMIZE, COUNT UP ENERGY IN CRITTER SYSTEM
+				if ( m_critter_unit_container )
 				{
 					for_all_children_of2( m_critter_unit_container )
 					{
@@ -85,52 +96,27 @@
 					}
 				}
 
+				
 				// INSERT NEW FOOD UNITS 
 				const float maximum_energy_in_system = m_intitial_energy->get_float() * m_number_of_units->get_uint();
-
 				float missing_energy_in_system = maximum_energy_in_system - total_energy_in_entities;
 				if ( missing_energy_in_system >= m_intitial_energy->get_float() )
 				{
-					auto food_unit = new CdFood();
-					m_unit_container->addChild( "food_unit", food_unit );
-					food_unit->setEnergy( m_intitial_energy->get_float() );
+					m_mutex.lock();
+					auto cmd_insert = m_command_buffer->addChild( "pass_command", new BEntity_reference() );
+					cmd_insert->set(this);
+					auto command = cmd_insert->addChild( "command", new BEntity_string() );
+					command->set("insert_food");
+					m_mutex.unlock();
+					
+					
 
-					// FIXME looking up by _external_child name isn't ok, we are lucky it's first of the children
-					auto physics = food_unit->getChild("external_physics", 1)->get_reference();
-					auto physics_transform = food_unit->getChild("external_physics", 1)->get_reference()->getChild( "transform" );
-
-					physics->set("restitution", 0.5f);
-
-					if ( m_rng == 0)
-						m_rng = parent()->getChild( "random_number_generator" ); // FIXME PREFETCH
-
-					if ( m_rng )
-					{
-						m_rng->set( "min", (Bint)0 );
-						m_rng->set( "max", (Bint)m_dropzone_size_x->get_float() );
-						float rand_x = m_rng->get_int();
-						m_rng->set( "max", (Bint)m_dropzone_size_y->get_float() );
-						float rand_y = m_rng->get_int();
-						m_rng->set( "max", (Bint)m_dropzone_size_z->get_float() );
-						float rand_z = m_rng->get_int();
-						// std::cout << "randx : " << rand_x << " randy : " << rand_y << " randz : " << rand_z << std::endl;
-
-						physics_transform->getChild("position_x", 1)->set( m_dropzone_position_x->get_float() + rand_x );
-						physics_transform->getChild("position_y", 1)->set( m_dropzone_position_y->get_float() + rand_y );
-						physics_transform->getChild("position_z", 1)->set( m_dropzone_position_z->get_float() + rand_z );
-						physics_transform->getChild("rotation_euler_x", 1)->set( 0.0f );
-						physics_transform->getChild("rotation_euler_y", 1)->set( 0.0f );
-						physics_transform->getChild("rotation_euler_z", 1)->set( 0.0f );
-					}
-
+    
 					// PREVENT FURTHER DELETION OR INSERTION OF FOOD IN THIS FRAME
 						return;
 				}
+
 			}
-			// else
-			// {
-				// std::cout << "no" << std::endl;
-			// }
 
 		// DIE FROM OLD AGE OR ENERGY DEPLETION
 			for_all_children_of2( m_unit_container )
@@ -150,6 +136,48 @@
 			}
 	}
 
+	bool CdFoodSystem::set( const Bstring& id, BEntity* value )
+	// bool CdFoodSystem::set( const char* value )
+	{
+		if ( id == std::string("insert_food") )
+		{
+			auto food_unit = new CdFood();
+			m_unit_container->addChild( "food_unit", food_unit );
+			food_unit->setEnergy( m_intitial_energy->get_float() );
+
+			// FIXME looking up by _external_child name isn't ok, we are lucky it's first of the children
+			auto physics = food_unit->getChild("external_physics", 1)->get_reference();
+			auto physics_transform = food_unit->getChild("external_physics", 1)->get_reference()->getChild( "transform" );
+
+			physics->set("restitution", 0.5f);
+
+			if ( m_rng == 0)
+				m_rng = parent()->getChild( "random_number_generator" ); // FIXME PREFETCH
+
+			if ( m_rng )
+			{
+				m_rng->set( "min", (Bint)0 );
+				m_rng->set( "max", (Bint)m_dropzone_size_x->get_float() );
+				float rand_x = m_rng->get_int();
+				m_rng->set( "max", (Bint)m_dropzone_size_y->get_float() );
+				float rand_y = m_rng->get_int();
+				m_rng->set( "max", (Bint)m_dropzone_size_z->get_float() );
+				float rand_z = m_rng->get_int();
+				// std::cout << "randx : " << rand_x << " randy : " << rand_y << " randz : " << rand_z << std::endl;
+
+				physics_transform->getChild("position_x", 1)->set( m_dropzone_position_x->get_float() + rand_x );
+				physics_transform->getChild("position_y", 1)->set( m_dropzone_position_y->get_float() + rand_y );
+				physics_transform->getChild("position_z", 1)->set( m_dropzone_position_z->get_float() + rand_z );
+				physics_transform->getChild("rotation_euler_x", 1)->set( 0.0f );
+				physics_transform->getChild("rotation_euler_y", 1)->set( 0.0f );
+				physics_transform->getChild("rotation_euler_z", 1)->set( 0.0f );
+			}			
+			
+			return true;
+		}
+		return false;
+	}
+	
 	void CdFoodSystem::removeFood( BEntity* entity )
 	{
 		// HACK first external child one is body
@@ -159,10 +187,15 @@
 			while ( removeFromCollisions( bodypart ) ) {;}
 
 		// MOUSEPICKER
-			m_mouse_picker->removeGrabbedEntity( bodypart );
+			if ( m_mouse_picker )
+				m_mouse_picker->removeGrabbedEntity( bodypart );
 
-		// ACTUAL REMOVAL
-			m_unit_container->removeChild( entity );
+		// ACTUAL REMOVAL, command for thread safety
+			m_mutex.lock();
+				auto cmd_rm = m_command_buffer->addChild( "remove", new BEntity_reference() );
+				cmd_rm->set( entity );
+				// m_unit_container->removeChild( entity );
+			m_mutex.unlock();
 	}
 
 	bool CdFoodSystem::removeFromCollisions( BEntity* to_remove )
@@ -212,7 +245,7 @@
 
 		// GRAPHICS ENTITY
 			BEntity* graphics_transform(0);
-			auto graphicsmodelsystem = topParent()->getChild("Scene", 1)->getChild("Critterding", 1)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
+			auto graphicsmodelsystem = topParent()->getChild("bin", 1)->getChild("Critterding", 1)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
 			if ( graphicsmodelsystem )
 			{
 				// LOAD MODEL IF NEEDED, ADD TRANSFORM
@@ -237,7 +270,7 @@
 					addChild( "external_graphics", new BEntity_external() )->set( graphics_transform );
 			}
 
-			physics_transform->connectServerServer(graphics_transform);
+			physics_transform->connectServerServer(graphics_transform, true);
 	}
 	
 	

@@ -17,6 +17,8 @@
 			bool removeGrabbedEntity( BEntity* to_remove );
 		private:
 
+			bool m_do_attach;
+			
 			// btVector3			direction;
 			btPoint2PointConstraint* m_constraint;
 			float m_picking_distance;

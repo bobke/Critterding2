@@ -28,8 +28,8 @@
 	// 			if(settings->getCVar("body_selfcollisions") == 0)
 				m_dispatcher->setNearCallback(&BPhysicsWorld::CollisionNearOverride);
 
-				btVector3 worldAabbMin(-10000,-10000,-10000);
-				btVector3 worldAabbMax(10000,10000,10000);
+				btVector3 worldAabbMin(-500,-500,-500);
+				btVector3 worldAabbMax(500,500,500);
 				m_broadphase = new btAxisSweep3 (worldAabbMin, worldAabbMax);
 				m_ghostPairCallback = new btGhostPairCallback();
 				m_broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(m_ghostPairCallback);

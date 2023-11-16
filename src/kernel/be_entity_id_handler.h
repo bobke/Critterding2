@@ -2,8 +2,9 @@
 #define BE_ENTITY_ID_HANDLER_H_INCLUDED
 
 #include "be_types.h"
-// #include <map>
 #include <map>
+#include <thread>
+#include <mutex>
 
 class B_ID_Handler
 {
@@ -27,6 +28,11 @@ class B_ID_Handler
 		// Bfloat m_totalTime_last;
 		std::map<Buint64, Bbool> m_map;
 		std::map<Buint64, Bfloat> m_delayed_map;
+
+				
+		// MUTEX
+			std::mutex m_mutex;
+	
 };
 
 #endif

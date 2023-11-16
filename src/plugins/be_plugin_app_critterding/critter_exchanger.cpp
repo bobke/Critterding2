@@ -11,7 +11,7 @@
 		m_active = addChild( "active", new BEntity_bool() );
 		m_active->set( false );
 
-		auto critterding = topParent()->getChild("Scene", 1)->getChild("Critterding");
+		auto critterding = topParent()->getChild("bin", 1)->getChild("Critterding");
 
 		m_critter_system = dynamic_cast<CdCritterSystem*>( critterding->getChild("critter_system") );
 		m_species_system = dynamic_cast<CdSpeciesSystem*>( critterding->getChild("species_system") );

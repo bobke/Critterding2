@@ -123,7 +123,7 @@
 				const BEntityVector& children() const;
 
 				BEntity* addChild( BEntity* const entity );
-				BEntity* addChild( const std::string& name, BEntity* const entity );
+				virtual BEntity* addChild( const std::string& name, BEntity* const entity );
 				BEntity* addChild( const std::string& name, const std::string& entityClass );
 				BEntity* addChild( const std::string& name, const std::string& library, const std::string& entityClass );
 				virtual Bbool onAddChild( BEntity* entity );
@@ -188,7 +188,7 @@
 				BEOutput* getOutput() const;
 				virtual bool apply( BEntity* e );
 
-				void connectServerServer( BEntity* entity_with_input );
+				void connectServerServer( BEntity* entity_with_input, const bool force_local=false );
 				void conn( BEntity* entity_with_output, BEntity* entity_with_input );  // FIXME implement
 // 				void disconnectServerServer( BEntity* entity_with_input );
 				virtual bool onUpdate() const;

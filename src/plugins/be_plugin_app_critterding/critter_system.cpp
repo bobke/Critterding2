@@ -1,27 +1,38 @@
 #include "critter_system.h"
 #include "kernel/be_entity_core_types.h"
-#include "species_system.h"
-#include "body_system.h"
-#include "vision_system.h"
+// #include "species_system.h"
 #include "plugins/be_plugin_bullet/be_entity_mousepicker.h"
 #include <iostream>
  
 	void CdCritterSystem::construct()
 	{
+		m_command_buffer = getCommandBuffer();
 		auto settings = addChild( "settings", new BEntity() );
 
-		// VISION SYSTEM
-			m_vision_system = new CdVisionSystem();
-			addChild( "vision_system", m_vision_system );
-			addChild("SDLSwapBuffers", "SDLSwapBuffers");
+		// BRAINZ SYSTEM
+			m_brain_system = addChild( "brain_system", "BrainSystem" );
 
-		// SPECIES SYSTEM
-			m_species_system = new CdSpeciesSystem();
-			addChild( "species_system", m_species_system );
+		// BODY SYSTEM
+			auto body_system = addChild( "body_system", "CdBodySystem" );
+			m_body_system_unit_container = body_system->getChild("unit_container", 1);
+			// m_body_system = addChild( "body_system", "CdBodySystem" );
 
-		m_unit_container = addChild( "unit_container", new BEntity() );
-		m_vision_system->m_unit_container = m_unit_container;
+		// // SO MOVE THIS UP THE TREE, HAVE A set("register" entity*) in visionsystem, then register it in plugin.cpp
+		// // VISION SYSTEM
+		// 	auto vision_system = addChild( "vision_system", "CdVisionSystem" );
+		// 	addChild("SDLSwapBuffers", "SDLSwapBuffers");
+
+		// // SPECIES SYSTEM
+		// 	m_species_system = new CdSpeciesSystem();
+		// 	addChild( "species_system", m_species_system );
+
+		// UNIT CONTAINER
+			m_unit_container = addChild( "unit_container", new BEntity() );
 		
+		// // REGISTER UNIT CONTAINER IN VISION SYSTEM
+		// 	vision_system->set("register_container", m_unit_container);
+		
+		// SETTINGS
 		m_minimum_number_of_units = settings->addChild( "minimum_number_of_units", new BEntity_uint() );
 		m_maximum_age = settings->addChild( "maximum_age", new BEntity_uint() );
 		m_intitial_energy = settings->addChild( "intitial_energy", new BEntity_float() );
@@ -39,12 +50,12 @@
 		m_intitial_energy->set( Bfloat(1500.0f) );
 		m_procreate_minimum_energy->set( Bfloat(2501.0f) );
 		m_maximum_age->set( Buint(16000) );
-		m_dropzone_position_x->set( Bfloat(-65.0f) );
+		m_dropzone_position_x->set( Bfloat(-100.0f) );
 		m_dropzone_position_y->set( Bfloat(-18.0f) );
-		m_dropzone_position_z->set( Bfloat(-165.0f) );
-		m_dropzone_size_x->set( Bfloat(130.0f) );
-		m_dropzone_size_y->set( Bfloat(1.0f) );
-		m_dropzone_size_z->set( Bfloat(130.0f) );
+		m_dropzone_position_z->set( Bfloat(-170.0f) );
+		m_dropzone_size_x->set( Bfloat(200.0f) );
+		m_dropzone_size_y->set( Bfloat(1.5f) );
+		m_dropzone_size_z->set( Bfloat(140.0f) );
 
 		// m_minimum_number_of_units->set( Buint(1) );
 		// m_intitial_energy->set( Bfloat(1500.0f) );
@@ -64,26 +75,29 @@
 		m_copy_random_position->set( false );
 		
 		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
-		m_mouse_picker = dynamic_cast<BMousePicker*>( parent()->getChild("external_mousepicker", 1)->get_reference() );
 
-		
+		m_mouse_picker = 0;
+		auto ext = parent()->getChild("external_mousepicker", 1);
+		if ( ext )
+			m_mouse_picker = dynamic_cast<BMousePicker*>( ext->get_reference() );
+
 	}
 	
 	void CdCritterSystem::process()
 	{
-		// GIVE SPECIES SPECIES, FIXME this is a fix for a manually loaded critter
-			// pick the last entity from m_unit_container
-			auto it = m_unit_container->children().rbegin();
-			if ( it != m_unit_container->children().rend() )
-			{
-				// if it doesn't have a species_reference, create a new species
-				auto species_reference = (*it)->getChild("species_reference", 1);
-				if ( !species_reference )
-				{
-					// species
-					m_species_system->addNewSpecies( (*it) );
-				}
-			}
+		// // GIVE SPECIES SPECIES, FIXME this is a fix for a manually loaded critter
+		// 	// pick the last entity from m_unit_container
+		// 	auto it = m_unit_container->children().rbegin();
+		// 	if ( it != m_unit_container->children().rend() )
+		// 	{
+		// 		// if it doesn't have a species_reference, create a new species
+		// 		auto species_reference = (*it)->getChild("species_reference", 1);
+		// 		if ( !species_reference )
+		// 		{
+		// 			// species
+		// 			m_species_system->addNewSpecies( (*it) );
+		// 		}
+		// 	}
 		
 		// AGE ALL UNITS WITH A DAY, COUNT UP ALL ENERGY FROM UNITS (FIXME ACCOUNT FOR CRITTERS, MAKE GLOBAL VARIABLE FOR TOTAL ENERGY)
 			float total_energy_in_entities(0.0f);
@@ -105,16 +119,95 @@
 				m_framecount = 0;
 				if ( m_unit_container->numChildren() < m_minimum_number_of_units->get_uint() )
 				{
+					m_mutex.lock();
+					auto cmd_insert = m_command_buffer->addChild( "pass_command", new BEntity_reference() );
+					cmd_insert->set(this);
+					auto command = cmd_insert->addChild( "command", new BEntity_string() );
+					command->set("insert_critter");
+					m_mutex.unlock();
+
+
+					// PREVENT FURTHER ACTIONS IN THIS FRAME
+						return;
+				}
+			}
+
+		// DIE FROM OLD AGE OR ENERGY DEPLETION
+		{
+			for_all_children_of2( m_unit_container )
+			{
+				auto critter_unit = dynamic_cast<CdCritter*>( *child2 );
+				if ( critter_unit )
+				{
+					// reached max age or energy is depleted
+					if ( critter_unit->age() >= m_maximum_age->get_uint() || critter_unit->energy() <= 0.0f )
+					{
+						removeCritter( *child2 );
+						
+						// PREVENT FURTHER ACTIONS IN THIS FRAME
+							return; 
+					}
+				}
+			}
+		}
+
+		// PROCREATE
+// 		if ( 1 == 1 )
+		{
+			static Buint t_highest(0);
+			
+			for_all_children_of2( m_unit_container )
+			{
+				auto critter_unit = dynamic_cast<CdCritter*>( *child2 );
+				if ( critter_unit )
+				{
+					// energy is enough
+					if ( critter_unit->energy() >= m_procreate_minimum_energy->get_float() )
+					{
+						auto procreate = critter_unit->getChild( "motor_neurons", 1)->getChild( "procreate", 1);
+						
+						// FIXME SHOULD THIS BE IsFiring? TURNS OUT THIS ARE FLOATS and not motor neurons
+						if ( procreate->get_float() != 0.0f )
+						// if ( dynamic_cast<BNeuron*>(procreate)->m_firing->get_bool() )
+						// if ( procreate->get_reference()->getChild("firing", 1)->get_bool() )
+						{
+							procreate->set( 0.0f );
+							critter_unit->setEnergy( critter_unit->energy() / 2 );
+
+							m_mutex.lock();
+
+							auto cmd_procreate = m_command_buffer->addChild( "pass_command", new BEntity_reference() );
+							cmd_procreate->set(this);
+							auto command = cmd_procreate->addChild( "command", new BEntity_string() );
+							command->set("procreate_critter");
+							
+							command->addChild( "entity", new BEntity_reference() )->set( critter_unit );
+							
+							
+							m_mutex.unlock();
+							
+							// std::cout << "COPYING CRITTER: " << critter_unit->id() << " done" << std::endl << std::endl;
+							// PREVENT FURTHER ACTIONS IN THIS FRAME
+								return; 
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// bool CdCritterSystem::set( const char* value )
+	bool CdCritterSystem::set( const Bstring& id, BEntity* value )
+	{
+		if ( id == std::string("insert_critter") )
+		{
 					auto critter_unit = new CdCritter();
 					m_unit_container->addChild( "critter_unit", critter_unit );
 					critter_unit->setEnergy( m_intitial_energy->get_float() );
 
 					// BODY
-						auto body_system = parent()->getChild( "body_system", 1 );
-						auto body_unit_system = body_system->getChild("unit_container", 1);
-						
 						// auto newBody = body_unit_system->addChild( "body", new BBody() );
-						auto newBody = body_unit_system->addChild( "body", new BEntity() );
+						auto newBody = m_body_system_unit_container->addChild( "body", new BEntity() );
 						auto fixed_1 = newBody->addChild( "body_fixed1", "BodyFixed1" );
 
 						// auto fixed_1 = body_unit_system->addChild( "body_fixed1", "BodyFixed1" );
@@ -129,8 +222,7 @@
 							critter_unit->addChild( "external_body", new BEntity_external() )->set( newBody );
 
 					// BRAIN
-						auto brain_system = parent()->getChild( "brain_system", 1 );
-						critter_unit->m_brain = brain_system->getChild( "unit_container", 1)->addChild( "brain", "Brain" );
+						critter_unit->m_brain = m_brain_system->getChild( "unit_container", 1)->addChild( "brain", "Brain" );
 					
 						// OUTPUTS
 						// reference body constraints as brain outputs
@@ -188,154 +280,122 @@
 								}
 
 					
-					critter_unit->m_brain = brain_system->getChildCustom( critter_unit->m_brain, "new" );
+						critter_unit->m_brain = m_brain_system->getChildCustom( critter_unit->m_brain, "new" );
 
-					// REFERENCE TO EXTERNAL CHILD
-						critter_unit->addChild( "external_brain", new BEntity_external() )->set( critter_unit->m_brain );
+						// REFERENCE TO EXTERNAL CHILD
+							critter_unit->addChild( "external_brain", new BEntity_external() )->set( critter_unit->m_brain );
 
-					// species
-					m_species_system->addNewSpecies( critter_unit );
+					// // // SPECIES
+					// 	m_species_system->addNewSpecies( critter_unit );
 
-					// PREVENT FURTHER ACTIONS IN THIS FRAME
-						return;
-				}
-			}
-
-		// DIE FROM OLD AGE OR ENERGY DEPLETION
-		{
-			for_all_children_of2( m_unit_container )
-			{
-				auto critter_unit = dynamic_cast<CdCritter*>( *child2 );
-				if ( critter_unit )
-				{
-					// reached max age or energy is depleted
-					if ( critter_unit->age() >= m_maximum_age->get_uint() || critter_unit->energy() <= 0.0f )
-					{
-						removeCritter( *child2 );
-						
-						// PREVENT FURTHER ACTIONS IN THIS FRAME
-							return; 
-					}
-				}
-			}
+			return true;
 		}
 
-		// PROCREATE
-// 		if ( 1 == 1 )
+		if ( id == std::string("procreate_critter") )
 		{
-			static Buint t_highest(0);
+			auto critter_unit = dynamic_cast<CdCritter*>( value->getChild("entity", 1)->get_reference() );
+			// std::cout << "ad: " << critter_unit->getChild( "adam_distance", 1 )->get_uint() << " total:" << m_unit_container->numChildren()+1 << "(h: " << t_highest << ")" << ": " << critter_unit->id() << std::endl;
+			std::cout << "ad: " << critter_unit->getChild( "adam_distance", 1 )->get_uint() << " total:" << m_unit_container->numChildren()+1 << ": " << critter_unit->id() << std::endl;
+
+			// critter_unit->setEnergy( critter_unit->energy() / 2 );
+			// critter_unit->setAge( Buint(0) );
 			
-			for_all_children_of2( m_unit_container )
+			// COPY CRITTER
+				auto critter_new = m_entityCopy.copyEntity( critter_unit );
+				critter_new->getChild( "age", 1 )->set( Buint(0) );
+				// critter_new->getChild( "energy", 1 )->set( Buint(0) );
+
+			// CHANGE POSITION to above parent
+			if ( !m_copy_random_position->get_bool() )
 			{
-				auto critter_unit = dynamic_cast<CdCritter*>( *child2 );
-				if ( critter_unit )
+				auto bodyparts_old = critter_unit->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+				auto bodyparts_new = critter_new->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+				
+				const auto& children_old = bodyparts_old->children();
+				auto old_child = children_old.begin();
+				// for ( auto child2(children_vector2.begin()); child2 != children_vector2.end(); ++child2 )
+
+				for_all_children_of3( bodyparts_new )
 				{
-					// energy is enough
-					if ( critter_unit->energy() >= m_procreate_minimum_energy->get_float() )
+					auto t = (*child3)->get_reference()->getChild( "transform", 1 );
+					auto oldt = (*old_child)->get_reference()->getChild( "transform", 1 );
+					if ( t )
 					{
-						
-						auto procreate = critter_unit->getChild( "motor_neurons", 1)->getChild( "procreate", 1);
-						if ( procreate->get_float() != 0.0f )
+						// std::cout << "changing position" << std::endl;
+						t->set("position_x", oldt->get_float("position_x"));
+						t->set("position_y", oldt->get_float("position_y") + 0.75f);
+						t->set("position_z", oldt->get_float("position_z"));
+					}
+					old_child++;
+				}
+			}
+
+			// MUTATE CRITTER BRAIN
+
+				// get brain from critter
+				BEntity* brain_new;
+				for_all_children_of3( critter_new )
+				{
+					if ( (*child3)->name() == "external_brain" )
+					{
+						if ( (*child3)->get_reference()->name() == "brain" )
 						{
-							std::cout << "ad: " << critter_unit->getChild( "adam_distance", 1 )->get_uint() << " total:" << m_unit_container->numChildren()+1 << "(h: " << t_highest << ")" << ": " << critter_unit->id() << std::endl;
-
-							critter_unit->setEnergy( critter_unit->energy() / 2 );
-// 							critter_unit->setAge( Buint(0) );
-							procreate->set( 0.0f );
-							
-							// COPY CRITTER
-								auto critter_new = m_entityCopy.copyEntity( critter_unit );
-								critter_new->getChild( "age", 1 )->set( Buint(0) );
-// 								critter_new->getChild( "energy", 1 )->set( Buint(0) );
-
-								if ( m_unit_container->numChildren() > t_highest )
-								{
-									t_highest = m_unit_container->numChildren();
-								}
-								
-								
-							// CHANGE POSITION to above parent
-							if ( !m_copy_random_position->get_bool() )
-							{
-								auto bodyparts_old = critter_unit->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-								auto bodyparts_new = critter_new->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-								
-								const auto& children_old = bodyparts_old->children();
-								auto old_child = children_old.begin();
-								// for ( auto child2(children_vector2.begin()); child2 != children_vector2.end(); ++child2 )
-
-								for_all_children_of3( bodyparts_new )
-								{
-									auto t = (*child3)->get_reference()->getChild( "transform", 1 );
-									auto oldt = (*old_child)->get_reference()->getChild( "transform", 1 );
-									if ( t )
-									{
-										// std::cout << "changing position" << std::endl;
-										t->set("position_x", oldt->get_float("position_x"));
-										t->set("position_y", oldt->get_float("position_y") + 0.75f);
-										t->set("position_z", oldt->get_float("position_z"));
-									}
-									old_child++;
-								}
-							}
-
-							// MUTATE CRITTER BRAIN
-								auto brain_system = parent()->getChild( "brain_system", 1 );
-
-								// get brain from critter
-								BEntity* brain_new;
-								for_all_children_of3( critter_new )
-								{
-									if ( (*child3)->name() == "external_brain" )
-									{
-										if ( (*child3)->get_reference()->name() == "brain" )
-										{
-											brain_new = (*child3)->get_reference();
-										}
-									}
-								}
-								
-								// ACTUAL MUTATE
-								if ( brain_system->set( "mutate", brain_new ) )
-								{
-									auto ad = critter_new->getChild( "adam_distance", 1 );
-									ad->set( ad->get_uint() + 1 );
-									
-									m_species_system->addNewSpecies( critter_new );
-								}
-								else
-								{
-									m_species_system->copySpecies( critter_unit, critter_new );
-								}
-							
-							// std::cout << "COPYING CRITTER: " << critter_unit->id() << " done" << std::endl << std::endl;
-							// PREVENT FURTHER ACTIONS IN THIS FRAME
-								return; 
+							brain_new = (*child3)->get_reference();
 						}
 					}
 				}
-			}
+				
+				// ACTUAL MUTATE
+				if ( m_brain_system->set( "mutate", brain_new ) )
+				{
+					auto ad = critter_new->getChild( "adam_distance", 1 );
+					ad->set( ad->get_uint() + 1 );
+// 					
+// 					m_species_system->addNewSpecies( critter_new );
+				}
+				// else
+				// {
+				// 	m_species_system->copySpecies( critter_unit, critter_new );
+				// }
+
+			return true;
 		}
+
+		// if ( id == std::string("migrate_critter") )
+		// {
+		// 	return true;
+		// }
+		return false;
 	}
-	
+
 	void CdCritterSystem::removeCritter( BEntity* entity )
 	{
-		auto bodyparts = entity->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-		
+			m_mutex.lock();
+
+		// shortcut
+			auto bodyparts = entity->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+
 		// COLLISIONS
 			while ( removeFromCollisions( bodyparts ) ) {;}
 
 		// MOUSEPICKER, loop all bodyparts
-			for_all_children_of3( bodyparts )
+			if ( m_mouse_picker )
 			{
-				m_mouse_picker->removeGrabbedEntity( (*child3)->get_reference() );
+				for_all_children_of3( bodyparts )
+				{
+					m_mouse_picker->removeGrabbedEntity( (*child3)->get_reference() );
+				}
 			}
 
-		// SPECIES
-			m_species_system->removeFromSpecies( entity );
+		// // SPECIES
+		// 	m_species_system->removeFromSpecies( entity );
 
 		// ACTUAL REMOVAL
-			m_unit_container->removeChild( entity );
+			auto cmd_rm = m_command_buffer->addChild( "remove", new BEntity_reference() );
+			cmd_rm->set( entity );
+			// m_unit_container->removeChild( entity );
+
+			m_mutex.unlock();
 	}
 
 	bool CdCritterSystem::removeFromCollisions( BEntity* to_remove_list )
@@ -364,7 +424,6 @@
 	{
 		m_age = addChild( "age", new BEntity_uint() );
 		m_energy = addChild( "energy", new BEntity_float() );
-		// m_species = addChild( "species_reference", new BEntity_reference() );
 		addChild( "adam_distance", new BEntity_uint() )->set( Buint(0) );
 		
 		m_brain_inputs = 0;

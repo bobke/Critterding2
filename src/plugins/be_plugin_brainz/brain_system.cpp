@@ -38,7 +38,7 @@
 		
 		m_mutation_chance->set( Buint(8) );
 		m_mutationruns_min->set( Buint(1) );
-		m_mutationruns_max->set( Buint(16) );
+		m_mutationruns_max->set( Buint(12) );
 		// m_mutation_chance->set( Buint(30) );
 		// m_mutationruns_min->set( Buint(1) );
 		// m_mutationruns_max->set( Buint(20) );
@@ -71,25 +71,26 @@
 		m_mutationweight_neuron_remove->set( Buint(25) );
 		m_mutationweight_neuron_alter_firingweight->set( Buint(25) );
 		m_mutationweight_neuron_alter_firingthreshold->set( Buint(25) );
-		m_mutationweight_neuron_alter_firingweight_slightly->set( Buint(100) );
-		m_mutationweight_neuron_alter_firingthreshold_slightly->set( Buint(100) );
+		m_mutationweight_neuron_alter_firingweight_slightly->set( Buint(50) );
+		m_mutationweight_neuron_alter_firingthreshold_slightly->set( Buint(50) );
 		m_mutationweight_synapse_add_neuron_to_neuron->set( Buint(50) );
 		m_mutationweight_synapse_add_neuron_to_output->set( Buint(10) );
 		m_mutationweight_synapse_add_input_to_neuron->set( Buint(10) );
 		m_mutationweight_synapse_remove_from_neuron->set( Buint(50) );
 		m_mutationweight_synapse_remove_from_output->set( Buint(10) );
 		m_mutationweight_synapse_alter_weight->set( Buint(80) );
-		m_mutationweight_synapse_alter_weight_slightly->set( Buint(200) );
+		m_mutationweight_synapse_alter_weight_slightly->set( Buint(160) );
 
 		m_slightly_percent->set( Buint(5) );
 		
 		m_unit_container = addChild( "unit_container", new BEntity() );
 		
-		m_rng = parent()->getChild( "random_number_generator" ); // FIXME PREFETCH
+		m_rng = parent()->parent()->getChild( "random_number_generator" ); // FIXME PREFETCH
 	}
 
 	void BrainSystem::process()
 	{
+		// std::cout << "brain process " << id() <<  std::endl;
 		// fpr each brain: (*child)
 		for_all_children_of( m_unit_container )
 		{
@@ -996,6 +997,8 @@
 		if ( !m_weight )
 			m_weight = getChild("weight", 1);
 
+		// std::cout << "set " << (m_weight->get_float() * value) << std::endl;
+		
 		m_parent_neuron->set( m_parent_neuron->get_float() + (m_weight->get_float() * value) );
 		return true;
 	}

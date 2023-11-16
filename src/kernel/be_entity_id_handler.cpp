@@ -1,6 +1,5 @@
 #include "be_entity_id_handler.h"
 #include "be_entity_interface.h"
-// #include <iostream>
 
 	B_ID_Handler::B_ID_Handler()
 	: m_id_counter(0)
@@ -13,6 +12,7 @@
 	Buint64 B_ID_Handler::pop_front()
 	// Buint64 B_ID_Handler::pop_front( const Bfloat totalTime )
 	{
+		m_mutex.lock();
 		++m_grandTotalEntities;
 
 		// m_totalTime_last = totalTime;
@@ -23,8 +23,10 @@
 			const Buint64 to_return = begin->first;
 			m_map.erase ( begin );
 // 			std::cout << "pop_front  " << this << " " << 1+to_return << std::endl;
+			m_mutex.unlock();
 			return to_return;
 		}
+		m_mutex.unlock();
 
 // 		std::cout << "pop_front  " << this << " " << 1+m_id_counter << std::endl;
 		return ++m_id_counter;
@@ -48,6 +50,7 @@
 // 		std::cout << "recycleid " << entity->id() << std::endl;
 		if ( entity->isIDRecyclable() )
 		{
+			m_mutex.lock();
 			if ( entity->hasDelayReuseID() )
 			{
 				m_delayed_map.insert( { entity->id(), 0 } );
@@ -59,6 +62,7 @@
 				m_map.insert( { entity->id(), true } );
 // 				m_map[entity->id()] = true;
 			}
+			m_mutex.unlock();
 
 			processRecycle();
 		}
@@ -72,6 +76,7 @@
 
 	void B_ID_Handler::processRecycle()
 	{
+		m_mutex.lock();
 		// FIXME WHY ISN'T THIS TIME STUFF IN FRAMES, IF NEEDED AT ALL
 // 		std::cout << "recycledebug test" << std::endl;
 // 		std::cout << " total time " << totalTime << std::endl;
@@ -190,6 +195,7 @@
 			}
 // 			m_totalTime_last = totalTime;
 		}
+		m_mutex.unlock();
 	}
 
 

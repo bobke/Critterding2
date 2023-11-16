@@ -16,6 +16,7 @@ BUILDING
 RUNNING
 -------
 	./src/bengine app_critterding
+	./src/bengine app_critterding_threads (experimental)
 
 KEYS
 ----
