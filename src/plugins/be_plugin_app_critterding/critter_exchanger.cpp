@@ -14,8 +14,8 @@
 		auto critterding = topParent()->getChild("bin", 1)->getChild("Critterding");
 
 		m_critter_system = dynamic_cast<CdCritterSystem*>( critterding->getChild("critter_system") );
-		m_species_system = dynamic_cast<CdSpeciesSystem*>( critterding->getChild("species_system") );
-		m_critter_unit_container = m_critter_system->getChild("unit_container");
+		// m_species_system = dynamic_cast<CdSpeciesSystem*>( critterding->getChild("species_system") );
+		m_critter_unit_container = m_critter_system->getChild("unit_container", 1);
 
 		m_rng = critterding->getChild("random_number_generator");
 
@@ -94,7 +94,7 @@
 								b.loadEntity(m_critter_unit_container, filename_to_rename_to);
 
 								auto critter = m_critter_unit_container->children().rbegin();
-								m_species_system->addNewSpecies( *critter );
+								// m_species_system->addNewSpecies( *critter );
 
 								// reset age
 									(*critter)->getChild("age", 1)->set( Buint(0) );

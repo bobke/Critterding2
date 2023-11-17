@@ -24,7 +24,7 @@
 			BEntity* m_active;
 			BEntity* m_critter_unit_container;
 			CdCritterSystem* m_critter_system;
-			CdSpeciesSystem* m_species_system;
+			// CdSpeciesSystem* m_species_system;
 			BEntity* m_rng;
 	
 			// TIMER

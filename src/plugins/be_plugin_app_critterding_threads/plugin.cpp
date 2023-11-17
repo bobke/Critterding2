@@ -523,7 +523,8 @@
 			population_controller->set( "register_food_container", getChild("thread3", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
 			population_controller->set( "register_food_container", getChild("thread4", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
 			
-			
+		// CRITTER EXCHANGER
+			addChild( "CdCritterExchanger", "CdCritterExchanger" );
 	}
 
 	void Critterding_threads::process()

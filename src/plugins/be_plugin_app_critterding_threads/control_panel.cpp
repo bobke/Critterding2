@@ -17,7 +17,7 @@
 			auto critter_systems = addChild("critter_systems", new BEntity() );
 			auto food_systems = addChild("food_systems", new BEntity() );
 			m_brain_systems = addChild("brain_systems", new BEntity() );
-			auto brain_settings = addChild("brain_systems", new BEntity() );
+			auto brain_settings = addChild("brain_settings", new BEntity() );
 			auto critter_settings = addChild("critter_settings", new BEntity() );
 			m_food_unit_containers = addChild("food_unit_containers", new BEntity() );
 			m_brain_unit_containers = addChild("brain_unit_containers", new BEntity() );
