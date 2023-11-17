@@ -40,10 +40,26 @@
 			// auto startTimeMs = topParent()->getChild("sys", 1)->getChild( "timer",1 )->?? ;
 			rng->set( "seed", Bint( 111 ) );
 		
+		// FOOD SYSTEM
+		{
+			auto food_system = addChild( "food_system", new CdFoodSystem() );
+			m_food_unit_container = food_system->getChild( "unit_container", 1 );
+		}
+
+		// CRITTER SYSTEM
+		{
+			auto critter_system = addChild( "critter_system", "CdCritterSystem" );
+			m_critter_unit_container = critter_system->getChild( "unit_container", 1 );
+
+			// REGISTER UNIT CONTAINER IN VISION SYSTEM
+			auto vision_system = parent()->parent()->getChild( "vision_system", 1 );
+				vision_system->set( "register_container", m_critter_unit_container );
+		}
+
 		// BULLET PHYSICS
 			m_physics_world = addChild( "physicsworld", "PhysicsWorld" );
 			m_physics_world_collisions = m_physics_world->getChild( "collisions", 1 );
-		
+
 		// PHYSICS map
 			auto map = addChild( "map", new BEntity() );
 			const char* map_location = "../share/modules/easy.obj";
@@ -68,23 +84,7 @@
 				physics_entity_transform->getChild("position_x", 1)->set( 0.0f );
 				physics_entity_transform->getChild("position_y", 1)->set( -20.0f );
 				physics_entity_transform->getChild("position_z", 1)->set( -100.0f );
-			}
-
-		// FOOD SYSTEM
-		{
-			auto food_system = addChild( "food_system", new CdFoodSystem() );
-			m_food_unit_container = food_system->getChild( "unit_container", 1 );
-		}
-
-		// CRITTER SYSTEM
-		{
-			auto critter_system = addChild( "critter_system", "CdCritterSystem" );
-			m_critter_unit_container = critter_system->getChild( "unit_container", 1 );
-
-			// REGISTER UNIT CONTAINER IN VISION SYSTEM
-			auto vision_system = parent()->parent()->getChild( "vision_system", 1 );
-				vision_system->set( "register_container", m_critter_unit_container );
-		}
+			}		
 	}
 
 	void Server::process()

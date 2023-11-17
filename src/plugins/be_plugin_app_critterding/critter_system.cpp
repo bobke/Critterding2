@@ -74,13 +74,12 @@
 		m_copy_random_position = settings->addChild( "copy_random_position", new BEntity_bool() );
 		m_copy_random_position->set( false );
 		
-		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
-
 		m_mouse_picker = 0;
 		auto ext = parent()->getChild("external_mousepicker", 1);
 		if ( ext )
 			m_mouse_picker = dynamic_cast<BMousePicker*>( ext->get_reference() );
 
+		m_collisions = 0;
 	}
 	
 	void CdCritterSystem::process()
@@ -406,6 +405,11 @@
 
 	bool CdCritterSystem::removeFromCollisions( BEntity* to_remove_list )
 	{
+		if ( m_collisions == 0 )
+		{
+			m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
+		}
+
 		for_all_children_of( m_collisions )
 		{
 			auto e1 = (*child)->getChild( "entity1", 1 )->get_reference();

@@ -44,14 +44,14 @@
 		m_insert_frame_interval = settings->addChild( "insert_frame_interval", new BEntity_uint() ); // FIXME why?
 		m_insert_frame_interval->set( (Buint)2 );
 
-		m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
-		
 		m_mouse_picker = 0;
 		auto ext = parent()->getChild("external_mousepicker", 1);
 		if ( ext )
 			m_mouse_picker = dynamic_cast<BMousePicker*>( ext->get_reference() );
 
 		m_command_buffer = getCommandBuffer();
+		
+		m_collisions = 0;
 	}
 	
 	void CdFoodSystem::process()
@@ -206,6 +206,11 @@
 
 	bool CdFoodSystem::removeFromCollisions( BEntity* to_remove )
 	{
+		if ( m_collisions == 0 )
+		{
+			m_collisions = parent()->getChild("physicsworld", 1)->getChild("collisions", 1);
+		}
+		
 		for_all_children_of( m_collisions )
 		{
 			auto e1 = (*child)->getChild( "entity1", 1 )->get_reference();
