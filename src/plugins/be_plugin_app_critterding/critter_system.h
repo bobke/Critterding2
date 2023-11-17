@@ -20,7 +20,7 @@
 
 				void construct();
 				void process();
-				void removeCritter( BEntity* entity );
+				void removeCritter( BEntity* entity, bool force_direct_deletion=false );
 				// bool set( const char* value );
 				virtual bool set( const Bstring& id, BEntity* value );
 

@@ -123,6 +123,8 @@
 		const float frustumHalfWidth = frustumHalfHeight * m_aspect_ratio->get_float();
 		glFrustum( -frustumHalfWidth, frustumHalfWidth, -frustumHalfHeight, frustumHalfHeight, m_z_near->get_float(), m_z_far->get_float() );
 
+		// std::cout << m_fov_y->get_float() << " " << -frustumHalfWidth << " " << frustumHalfWidth << " " << -frustumHalfHeight << " " << frustumHalfHeight << " " << m_z_near->get_float() << " " << m_z_far->get_float() << std::endl;
+		
 		// INVERSE MATRIX
 		m_transform->apply( &m_gl_transform );
 		m_inversable_ops.setFromOpenGLMatrix ( m_gl_transform.m_value );

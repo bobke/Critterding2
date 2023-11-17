@@ -83,7 +83,7 @@
 
 	void BSystemMonitor::construct()
 	{
-		std::cout << "BSystemMonitor::construct()" << std::endl;
+		// std::cout << "BSystemMonitor::construct()" << std::endl;
 
 		// THREADS
 // 			pluginManager()->load( "thread", "src/plugins/be_plugin_thread", "be_plugin_thread" );

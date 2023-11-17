@@ -240,11 +240,13 @@
 	{
 		if ( id == "register_container" )
 		{
-			std::cout << "registered container " << value->name() << std::endl;
+			// std::cout << "CdVisionSystem::registered container " << value->name() << std::endl;
 			m_critter_containers->addChild( "container", new BEntity_reference() )->set( value ) ;
 
 			return true;
 		}
+
+		std::cout << "CdVisionSystem::warning: unknown command '" << id << "'" << std::endl;
 		return false;
 	}	
 	

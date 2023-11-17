@@ -19,20 +19,19 @@
 
 			virtual void construct();
 			virtual void process();
+			
+			bool set ( const Bstring& id, BEntity* value );
+			
 		private:
+			BEntity* m_critter_containers;
+			BEntity* m_food_containers;
 
 			// SHORTCUTS
 			BEntity* m_active;
 			BEntity* m_population_trigger;
 			BEntity* m_population_reduce_to;
 			BEntity* m_below_y_trigger;
-			CdCritterSystem* m_critter_system;
-			CdFoodSystem* m_food_system;
-			BEntity* m_critter_unit_container;
-			BEntity* m_food_unit_container;
-			
 			BEntity* m_energy_reduce_by;
-			BEntity* m_food_number_of_units;
 	};
 
 #endif

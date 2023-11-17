@@ -272,7 +272,7 @@
 
 		// GRAPHICS MAP
 		{
-			auto map = addChild( "map", new BEntity() );
+			auto map = addChild( "graphics_map", new BEntity() );
 			const char* map_location = "../share/modules/easy.obj";
 			auto t_graphicsModel = t_graphicsModelSystem->addChild("graphics_entity_map", "GraphicsModel");
 			t_graphicsModel->addChild( "filename", new BEntity_string_property() )->set( map_location );
@@ -500,6 +500,7 @@
 			m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast4 );
 		}
 
+		// MOUSE PICKERS
 			auto mousepicker1 = getChild("thread1", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
 			auto mousepicker2 = getChild("thread2", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
 			auto mousepicker3 = getChild("thread3", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
@@ -510,9 +511,19 @@
 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker2 );
 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker3 );
 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker4 );
-		// MOUSE PICKER
-			// auto mousepicker = m_physics_world->addChild( "mousepicker", "Bullet_MousePicker" );
-			// addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker );		
+		
+		// POPULATION CONTROLLER
+			auto population_controller = addChild( "CdPopulationController", "CdPopulationController" );
+			population_controller->set( "register_critter_container", getChild("thread1", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
+			population_controller->set( "register_critter_container", getChild("thread2", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
+			population_controller->set( "register_critter_container", getChild("thread3", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
+			population_controller->set( "register_critter_container", getChild("thread4", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
+			population_controller->set( "register_food_container", getChild("thread1", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
+			population_controller->set( "register_food_container", getChild("thread2", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
+			population_controller->set( "register_food_container", getChild("thread3", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
+			population_controller->set( "register_food_container", getChild("thread4", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
+			
+			
 	}
 
 	void Critterding_threads::process()

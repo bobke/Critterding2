@@ -178,7 +178,7 @@
 		return false;
 	}
 	
-	void CdFoodSystem::removeFood( BEntity* entity )
+	void CdFoodSystem::removeFood( BEntity* entity, bool force_direct_deletion )
 	{
 		// HACK first external child one is body
 		auto bodypart = entity->getChild( "external_physics", 1 )->get_reference();
@@ -191,11 +191,17 @@
 				m_mouse_picker->removeGrabbedEntity( bodypart );
 
 		// ACTUAL REMOVAL, command for thread safety
+		if ( force_direct_deletion )
+		{
+			m_unit_container->removeChild( entity );
+		}
+		else
+		{
 			m_mutex.lock();
 				auto cmd_rm = m_command_buffer->addChild( "remove", new BEntity_reference() );
 				cmd_rm->set( entity );
-				// m_unit_container->removeChild( entity );
 			m_mutex.unlock();
+		}
 	}
 
 	bool CdFoodSystem::removeFromCollisions( BEntity* to_remove )

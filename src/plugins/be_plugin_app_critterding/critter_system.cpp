@@ -368,7 +368,7 @@
 		return false;
 	}
 
-	void CdCritterSystem::removeCritter( BEntity* entity )
+	void CdCritterSystem::removeCritter( BEntity* entity, bool force_direct_deletion )
 	{
 			m_mutex.lock();
 
@@ -391,9 +391,15 @@
 		// 	m_species_system->removeFromSpecies( entity );
 
 		// ACTUAL REMOVAL
-			auto cmd_rm = m_command_buffer->addChild( "remove", new BEntity_reference() );
-			cmd_rm->set( entity );
-			// m_unit_container->removeChild( entity );
+			if ( force_direct_deletion )
+			{
+				m_unit_container->removeChild( entity );
+			}
+			else
+			{
+				auto cmd_rm = m_command_buffer->addChild( "remove", new BEntity_reference() );
+				cmd_rm->set( entity );
+			}
 
 			m_mutex.unlock();
 	}

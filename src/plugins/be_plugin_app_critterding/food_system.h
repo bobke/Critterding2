@@ -28,7 +28,7 @@
 				void process();
 				
 				virtual bool set( const Bstring& id, BEntity* value );
-				void removeFood( BEntity* entity );
+				void removeFood( BEntity* entity, bool force_direct_deletion=false );
 
 			private:
 				// FOOD CONTAINER

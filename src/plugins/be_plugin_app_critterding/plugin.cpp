@@ -234,9 +234,8 @@
 			// const char* map_location = "../share/modules/medium.obj";
 			// const char* map_location = "../share/modules/hard.obj";
 
-			// PHYSICS map
-			auto physics_entity = m_physics_world->addChild( "physics_entity_map", "PhysicsEntity" );
-				// physics_entity->set("filename", map_location);
+			// PHYSICS
+				auto physics_entity = m_physics_world->addChild( "physics_entity_map", "PhysicsEntity" );
 				physics_entity->getChild( "filename", 1 )->set( map_location );
 				map->addChild( "external_physics", new BEntity_external() )->set(physics_entity);
 
@@ -246,19 +245,14 @@
 				auto physics_scale_x = physics_entity->addChild("scale_x", new BEntity_float_property());
 				auto physics_scale_y = physics_entity->addChild("scale_y", new BEntity_float_property());
 				auto physics_scale_z = physics_entity->addChild("scale_z", new BEntity_float_property());
-					// physics_scale_x->set( 1.25f );
-					// physics_scale_y->set( 1.0f );
-					// physics_scale_z->set( 1.25f );
 					physics_scale_x->set( 8.0f );
 					physics_scale_y->set( 1.0f );
 					physics_scale_z->set( 10.0f );
 
 			// GRAPHICS
-				// map
 				auto t_graphicsModel = t_graphicsModelSystem->addChild("graphics_entity_map", "GraphicsModel");
 				t_graphicsModel->addChild( "filename", new BEntity_string_property() )->set( map_location );
 				auto graphics_transform = t_graphicsModel->addChild("transform", "Transform");
-				// t_graphicsModel->set("filename", map_location);
 				map->addChild( "external_graphics", new BEntity_external() )->set(t_graphicsModel);
 
 			// CONNECT AND POSITION
@@ -268,17 +262,11 @@
 					physics_entity_transform->getChild("position_x", 1)->set( 0.0f );
 					physics_entity_transform->getChild("position_y", 1)->set( -20.0f );
 					physics_entity_transform->getChild("position_z", 1)->set( -100.0f );
-					// physics_entity_transform->getChild("rotation_euler_x", 1)->set( 0.0f );
-					// physics_entity_transform->getChild("rotation_euler_y", 1)->set( 0.0f ); // FIXME IF 0 TRANSFORM NOT SET
-					// physics_entity_transform->getChild("rotation_euler_z", 1)->set( 0.0f );
 
 					physics_scale_x->connectServerServer( graphics_transform->getChild("scale_x", 1) );
 					physics_scale_y->connectServerServer( graphics_transform->getChild("scale_y", 1) );
 					physics_scale_z->connectServerServer( graphics_transform->getChild("scale_z", 1) );
 					
-					// graphics_transform->getChild("scale_x", 1)->set( 1.25f );
-					// graphics_transform->getChild("scale_y", 1)->set( 1.0f );
-					// graphics_transform->getChild("scale_z", 1)->set( 1.25f );
 					graphics_transform->getChild("scale_x", 1)->set( 8.0f );
 					graphics_transform->getChild("scale_y", 1)->set( 1.0f );
 					graphics_transform->getChild("scale_z", 1)->set( 10.0f );
@@ -289,54 +277,9 @@
 				}
 		}
 
-// 		// MAP 2
-// 		{
-// 			auto map = addChild( "map", new BEntity() );
-// 			const char* map_location = "../share/modules/easy.obj";
-// 			// const char* map_location = "/projects/critterding-beta14/share/critterding/maps/planet-sphere/planet2.obj";
-// 			// const char* map_location = "/projects/critterding-beta14/share/critterding/maps/planet/terraria_altrock3.obj";
-// 			// const char* map_location = "/projects/bengine-new/share/sandbox/models/Medieval/Medieval_City.obj";
-// 			// PHYSICS map
-// 			auto physics_entity = m_physics_world->addChild( "physics_entity_map", "PhysicsEntity" );
-// 				physics_entity->set("filename", map_location);
-// 				map->addChild( "external_physics", new BEntity_external() )->set(physics_entity);
-// 
-// 				auto physics_scale_x = physics_entity->addChild("scale_x", new BEntity_float_property());
-// 				auto physics_scale_y = physics_entity->addChild("scale_y", new BEntity_float_property());
-// 				auto physics_scale_z = physics_entity->addChild("scale_z", new BEntity_float_property());
-// 				physics_scale_x->set( 8.0f );
-// 				physics_scale_y->set( 8.0f );
-// 				physics_scale_z->set( 15.0f );
-// 			// GRAPHICS
-// 				// map
-// 				auto t_graphicsModel = t_graphicsModelSystem->addChild("graphics_entity_map", "GraphicsModel");
-// 				auto graphics_transform = t_graphicsModel->addChild("transform", "Transform");
-// 				t_graphicsModel->set("filename", map_location);
-// 				map->addChild( "external_graphics", new BEntity_external() )->set(t_graphicsModel);
-// 
-// 				graphics_transform->getChild("scale_x", 1)->set( 8.0f );
-// 				graphics_transform->getChild("scale_y", 1)->set( 8.0f );
-// 				graphics_transform->getChild("scale_z", 1)->set( 15.0f );
-// 			
-// 			// CONNECT AND POSITION
-// 				auto physics_entity_transform = physics_entity->getChild("transform", 1);
-// 				if ( physics_entity_transform )
-// 				{
-// 					physics_entity_transform->getChild("position_x", 1)->set( 0.0f );
-// 					physics_entity_transform->getChild("position_y", 1)->set( -19.0f );
-// 					physics_entity_transform->getChild("position_z", 1)->set( -100.0f );
-// 					// CONNECT
-// 					physics_entity_transform->connectServerServer( graphics_transform );
-// 					physics_entity_transform->onUpdate();
-// 				}
-// 				
-// 		}
-
 		// SKY DOME
 			auto t_graphicsModelSkyDome = t_graphicsModelSystem->addChild("GraphicsModel_SkyDome", "GraphicsModel");
-			// t_graphicsModelSkyDome->getChild("active", 1)->set( false );
 			t_graphicsModelSkyDome->set("filename", "../share/modules/skydome3.obj");
-			// t_graphicsModelSkyDome->set("filename", "/projects/critterding-beta14/share/critterding/skies/round/skydome3.obj");
 
 		// VISION SYSTEM
 			auto vision_system = addChild( "vision_system", "CdVisionSystem" );
@@ -351,24 +294,16 @@
 
 		// FOOD SYSTEM
 			auto food_system = addChild( "food_system", new CdFoodSystem() );
-
 			m_food_unit_container = food_system->getChild( "unit_container", 1 );
 
 		// POPULATION CONTROLLER
-			addChild( "CdPopulationController", new CdPopulationController() );
+			auto population_controller = addChild( "CdPopulationController", new CdPopulationController() );
+			population_controller->set( "register_critter_container", m_critter_unit_container );
+			population_controller->set( "register_food_container", m_food_unit_container );
 
 		// CRITTER EXCHANGER
 			addChild( "CdCritterExchanger", new CdCritterExchanger() );
-			
-// 		// BODY SETTINGS
-// 			auto body_settings = addChild( "body_settings", new BEntity() );
-// 			body_settings->addChild( "mutation_chance", new BEntity_uint() )->set( Buint(20) );
-// 			body_settings->addChild( "bodypart_min", new BEntity_uint() )->set( Buint(3) );
-// 			body_settings->addChild( "bodypart_max", new BEntity_uint() )->set( Buint(7) );
-// 			body_settings->addChild( "eye_min", new BEntity_uint() )->set( Buint(1) );
-// 			body_settings->addChild( "eye_max", new BEntity_uint() )->set( Buint(1) );
-// 			body_settings->addChild( "spike_min", new BEntity_uint() )->set( Buint(0) );
-// 			body_settings->addChild( "spike_max", new BEntity_uint() )->set( Buint(1) );
+
 	}
 
 	void Critterding::process()

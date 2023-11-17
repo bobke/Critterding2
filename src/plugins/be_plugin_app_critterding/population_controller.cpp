@@ -2,6 +2,7 @@
 #include "kernel/be_entity_core_types.h"
 #include "critter_system.h"
 #include "food_system.h"
+#include <iostream>
 
 	void CdPopulationController::construct()
 	{
@@ -22,53 +23,116 @@
 		m_below_y_trigger = addChild( "below_y_trigger", new BEntity_float() );
 		m_below_y_trigger->set( -200.0f );
 
-		m_critter_system = dynamic_cast<CdCritterSystem*>( topParent()->getChild("critter_system") );
-		m_critter_unit_container = m_critter_system->getChild("unit_container");
-
-		m_food_system = dynamic_cast<CdFoodSystem*>( topParent()->getChild("food_system") );
-		// auto food_system = topParent()->getChild("food_system");
-		m_food_unit_container = m_food_system->getChild("unit_container");
-		
-		m_food_number_of_units = m_food_system->getChild("settings")->getChild("number_of_units");
+		m_critter_containers = addChild("critter_containers", new BEntity());
+		m_food_containers = addChild("food_containers", new BEntity());
 	} 
 
 	void CdPopulationController::process()
 	{
 		if ( m_active->get_bool() )
 		{
-			if ( m_critter_unit_container->numChildren() >= m_population_trigger->get_uint() )
+			// CRITTER DEPTH CHECK AND CALCULATE SUM OF ALL CRITTERS
+			int sumCritters( 0 );
+			{
+				for_all_children_of3( m_critter_containers )
+				{
+					auto critter_unit_container = (*child3)->get_reference();
+					sumCritters += critter_unit_container->numChildren();
+
+					// REMOVE CRITTERS FALLEN BELOW y
+					for_all_children_of( critter_unit_container )
+					{
+						if ( (*child)->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference()->getChild("transform", 1)->getChild("position_y", 1)->get_float() < m_below_y_trigger->get_float() )
+						{
+							auto critter_system = dynamic_cast<CdCritterSystem*>( critter_unit_container->parent() );
+							critter_system->removeCritter( *child, true );
+						}
+					}
+				}
+			}
+
+			// IF SUM > POPULATION_TRIGGER START REMOVING CRITTERS, each time finding the unit_container with most children
+			if ( sumCritters >= m_population_trigger->get_uint() )
 			{
 				// KEEP REMOVING FIRST UNTIL LIMIT REACHED
-				while ( m_critter_unit_container->numChildren() > m_population_reduce_to->get_uint() )
+				while ( sumCritters > m_population_reduce_to->get_uint() )
 				{
-					m_critter_system->removeCritter( *m_critter_unit_container->children().begin() );
+
+					// find container with highest number of critters
+						BEntity* highestcontainer( 0 );
+						for_all_children_of( m_critter_containers )
+						{
+							if ( highestcontainer == 0 || (*child)->get_reference()->numChildren() > highestcontainer->numChildren() )
+							{
+								highestcontainer = (*child)->get_reference();
+							}
+						}
+
+					// remove critter
+						auto critter_system = dynamic_cast<CdCritterSystem*>( highestcontainer->parent() );
+						critter_system->removeCritter( *highestcontainer->children().begin(), true );
+						sumCritters--;
 				}
 
 				// REDUCE ENERGY
 				if ( m_energy_reduce_by->get_uint() > 0 )
 				{
-					m_food_number_of_units->set( m_food_number_of_units->get_uint() - m_energy_reduce_by->get_uint() );
+					for ( unsigned int i( 0 ); i < m_energy_reduce_by->get_uint(); ++i )
+					{
+						// find container with highest number of food
+							BEntity* highestcontainer( 0 );
+							BEntity* highest_number_of_units( 0 );
+							for_all_children_of( m_food_containers )
+							{
+								auto this_number_of_units = (*child)->get_reference()->parent()->getChild("settings")->getChild("number_of_units");
+								if ( highestcontainer == 0 || this_number_of_units->get_uint() > highest_number_of_units->get_uint() )
+								{
+									highestcontainer = (*child)->get_reference();
+									highest_number_of_units = this_number_of_units;
+								}
+							}
+
+						// alter energy
+							highest_number_of_units->set( highest_number_of_units->get_uint() - 1 );
+					}
 				}
 			}
 
-			// REMOVE CRITTERS FALLEN BELOW y
-			for_all_children_of( m_critter_unit_container )
+			// FOOD DEPTH CHECK
+			for_all_children_of( m_food_containers )
 			{
-				if ( (*child)->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference()->getChild("transform", 1)->getChild("position_y", 1)->get_float() < m_below_y_trigger->get_float() )
-				{
-					m_critter_system->removeCritter( *child );
-					return;
-				}
-			}
+				auto food_unit_container = (*child)->get_reference();
 
-			// REMOVE FOOD FALLEN BELOW y
-			for_all_children_of2( m_food_unit_container )
-			{
-				if ( (*child2)->getChild("external_physics", 1)->get_reference()->getChild("transform", 1)->getChild("position_y", 1)->get_float() < m_below_y_trigger->get_float() )
+				// REMOVE FOOD FALLEN BELOW y
+				for_all_children_of2( food_unit_container ) // FIXME
 				{
-					m_food_system->removeFood( *child2 );
-					return;
+					if ( (*child2)->getChild("external_physics", 1)->get_reference()->getChild("transform", 1)->getChild("position_y", 1)->get_float() < m_below_y_trigger->get_float() )
+					{
+						auto food_system = dynamic_cast<CdFoodSystem*>( food_unit_container->parent() );
+						food_system->removeFood( *child );
+					}
 				}
 			}
 		}
+	}
+
+	bool CdPopulationController::set( const Bstring& id, BEntity* value )
+	{
+		if ( id == "register_critter_container" )
+		{
+			// std::cout << "CdPopulationController::registered critter container " << value->name() << std::endl;
+			m_critter_containers->addChild( "critter_container_ref", new BEntity_reference() )->set( value ) ;
+
+			return true;
+		}
+		if ( id == "register_food_container" )
+		{
+			// std::cout << "CdPopulationController::registered food container " << value->name() << std::endl;
+			m_food_containers->addChild( "food_container_ref", new BEntity_reference() )->set( value ) ;
+
+			return true;
+		}
+
+		std::cout << "CdPopulationController::warning: unknown command '" << id << "'" << std::endl;
+		return false;
 	}
