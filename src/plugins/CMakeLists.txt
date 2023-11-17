@@ -6,8 +6,8 @@
 # ADD_SUBDIRECTORY(be_plugin_app_vulkan)
 # ADD_SUBDIRECTORY(be_plugin_app_attractors)
 ADD_SUBDIRECTORY(be_plugin_thread)
-ADD_SUBDIRECTORY(be_plugin_alsa)
-ADD_SUBDIRECTORY(be_plugin_app_alsa)
+# ADD_SUBDIRECTORY(be_plugin_alsa)
+# ADD_SUBDIRECTORY(be_plugin_app_alsa)
 
 # ADD_SUBDIRECTORY(be_plugin_test)
 
