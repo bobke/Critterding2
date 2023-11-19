@@ -46,6 +46,7 @@
 						{
 							auto critter_system = dynamic_cast<CdCritterSystem*>( critter_unit_container->parent() );
 							critter_system->removeCritter( *child, true );
+							return; // actually needed with how for loop is implemented
 						}
 					}
 				}
@@ -109,7 +110,8 @@
 					if ( (*child2)->getChild("external_physics", 1)->get_reference()->getChild("transform", 1)->getChild("position_y", 1)->get_float() < m_below_y_trigger->get_float() )
 					{
 						auto food_system = dynamic_cast<CdFoodSystem*>( food_unit_container->parent() );
-						food_system->removeFood( *child );
+						food_system->removeFood( *child2, true );
+						return; // actually needed with how for loop is implemented
 					}
 				}
 			}
