@@ -62,9 +62,10 @@
 				m_map.insert( { entity->id(), true } );
 // 				m_map[entity->id()] = true;
 			}
-			m_mutex.unlock();
 
 			processRecycle();
+
+			m_mutex.unlock();
 		}
 	}
 
@@ -76,7 +77,7 @@
 
 	void B_ID_Handler::processRecycle()
 	{
-		m_mutex.lock();
+		// m_mutex.lock();
 		// FIXME WHY ISN'T THIS TIME STUFF IN FRAMES, IF NEEDED AT ALL
 // 		std::cout << "recycledebug test" << std::endl;
 // 		std::cout << " total time " << totalTime << std::endl;
@@ -195,7 +196,7 @@
 			}
 // 			m_totalTime_last = totalTime;
 		}
-		m_mutex.unlock();
+		// m_mutex.unlock();
 	}
 
 

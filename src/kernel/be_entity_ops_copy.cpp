@@ -607,9 +607,7 @@
 
 			// EXTERNAL PARENT
 			// parent parent by id
-			auto Scene = parent->topParent()->getChild( "bin", 1 );
-			bool parent_parent_found(false);
-			BEntity* external_parent_parent(0);
+			// auto Scene = parent->topParent()->getChild( "bin", 1 );
 			// BEntity* external_parent_parent = parent->topParent()->getChild( (unsigned int)external_parent_id) ;
 			// // matches type?
 			// if ( external_parent_parent && external_parent_parent->entityType() == BEntityTypeManager::Instance()->getEntityID(external_parent_type) )
@@ -619,17 +617,40 @@
 			// 		parent_parent_found = true;
 			// }
 
-			// parent parent by name
+			// find parent parent by name, searching parents of parents
+			bool parent_parent_found(false);
+			BEntity* external_parent_parent(0);
 			if ( !parent_parent_found && external_parent_name.size()>0 )
 			{
-				external_parent_parent = Scene->getChild( external_parent_name.c_str() );
-				// matches type?
-				if ( external_parent_parent && external_parent_parent->class_id() == external_parent_type )
+				BEntity* current_parent = parent;
+				std::cout << "0 parent_parent_found:" << parent_parent_found << std::endl;
+				std::cout << "0 current_parent:" << current_parent->name() << std::endl;
+				while ( !parent_parent_found && current_parent != parent->topParent() )
 				{
-					parent_parent_found = true;
-					// std::cout << "parent parent:" << external_parent_parent->name() << std::endl;
+					external_parent_parent = current_parent->getChild( external_parent_name.c_str() );
+					// matches type?
+					if ( external_parent_parent && external_parent_parent->class_id() == external_parent_type )
+					{
+						std::cout << "a parent parent:" << external_parent_parent->name() << std::endl;
+						parent_parent_found = true;
+					}
+					current_parent = current_parent->parent();
+					std::cout << "0 parent_parent_found:" << parent_parent_found << std::endl;
+					std::cout << "0 current_parent:" << current_parent->name() << std::endl;
 				}
 			}
+
+			// // parent parent by name
+			// if ( !parent_parent_found && external_parent_name.size()>0 )
+			// {
+			// 	external_parent_parent = Scene->getChild( external_parent_name.c_str() );
+			// 	// matches type?
+			// 	if ( external_parent_parent && external_parent_parent->class_id() == external_parent_type )
+			// 	{
+			// 		parent_parent_found = true;
+			// 		// std::cout << "parent parent:" << external_parent_parent->name() << std::endl;
+			// 	}
+			// }
 
 			if ( parent_parent_found )
 			{
