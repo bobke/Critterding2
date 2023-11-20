@@ -15,8 +15,10 @@ BUILDING
 
 RUNNING
 -------
+	with a single thread: 
 	./src/bengine app_critterding
-	./src/bengine app_critterding_threads (experimental)
+	with 4 server threads:
+	./src/bengine app_critterding_threads
 
 KEYS
 ----

@@ -623,20 +623,15 @@
 			if ( !parent_parent_found && external_parent_name.size()>0 )
 			{
 				BEntity* current_parent = parent;
-				std::cout << "0 parent_parent_found:" << parent_parent_found << std::endl;
-				std::cout << "0 current_parent:" << current_parent->name() << std::endl;
 				while ( !parent_parent_found && current_parent != parent->topParent() )
 				{
 					external_parent_parent = current_parent->getChild( external_parent_name.c_str() );
 					// matches type?
 					if ( external_parent_parent && external_parent_parent->class_id() == external_parent_type )
 					{
-						std::cout << "a parent parent:" << external_parent_parent->name() << std::endl;
 						parent_parent_found = true;
 					}
 					current_parent = current_parent->parent();
-					std::cout << "0 parent_parent_found:" << parent_parent_found << std::endl;
-					std::cout << "0 current_parent:" << current_parent->name() << std::endl;
 				}
 			}
 
