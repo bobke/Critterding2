@@ -14,6 +14,18 @@
 			return m_value;
 		}
 
+	// EXTERNAL
+		bool BEntity_external::set( BEntity* value )
+		{
+			m_value = value;
+			if ( value != 0 )
+			{
+				value->addChild( "_external_child_backward_ref", new BEntity_reference() )->set( this );
+			}
+			return true;
+		}
+	
+	
 	// TRIGGER
 
 		BEntity_trigger::BEntity_trigger()

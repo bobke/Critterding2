@@ -111,12 +111,15 @@
 
 		void B_Children_Handler::clearChildren( BEntity* parent )
 		{
-			// FIXME DISABLED THIS FOR NOW BUT NEEDS TO WORK
+			// if ( parent->hasChildren() )
+			// 	std::cout << "clearChildren:: " << parent->id() << " name: " << parent->name() << std::endl;
+
 			while ( parent->hasChildren() )
 			{
 				auto& children_vector = children( parent );
 				
 				const auto it = children_vector.end()-1;
+				// std::cout << "  clearChildren:: " << (*it)->id() << " name: " << (*it)->name() << std::endl;
 
 				removeChild( parent, it );
 			}
@@ -193,10 +196,40 @@
 					}
 				}
 
-			// EXTERNAL CHILD
-				if ( dynamic_cast<BEntity_external*>(entity) )
+			// PARENT IS DEPLOYED EXTERNAL CHILD, experimental
+				if ( dynamic_cast<BEntity_reference*>( entity ) )
 				{
-					entity->get_reference()->parent()->removeChild( entity->get_reference() );
+					if ( entity->name() == "_external_child_backward_ref" )
+					{
+						// set external_child's reference here to 0
+						auto external_entity = entity->get_reference();
+						if ( external_entity != 0 )
+						{
+							if ( external_entity->get_reference() != 0 )
+							{
+								external_entity->set( (BEntity*)0 );
+							}
+						}
+					}
+				}
+
+			// EXTERNAL CHILD
+				if ( dynamic_cast<BEntity_external*>( entity ) )
+				{
+					if ( entity->get_reference() != 0 )
+					{
+						auto deployed_entity = entity->get_reference();
+
+						// FIRST it's reference back here to 0
+						auto backward_ref = deployed_entity->getChild("_external_child_backward_ref", 1);
+						if ( backward_ref )
+						{
+							backward_ref->set( (BEntity*)0 );
+						}
+
+						// remove deployed entity
+						deployed_entity->parent()->removeChild( deployed_entity );
+					}
 				}
 
 			// REMOVE CHILDREN

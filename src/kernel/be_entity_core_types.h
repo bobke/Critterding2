@@ -11,7 +11,7 @@
 
 			virtual bool set( BEntity* value );
 			virtual BEntity* get_reference();
-		private:
+		protected:
 			BEntity* m_value;
 	};
 	
@@ -23,6 +23,7 @@
 		public:
 			BEntity_external() {};
 			const char* class_id() const { return "external_child"; }
+			virtual bool set( BEntity* value );
 			virtual ~BEntity_external() {};
 	};
 	
