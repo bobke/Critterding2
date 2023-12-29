@@ -213,40 +213,41 @@
 
 					if( pr == priority )
 					{
-						// DEPTH
-							glDepthMask( depthMask );
-							if ( depthTest )
-							{
-// 								std::cout << "dt+";
-								glEnable(GL_DEPTH_TEST);
-							}
-							else
-							{
-// 								std::cout << "dt-";
-								glDisable(GL_DEPTH_TEST);
-							}
-						
-						// BLEND
-							if ( blend )
-							{
-								if ( !m_draw_blend_is_disabled )
-								{
-// 									std::cout << "bl+";
-									glEnable(GL_BLEND);
-									glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-									m_draw_blend_is_disabled = false;
-								}
-							}
-							else
-							{
-								if ( m_draw_blend_is_disabled )
-								{
-// 									std::cout << "bl-";
-									glDisable(GL_BLEND);
-									glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-									m_draw_blend_is_disabled = true;
-								}
-							}
+						// // DEPTH AND BLEND, COMMENTED OUT FOR CRITTERDING PERFORMANCE
+// 						// DEPTH
+// 							glDepthMask( depthMask );
+// 							if ( depthTest )
+// 							{
+// // 								std::cout << "dt+";
+// 								glEnable(GL_DEPTH_TEST);
+// 							}
+// 							else
+// 							{
+// // 								std::cout << "dt-";
+// 								glDisable(GL_DEPTH_TEST);
+// 							}
+// 						
+// 						// BLEND
+// 							if ( blend )
+// 							{
+// 								if ( !m_draw_blend_is_disabled )
+// 								{
+// // 									std::cout << "bl+";
+// 									glEnable(GL_BLEND);
+// 									glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+// 									m_draw_blend_is_disabled = false;
+// 								}
+// 							}
+// 							else
+// 							{
+// 								if ( m_draw_blend_is_disabled )
+// 								{
+// // 									std::cout << "bl-";
+// 									glDisable(GL_BLEND);
+// 									glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+// 									m_draw_blend_is_disabled = true;
+// 								}
+// 							}
 							
 
 						const Material& material = (*it).second;
@@ -261,30 +262,31 @@
 							glBindTexture(GL_TEXTURE_2D, 0);
 						}
 
+						// SPECIFIC MATERIALS, COMMENTED OUT FOR CRITTERDING PERFORMANCE
 						{
 							const auto& ambient = material.m_material.getAmbient();
 							const float f_a[4] = { ambient.x(), ambient.y(), ambient.z(), 1 };
 							glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, f_a );
 						}
-						{
-							const auto& diffuse = material.m_material.getDiffuse();
-							const float f_d[4] = { diffuse.x(), diffuse.y(), diffuse.z(), 1 };
-							glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, f_d );
-						}
-						{
-							const auto& specular = material.m_material.getSpecular();
-							const float f_s[4] = { specular.x(), specular.y(), specular.z(), 1 };
-							glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, f_s );
-						}
-						{
-							const auto& emission = material.m_material.getEmission();
-							const float f_s[4] = { emission.x(), emission.y(), emission.z(), 1 };
-							glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, f_s );
-						}
-						{
-							const auto& shininess = material.m_material.getShininess();
-							glMaterialfv( GL_FRONT_AND_BACK, GL_SHININESS, &shininess );
-						}
+						// {
+						// 	const auto& diffuse = material.m_material.getDiffuse();
+						// 	const float f_d[4] = { diffuse.x(), diffuse.y(), diffuse.z(), 1 };
+						// 	glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, f_d );
+						// }
+						// {
+						// 	const auto& specular = material.m_material.getSpecular();
+						// 	const float f_s[4] = { specular.x(), specular.y(), specular.z(), 1 };
+						// 	glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, f_s );
+						// }
+						// {
+						// 	const auto& emission = material.m_material.getEmission();
+						// 	const float f_s[4] = { emission.x(), emission.y(), emission.z(), 1 };
+						// 	glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, f_s );
+						// }
+						// {
+						// 	const auto& shininess = material.m_material.getShininess();
+						// 	glMaterialfv( GL_FRONT_AND_BACK, GL_SHININESS, &shininess );
+						// }
 
 						const DrawCall& drawCall = m_drawCalls[i];
 						glDrawElements( GL_TRIANGLES, drawCall.m_count, GL_UNSIGNED_INT, (char *)NULL + ((drawCall.m_first)*sizeof(GLint)) );

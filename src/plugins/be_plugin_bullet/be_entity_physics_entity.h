@@ -1,5 +1,4 @@
-#ifndef BE_ENTITY_PHYSICS_ENTITY_H_INCLUDED
-#define BE_ENTITY_PHYSICS_ENTITY_H_INCLUDED
+#pragma once
 
 #include "kernel/be_entity_interface.h"
 #include "be_types_extra.h"
@@ -61,7 +60,8 @@
 			BPhysicsEntityMesh();
 // 			BPhysicsEntityMesh(BeFilesystem& filesystem, const boost::shared_ptr<BeGeometrySystem>& modelsystem);
 			virtual ~BPhysicsEntityMesh(){};
-			typedef boost::shared_ptr<BPhysicsEntityMesh> ptr;
+
+			virtual void construct();
 
 			void setGeometry( const boost::shared_ptr<BeGeometry>& geometry ) { m_geometry=geometry; }
 
@@ -73,9 +73,15 @@
 			virtual Bbool onRemoveChild( BEntity* entity );
 		protected:
 			std::string m_filename_value;
-			BEVector3 m_pre_scale;
-			BEVector3 m_pre_position;
-			BEVector3 m_pre_rotation;
+			BEntity* m_pre_scale_x;
+			BEntity* m_pre_scale_y;
+			BEntity* m_pre_scale_z;
+			BEntity* m_pre_position_x;
+			BEntity* m_pre_position_y;
+			BEntity* m_pre_position_z;
+			BEntity* m_pre_rotation_x;
+			BEntity* m_pre_rotation_y;
+			BEntity* m_pre_rotation_z;
 			boost::shared_ptr<BeGeometry> m_geometry;
 	};
 
@@ -125,6 +131,3 @@
 	
 	
 	
-	
-#endif
- 

@@ -1,8 +1,8 @@
 #include "food_system.h"
 #include "critter_system.h"
 #include "kernel/be_entity_core_types.h"
-#include <iostream>
 #include "plugins/be_plugin_bullet/be_entity_mousepicker.h"
+// #include <iostream>
  
 	void CdFoodSystem::construct()
 	{
@@ -96,21 +96,15 @@
 					}
 				}
 
-				
 				// INSERT NEW FOOD UNITS 
 				const float maximum_energy_in_system = m_intitial_energy->get_float() * m_number_of_units->get_uint();
 				float missing_energy_in_system = maximum_energy_in_system - total_energy_in_entities;
 				if ( missing_energy_in_system >= m_intitial_energy->get_float() )
 				{
-					m_mutex.lock();
-					auto cmd_insert = m_command_buffer->addChild( "pass_command", new BEntity_reference() );
-					cmd_insert->set(this);
-					auto command = cmd_insert->addChild( "command", new BEntity_string() );
-					command->set("insert_food");
-					m_mutex.unlock();
-					
-					
-
+						auto cmd_insert = m_command_buffer->addChild( "pass_command", new BEntity_reference() );
+						cmd_insert->set(this);
+						auto command = cmd_insert->addChild( "command", new BEntity_string() );
+						command->set("insert_food");
     
 					// PREVENT FURTHER DELETION OR INSERTION OF FOOD IN THIS FRAME
 						return;
@@ -197,10 +191,8 @@
 		}
 		else
 		{
-			m_mutex.lock();
 				auto cmd_rm = m_command_buffer->addChild( "remove", new BEntity_reference() );
 				cmd_rm->set( entity );
-			m_mutex.unlock();
 		}
 	}
 

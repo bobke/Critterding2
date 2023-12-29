@@ -2,17 +2,6 @@
 #define FOOD_SYSTEM_H_INCLUDED
 
 #include "kernel/be_entity_interface.h"
-#include <thread>
-#include <mutex>
-
-// 	// RANDOMIZER
-// 		class BeRand
-// 		{
-// 			public:
-// 				BeRand();
-// 				virtual ~BeRand() {};
-// 				const int get(const int minimum, const int maximum) const;
-// 		};
 
 		class BMousePicker;
 
@@ -54,10 +43,7 @@
 				BEntity* m_rng;
 // 				BeRand m_randomizer;
 				BEntity* m_critter_unit_container;
-				
-			// MUTEX
-				std::mutex m_mutex;
-				
+
 		};
 
 	//  UNIT

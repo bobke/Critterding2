@@ -26,9 +26,11 @@
 		critter_exchanger.h
 		critter_thread_mesher.cpp
 		critter_thread_mesher.h
+		opengl_setup.cpp
+		opengl_setup.h
 	)
 
 	ADD_LIBRARY( be_plugin_app_critterding SHARED ${plugin_SRCS} )
-	TARGET_LINK_LIBRARIES( be_plugin_app_critterding be_base_entity_types be_plugin_opengl be_plugin_bullet )
+	TARGET_LINK_LIBRARIES( be_plugin_app_critterding be_base_entity_types be_plugin_opengl )
 
 

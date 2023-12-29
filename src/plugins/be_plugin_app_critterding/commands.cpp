@@ -1,12 +1,22 @@
 #include "commands.h"
 #include "plugins/be_plugin_bullet/bullet3/src/LinearMath/btVector3.h"
-#include <iostream>
+// #include <iostream>
  
 	bool cmd_launchAdminWindow::set()
 	{
 		if ( !getAdminWindow() )
 		{
-			auto qt_app = topParent()->getChild( "bin", 1 )->getChild( "QT Application", 2 );
+			auto bin = topParent()->getChild( "bin", 1 );
+			auto qt_app = bin->getChild( "QT Application", 2 );
+			
+			// if ( !qt_app )
+			// {
+			// 	// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
+			// 		auto spawner = bin->addChild( "spawner", "QApplicationSpawner" );
+			// 		auto t_parent_to_add_to = spawner->getChildCustom( bin );
+			// 		bin->removeChild( spawner );
+			// }
+			
 			if ( qt_app )
 			{
 				qt_app->addChild( "Admin App", "AdminWindow" );
@@ -227,7 +237,7 @@
 				
 					if ( shortest_raycaster != 0 )
 					{
-						std::cout << "shortest raycaster: " << shortest_raycaster->id() << " " << shortest_raycaster->name()  << std::endl;
+						// std::cout << "shortest raycaster: " << shortest_raycaster->id() << " " << shortest_raycaster->name()  << std::endl;
 						
 						auto mousepicker = shortest_raycaster->parent()->getChild( "mousepicker", 1 );
 						if ( mousepicker )

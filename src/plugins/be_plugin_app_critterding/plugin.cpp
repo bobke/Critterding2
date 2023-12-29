@@ -10,37 +10,49 @@
 #include "critter_exchanger.h"
 #include "critter_thread_mesher.h"
 #include "commands.h"
+#include "plugins/be_plugin_bullet/be_entity_transform.h" // FIXME work this away
 #include "plugins/be_plugin_opengl/be_entity_camera.h"
-#include <iostream>
+#include "opengl_setup.h"
+// #include <iostream>
 
+// 	void Scene::construct()
+// 	{
+// 		// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
+// 			pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
+// 			auto spawner = addChild( "spawner", "QApplicationSpawner" );
+// 			auto t_parent_to_add_to = spawner->getChildCustom( this );
+// 			removeChild( spawner );
+// 		
+// 		pluginManager()->load( "app_admin_window", "src/plugins/be_plugin_app_admin_window", "be_plugin_app_admin_window" );
+// 		pluginManager()->load( "app_sysmon", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
+// 
+// 		// t_parent_to_add_to->addChild( "Admin App", "AdminWindow" );
+// 		// t_parent_to_add_to->addChild( "sysmon", "SystemMonitor" );
+// 
+// 		auto sdl_window = addChild("Critterding", new Critterding())->getChild("SDL GLWindow");
+// 		sdl_window->set("on_close_destroy_entity", this);
+// 	}
+	
 	void Scene::construct()
 	{
+		setName( "Critterding" );
+		std::cout << "Scene::construct()" << std::endl;
+
 		// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
-			pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
+		pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
+
 			auto spawner = addChild( "spawner", "QApplicationSpawner" );
-			auto t_parent_to_add_to = spawner->getChildCustom( this );
+			auto t_parent_to_add_to = spawner->getChildCustom( parent() );
 			removeChild( spawner );
-		
+
 		pluginManager()->load( "app_admin_window", "src/plugins/be_plugin_app_admin_window", "be_plugin_app_admin_window" );
 		pluginManager()->load( "app_sysmon", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
-
-		// t_parent_to_add_to->addChild( "Admin App", "AdminWindow" );
-		// t_parent_to_add_to->addChild( "sysmon", "SystemMonitor" );
-
-		auto sdl_window = addChild("Critterding", new Critterding())->getChild("SDL GLWindow");
-		sdl_window->set("on_close_destroy_entity", this);
-	}
-	
-	void Critterding::construct()
-	{
-		std::cout << "Scene::construct()" << std::endl;
 
 		// settings
 			auto settings = addChild( "settings", new BEntity() );
 			m_eat_transfer_energy = settings->addChild( "eat_energy_transfer", new BEntity_float() );
 			m_eat_transfer_energy->set( 100.0f );
 
-		
 		pluginManager()->load( "system", "src/plugins/be_plugin_system", "be_plugin_system" );
 		pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
 		pluginManager()->load( "opengl", "src/plugins/be_plugin_opengl", "be_plugin_opengl" );
@@ -95,6 +107,7 @@
 		// SDL & OPENGL
 			auto glscene = addChild( "SDL GLWindow", "SDLWindow" );
 			// glscene->setFps(60);
+			glscene->addChild("OpenGL_Setup", "OpenGL_Setup");
 			
 			m_win_width = glscene->getChild( "width", 1 );
 			m_win_height = glscene->getChild( "height", 1 );
@@ -205,14 +218,14 @@
 		{
 			auto light = t_graphicsModelSystem->addChild( "light", "GLLight" );
 			
-			light->getChild( "model_ambient_r", 1 )->set( 0.2f );
-			light->getChild( "model_ambient_g", 1 )->set( 0.2f );
-			light->getChild( "model_ambient_b", 1 )->set( 0.2f );
+			light->getChild( "model_ambient_r", 1 )->set( 0.5f );
+			light->getChild( "model_ambient_g", 1 )->set( 0.5f );
+			light->getChild( "model_ambient_b", 1 )->set( 0.5f );
 			light->getChild( "model_ambient_a", 1 )->set( 0.0f );
 			
-			light->getChild( "color_ambient_r", 1 )->set( 0.2f );
-			light->getChild( "color_ambient_g", 1 )->set( 0.2f );
-			light->getChild( "color_ambient_b", 1 )->set( 0.2f );
+			light->getChild( "color_ambient_r", 1 )->set( 0.5f );
+			light->getChild( "color_ambient_g", 1 )->set( 0.5f );
+			light->getChild( "color_ambient_b", 1 )->set( 0.5f );
 			light->getChild( "color_ambient_a", 1 )->set( 0.0f );
 			
 			light->getChild( "color_diffuse_r", 1 )->set( 0.4f );
@@ -306,7 +319,7 @@
 
 	}
 
-	void Critterding::process()
+	void Scene::process()
 	{
 		// CHECK PHYSICS COLLISIONS
 			for_all_children_of( m_physics_world_collisions )
@@ -364,7 +377,7 @@
 			m_bullet_raycast->process();
 	}
 
-	BEntity* Critterding::findCritter( BEntity* e1, BEntity* e2 )
+	BEntity* Scene::findCritter( BEntity* e1, BEntity* e2 )
 	{
 		BEntity* critter_bp( e1 );
 		if ( e2->name() == "bodypart_central" )
@@ -384,7 +397,7 @@
 		return 0;
 	}
 	
-	BEntity* Critterding::findFood( BEntity* e1, BEntity* e2 )
+	BEntity* Scene::findFood( BEntity* e1, BEntity* e2 )
 	{
 		BEntity* food_bp( e1 );
 		if ( e2->name() == "physics_entity_food" )
@@ -407,7 +420,7 @@
 	{
 		  PLUGIN_INFO
 		, SCENE
-		, CRITTERDING
+		// , CRITTERDING
 		, CD_CONTROL_PANEL
 		, CD_POPULATION_CONTROL
 		, CD_CRITTER_EXCHANGER
@@ -421,6 +434,7 @@
 		, CD_BODY_SYSTEM
 		, CD_BODY // FIXME REMOVE LEGACY
 		, CD_BODY_FIXED1
+		, OPENGL_SETUP
 	};
 
 	extern "C" BEntity* create( BEntity* parent, const Buint type )
@@ -430,7 +444,7 @@
 			{
 				BClassesHelper i;
 					i.addClass( parent, CLASS::SCENE, "Scene" );
-					i.addClass( parent, CLASS::CRITTERDING, "Critterding" );
+					// i.addClass( parent, CLASS::CRITTERDING, "Critterding" );
 					i.addClass( parent, CLASS::CD_CONTROL_PANEL, "CdControlPanel" );
 					i.addClass( parent, CLASS::CD_POPULATION_CONTROL, "CdPopulationController" );
 					i.addClass( parent, CLASS::CD_CRITTER_EXCHANGER, "CdCritterExchanger" );
@@ -444,6 +458,7 @@
 					i.addClass( parent, CLASS::CD_BODY_SYSTEM, "CdBodySystem" );
 					i.addClass( parent, CLASS::CD_BODY, "CdBody" );
 					i.addClass( parent, CLASS::CD_BODY_FIXED1, "BodyFixed1" );
+					i.addClass( parent, CLASS::OPENGL_SETUP, "OpenGL_Setup" );
 				return 0;
 			}
 
@@ -454,8 +469,8 @@
 
 				if ( type == CLASS::SCENE )
 					i = new Scene();
-				else if ( type == CLASS::CRITTERDING )
-					i = new Critterding();
+				// else if ( type == CLASS::CRITTERDING )
+					// i = new Critterding();
 				else if ( type == CLASS::CD_CONTROL_PANEL )
 					i = new CdControlPanel();
 				else if ( type == CLASS::CD_POPULATION_CONTROL )
@@ -482,6 +497,8 @@
 					i = new BEntity();
 				else if ( type == CLASS::CD_BODY_FIXED1 )
 					i = new BodyFixed1();
+				else if ( type == CLASS::OPENGL_SETUP )
+					i = new OpenGL_Setup();
 
 				return i;
 			}

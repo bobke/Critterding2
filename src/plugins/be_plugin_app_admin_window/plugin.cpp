@@ -21,8 +21,8 @@
 		auto admin_window = t_parent_to_add_to->addChild("Admin App", new BAdminWindow());
 
 		// kill the scene when the main window is closed
-		auto qmainwindow = admin_window->getChild("QT MainWindow");
-		qmainwindow->set("on_close_destroy_entity", this);
+			auto qmainwindow = admin_window->getChild("QT MainWindow");
+			qmainwindow->set("on_close_destroy_entity", this);
 	}
 
 	BAdminWindow::~BAdminWindow()

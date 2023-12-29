@@ -15,6 +15,7 @@
 			BGraphicsModel();
 			const char* class_id() const { return "GraphicsModel"; }
 			virtual ~BGraphicsModel() {};
+			virtual void construct();
 
 			void setModel( boost::shared_ptr<BeGraphicsModelResource> model );
 			boost::shared_ptr<BeGraphicsModelResource> getModel() const;
@@ -29,9 +30,15 @@
 		private:
 			boost::shared_ptr<BeGraphicsModelResource> m_model;
 			std::string m_loaded_path;
-// 			btVector3 m_pre_scale;
-// 			btVector3 m_pre_position;
-// 			btVector3 m_pre_rotation;
+			BEntity* m_pre_scale_x;
+			BEntity* m_pre_scale_y;
+			BEntity* m_pre_scale_z;
+			BEntity* m_pre_position_x;
+			BEntity* m_pre_position_y;
+			BEntity* m_pre_position_z;
+			BEntity* m_pre_rotation_x;
+			BEntity* m_pre_rotation_y;
+			BEntity* m_pre_rotation_z;
 // 			btScalar m_matrix[16];
 // 			btVector3 m_scale;
 

@@ -1,7 +1,7 @@
 #include "kernel/be_entity_core_types.h"
 #include "be_entity_raycast.h"
 #include "be_entity_physicsworld.h"
-#include <iostream>
+// #include <iostream>
 
 	void BRaycast::construct()
 	{

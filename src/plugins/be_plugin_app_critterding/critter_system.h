@@ -3,8 +3,6 @@
 
 #include "kernel/be_entity_interface.h"
 #include "kernel/be_entity_ops_copy.h"
-#include <thread>
-#include <mutex>
 
 	class CdSpeciesSystem;
 	class BeRigidBody;
@@ -52,9 +50,6 @@
 				CdSpeciesSystem* m_species_system;
 				BEntity* m_body_system_unit_container;
 				BEntity* m_brain_system;
-
-			// MUTEX
-				std::mutex m_mutex;
 		};
 
 	//  UNIT

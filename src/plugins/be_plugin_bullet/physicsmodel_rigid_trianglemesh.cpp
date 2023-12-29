@@ -2,6 +2,7 @@
 // #include "kernel/be_profiler.h"
 #include "BulletCollision/Gimpact/btGImpactShape.h"
 // #include "be_entity_types.h"
+// #include <iostream>
 
 BodypartRigidTrianglemesh::BodypartRigidTrianglemesh(const btVector3* const gVertices, const unsigned int numVertices, int* const gVIndices, const unsigned int numVIndices, const btTransform& transform ,const float weight, const float linearDamping, const float angularDamping  )
  : BeRigidBody()
@@ -13,6 +14,7 @@ BodypartRigidTrianglemesh::BodypartRigidTrianglemesh(const btVector3* const gVer
 // 		std::cout << weight << " :: " << "btGImpactMeshShape" << std::endl;
 		btGImpactMeshShape * tshape = new btGImpactMeshShape(m_triangleIndexVertexArray.get());
 // 		tshape->setLocalScaling(btVector3(2.0f,1.0f,1.0f));
+		tshape->calculateLocalInertia( weight, m_localInertia );
 		tshape->updateBound();
 		m_shape.reset(tshape);
 	}
@@ -54,10 +56,13 @@ BodypartRigidTrianglemesh::BodypartRigidTrianglemesh(boost::shared_ptr<BeGeometr
 // 		std::cout << weight << " :: " << "btGImpactMeshShape" << std::endl;
 		btGImpactMeshShape * tshape = new btGImpactMeshShape(m_triangleIndexVertexArray.get());
 		tshape->setLocalScaling(scaling);
-		
-		tshape->calculateLocalInertia( weight, m_localInertia );
 		tshape->updateBound();
 		
+		tshape->calculateLocalInertia( weight, m_localInertia );
+		
+		// std::cout << " Local inertia : x: " << m_localInertia.x() << std::endl;
+		// std::cout << " Local inertia : y: " << m_localInertia.y() << std::endl;
+		// std::cout << " Local inertia : z: " << m_localInertia.z() << std::endl;
 		
 // 		tshape->postUpdate();
 // 		tshape->postUpdate();

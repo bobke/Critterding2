@@ -6,24 +6,24 @@
 
 	class BCamera;
 
-	// SCENE
-		class Scene: public BEntity
-		{
-			public:
-				Scene() : BEntity() {};
-				virtual ~Scene() {};
-				
-				virtual void construct();
-		};
+// 	// SCENE
+// 		class Scene: public BEntity
+// 		{
+// 			public:
+// 				Scene() : BEntity() {};
+// 				virtual ~Scene() {};
+// 				
+// 				virtual void construct();
+// 		};
 		
 
 	// CRITTERDING
-		class Critterding: public BEntity
+		class Scene: public BEntity
 		{
 			public:
-				Critterding() : BEntity() { setProcessing(); };
-				const char* class_id() const { return "Critterding"; }
-				virtual ~Critterding() {};
+				Scene() : BEntity() { setProcessing(); };
+				const char* class_id() const { return "Scene"; }
+				virtual ~Scene() {};
 				
 				virtual void construct();
 				virtual void process();

@@ -24,16 +24,15 @@ class btDynamicsWorld;
 ///rayCast vehicle, very special constraint that turn a rigidbody into a vehicle.
 class btRaycastVehicle : public btActionInterface
 {
-	btAlignedObjectArray<btVector3> m_forwardWS;
-	btAlignedObjectArray<btVector3> m_axle;
-	btAlignedObjectArray<btScalar> m_forwardImpulse;
-	btAlignedObjectArray<btScalar> m_sideImpulse;
-
 	///backwards compatibility
 	int m_userConstraintType;
 	int m_userConstraintId;
 
 public:
+	btAlignedObjectArray<btScalar> m_forwardImpulse;
+	btAlignedObjectArray<btScalar> m_sideImpulse;
+	btAlignedObjectArray<btVector3> m_forwardWS;
+	btAlignedObjectArray<btVector3> m_axle;
 	class btVehicleTuning
 	{
 	public:
@@ -54,17 +53,17 @@ public:
 		btScalar m_maxSuspensionForce;
 	};
 
-private:
-	btVehicleRaycaster* m_vehicleRaycaster;
-	btScalar m_pitchControl;
-	btScalar m_steeringValue;
 	btScalar m_currentVehicleSpeedKmHour;
-
-	btRigidBody* m_chassisBody;
-
+	int m_indexForwardAxis;
 	int m_indexRightAxis;
 	int m_indexUpAxis;
-	int m_indexForwardAxis;
+	btRigidBody* m_chassisBody;
+	btVehicleRaycaster* m_vehicleRaycaster;
+private:
+	btScalar m_pitchControl;
+	btScalar m_steeringValue;
+
+
 
 	void defaultInit(const btVehicleTuning& tuning);
 

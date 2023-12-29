@@ -150,21 +150,21 @@
 		// GENERAL V LAYOUT
 			BEntity* general_layout_H = general_layout_V->addChild( "QT VBoxlayout", "QVBoxLayout" );
 
-			// PROGRAM SETTINGS
-			{
-				// V LAYOUT
-					BEntity* settings_layout_V = general_layout_H->addChild( "QT VBoxlayout for settings", "QVBoxLayout" );
-				
-					// BEntity* layout_H = settings_layout_V->addChild( "HBox", "QHBoxLayout" );
-					// {
-					// 	// BACKGROUND FPS
-					// 		BEntity* text_background_fps = layout_H->addChild( "text_background_fps", "QLabel" );
-					// 		text_background_fps->set("text", "strive fps");
-					// 		m_line_edit_fps_background = layout_H->addChild( "fps_background", "QLineEdit" );
-					// 		m_line_edit_fps_background->set("width", Buint(164));
-					// 		m_line_edit_fps_background->set("height", Buint(28));
-					// }
-
+// 			// PROGRAM SETTINGS
+// 			{
+// 				// V LAYOUT
+// 					BEntity* settings_layout_V = general_layout_H->addChild( "QT VBoxlayout for settings", "QVBoxLayout" );
+// 				
+// 					BEntity* layout_H = settings_layout_V->addChild( "HBox", "QHBoxLayout" );
+// 					{
+// 						// BACKGROUND FPS
+// 							BEntity* text_background_fps = layout_H->addChild( "text_background_fps", "QLabel" );
+// 							text_background_fps->set("text", "strive fps");
+// 							m_line_edit_fps_background = layout_H->addChild( "fps_background", "QLineEdit" );
+// 							m_line_edit_fps_background->set("width", Buint(164));
+// 							m_line_edit_fps_background->set("height", Buint(28));
+// 					}
+// 
 // 					BEntity* layout_H2 = settings_layout_V->addChild( "HBox", "QHBoxLayout" );
 // 					{
 // 						// VULKAN SCENE LOADMODEL FPS
@@ -174,7 +174,7 @@
 // 							m_line_edit_vk_loadmodel_fps->set("width", Buint(164));
 // 
 // 					}
-			}
+// 			}
 			
 			// STATS V LAYOUT
 				BEntity* layout_V = general_layout_H->addChild( "QT VBoxlayout for stats", "QVBoxLayout" );
@@ -194,7 +194,7 @@
 					{
 						BEntity* text_current_fps = layout_H->addChild( "text_current_fps", "QLabel" );
 						text_current_fps->set("text", "current fps");
-						m_line_edit_fps_cur = layout_H->addChild( "Currenct FPS", "QLineEdit" );
+						m_line_edit_fps_cur = layout_H->addChild( "Current FPS", "QLineEdit" );
 						m_line_edit_fps_cur->set("current fps");
 						m_line_edit_fps_cur->set("width", Buint(164));
 						m_line_edit_fps_cur->set("height", Buint(28));

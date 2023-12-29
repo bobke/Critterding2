@@ -3,7 +3,7 @@
 #include "plugins/be_plugin_bullet/be_entity_physics_entity.h"
 #include "kernel/be_plugin_base_entity_types.h"
 #include "critter_system.h"
-#include <iostream>
+// #include <iostream>
 
 	void CdVisionSystem::construct()
 	{
@@ -53,7 +53,7 @@
 		// std::cout << "------------- vision system START" << std::endl;
 		if ( m_drawEntities == 0 )
 		{
-			m_drawEntities = topParent()->getChild("bin", 1)->getChild("Critterding", 1)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
+			m_drawEntities = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
 			
 		}
 

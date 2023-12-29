@@ -38,7 +38,7 @@
 		
 		m_mutation_chance->set( Buint(8) );
 		m_mutationruns_min->set( Buint(1) );
-		m_mutationruns_max->set( Buint(12) );
+		m_mutationruns_max->set( Buint(16) );
 		// m_mutation_chance->set( Buint(30) );
 		// m_mutationruns_min->set( Buint(1) );
 		// m_mutationruns_max->set( Buint(20) );
@@ -62,9 +62,9 @@
 		// m_synapse_adam_min->set( Buint(4) );
 		// m_synapse_adam_max->set( Buint(10) );
 
-		m_neuron_adam_min->set( Buint(30) );
-		m_neuron_adam_max->set( Buint(60) );
-		m_synapse_adam_min->set( Buint(1) );
+		m_neuron_adam_min->set( Buint(50) );
+		m_neuron_adam_max->set( Buint(100) );
+		m_synapse_adam_min->set( Buint(2) );
 		m_synapse_adam_max->set( Buint(6) );
 		
 		m_mutationweight_neuron_add->set( Buint(25) );
@@ -286,32 +286,29 @@
 				auto inputs = brain->getChild( "inputs", 1 );
 				for_all_children_of3( inputs )
 				{
-					// PICK RANDOM NEURONS TO CONNECT TO 
-					// do_times(2)
-					{
-						// PICK ANOTHER RANDOM NEURON TO CONNECT FROM
-						auto random_neuron = randomChild( neurons );
+					// PICK ANOTHER RANDOM NEURON TO CONNECT FROM
+					auto random_neuron = randomChild( neurons );
 
-						// add synapse to randomly picked neuron
-						auto synapse = addSynapse( random_neuron );
-						
-						// VISION WEIGHT HACK
-						if ( (*child3)->name() == "vision_value_R" || (*child3)->name() == "vision_value_G" || (*child3)->name() == "vision_value_B" || (*child3)->name() == "vision_value_A" )
-						{
-							// std::cout << "vision input " << std::endl;
-							
-							auto weightEntity = synapse->getChild("weight", 1);
-							if ( weightEntity )
-							{
-								// std::cout << "from: " << weightEntity->get_float();
-								weightEntity->set( 0.2f * weightEntity->get_float() );
-								// std::cout << "  to: " << weightEntity->get_float() << std::endl;
-							}
-						}
+					// add synapse to randomly picked neuron
+					auto synapse = addSynapse( random_neuron );
 
-						// connect input to neuron
-						(*child3)->connectServerServer( synapse );
-					}
+// 					// VISION WEIGHT HACK
+// 					if ( (*child3)->name() == "vision_value_R" || (*child3)->name() == "vision_value_G" || (*child3)->name() == "vision_value_B" || (*child3)->name() == "vision_value_A" )
+// 					{
+// 						// std::cout << "vision input " << std::endl;
+// 						
+// 						// kick weight down a notch
+// 						auto weightEntity = synapse->getChild("weight", 1);
+// 						if ( weightEntity )
+// 						{
+// 							// std::cout << "from: " << weightEntity->get_float();
+// 							weightEntity->set( 0.2f * weightEntity->get_float() );
+// 							// std::cout << "  to: " << weightEntity->get_float() << std::endl;
+// 						}
+// 					}
+
+					// connect input to neuron
+					(*child3)->connectServerServer( synapse );
 				}
 				
 				

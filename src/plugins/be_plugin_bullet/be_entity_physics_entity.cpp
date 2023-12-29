@@ -10,7 +10,7 @@
 		BPhysicsEntity::BPhysicsEntity()
 		 : BEntity()
 		 , m_drawCall(0)
-		 , m_mass(1.0f)
+		 , m_mass(0.0f)
 		 , m_damping_linear(0.01f)
 		 , m_damping_angular(0.01f)
 		 , m_friction(1.0f)
@@ -126,7 +126,17 @@
 				if ( m_wants_deactivation != value )
 				{
 					m_wants_deactivation = value;
-					reconstruct();
+					if ( m_wants_deactivation )
+					{
+						getPhysicsComponent()->getBody()->setDeactivationTime(0.8f);
+						getPhysicsComponent()->getBody()->setSleepingThresholds(1.6f, 2.5f);
+						getPhysicsComponent()->getBody()->setActivationState(WANTS_DEACTIVATION);
+						getPhysicsComponent()->getBody()->activate();
+					}
+					else
+					{
+						getPhysicsComponent()->getBody()->setActivationState(DISABLE_DEACTIVATION);
+					}
 					return true;
 				}
 			}
@@ -214,21 +224,29 @@
 
 				if ( shape )
 				{
-				
-					if (m_mass != 0.f) // weight of non zero = dynamic
-						physics_component->setMotionState( boost::shared_ptr<BeEventDrivenMotionState>(new BeEventDrivenMotionState( m_transform )) );
-
-					if (m_mass != 0.f) // weight of non zero = dynamic
+					// weight of non zero = dynamic
+					if (m_mass != 0.0f)
 					{
-// 						shape->calculateLocalInertia( m_mass, localInertia );
+						physics_component->setMotionState( boost::shared_ptr<BeEventDrivenMotionState>(new BeEventDrivenMotionState( m_transform )) );
+						
+						m_physics_component->m_localInertia = btVector3(1.0f, 1.0f, 1.0f);
+						shape->calculateLocalInertia( m_mass, m_physics_component->m_localInertia );
+
+						// std::cout << name() << " Local inertia a: x: " << m_physics_component->m_localInertia.x() << std::endl;
+						// std::cout << name() << " Local inertia a: y: " << m_physics_component->m_localInertia.y() << std::endl;
+						// std::cout << name() << " Local inertia a: z: " << m_physics_component->m_localInertia.z() << std::endl;
+						
+						
 						m_physics_component->setBody( boost::shared_ptr<btRigidBody>(new btRigidBody( btRigidBody::btRigidBodyConstructionInfo( m_mass, physics_component->getMotionState().get(), shape, m_physics_component->m_localInertia )) ) );
+						m_physics_component->getBody()->setMassProps( m_mass, m_physics_component->m_localInertia );
 					}
 					else
 					{
 						m_physics_component->setBody( boost::shared_ptr<btRigidBody>(new btRigidBody( btRigidBody::btRigidBodyConstructionInfo( m_mass, 0, shape, m_physics_component->m_localInertia )) ) );
-						m_physics_component->getBody()->setWorldTransform(m_transform);
 					}
 
+					m_physics_component->getBody()->setWorldTransform(m_transform);
+					
 					btRigidBody* rigidBody(m_physics_component->getBody());
 
 					if ( m_mass > 0.0f )
@@ -333,18 +351,28 @@
 					{
 						if ( m_mass == 0.0f || old_mass == 0.0f )
 						{
-							// std::cout << "  CHANGING MODELS: " << name() << " " << id() << "  weight: " << m_mass << std::endl;;
+							// std::cout << "  CHANGING MODELS: " << name() << "  weight: " << m_mass << std::endl;;
 							reconstruct();
 						}
 						else
 						{
-							// std::cout << "  KEEPING MODELS: " << name() << " " << id() << "  weight: " << m_mass << std::endl;
-							btVector3 localInertia(0,0,0);
-							if (m_mass != 0.f) // weight of non zero = dynamic
-							{
-								getPhysicsComponent()->getShape()->calculateLocalInertia( m_mass, localInertia );
-							}
-							getPhysicsComponent()->getBody()->setMassProps(m_mass, localInertia);
+							// std::cout << "  KEEPING MODELS: " << name() << "  weight: " << m_mass << std::endl;
+							
+							// btVector3 localInertia(0.0f,0.0f,0.0f);
+							// getPhysicsComponent()->getShape()->calculateLocalInertia( m_mass, localInertia );
+							// std::cout << name() << " Local inertia b: x: " << localInertia.x() << std::endl;
+							// std::cout << name() << " Local inertia b: y: " << localInertia.y() << std::endl;
+							// std::cout << name() << " Local inertia b: z: " << localInertia.z() << std::endl;
+       // 
+							// getPhysicsComponent()->getBody()->setMassProps(m_mass, localInertia);
+
+							// std::cout << name() << " mass b2: : " << m_mass << std::endl;
+							// m_physics_component->m_localInertia = btVector3 ( 1.0f, 1.0f, 1.0f );
+							// getPhysicsComponent()->getShape()->calculateLocalInertia( 0.0f, m_physics_component->m_localInertia );
+							// std::cout << name() << " Local inertia b2: x: " << m_physics_component->m_localInertia.x() << std::endl;
+							// std::cout << name() << " Local inertia b2: y: " << m_physics_component->m_localInertia.y() << std::endl;
+							// std::cout << name() << " Local inertia b2: z: " << m_physics_component->m_localInertia.z() << std::endl;
+							getPhysicsComponent()->getBody()->setMassProps(m_mass, m_physics_component->m_localInertia);
 						}
 					}
 					return true;
@@ -356,10 +384,11 @@
 				{
 					m_scale.setX( value );
 					getPhysicsComponent()->getShape()->setLocalScaling( m_scale );
-					btVector3 localInertia(0,0,0);
+					btVector3 localInertia(0.0f,0.0f,0.0f);
 					if (m_mass != 0.f) // weight of non zero = dynamic
 					{
 						getPhysicsComponent()->getShape()->calculateLocalInertia( m_mass, localInertia );
+						// std::cout << name() << " Local inertia c: x: " << localInertia.x() << std::endl;
 					}
 					getPhysicsComponent()->getBody()->setMassProps(m_mass, localInertia);
 					// if ( m_scale.x() != 0.0f && m_scale.y() != 0.0f && m_scale.z() != 0.0f )
@@ -374,10 +403,11 @@
 				{
 					m_scale.setY( value );
 					getPhysicsComponent()->getShape()->setLocalScaling( m_scale );
-					btVector3 localInertia(0,0,0);
+					btVector3 localInertia(0.0f,0.0f,0.0f);
 					if (m_mass != 0.f) // weight of non zero = dynamic
 					{
 						getPhysicsComponent()->getShape()->calculateLocalInertia( m_mass, localInertia );
+						// std::cout << name() << " Local inertia d: x: " << localInertia.x() << std::endl;
 					}
 					getPhysicsComponent()->getBody()->setMassProps(m_mass, localInertia);
 					// if ( m_scale.x() != 0.0f && m_scale.y() != 0.0f && m_scale.z() != 0.0f )
@@ -392,10 +422,11 @@
 				{
 					m_scale.setZ( value );
 					getPhysicsComponent()->getShape()->setLocalScaling( m_scale );
-					btVector3 localInertia(0,0,0);
+					btVector3 localInertia(0.0f,0.0f,0.0f);
 					if (m_mass != 0.f) // weight of non zero = dynamic
 					{
 						getPhysicsComponent()->getShape()->calculateLocalInertia( m_mass, localInertia );
+						// std::cout << name() << " Local inertia e: x: " << localInertia.x() << std::endl;
 					}
 					getPhysicsComponent()->getBody()->setMassProps(m_mass, localInertia);
 					// if ( m_scale.x() != 0.0f && m_scale.y() != 0.0f && m_scale.z() != 0.0f )
@@ -465,12 +496,41 @@
 
 		BPhysicsEntityMesh::BPhysicsEntityMesh()
 		 : BPhysicsEntity()
-		 , m_pre_scale(1.0f, 1.0f, 1.0f)
-		 , m_pre_position(0.0f, 0.0f, 0.0f)
-		 , m_pre_rotation(0.0f, 0.0f, 0.0f)
+		 // , m_pre_scale(1.0f, 1.0f, 1.0f)
+		 // , m_pre_position(0.0f, 0.0f, 0.0f)
+		 // , m_pre_rotation(0.0f, 0.0f, 0.0f)
 		{
 		}
 
+		void BPhysicsEntityMesh::construct()
+		{
+			BPhysicsEntity::construct();
+
+			m_pre_scale_x = addChild( "pre_scale_x", new BEntity_float() );
+			m_pre_scale_y = addChild( "pre_scale_y", new BEntity_float() );
+			m_pre_scale_z = addChild( "pre_scale_z", new BEntity_float() );
+			m_pre_position_x = addChild( "pre_position_x", new BEntity_float() );
+			m_pre_position_y = addChild( "pre_position_y", new BEntity_float() );
+			m_pre_position_z = addChild( "pre_position_z", new BEntity_float() );
+			m_pre_rotation_x = addChild( "pre_rotation_x", new BEntity_float() );
+			m_pre_rotation_y = addChild( "pre_rotation_y", new BEntity_float() );
+			m_pre_rotation_z = addChild( "pre_rotation_z", new BEntity_float() );
+			
+			m_pre_scale_x->set( 1.0f );
+			m_pre_scale_y->set( 1.0f );
+			m_pre_scale_z->set( 1.0f );
+			
+			m_pre_position_x->set( 0.0f );
+			m_pre_position_y->set( 0.0f );
+			m_pre_position_z->set( 0.0f );
+
+			m_pre_rotation_x->set( 0.0f );
+			m_pre_rotation_y->set( 0.0f );
+			m_pre_rotation_z->set( 0.0f );
+			
+		}
+		
+		
 		bool BPhysicsEntityMesh::set( const Bstring& id, const char* value )
 		{
 // 			std::cout << "BPhysicsEntity:string: " << id << ":" << value << std::endl;
@@ -485,14 +545,15 @@
 
 					btTransform geometry_transform;
 					geometry_transform.setIdentity();
-					geometry_transform.setOrigin( m_pre_position );
-					geometry_transform.getBasis().setEulerZYX( m_pre_rotation.x(), m_pre_rotation.y(), m_pre_rotation.z() );
 					
+					geometry_transform.setOrigin( btVector3( m_pre_position_x->get_float(), m_pre_position_y->get_float(), m_pre_position_z->get_float() ) );
+					geometry_transform.getBasis().setEulerZYX( m_pre_rotation_x->get_float(), m_pre_rotation_y->get_float(), m_pre_rotation_z->get_float() );
+
 					BeGeometrySystem g;
 					BeFilesystem fs;
 					
 					
-					boost::shared_ptr<BeGeometry> geometry( g.load( fs, m_filename_value, m_pre_scale, geometry_transform ) );
+					boost::shared_ptr<BeGeometry> geometry( g.load( fs, m_filename_value, btVector3( m_pre_scale_x->get_float(), m_pre_scale_y->get_float(), m_pre_scale_z->get_float() ), geometry_transform ) );
 					if ( geometry != 0 )
 					{
 						setGeometry(geometry);

@@ -1,6 +1,6 @@
 #include "body_system.h"
 #include "kernel/be_entity_core_types.h"
-#include <iostream>
+// #include <iostream>
  
 	void BodySystem::construct()
 	{

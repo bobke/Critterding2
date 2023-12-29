@@ -1,7 +1,7 @@
 #include "be_entity_processor.h"
 #include "be_timer.h"
 #include "be_entity_top.h"
-// #include <iostream>
+#include <iostream>
 
 	void BProcessor::reConstructList( BEntity* entity, Bbool skip_checks )
 	{
@@ -65,29 +65,40 @@
 	// PROCESS
 		void BProcessor::run()
 		{
+			// std::cout << " BProcessor::run() start " << std::endl;
+			
 			// fixed end so when entities are added during a run they don't get to run
 			// FIXME we actually want to be able to run it first frame though
 			auto end = m_proc_entity_list.end();
 
+			// std::cout << " BProcessor::run() a " << std::endl;
 			// PROCESS EACH ENTITY IN LIST
 			for ( auto child=m_proc_entity_list.begin(); child != end; ++child )
 			{
+				// std::cout << " BProcessor::run() b " << std::endl;
 				// when 0 (always) or it's time
 				if ( (*child).m_fps == 0 )
 				{
+					// std::cout << " BProcessor::run() c " << std::endl;
 					(*child).m_entity->process();
+					// std::cout << " BProcessor::run() d " << std::endl;
 				}
 
 				else
 				{
+					// std::cout << " BProcessor::run() e " << std::endl;
 					// update timer
 					if ( m_timer_ms_total->get_uint() - (*child).m_time_last_processed >= (*child).m_ms_to_sleep )
 					{
+						// std::cout << " BProcessor::run() f " << std::endl;
 						(*child).m_time_last_processed = m_timer_ms_total->get_uint();
 						(*child).m_entity->process();
+						// std::cout << " BProcessor::run() g " << std::endl;
 					}
+					// std::cout << " BProcessor::run() h " << std::endl;
 				}
 			}
+			// std::cout << " BProcessor::run() end " << std::endl;
 		}
 
 	// ENTITY LIST CONTROL
@@ -122,7 +133,7 @@
 
 		void BProcessor::removeEntity( BEntity* entity )
 		{
-			// std::cout << " BProcessor::removeEntity " << entity->id() << std::endl;
+			// std::cout << " BProcessor::removeEntity " << entity->id() << " " << entity->name() << std::endl;
 			// FIXME this isn't thought out yet, at all
 			
 			// REMOVE FROM BACKBUFFER
@@ -134,7 +145,16 @@
 				{
 					if ( (*child).m_entity == entity )
 					{
+						// std::cout << "   ok" << " procsize " << m_proc_entity_list.size() << std::endl;
+						// unsigned int i=0;
+						// for ( auto child2=m_proc_entity_list.begin(); child2 != m_proc_entity_list.end(); ++child2 )
+						// {
+						// 	std::cout << i++ << ":     " << " name: " << (*child2).m_entity->name() << std::endl;
+						// }
+						
 						m_proc_entity_list.erase(child);
+
+						
 						return;
 					}
 				}

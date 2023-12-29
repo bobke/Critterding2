@@ -539,7 +539,6 @@
 						std::cout << "!!!!!!!!!!!" << this->name() << " got a _external_child" << std::endl;
 						exit(0);
 					}
-
 					entity->setName( name );
 				}
 				entity->construct();

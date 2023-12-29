@@ -1,12 +1,11 @@
-#ifndef PHYSICSMODEL_RIGID_H_INCLUDED
-#define PHYSICSMODEL_RIGID_H_INCLUDED
+#pragma once
 
-// #include "kernel/be_entity_interface.h"
 #include "be_physics_material.h"
 #include "bullet3/src/btBulletDynamicsCommon.h"
 #include <boost/shared_ptr.hpp>
-#include <iostream>
-#include "kernel/be_entity_interface.h"
+// #include "kernel/be_entity_interface.h"
+#include "be_entity_transform.h"
+
 
 // class BeOutput;
 // class BeEntity;
@@ -20,7 +19,18 @@ class BEntity;
 				const char* class_id() const { return "Bullet_Transform_Emitter"; }
 				virtual ~transformEmitter() {};
 				void construct();
-				virtual bool apply( BEntity* e ) { return e->set( reinterpret_cast<const char*>(m_value) ); }
+				virtual bool apply( BEntity* e )
+				{
+					auto tr = dynamic_cast<BBulletTransform*>( e );
+					if ( tr )
+					{
+						tr->m_transform.setFromOpenGLMatrix( m_value );
+						// tr->m_transform = m_transform;
+						return true;
+					}
+
+					return e->set( reinterpret_cast<const char*>(m_value) );
+				}
 				virtual const char* get_string() { return reinterpret_cast<const char*>(m_value); }
 				
 				virtual bool set( const Bstring& id, const Bfloat& value );
@@ -108,5 +118,3 @@ class BeRigidBody
 };
 
 
-#endif
- 

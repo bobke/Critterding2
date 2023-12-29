@@ -2,7 +2,7 @@
 #include "kernel/be_entity_core_types.h"
 // #include "species_system.h"
 #include "plugins/be_plugin_bullet/be_entity_mousepicker.h"
-#include <iostream>
+// #include <iostream>
  
 	void CdCritterSystem::construct()
 	{
@@ -118,13 +118,10 @@
 				m_framecount = 0;
 				if ( m_unit_container->numChildren() < m_minimum_number_of_units->get_uint() )
 				{
-					m_mutex.lock();
 					auto cmd_insert = m_command_buffer->addChild( "pass_command", new BEntity_reference() );
 					cmd_insert->set(this);
 					auto command = cmd_insert->addChild( "command", new BEntity_string() );
 					command->set("insert_critter");
-					m_mutex.unlock();
-
 
 					// PREVENT FURTHER ACTIONS IN THIS FRAME
 						return;
@@ -173,17 +170,11 @@
 							procreate->set( 0.0f );
 							critter_unit->setEnergy( critter_unit->energy() / 2 );
 
-							m_mutex.lock();
-
 							auto cmd_procreate = m_command_buffer->addChild( "pass_command", new BEntity_reference() );
 							cmd_procreate->set(this);
 							auto command = cmd_procreate->addChild( "command", new BEntity_string() );
 							command->set("procreate_critter");
-							
 							command->addChild( "entity", new BEntity_reference() )->set( critter_unit );
-							
-							
-							m_mutex.unlock();
 							
 							// std::cout << "COPYING CRITTER: " << critter_unit->id() << " done" << std::endl << std::endl;
 							// PREVENT FURTHER ACTIONS IN THIS FRAME
@@ -369,8 +360,6 @@
 
 	void CdCritterSystem::removeCritter( BEntity* entity, bool force_direct_deletion )
 	{
-			m_mutex.lock();
-
 		// shortcut
 			auto bodyparts = entity->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
 
@@ -399,8 +388,6 @@
 				auto cmd_rm = m_command_buffer->addChild( "remove", new BEntity_reference() );
 				cmd_rm->set( entity );
 			}
-
-			m_mutex.unlock();
 	}
 
 	bool CdCritterSystem::removeFromCollisions( BEntity* to_remove_list )

@@ -1,8 +1,7 @@
 #include "be_entity_camera.h"
 #include "be_entity_graphics_model.h"
-// #include "LinearMath/btTransform.h"
 #include <GL/gl.h>
-#include <iostream>
+// #include <iostream>
 
 	BCamera::BCamera()
 	: BEntity()
@@ -25,9 +24,11 @@
 		m_sensitivity_move->set( 7.0f );
 		m_sensitivity_look = addChild( "sensitivity_look", new BEntity_float() );
 		m_sensitivity_look->set( 1.0f );
-		// m_transform = addChild( "transform", "Bullet_Transform" ); // FIXME load bullet library
+		// m_transform = addChild( "transform", "Bullet_Transform" );
 		m_transform = new BBulletTransform();
-		addChild( "transform", m_transform ); // FIXME load bullet library
+		addChild( "transform", m_transform );
+		m_base_transform = new BBulletTransform();
+		addChild( "base_transform", m_base_transform );
 		
 		auto movement = addChild( "movement", new BEntity() );
 		m_forward = movement->addChild( "forward", new BEntity_bool() );
@@ -44,8 +45,6 @@
 		m_look_down = looking->addChild( "down", new BEntity_bool() );
 		m_look_roll_left = looking->addChild( "roll_left", new BEntity_bool() );
 		m_look_roll_right = looking->addChild( "roll_right", new BEntity_bool() );
-
-		m_transform->m_transform.setIdentity();
 	}
 
 	// FIXME do this in the transform itself?
@@ -126,7 +125,10 @@
 		// std::cout << m_fov_y->get_float() << " " << -frustumHalfWidth << " " << frustumHalfWidth << " " << -frustumHalfHeight << " " << frustumHalfHeight << " " << m_z_near->get_float() << " " << m_z_far->get_float() << std::endl;
 		
 		// INVERSE MATRIX
-		m_transform->apply( &m_gl_transform );
+		m_sum_transform.m_transform = m_base_transform->m_transform * m_transform->m_transform;
+		m_sum_transform.apply( &m_gl_transform );
+		
+		// m_transform->apply( &m_gl_transform );
 		m_inversable_ops.setFromOpenGLMatrix ( m_gl_transform.m_value );
 		// m_inversable_ops = m_inversable_ops * m_transform->m_transform;
 		m_inversable_ops.inverse().getOpenGLMatrix( m_gl_transform.m_value );

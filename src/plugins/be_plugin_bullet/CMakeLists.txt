@@ -64,6 +64,10 @@
 		be_entity_raycast.cpp
 		be_entity_mousepicker.cpp
 		be_entity_mousepicker.h
+		be_entity_raycastvehicle.cpp
+		be_entity_raycastvehicle.h
+		be_entity_transform.cpp
+		be_entity_transform.h
 
 		be_types_extra.cpp
 		be_types_extra.h
@@ -77,6 +81,9 @@
 		# be_texture_store.cpp
 		be_parser.h
 		be_parser.cpp
+
+		btraycastvehicle.cpp
+		btraycastvehicle.h
 
 		filesystem/be_filesystem.h
 		filesystem/be_filesystem.cpp

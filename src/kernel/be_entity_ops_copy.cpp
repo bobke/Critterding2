@@ -377,8 +377,14 @@
 					// std::cout << "dealing with A '" << entity_to_save->class_id() << "'" << std::endl;
 					if ( entity_to_save->class_id() == std::string("reference") )
 					{
-						// std::cout << "dealing with " << entity_to_save->class_id() << std::endl;
-						file_content << spaces << "\t" << "<value>" << entity_to_save->get_reference()->id() << "</value>" << std::endl;
+						// // std::cout << "dealing with " << entity_to_save->class_id() << std::endl;
+						// file_content << spaces << "\t" << "<value>" << entity_to_save->get_reference()->id() << "</value>" << std::endl;
+
+						if ( entity_to_save->get_reference() != 0 )
+							file_content << spaces << "\t" << "<value>" << entity_to_save->get_reference()->id() << "</value>" << std::endl;
+						else
+							std::cout << "warning: entity_to_save reference is empty " << entity_to_save->name() << std::endl; 
+						
 					}
 					else if ( entity_to_save->class_id() == std::string("bool") || entity_to_save->class_id() == std::string("bool_property") )
 					{

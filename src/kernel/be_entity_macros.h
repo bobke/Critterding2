@@ -113,20 +113,24 @@
 			class name : public BEntity \
 			{ \
 				public: \
-					name() {}; \
+					name()  { setProcessing(); } \
 					virtual ~name() {};
 
-	#define ENTITY_PROC(name) \
-			class name : public BEntity \
-			{ \
-				public: \
-					name() : m_has_processing(true) {}; \
-					virtual ~name() {};
+	// #define ENTITY_PROC_SIMPLEST(name) \
+	// 		class name : public BEntity \
+	// 		{ \
+	// 			public: \
+	// 				name() { setProcessing(); } \
+	// 				virtual ~name() {}; \
+	// 				virtual void process()
 
 	#define ENTITY_SIMPLEST(name) \
 			class name : public BEntity \
 			{ \
-				virtual void process()
+				public: \
+					name() { setProcessing(); } \
+					virtual ~name() {}; \
+					virtual void process()
 
 	/* #define ENTITY_SIMPLEST_END \
 			}; */

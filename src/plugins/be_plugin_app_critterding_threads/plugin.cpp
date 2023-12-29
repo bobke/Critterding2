@@ -5,25 +5,26 @@
 #include "plugins/be_plugin_app_critterding/food_system.h"
 #include "plugins/be_plugin_app_critterding/commands.h"
 #include "plugins/be_plugin_bullet/be_entity_physics_entity.h"
-#include <iostream>
+#include "plugins/be_plugin_bullet/be_entity_transform.h" // FIXME work this away
+// #include <iostream>
 
-	void Scene::construct()
-	{
-		// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
-			pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
-			auto spawner = addChild( "spawner", "QApplicationSpawner" );
-			auto t_parent_to_add_to = spawner->getChildCustom( this );
-			removeChild( spawner );
-		
-		pluginManager()->load( "app_admin_window", "src/plugins/be_plugin_app_admin_window", "be_plugin_app_admin_window" );
-		pluginManager()->load( "app_sysmon", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
-
-		// t_parent_to_add_to->addChild( "Admin App", "AdminWindow" );
-		// t_parent_to_add_to->addChild( "sysmon", "SystemMonitor" );
-
-		auto sdl_window = addChild("Critterding", new Critterding_threads())->getChild("SDL GLWindow");
-		sdl_window->set("on_close_destroy_entity", this);
-	}
+// 	void Scene::construct()
+// 	{
+// 		// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
+// 			pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
+// 			auto spawner = addChild( "spawner", "QApplicationSpawner" );
+// 			auto t_parent_to_add_to = spawner->getChildCustom( this );
+// 			removeChild( spawner );
+// 		
+// 		pluginManager()->load( "app_admin_window", "src/plugins/be_plugin_app_admin_window", "be_plugin_app_admin_window" );
+// 		pluginManager()->load( "app_sysmon", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
+// 
+// 		// t_parent_to_add_to->addChild( "Admin App", "AdminWindow" );
+// 		// t_parent_to_add_to->addChild( "sysmon", "SystemMonitor" );
+// 
+// 		auto sdl_window = addChild("Critterding", new Critterding_threads())->getChild("SDL GLWindow");
+// 		sdl_window->set("on_close_destroy_entity", this);
+// 	}
 	
 	void Server::construct()
 	{
@@ -132,10 +133,20 @@
 	}
 	
 	
-	void Critterding_threads::construct()
+	void Scene::construct()
 	{
+		setName( "Critterding" );
 		std::cout << "Scene::construct()" << std::endl;
+		
+		// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
+		pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
 
+			auto spawner = addChild( "spawner", "QApplicationSpawner" );
+			auto t_parent_to_add_to = spawner->getChildCustom( parent() );
+			removeChild( spawner );
+
+		pluginManager()->load( "app_admin_window", "src/plugins/be_plugin_app_admin_window", "be_plugin_app_admin_window" );
+		pluginManager()->load( "app_sysmon", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
 		pluginManager()->load( "critterding", "src/plugins/be_plugin_app_critterding", "be_plugin_app_critterding" );
 
 		pluginManager()->load( "system", "src/plugins/be_plugin_system", "be_plugin_system" );
@@ -143,12 +154,13 @@
 		pluginManager()->load( "opengl", "src/plugins/be_plugin_opengl", "be_plugin_opengl" );
 		pluginManager()->load( "bullet", "src/plugins/be_plugin_bullet", "be_plugin_bullet" );
 		pluginManager()->load( "brainz", "src/plugins/be_plugin_brainz", "be_plugin_brainz" );
-		pluginManager()->load( "qwt", "src/plugins/be_plugin_qwt", "be_plugin_qwt" ); // FIXME
+		pluginManager()->load( "qwt", "src/plugins/be_plugin_qwt", "be_plugin_qwt" );
 		pluginManager()->load( "thread", "src/plugins/be_plugin_thread", "be_plugin_thread" );
 
 		// SDL & OPENGL
 			auto glscene = addChild( "SDL GLWindow", "SDLWindow" );
 			// glscene->setFps(60);
+			glscene->addChild("OpenGL_Setup", "OpenGL_Setup");
 
 			m_win_width = glscene->getChild( "width", 1 );
 			m_win_height = glscene->getChild( "height", 1 );
@@ -249,14 +261,14 @@
 		{
 			auto light = t_graphicsModelSystem->addChild( "light", "GLLight" );
 			
-			light->getChild( "model_ambient_r", 1 )->set( 0.2f );
-			light->getChild( "model_ambient_g", 1 )->set( 0.2f );
-			light->getChild( "model_ambient_b", 1 )->set( 0.2f );
+			light->getChild( "model_ambient_r", 1 )->set( 0.5f );
+			light->getChild( "model_ambient_g", 1 )->set( 0.5f );
+			light->getChild( "model_ambient_b", 1 )->set( 0.5f );
 			light->getChild( "model_ambient_a", 1 )->set( 0.0f );
 			
-			light->getChild( "color_ambient_r", 1 )->set( 0.2f );
-			light->getChild( "color_ambient_g", 1 )->set( 0.2f );
-			light->getChild( "color_ambient_b", 1 )->set( 0.2f );
+			light->getChild( "color_ambient_r", 1 )->set( 0.5f );
+			light->getChild( "color_ambient_g", 1 )->set( 0.5f );
+			light->getChild( "color_ambient_b", 1 )->set( 0.5f );
 			light->getChild( "color_ambient_a", 1 )->set( 0.0f );
 			
 			light->getChild( "color_diffuse_r", 1 )->set( 0.4f );
@@ -527,7 +539,7 @@
 			addChild( "CdCritterExchanger", "CdCritterExchanger" );
 	}
 
-	void Critterding_threads::process()
+	void Scene::process()
 	{
 		// std::cout << "a" << std::endl;
 		// CAST RAY FROM MOUSE
@@ -622,7 +634,7 @@
 	{
 		  PLUGIN_INFO
 		, SCENE
-		, CRITTERDING_THREADS
+		// , CRITTERDING_THREADS
 	};
 
 	extern "C" BEntity* create( BEntity* parent, const Buint type )
@@ -632,7 +644,7 @@
 			{
 				BClassesHelper i;
 					i.addClass( parent, CLASS::SCENE, "Scene" );
-					i.addClass( parent, CLASS::CRITTERDING_THREADS, "Critterding_threads" );
+					// i.addClass( parent, CLASS::CRITTERDING_THREADS, "Critterding_threads" );
 				return 0;
 			}
 
@@ -643,8 +655,8 @@
 
 				if ( type == CLASS::SCENE )
 					i = new Scene();
-				else if ( type == CLASS::CRITTERDING_THREADS )
-					i = new Critterding_threads();
+				// else if ( type == CLASS::CRITTERDING_THREADS )
+					// i = new Critterding_threads();
 
 				return i;
 			}

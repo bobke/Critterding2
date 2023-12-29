@@ -44,6 +44,7 @@
 				protected:
 					BProcessor* m_processor;
 					bool m_reconstruct_list;
+					BEntity* m_bin;
 
 			// TOP FUNCTIONS
 					virtual BEntity* getNearestTop();

@@ -64,8 +64,8 @@
 			bool loadGraphicsMaterials(const std::string& path);
 			BeGraphicsMaterial* getEffect(const std::string& name);
 
-			void reset2D(const int width, const int height);
-			void reset3D(const int offsetX, const int offsetY, const int width, const int height);
+			// void reset2D(const int width, const int height);
+			// void reset3D(const int offsetX, const int offsetY, const int width, const int height);
 
 			void flush();
 			

@@ -71,15 +71,22 @@
 			else 
 			{
 				BEntity* scene = getChild("bin", 1);
+				unsigned int numChildren  = scene->numChildren();
 
 				// WHILE SCENE HAS NOT BEEN DELETED
-					while ( scene )
+					// while ( scene )
+					while ( numChildren != 0 )
 					{
-						// UPDATE VARS
-							// FPS
-						
 						// PROCESS COMMAND BUFFER
 							process_and_clear_command_buffer();
+
+						// HACK if number of children changed, reConstructList, because segfault, where there shouldn't be (one in processor an entry remains referring to a non existant entitiy)
+							unsigned int new_numChildren = scene->numChildren();
+							if ( new_numChildren != numChildren )
+							{
+								m_reconstruct_list = true;
+							}
+							numChildren = new_numChildren;
 
 							// RECONSTRUCT PROCESS LIST IF NEEDED
 							reConstructProcessList( this );
@@ -87,18 +94,17 @@
 						// PROCESS
 							m_processor->run();
 
-						// PROCESS COMMAND BUFFER
-							process_and_clear_command_buffer();
-
-						// TRY TO REFIND SCENE TO CHECK IF STILL EXISTS
-							scene = getChild("bin", 1);
-
+						// // PROCESS COMMAND BUFFER // WHY DID WE HAVE THIS REALLY WHEN THEN NEXT LOOP STARTS WITH THIS EXACTLY... NONE
+						// 	process_and_clear_command_buffer();
+      
+						// // TRY TO REFIND SCENE TO CHECK IF STILL EXISTS
+						// 	scene = getChild("bin", 1);
+							
 						// NUM LOOPS
 							++m_numLoops;
 
 				}
 			}
-
 		}
 
 		void BEntityTop::addProcessing( BEntity* entity ) // FIXME

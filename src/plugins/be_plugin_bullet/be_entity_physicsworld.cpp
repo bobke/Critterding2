@@ -2,6 +2,7 @@
 #include "be_entity_physics_entity.h"
 #include "physicsmodel_rigid.h"
 #include "be_entity_constraint_hinge.h"
+#include "be_entity_raycastvehicle.h"
 
 // #include "BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
 #include "BulletSoftBody/btSoftRigidDynamicsWorld.h"
@@ -142,6 +143,20 @@
 				}
 				return true;
 			}
+
+			auto vehicle = dynamic_cast<BeServerEntityPhysics_Vehicle*>(entity);
+			if ( vehicle )
+			{
+				if ( vehicle->m_vehicle )
+				{
+					vehicle->m_vehicleRayCaster = boost::shared_ptr<btDefaultVehicleRaycaster>(new btDefaultVehicleRaycaster(m_physics_world));
+					vehicle->m_vehicle->m_vehicleRaycaster = vehicle->m_vehicleRayCaster.get();
+					m_physics_world->addVehicle(vehicle->m_vehicle.get());
+					std::cout << "vehicle->m_vehicle added" << std::endl;
+				}
+				return true;
+			}
+			
 			
 // 			std::cout << "none added" << std::endl;
 			return false;
@@ -167,6 +182,17 @@
 				if ( physics_constraint_hinge->m_hinge )
 				{
 					m_physics_world->removeConstraint( physics_constraint_hinge->m_hinge ); // FIXME getHinge
+				}
+				return true;
+			}
+
+			auto vehicle = dynamic_cast<BeServerEntityPhysics_Vehicle*>(entity);
+			if ( vehicle )
+			{
+				if ( vehicle->m_vehicle )
+				{
+					m_physics_world->removeVehicle(vehicle->m_vehicle.get());
+					std::cout << "vehicle->m_vehicle removed" << std::endl;
 				}
 				return true;
 			}

@@ -18,6 +18,32 @@
 			setProcessing();
 		}
 
+		void BGraphicsModel::construct()
+		{
+			m_pre_scale_x = addChild( "pre_scale_x", new BEntity_float() );
+			m_pre_scale_y = addChild( "pre_scale_y", new BEntity_float() );
+			m_pre_scale_z = addChild( "pre_scale_z", new BEntity_float() );
+			m_pre_position_x = addChild( "pre_position_x", new BEntity_float() );
+			m_pre_position_y = addChild( "pre_position_y", new BEntity_float() );
+			m_pre_position_z = addChild( "pre_position_z", new BEntity_float() );
+			m_pre_rotation_x = addChild( "pre_rotation_x", new BEntity_float() );
+			m_pre_rotation_y = addChild( "pre_rotation_y", new BEntity_float() );
+			m_pre_rotation_z = addChild( "pre_rotation_z", new BEntity_float() );
+			
+			m_pre_scale_x->set( 1.0f );
+			m_pre_scale_y->set( 1.0f );
+			m_pre_scale_z->set( 1.0f );
+			
+			m_pre_position_x->set( 0.0f );
+			m_pre_position_y->set( 0.0f );
+			m_pre_position_z->set( 0.0f );
+
+			m_pre_rotation_x->set( 0.0f );
+			m_pre_rotation_y->set( 0.0f );
+			m_pre_rotation_z->set( 0.0f );
+			
+		}
+
 		void BGraphicsModel::setModel( boost::shared_ptr<BeGraphicsModelResource> model )
 		{
 			m_model=model;
@@ -271,24 +297,22 @@
 		if ( id == "filename" && m_loaded_path != value )
 		{
 	//	std::cout << "PATH CALLED!!!!!!!!!!!!!" << std::endl;
-	// 		BEVector3 scale(1.0f,1.0f,1.0f);
-	// 		btTransform transform;
-	// 		transform.setIdentity();
+			btVector3 scale( m_pre_scale_x->get_float(), m_pre_scale_y->get_float(), m_pre_scale_z->get_float() );
+			// btTransform transform;
+			// transform.setIdentity();
 
 			// FIXME REMOVE THIS BY MAKING IT A TRANSFORM BY DEFAULT
 			btTransform geometry_transform;
 			geometry_transform.setIdentity();
-// 			geometry_transform.setOrigin( m_pre_position );
-// 			geometry_transform.getBasis().setEulerZYX( m_pre_rotation.x(), m_pre_rotation.y(), m_pre_rotation.z() );
-// // 			geometry_transform.setOrigin( btVector3(0, 0, -200) );
-// // 			geometry_transform.getBasis().setEulerZYX( 0.2f, m_pre_rotation.y(), m_pre_rotation.z() );
+			geometry_transform.setOrigin( btVector3( m_pre_position_x->get_float(), m_pre_position_y->get_float(), m_pre_position_z->get_float() ) );
+			geometry_transform.getBasis().setEulerZYX( m_pre_rotation_x->get_float(), m_pre_rotation_y->get_float(), m_pre_rotation_z->get_float() );
 
 			
 			
 			BGraphicsModelSystem* scene = dynamic_cast<BGraphicsModelSystem*>(parent());
 			if ( scene )
 			{
-				boost::shared_ptr<BeGraphicsModelResource> new_model( scene->load(value, scene->m_graphicsSystem, scene, btVector3( 1.0f, 1.0f, 1.0f ), geometry_transform) );
+				boost::shared_ptr<BeGraphicsModelResource> new_model( scene->load(value, scene->m_graphicsSystem, scene, scale, geometry_transform) );
 				if ( new_model )
 				{
 					setModel( new_model );

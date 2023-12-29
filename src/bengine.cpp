@@ -60,7 +60,9 @@ int main(int argc, char* argv[])
 			plugin_manager->load( argv[1], "src/plugins/"+t_plugin, t_plugin );
 
 		// LOADING OBJECT FROM CLASS NAMED SCENE FROM LIBRARY
-			BEntity* scene = toptop->addChild("bin", "Scene");
+			// BEntity* scene = toptop->addChild("bin", "Scene");
+			BEntity* bin = toptop->addChild( "bin", "entity" );
+			BEntity* scene = bin->addChild( "", "Scene" );
 
 			if ( scene != 0 )
 			{

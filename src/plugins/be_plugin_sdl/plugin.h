@@ -64,14 +64,14 @@
 		};
 
 	// SCENE
-		class SDL_SwapBuffers: public BEntity
-		{
-			public:
-				SDL_SwapBuffers() : BEntity() { setProcessing(); }
-				virtual ~SDL_SwapBuffers() {};
-				void process() { SDL_GL_SwapBuffers(); };
-		};
+		// class SDL_SwapBuffers: public BEntity
+		// {
+		// 	public:
+		// 		SDL_SwapBuffers() : BEntity() { setProcessing(); }
+		// 		virtual ~SDL_SwapBuffers() {};
+		// 		void process() { SDL_GL_SwapBuffers(); };
+		// };
 		
-// 		ENTITY_SIMPLEST( SDL_SwapBuffers ) { SDL_GL_SwapBuffers(); } END
+		ENTITY_SIMPLEST( SDL_SwapBuffers ) { SDL_GL_SwapBuffers(); } END
 
 #endif

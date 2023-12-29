@@ -6,23 +6,23 @@
 
 	class BCamera;
 
-	// SCENE
+// 	// SCENE
+// 		class Scene: public BEntity
+// 		{
+// 			public:
+// 				Scene() : BEntity() {};
+// 				virtual ~Scene() {};
+// 				
+// 				virtual void construct();
+// 		};
+
+	// CRITTERDING
 		class Scene: public BEntity
 		{
 			public:
-				Scene() : BEntity() {};
+				Scene() : BEntity() { setProcessing(); };
+				const char* class_id() const { return "Scene"; }
 				virtual ~Scene() {};
-				
-				virtual void construct();
-		};
-
-	// CRITTERDING
-		class Critterding_threads: public BEntity
-		{
-			public:
-				Critterding_threads() : BEntity() { setProcessing(); };
-				const char* class_id() const { return "Critterding"; }
-				virtual ~Critterding_threads() {};
 				
 				virtual void construct();
 				virtual void process();

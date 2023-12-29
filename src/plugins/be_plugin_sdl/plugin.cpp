@@ -180,21 +180,21 @@
 
 				//Create window
 				m_surface = SDL_SetVideoMode(m_width->get_int(), m_height->get_int(), w_bpp, videoFlags);
-				glewInit();
+				// glewInit();
 
 // 				m_logDebug << "::WINDOW SDL subsystem initialized\n";
 
 				//Enable GL multisampled rendering if required
 				int value;
 				SDL_GL_GetAttribute(SDL_GL_MULTISAMPLEBUFFERS, &value);
-				if(value)
-				{
-					glEnable(GL_MULTISAMPLE);
-					glHint(GL_LINE_SMOOTH_HINT, GL_NICEST );
-					glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-					glEnable(GL_LINE_SMOOTH);
-					glEnable(GL_POLYGON_SMOOTH);
-				}
+				// if(value)
+				// {
+				// 	glEnable(GL_MULTISAMPLE);
+				// 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST );
+				// 	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST );
+				// 	glEnable(GL_LINE_SMOOTH);
+				// 	glEnable(GL_POLYGON_SMOOTH);
+				// }
 
 // 				//Hack
 // 				settings.setCVar("fullscreen", fullscreen);
@@ -266,7 +266,9 @@
 			m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_FULLSCREEN );
 		else
 			m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_RESIZABLE );
-		glewInit();
+
+		// glewInit();
+
 // 		m_logDebug << "::WINDOW SDL subsystem initialized\n";
 		// 	std::cerr << "Video " << front.width() << "x" << front.height() << "x" << int(front.getSurface()->format->BitsPerPixel) << "\n";
 		// 	std::cerr << "Render Mode: " <<  ((hwaccel) ? "Direct Rendering" : "Software Rendering")   << "\n";
@@ -326,7 +328,7 @@
 		}
 		SDL_FreeSurface(m_surface);
 		m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, videoFlags );
-		glewInit();
+		// glewInit();
 // 		if ( m_canvas )
 // 			m_canvas->resize(w_width, w_height);
 	}
@@ -384,7 +386,19 @@
 								binding->set();
 							}
 						}
+
+						std::stringstream key_name;
+						key_name << "key_down_" << SDL_GetKeyName( event.key.keysym.sym );
+						auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
+						if ( binding2 )
+						{
+							if ( binding2->class_id() == std::string("trigger") )
+							{
+								binding2->set();
+							}
+						}
 					}
+
 				}
 
 				else if(event.type == SDL_KEYUP)
@@ -407,6 +421,18 @@
 								binding->set();
 							}
 						}
+						
+						std::stringstream key_name;
+						key_name << "key_up_" << SDL_GetKeyName( event.key.keysym.sym );
+						auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
+						if ( binding2 )
+						{
+							if ( binding2->class_id() == std::string("trigger") )
+							{
+								binding2->set();
+							}
+						}
+						
 					}
 				}
 				
@@ -506,7 +532,7 @@
 		}
 
 		// SETUP OPENGL
-		if ( 1 == 1 )
+		if ( 0 == 1 )
 		{
 			//Hint for everything to be nicest
 			glHint(GL_FOG_HINT, GL_FASTEST);
@@ -522,9 +548,9 @@
 			glShadeModel(GL_SMOOTH);
 
 			//Enable back face culling
-// 			glDisable(GL_CULL_FACE);
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
+			glDisable(GL_CULL_FACE);
+			// glEnable(GL_CULL_FACE);
+			// glCullFace(GL_BACK);
 
 			//Enable depth test
 			glEnable(GL_DEPTH_TEST);
@@ -545,6 +571,8 @@
 			// v[3] = 1.0f;
 
 			// glEnable(GL_LIGHTING);
+			
+			
 			glEnable(GL_NORMALIZE);
 
 			// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, v);

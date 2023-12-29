@@ -54,37 +54,4 @@ class btHingeConstraint;
 	// 	float			limitB;
 	};
 
-	// TRANSFORM // FIXME A COPY TOO MUCH
-		class BBulletTransform: public BEntity
-		{
-			public:
-				BBulletTransform() {};
-				const char* class_id() const { return "Bullet_Transform"; }
-				virtual ~BBulletTransform() {};
-				void construct();
-				virtual bool apply( BEntity* e )
-				{
-					auto tr = dynamic_cast<BBulletTransform*>( e );
-					if ( tr )
-					{
-						tr->m_transform = m_transform;
-						return true;
-					}
-
-					float m_matrix[16];
-					m_transform.getOpenGLMatrix( m_matrix );
-					return e->set( reinterpret_cast<const char*>(m_matrix) );
-				}
-// 				virtual const char* get_string() { return reinterpret_cast<const char*>(m_transform); }
-				
-				bool set( const Bstring& id, const Bfloat& value );
-				virtual Bfloat get_float( const Bstring& id );
-
-// 				float m_matrix[16];
-				btTransform m_transform;
-			private:
-// 				char m_value_chars[64];
-		};
-
-
 #endif

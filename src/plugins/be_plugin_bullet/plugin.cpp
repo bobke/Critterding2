@@ -4,6 +4,8 @@
 #include "be_entity_constraint_hinge.h"
 #include "be_entity_raycast.h"
 #include "be_entity_mousepicker.h"
+#include "be_entity_raycastvehicle.h"
+#include "be_entity_transform.h"
 #include "physicsmodel_rigid.h"
 
 // ---- FACTORIES
@@ -18,6 +20,7 @@
 		, BULLET_MOUSEPICKER
 		, BULLET_TRANSFORM
 		, BULLET_TRANSFORM_EMITTER
+		, BULLET_CAR
 	};
 
 	extern "C" BEntity* create( BEntity* parent, const Buint type )
@@ -34,6 +37,7 @@
 					i.addClass( parent, CLASS::BULLET_MOUSEPICKER, "Bullet_MousePicker" );
 					i.addClass( parent, CLASS::BULLET_TRANSFORM, "Bullet_Transform" );
 					i.addClass( parent, CLASS::BULLET_TRANSFORM_EMITTER, "Bullet_Transform_Emitter" );
+					i.addClass( parent, CLASS::BULLET_CAR, "Bullet_Car" );
 				return 0;
 			}
 
@@ -58,6 +62,8 @@
 					i = new BBulletTransform();
 				else if ( type == CLASS::BULLET_TRANSFORM_EMITTER )
 					i = new transformEmitter();
+				else if ( type == CLASS::BULLET_CAR )
+					i = new BeServerEntityPhysics_Vehicle();
 				
 			
 				
