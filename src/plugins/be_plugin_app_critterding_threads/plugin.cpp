@@ -142,7 +142,8 @@
 		pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
 
 			auto spawner = addChild( "spawner", "QApplicationSpawner" );
-			auto t_parent_to_add_to = spawner->getChildCustom( parent() );
+			auto t_parent_to_add_to = spawner->getChildCustom( this );
+			// auto t_parent_to_add_to = spawner->getChildCustom( parent() );
 			removeChild( spawner );
 
 		pluginManager()->load( "app_admin_window", "src/plugins/be_plugin_app_admin_window", "be_plugin_app_admin_window" );
