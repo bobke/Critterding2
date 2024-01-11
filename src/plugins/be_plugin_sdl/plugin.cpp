@@ -363,271 +363,145 @@
 				continue;
 			}
 
-			// if we have bindings, check keypresses
+			if(event.type == SDL_KEYDOWN)
 			{
-				if(event.type == SDL_KEYDOWN)
+				auto bindings = getChild( "bindings", 1 );
+				if( bindings )
 				{
-					auto bindings = getChild( "bindings", 1 );
-					if( bindings )
+					auto binding = bindings->getChild( SDL_GetKeyName( event.key.keysym.sym ), 1 );
+					if ( binding )
 					{
-						auto binding = bindings->getChild( SDL_GetKeyName( event.key.keysym.sym ), 1 );
-						if ( binding )
+						if ( binding->class_id() == std::string("bool") )
 						{
-							if ( binding->class_id() == std::string("bool") )
+							if ( binding->get_bool() == false )
 							{
-								if ( binding->get_bool() == false )
-								{
-									binding->set( true );
-								}
-							}
-							else if ( binding->class_id() == std::string("trigger") )
-							{
-								binding->set();
+								binding->set( true );
 							}
 						}
-
-						std::stringstream key_name;
-						key_name << "key_down_" << SDL_GetKeyName( event.key.keysym.sym );
-						auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
-						if ( binding2 )
+						else if ( binding->class_id() == std::string("trigger") )
 						{
-							if ( binding2->class_id() == std::string("trigger") )
-							{
-								binding2->set();
-							}
+							binding->set();
 						}
 					}
 
-				}
-
-				else if(event.type == SDL_KEYUP)
-				{
-					auto bindings = getChild( "bindings", 1 );
-					if( bindings )
+					std::stringstream key_name;
+					key_name << "key_down_" << SDL_GetKeyName( event.key.keysym.sym );
+					auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
+					if ( binding2 )
 					{
-						auto binding = bindings->getChild( SDL_GetKeyName( event.key.keysym.sym ), 1 );
-						if ( binding )
+						if ( binding2->class_id() == std::string("trigger") )
 						{
-							if ( binding->class_id() == std::string("bool") )
-							{
-								if ( binding->get_bool() == true )
-								{
-									binding->set( false );
-								}
-							}
-							else if ( binding->class_id() == std::string("trigger") )
-							{
-								binding->set();
-							}
-						}
-						
-						std::stringstream key_name;
-						key_name << "key_up_" << SDL_GetKeyName( event.key.keysym.sym );
-						auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
-						if ( binding2 )
-						{
-							if ( binding2->class_id() == std::string("trigger") )
-							{
-								binding2->set();
-							}
-						}
-						
-					}
-				}
-				
-				else if(event.type == SDL_MOUSEMOTION)
-				{
-					m_mouse_x->set( (int)event.motion.x );
-					m_mouse_y->set( (int)event.motion.y );
-				}
-				
-				else if (event.type == SDL_MOUSEBUTTONDOWN)
-				{
-					std::stringstream mouseButton_name;
-					mouseButton_name << "mousebutton_down_" << (int)event.button.button;
-					
-					auto bindings = getChild( "bindings", 1 );
-					if( bindings )
-					{
-						auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
-						if ( binding )
-						{
-							if ( binding->class_id() == std::string("bool") )
-							{
-								if ( binding->get_bool() == false )
-								{
-									binding->set( true );
-								}
-							}
-							else if ( binding->class_id() == std::string("trigger") )
-							{
-								binding->set();
-							}
-						}
-					}
-				}
-
-				else if (event.type == SDL_MOUSEBUTTONUP)
-				{
-					std::stringstream mouseButton_name;
-					mouseButton_name << "mousebutton_up_" << (int)event.button.button;
-					
-					auto bindings = getChild( "bindings", 1 );
-					if( bindings )
-					{
-						auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
-						if ( binding )
-						{
-							if ( binding->class_id() == std::string("bool") )
-							{
-								if ( binding->get_bool() == true )
-								{
-									binding->set( false );
-								}
-							}
-							else if ( binding->class_id() == std::string("trigger") )
-							{
-								binding->set();
-							}
+							binding2->set();
 						}
 					}
 				}
 
 			}
+
+			else if(event.type == SDL_KEYUP)
+			{
+				auto bindings = getChild( "bindings", 1 );
+				if( bindings )
+				{
+					auto binding = bindings->getChild( SDL_GetKeyName( event.key.keysym.sym ), 1 );
+					if ( binding )
+					{
+						if ( binding->class_id() == std::string("bool") )
+						{
+							if ( binding->get_bool() == true )
+							{
+								binding->set( false );
+							}
+						}
+						else if ( binding->class_id() == std::string("trigger") )
+						{
+							binding->set();
+						}
+					}
+					
+					std::stringstream key_name;
+					key_name << "key_up_" << SDL_GetKeyName( event.key.keysym.sym );
+					auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
+					if ( binding2 )
+					{
+						if ( binding2->class_id() == std::string("trigger") )
+						{
+							binding2->set();
+						}
+					}
+					
+				}
+			}
 			
+			else if(event.type == SDL_MOUSEMOTION)
+			{
+				m_mouse_x->set( (int)event.motion.x );
+				m_mouse_y->set( (int)event.motion.y );
+			}
+			
+			else if (event.type == SDL_MOUSEBUTTONDOWN)
+			{
+				std::stringstream mouseButton_name;
+				mouseButton_name << "mousebutton_down_" << (int)event.button.button;
+				
+				auto bindings = getChild( "bindings", 1 );
+				if( bindings )
+				{
+					auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
+					if ( binding )
+					{
+						if ( binding->class_id() == std::string("bool") )
+						{
+							if ( binding->get_bool() == false )
+							{
+								binding->set( true );
+							}
+						}
+						else if ( binding->class_id() == std::string("trigger") )
+						{
+							binding->set();
+						}
+					}
+				}
+			}
 
-// 			else if(event.type == SDL_KEYDOWN)
-// 			{
-// 				const std::string& key = SDL_GetKeyName( event.key.keysym.sym );
-// 				if ( !m_canvas || !m_canvas->keyPress( key ) )
-// 					m_eventsystem->activateKeystate( key );
-// 			}
-// 
+			else if (event.type == SDL_MOUSEBUTTONUP)
+			{
+				std::stringstream mouseButton_name;
+				mouseButton_name << "mousebutton_up_" << (int)event.button.button;
+				
+				auto bindings = getChild( "bindings", 1 );
+				if( bindings )
+				{
+					auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
+					if ( binding )
+					{
+						if ( binding->class_id() == std::string("bool") )
+						{
+							if ( binding->get_bool() == true )
+							{
+								binding->set( false );
+							}
+						}
+						else if ( binding->class_id() == std::string("trigger") )
+						{
+							binding->set();
+						}
+					}
+				}
+			}
 
-// 
-// 			else if (event.type == SDL_JOYBUTTONDOWN)
-// 			{
-// 				m_eventsystem->activateKeystate( event.button.button+4096 );
-// 			}
-// 			else if (event.type == SDL_JOYBUTTONUP)
-// 			{
-// 				m_eventsystem->deactivateKeystate( event.button.button+4096 );
-// 			}
-// 
-// 			else if(event.type == SDL_JOYAXISMOTION)
-// 			{
-// 				m_eventsystem->setAxisstate( event.jaxis.axis+6144, event.jaxis.value );
-// 			}
-// 
-// 			else if(event.type == SDL_MOUSEMOTION)
-// 			{
-// 				if ( m_canvas )
-// 					m_canvas->moveMouse( event.motion.x, event.motion.y );
-// 
-// 				m_eventsystem->setAxisstate( 0+7168, event.motion.x );
-// 				m_eventsystem->setAxisstate( 1+7168, event.motion.y );
-// 			}
-// 
+			// else if (event.type == SDL_JOYBUTTONDOWN)
+			// {
+			// }
+			// else if (event.type == SDL_JOYBUTTONUP)
+			// {
+			// }
+			// else if(event.type == SDL_JOYAXISMOTION)
+			// {
+			// }
 		}
 
-// 		// SETUP OPENGL
-// 		if ( 0 == 1 )
-// 		{
-// 			//Hint for everything to be nicest
-// 			glHint(GL_FOG_HINT, GL_FASTEST);
-// 			glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_FASTEST);
-// 			glHint(GL_GENERATE_MIPMAP_HINT, GL_FASTEST);
-// 			glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST);
-// 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-// 			glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
-// 			glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
-// 			glHint(GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST);
-// 
-// 			//Smooth shading
-// 			glShadeModel(GL_SMOOTH);
-// 
-// 			//Enable back face culling
-// 			glDisable(GL_CULL_FACE);
-// 			// glEnable(GL_CULL_FACE);
-// 			// glCullFace(GL_BACK);
-// 
-// 			//Enable depth test
-// 			glEnable(GL_DEPTH_TEST);
-// 
-// 			//Alpha blending
-// 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-// 			glEnable (GL_BLEND); 
-// // 			glDisable(GL_BLEND); 
-// 
-// // 			glDisable( GL_ALPHA_TEST );
-// 			glEnable ( GL_ALPHA_TEST );
-// 			glAlphaFunc ( GL_GREATER, 0.5f ) ;
-// 
-// 			// GLfloat v[4];
-// 			// v[0] = 0.5f;
-// 			// v[1] = 0.5f;
-// 			// v[2] = 0.5f;
-// 			// v[3] = 1.0f;
-// 
-// 			// glEnable(GL_LIGHTING);
-// 			
-// 			
-// 			glEnable(GL_NORMALIZE);
-// 
-// 			// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, v);
-// 			// glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
-// 			// glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-// 			// glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-// 
-// 
-// 			// glColorMaterial(GL_FRONT_AND_BACK, 0);
-// 			
-// 			//Set default light model settings
-// // 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_AMBIENT, Vector4f(0.5f, 0.5f, 0.5f, 1.0f));
-// // 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
-// // 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-// // 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-// // 
-// // 			// Set one directional light by default
-// // 				// BeDirectionalLight light;
-// // 				// light.setDirection(Vector3f(1,1,0));
-// // 				// light.setSpecular(Vector4f(1,1,1,1));
-// // 				// m_graphicsSystem->applyLight(GL_LIGHT0, &light);
-// // 		
-// 			//Set the default material
-// // 			m_graphicsSystem->applyMaterial(GL_FRONT_AND_BACK, 0);
-// 
-// // 			//Disable lighting
-// // 			m_graphicsSystem->disable(GL_LIGHTING);
-// // 
-// 			//Set default matrices
-// // 				glMatrixLoadIdentityEXT(GL_PROJECTION);
-// // 				glMatrixLoadIdentityEXT(GL_MODELVIEW);
-// 		}		
-		
-// 		std::cout << w_width << " " << w_height << std::endl;
-		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
-		
-		// FIXME MOVE TO CAMERA
-				// glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-				// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-				// glViewport( 0, 0, m_width->get_int(), m_height->get_int() );
-
-				// // 	glViewport(0,0,640,480);
-					// glViewport(0,0,w_width,w_height);
-				// 	glEnable(GL_DEPTH_TEST);
-				// 	glEnable(GL_BLEND);
-				// 	glEnable(GL_ALPHA_TEST);
-				// 	glDepthMask(GL_FALSE);
-				// 	glMatrixLoadIdentityEXT(GL_PROJECTION);
-				// 	glMatrixOrthoEXT(GL_PROJECTION, 0, w_width, w_height, 0,  0, 1);
-				// 	glMatrixLoadIdentityEXT(GL_MODELVIEW);
-				
-				// // 	glColor4f(1,1,1,1);
-				
-				// glUseProgram(0);
-// 				process_children();
-				
 	}
 
 	// PROPERTIES
