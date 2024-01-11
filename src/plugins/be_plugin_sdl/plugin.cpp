@@ -7,35 +7,24 @@
 	{
 		std::cout << "Scene::construct()" << std::endl;
 
-
 		addChild( "bindings", new BEntity() );
 	}
 
-
-	
-	BGLWindow::BGLWindow() :
-// 	m_eventsystem(eventsystem),
-	w_bpp(0),
-	// w_width(0),
-	// w_height(0),
-	n_width(0),
-	n_height(0),
-	fs(0),
-	vidInfo(0),
-	m_surface(0),
-	vidFlags(0),
-	hwaccel(0),
-	settingsfs(0),
-	m_resized(false),
-	m_resizable(false)
+	BGLWindow::BGLWindow()
+	: w_bpp(0)
+	, n_width(0)
+	, n_height(0)
+	, fs(0)
+	, vidInfo(0)
+	, m_surface(0)
+	, vidFlags(0)
+	, hwaccel(0)
+	, settingsfs(0)
+	, m_resized(false)
+	, m_resizable(false)
 	, m_destroy_entity_on_close(this)
-	
-// 	m_logDebug("WINDOW")
 	{
-		// register an exit event from glwindow
-// 		m_eventsystem->registerEvent( DOWN, "glwindow-quit", boost::shared_ptr<Event>(new Event(BeCommand("quit"), EVENT_NOREPEAT, 0)) );	
 		setProcessing();
-		
 	} 
 
 	void BGLWindow::construct()
@@ -45,7 +34,6 @@
 		m_height = addChild("height", new BEntity_int());
 		m_mouse_x = addChild("mouse_x", new BEntity_int());
 		m_mouse_y = addChild("mouse_y", new BEntity_int());
-
 		create("SDL WINDOW", 1224, 768);
 	}
 	
@@ -54,28 +42,11 @@
 		if( SDL_Init(SDL_INIT_VIDEO) < 0 )
 		{
 			std::cout << "WINDOW error: SDL Video initialization failed with error '" << SDL_GetError() << std::endl;
-// 			m_logDebug << "::WINDOW error: SDL Video initialization failed with error '" << SDL_GetError() << "'\n";
 			exit(1);
 		}
 
-// 		Settings * const settingsPointer=Settings::Instance();
-// 		if(settingsPointer)
 		{
-// 			Settings& settings=*settingsPointer;
-// 			if( settings.getCVar("window_safemode") == 0 )
 			{
-// 				const int width=settings.getCVar("window_width");
-// 				const int height=settings.getCVar("window_height");
-// 				const int colorBits=settings.getCVar("window_color_bits");
-// 				const int depthBits=settings.getCVar("window_depth_bits");
-// 				const int stencilBits=settings.getCVar("window_stencil_bits");
-// 				const int multisamples=settings.getCVar("window_multisamples");
-// 				const int doublebuffer=settings.getCVar("window_doublebuffer");
-// 				const int vsync=settings.getCVar("window_vsync");
-// 				const int resizable=settings.getCVar("window_resizable");
-// 				const int fullscreen=settings.getCVar("window_fullscreen");
-// 				const int hardwareGl=settings.getCVar("window_hardware_gl");
-
 				const int width=t_width;
 				const int height=t_height;
 				const int colorBits=24;
@@ -139,7 +110,6 @@
 
 				if ( !vidInfo )
 				{
-// 					m_logDebug << "::WINDOW error: Cannot get SDL video information '" <<  SDL_GetError() << "'\n";
 					std::cout << "WINDOW error: Cannot get SDL video information '" <<  SDL_GetError() << std::endl;
 					exit(1);
 				}
@@ -160,43 +130,23 @@
 				if( vidInfo->blit_hw != 0 )
 					vidFlags |= SDL_HWACCEL;
 
-
-				//Hacky
 				w_bpp = colorBits;
 				
 				m_width->set( (int)width );
 				m_height->set( (int)height );
-				// w_width = width;
-				// w_height = height;
 				n_width = width;
 				n_height = height;
-
-// 				Settings::Instance()->winWidth = &w_width;
-// 				Settings::Instance()->winHeight = &w_height;
 
 				//Set window title
 				setTitle(title);
 
 				//Create window
 				m_surface = SDL_SetVideoMode(m_width->get_int(), m_height->get_int(), w_bpp, videoFlags);
-				// glewInit();
-
-// 				m_logDebug << "::WINDOW SDL subsystem initialized\n";
 
 				//Enable GL multisampled rendering if required
 				int value;
 				SDL_GL_GetAttribute(SDL_GL_MULTISAMPLEBUFFERS, &value);
-				// if(value)
-				// {
-				// 	glEnable(GL_MULTISAMPLE);
-				// 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST );
-				// 	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST );
-				// 	glEnable(GL_LINE_SMOOTH);
-				// 	glEnable(GL_POLYGON_SMOOTH);
-				// }
 
-// 				//Hack
-// 				settings.setCVar("fullscreen", fullscreen);
 				settingsfs = 0;
 				fs = 0;
 
@@ -250,11 +200,10 @@
 
 		m_width->set( (int)width );
 		m_height->set( (int)height );
-		// w_width = width;
-		// w_height = height;
 		n_width = width;
 		n_height = height;
 
+		// FIXME LOOKS LIKE HERE WE NEED TO FEIX FULLSCREEN TOGGLE?
 // 		Settings::Instance()->winWidth = &w_width;
 // 		Settings::Instance()->winHeight = &w_height;
 // 		settingsfs = Settings::Instance()->getCVarPtr("fullscreen");
@@ -266,12 +215,6 @@
 		else
 			m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_RESIZABLE );
 
-		// glewInit();
-
-// 		m_logDebug << "::WINDOW SDL subsystem initialized\n";
-		// 	std::cerr << "Video " << front.width() << "x" << front.height() << "x" << int(front.getSurface()->format->BitsPerPixel) << "\n";
-		// 	std::cerr << "Render Mode: " <<  ((hwaccel) ? "Direct Rendering" : "Software Rendering")   << "\n";
-		// 	std::cerr << "Hardware Blit Acceleration: " << ((vidInfo->blit_hw) ? "Yes": "No") << "\n";
 	}
 
 	void BGLWindow::setTitle(const std::string& title)
@@ -290,9 +233,6 @@
 
 		if ( m_width->get_int() == 0 ) m_width->set( (int)1 );
 		if ( m_height->get_int() == 0 ) m_height->set( (int)1 );
-		// if ( w_height == 0 ) w_height = 1;
-		// if ( w_width == 0 ) w_width = 1;
-	// 	std::cout << "resize" << std::endl;
 		
 		SDL_FreeSurface(m_surface);
 		m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_RESIZABLE );
@@ -308,28 +248,19 @@
 		{
 			if ( m_width->get_int() == 0 ) m_width->set( (int)1 );
 			if ( m_height->get_int() == 0 ) m_height->set( (int)1 );
-			// if ( w_height == 0 ) w_height = 1;
-			// if ( w_width == 0 ) w_width = 1;
 			n_width = m_width->get_int();
 			n_height = m_height->get_int();
-// 			w_width = Settings::Instance()->getCVar("fsX");
-// 			w_height = Settings::Instance()->getCVar("fsY");
 			videoFlags |= SDL_FULLSCREEN;
 		}
 		else
 		{
 			m_width->set( (int)n_width );
 			m_height->set( (int)n_height );
-			// w_width = n_width;
-			// w_height = n_height;
 			if ( m_resizable )
 				videoFlags |= SDL_RESIZABLE;
 		}
 		SDL_FreeSurface(m_surface);
 		m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, videoFlags );
-		// glewInit();
-// 		if ( m_canvas )
-// 			m_canvas->resize(w_width, w_height);
 	}
 
 	void BGLWindow::process()
@@ -344,8 +275,6 @@
 		{
 			if(event.type == SDL_VIDEORESIZE)
 			{
-				// w_width = event.resize.w;
-				// w_height = event.resize.h;
 				m_width->set( (int)event.resize.w );
 				m_height->set( (int)event.resize.h );
 				resize();
@@ -395,7 +324,6 @@
 						}
 					}
 				}
-
 			}
 
 			else if(event.type == SDL_KEYUP)
@@ -418,7 +346,7 @@
 							binding->set();
 						}
 					}
-					
+
 					std::stringstream key_name;
 					key_name << "key_up_" << SDL_GetKeyName( event.key.keysym.sym );
 					auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
@@ -429,7 +357,6 @@
 							binding2->set();
 						}
 					}
-					
 				}
 			}
 			
@@ -550,7 +477,6 @@
 
 	extern "C" BEntity* create( BEntity* parent, const Buint type )
 	{
-// 		std::cout << "LIB CREATE:: type: " << type  << std::endl;
 		// PLUGIN DESCRIPTION ENTITY
 			if ( type == PLUGIN_INFO )
 			{
@@ -579,7 +505,6 @@
 
 	extern "C" void destroy( BEntity* p )
 	{
-// 		std::cout << "LIB DESTROY:: " << p->id() << std::endl;
 		delete p;
 	}
 	

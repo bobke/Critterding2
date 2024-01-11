@@ -37,8 +37,6 @@
 				void resize();
 				void toggleFs();
 				unsigned int w_bpp;		// Bits Per Pixel. With XFree86, highest = 24
-				// float w_width;
-				// float w_height;
 				int n_width;
 				int n_height;
 				int fs;
@@ -51,7 +49,7 @@
 				bool m_resized;
 				bool m_resizable;
 				BEntity* m_destroy_entity_on_close;
-				
+
 				BEntity* m_width;
 				BEntity* m_height;
 				BEntity* m_mouse_x;
