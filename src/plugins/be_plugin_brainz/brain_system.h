@@ -1,7 +1,5 @@
-#ifndef BRAIN_SYSTEM_H_INCLUDED
-#define BRAIN_SYSTEM_H_INCLUDED
+#pragma once
 
-#include "kernel/be_entity_interface.h"
 #include "kernel/be_entity_core_types.h"
 
 	//  SYSTEM
@@ -96,5 +94,3 @@
 				BEntity* m_weight;
 		};
 		
-#endif
- 

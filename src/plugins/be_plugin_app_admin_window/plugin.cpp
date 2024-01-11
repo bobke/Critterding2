@@ -61,7 +61,7 @@
 		// FIXME we'll need a system for this
 		auto qwindow = addChild( "QT MainWindow", "QMainWindow" );
 		qwindow->addChild( "title", "string_property" )->set("Admin Window");
-		qwindow->addChild( "x", "uint_property" )->set(Buint(1000));
+		qwindow->addChild( "x", "uint_property" )->set(Buint(100));
 		qwindow->addChild( "y", "uint_property" )->set(Buint(30));
 		qwindow->addChild( "width", "uint_property" )->set(Buint(500));
 		qwindow->addChild( "height", "uint_property" )->set(Buint(500));

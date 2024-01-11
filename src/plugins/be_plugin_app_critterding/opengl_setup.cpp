@@ -23,11 +23,18 @@
 		m_glEnable_GL_ALPHA_TEST = addChild( "GL_ALPHA_TEST", "bool" );
 		m_glEnable_GL_NORMALIZE = addChild( "GL_NORMALIZE", "bool" );
 		m_glEnable_GL_NORMALIZE->set( true );
+		
+		m_window_width = parent()->getChild("width", 1);
+		m_window_height = parent()->getChild("height", 1);
 	}
 	
 
 	void OpenGL_Setup::process()
 	{
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glViewport( 0, 0, m_window_width->get_int(), m_window_height->get_int() );
+
 		//Hint for everything to be nicest
 		glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);

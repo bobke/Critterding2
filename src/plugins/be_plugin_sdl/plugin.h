@@ -26,11 +26,9 @@
 				void createSafe(const std::string& title, const unsigned int t_width, const unsigned int t_height);
 
 				//	Destroy window and OpenGL Context, close the Display
-		// 		void destroy();
 				virtual void process();
 
 				void setTitle(const std::string& title);
-	// 			void setCanvas(boost::shared_ptr<Canvas> canvas) { m_canvas = canvas; }
 				virtual bool set( const Bstring& id, BEntity* value );
 				virtual BEntity* get_reference( const Bstring& id );
 
@@ -50,8 +48,6 @@
 				bool hwaccel;
 				int settingsfs;
 				SDL_Event event;
-	// 			BeLogDebug m_logDebug;
-	// 			boost::shared_ptr<Canvas> m_canvas;
 				bool m_resized;
 				bool m_resizable;
 				BEntity* m_destroy_entity_on_close;
@@ -63,6 +59,8 @@
 				
 		};
 
+	ENTITY_SIMPLEST( SDL_SwapBuffers ) { SDL_GL_SwapBuffers(); } END
+
 	// SCENE
 		// class SDL_SwapBuffers: public BEntity
 		// {
@@ -71,7 +69,5 @@
 		// 		virtual ~SDL_SwapBuffers() {};
 		// 		void process() { SDL_GL_SwapBuffers(); };
 		// };
-		
-		ENTITY_SIMPLEST( SDL_SwapBuffers ) { SDL_GL_SwapBuffers(); } END
 
 #endif

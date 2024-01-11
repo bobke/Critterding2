@@ -3,14 +3,14 @@
 #include "food_system.h"
 #include "body_system.h"
 #include "species_system.h"
-#include "critter_system.h"
+// #include "critter_system.h"
 #include "vision_system.h"
 #include "control_panel.h"
 #include "population_controller.h"
 #include "critter_exchanger.h"
 #include "critter_thread_mesher.h"
 #include "commands.h"
-#include "plugins/be_plugin_bullet/be_entity_transform.h" // FIXME work this away
+// #include "plugins/be_plugin_bullet/be_entity_transform.h" // FIXME work this away
 #include "plugins/be_plugin_opengl/be_entity_camera.h"
 #include "opengl_setup.h"
 // #include <iostream>

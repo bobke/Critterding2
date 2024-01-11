@@ -1,31 +1,12 @@
 #include "plugin.h"
 #include "kernel/be_lib_handler.h"
 #include "plugins/be_plugin_opengl/be_entity_camera.h"
-// #include "plugins/be_plugin_app_critterding/critter_system.h"
 #include "plugins/be_plugin_app_critterding/food_system.h"
 #include "plugins/be_plugin_app_critterding/commands.h"
-#include "plugins/be_plugin_bullet/be_entity_physics_entity.h"
-#include "plugins/be_plugin_bullet/be_entity_transform.h" // FIXME work this away
+// #include "plugins/be_plugin_bullet/be_entity_physics_entity.h"
+// #include "plugins/be_plugin_bullet/be_entity_transform.h" // FIXME work this away
 // #include <iostream>
 
-// 	void Scene::construct()
-// 	{
-// 		// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
-// 			pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
-// 			auto spawner = addChild( "spawner", "QApplicationSpawner" );
-// 			auto t_parent_to_add_to = spawner->getChildCustom( this );
-// 			removeChild( spawner );
-// 		
-// 		pluginManager()->load( "app_admin_window", "src/plugins/be_plugin_app_admin_window", "be_plugin_app_admin_window" );
-// 		pluginManager()->load( "app_sysmon", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
-// 
-// 		// t_parent_to_add_to->addChild( "Admin App", "AdminWindow" );
-// 		// t_parent_to_add_to->addChild( "sysmon", "SystemMonitor" );
-// 
-// 		auto sdl_window = addChild("Critterding", new Critterding_threads())->getChild("SDL GLWindow");
-// 		sdl_window->set("on_close_destroy_entity", this);
-// 	}
-	
 	void Server::construct()
 	{
 		// settings
@@ -608,26 +589,8 @@
 			}
 		}
 
-		// auto c_e1 = dynamic_cast<BPhysicsEntityCube*>( e1 );
-		// auto c_e2 = dynamic_cast<BPhysicsEntityCube*>( e2 );
-		// if ( c_e1 && c_e2 )
-		// {
-		// 	BEntity* food_bp( e1 );
-		// 	if ( e2->name() == "physics_entity_food" )
-		// 	{
-		// 		food_bp = e2;
-		// 	}
-		// 	for_all_children_of2( m_food_unit_container )
-		// 	{
-		// 		if ( (*child2)->getChild( "external_physics", 1 )->get_reference() == food_bp )
-		// 		{
-		// 			return (*child2);
-		// 		}
-		// 	}
-		// }
-
 		return 0;
-	}	
+	}
 	
 	
 // ---- FACTORIES

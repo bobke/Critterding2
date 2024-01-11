@@ -36,9 +36,9 @@
 				virtual bool set( const Bint& value );
 				virtual bool set( const Bfloat& value );
 				virtual bool set( const Bdouble& value );
-// 				virtual bool set( const Bstring& value );
+				// virtual bool set( const Bstring& value );
 				virtual bool set( const char* value );
-// 				virtual bool set( void* value );
+				// virtual bool set( void* value );
 
 				virtual bool set( const Bstring& id, BEntity* value );
 				virtual bool set( const Bstring& id, const Bbool& value );
@@ -46,7 +46,7 @@
 				virtual bool set( const Bstring& id, const Bint& value );
 				virtual bool set( const Bstring& id, const Bfloat& value );
 				virtual bool set( const Bstring& id, const Bdouble& value );
-// 				virtual bool set( const Bstring& id, const Bstring& value );
+				// virtual bool set( const Bstring& id, const Bstring& value );
 				virtual bool set( const Bstring& id, const char* value );
 
 		// GET VALUES
@@ -57,7 +57,7 @@
 				virtual Bint get_int();
 				virtual Bfloat get_float();
 				virtual Bdouble get_double();
-// 				virtual Bstring* get_string();
+				// virtual Bstring* get_string();
 				virtual const char* get_string();
 
 				virtual BEntity* get_reference( const Bstring& id );
@@ -66,9 +66,9 @@
 				virtual Bint get_int( const Bstring& id );
 				virtual Bfloat get_float( const Bstring& id );
 				virtual Bdouble get_double( const Bstring& id );
-// 				virtual Bstring* get_string( const Bstring& id );
+				// virtual Bstring* get_string( const Bstring& id );
 				virtual const char* get_string( const Bstring& id );
-// 				virtual void* get_binary( const Bstring& id );
+				// virtual void* get_binary( const Bstring& id );
 
 				template <typename T>
 				bool compareAndSetValue (T& original, T const& value);

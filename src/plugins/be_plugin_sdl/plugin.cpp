@@ -1,8 +1,7 @@
-#include "kernel/be_entity_core_types.h"
 #include "plugin.h"
+#include "kernel/be_entity_core_types.h"
 #include <iostream>
 #include <sstream>
-#include <GL/glew.h>
 
 	void Scene::construct()
 	{
@@ -531,88 +530,88 @@
 // 
 		}
 
-		// SETUP OPENGL
-		if ( 0 == 1 )
-		{
-			//Hint for everything to be nicest
-			glHint(GL_FOG_HINT, GL_FASTEST);
-			glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_FASTEST);
-			glHint(GL_GENERATE_MIPMAP_HINT, GL_FASTEST);
-			glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST);
-			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-			glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
-			glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
-			glHint(GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST);
-
-			//Smooth shading
-			glShadeModel(GL_SMOOTH);
-
-			//Enable back face culling
-			glDisable(GL_CULL_FACE);
-			// glEnable(GL_CULL_FACE);
-			// glCullFace(GL_BACK);
-
-			//Enable depth test
-			glEnable(GL_DEPTH_TEST);
-
-			//Alpha blending
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glEnable (GL_BLEND); 
-// 			glDisable(GL_BLEND); 
-
-// 			glDisable( GL_ALPHA_TEST );
-			glEnable ( GL_ALPHA_TEST );
-			glAlphaFunc ( GL_GREATER, 0.5f ) ;
-
-			// GLfloat v[4];
-			// v[0] = 0.5f;
-			// v[1] = 0.5f;
-			// v[2] = 0.5f;
-			// v[3] = 1.0f;
-
-			// glEnable(GL_LIGHTING);
-			
-			
-			glEnable(GL_NORMALIZE);
-
-			// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, v);
-			// glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
-			// glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-			// glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-
-
-			// glColorMaterial(GL_FRONT_AND_BACK, 0);
-			
-			//Set default light model settings
-// 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_AMBIENT, Vector4f(0.5f, 0.5f, 0.5f, 1.0f));
-// 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
-// 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-// 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+// 		// SETUP OPENGL
+// 		if ( 0 == 1 )
+// 		{
+// 			//Hint for everything to be nicest
+// 			glHint(GL_FOG_HINT, GL_FASTEST);
+// 			glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_FASTEST);
+// 			glHint(GL_GENERATE_MIPMAP_HINT, GL_FASTEST);
+// 			glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST);
+// 			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+// 			glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
+// 			glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
+// 			glHint(GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST);
 // 
-// 			// Set one directional light by default
-// 				// BeDirectionalLight light;
-// 				// light.setDirection(Vector3f(1,1,0));
-// 				// light.setSpecular(Vector4f(1,1,1,1));
-// 				// m_graphicsSystem->applyLight(GL_LIGHT0, &light);
-// 		
-			//Set the default material
-// 			m_graphicsSystem->applyMaterial(GL_FRONT_AND_BACK, 0);
-
-// 			//Disable lighting
-// 			m_graphicsSystem->disable(GL_LIGHTING);
+// 			//Smooth shading
+// 			glShadeModel(GL_SMOOTH);
 // 
-			//Set default matrices
-// 				glMatrixLoadIdentityEXT(GL_PROJECTION);
-// 				glMatrixLoadIdentityEXT(GL_MODELVIEW);
-		}		
+// 			//Enable back face culling
+// 			glDisable(GL_CULL_FACE);
+// 			// glEnable(GL_CULL_FACE);
+// 			// glCullFace(GL_BACK);
+// 
+// 			//Enable depth test
+// 			glEnable(GL_DEPTH_TEST);
+// 
+// 			//Alpha blending
+// 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+// 			glEnable (GL_BLEND); 
+// // 			glDisable(GL_BLEND); 
+// 
+// // 			glDisable( GL_ALPHA_TEST );
+// 			glEnable ( GL_ALPHA_TEST );
+// 			glAlphaFunc ( GL_GREATER, 0.5f ) ;
+// 
+// 			// GLfloat v[4];
+// 			// v[0] = 0.5f;
+// 			// v[1] = 0.5f;
+// 			// v[2] = 0.5f;
+// 			// v[3] = 1.0f;
+// 
+// 			// glEnable(GL_LIGHTING);
+// 			
+// 			
+// 			glEnable(GL_NORMALIZE);
+// 
+// 			// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, v);
+// 			// glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+// 			// glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+// 			// glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+// 
+// 
+// 			// glColorMaterial(GL_FRONT_AND_BACK, 0);
+// 			
+// 			//Set default light model settings
+// // 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_AMBIENT, Vector4f(0.5f, 0.5f, 0.5f, 1.0f));
+// // 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+// // 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+// // 			m_graphicsSystem->lightModel(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+// // 
+// // 			// Set one directional light by default
+// // 				// BeDirectionalLight light;
+// // 				// light.setDirection(Vector3f(1,1,0));
+// // 				// light.setSpecular(Vector4f(1,1,1,1));
+// // 				// m_graphicsSystem->applyLight(GL_LIGHT0, &light);
+// // 		
+// 			//Set the default material
+// // 			m_graphicsSystem->applyMaterial(GL_FRONT_AND_BACK, 0);
+// 
+// // 			//Disable lighting
+// // 			m_graphicsSystem->disable(GL_LIGHTING);
+// // 
+// 			//Set default matrices
+// // 				glMatrixLoadIdentityEXT(GL_PROJECTION);
+// // 				glMatrixLoadIdentityEXT(GL_MODELVIEW);
+// 		}		
 		
 // 		std::cout << w_width << " " << w_height << std::endl;
 		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
 		
 		// FIXME MOVE TO CAMERA
-				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-				glViewport( 0, 0, m_width->get_int(), m_height->get_int() );
+				// glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+				// glViewport( 0, 0, m_width->get_int(), m_height->get_int() );
 
 				// // 	glViewport(0,0,640,480);
 					// glViewport(0,0,w_width,w_height);
@@ -626,7 +625,7 @@
 				
 				// // 	glColor4f(1,1,1,1);
 				
-				glUseProgram(0);
+				// glUseProgram(0);
 // 				process_children();
 				
 	}
