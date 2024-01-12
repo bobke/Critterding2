@@ -19,19 +19,14 @@
 			// const btVector3& getForwardVector() const { return m_transform.getBasis().getRow(2); }
 			btVector3 getScreenDirection(const int win_x, const int win_y, const int mouse_x, const int mouse_y);
 
-			// btTransform m_pos_transform;
 			BBulletTransform* m_transform;
+		private:
 			BBulletTransform* m_base_transform;
 			BBulletTransform  m_sum_transform;
-
-		private:
-			btScalar m_modelview[16];
 			glTransform m_gl_transform;
-			btTransform m_inversable_ops;
 			
 			BEntity* m_s_elapsed;
 
-			// BEntity* m_transform;
 			BEntity* m_fov_y;
 			BEntity* m_aspect_ratio;
 			BEntity* m_z_near;
@@ -53,7 +48,6 @@
 			BEntity* m_look_down;
 			BEntity* m_look_roll_left;
 			BEntity* m_look_roll_right;
-		
 	};
 
 

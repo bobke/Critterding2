@@ -54,56 +54,56 @@
 			m_s_elapsed = topParent()->getChild("sys", 1)->getChild("timer", 1)->getChild("s_elapsed", 1);
 
 		// process movement
-		if ( m_forward->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, 0.0f, -m_sensitivity_move->get_float() * m_s_elapsed->get_float() ));
-		}
-		if ( m_backward->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, 0.0f, m_sensitivity_move->get_float() * m_s_elapsed->get_float() ));
-		}
-		if ( m_left->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( -m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.0f, 0.f ));
-		}
-		if ( m_right->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.0f, 0.f ));
-		}
-		if ( m_up->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.f ));
-		}
-		if ( m_down->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, -m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.f ));
-		}
-		
+			if ( m_forward->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, 0.0f, -m_sensitivity_move->get_float() * m_s_elapsed->get_float() ));
+			}
+			if ( m_backward->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, 0.0f, m_sensitivity_move->get_float() * m_s_elapsed->get_float() ));
+			}
+			if ( m_left->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( -m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.0f, 0.f ));
+			}
+			if ( m_right->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.0f, 0.f ));
+			}
+			if ( m_up->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.f ));
+			}
+			if ( m_down->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, -m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.f ));
+			}
+
 		// process looking
-		if ( m_look_left->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f, 0.0f ));
-		}
-		if ( m_look_right->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( -m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f, 0.0f ));
-		}
-		if ( m_look_up->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f ));
-		}
-		if ( m_look_down->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, -m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f ));
-		}
-		if ( m_look_roll_left->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, m_sensitivity_look->get_float() * m_s_elapsed->get_float() ));
-		}
-		if ( m_look_roll_right->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, -m_sensitivity_look->get_float() * m_s_elapsed->get_float() ));
-		}
+			if ( m_look_left->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f, 0.0f ));
+			}
+			if ( m_look_right->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( -m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f, 0.0f ));
+			}
+			if ( m_look_up->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f ));
+			}
+			if ( m_look_down->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, -m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f ));
+			}
+			if ( m_look_roll_left->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, m_sensitivity_look->get_float() * m_s_elapsed->get_float() ));
+			}
+			if ( m_look_roll_right->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, -m_sensitivity_look->get_float() * m_s_elapsed->get_float() ));
+			}
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
