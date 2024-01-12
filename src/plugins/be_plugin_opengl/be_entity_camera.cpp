@@ -50,15 +50,6 @@
 	// FIXME do this in the transform itself?
 	void BCamera::process()
 	{
-		// // HACK, this don't work, this is way more complicated
-		// // when altering this for critterding we butchered it for attractors scene
-		// // so remake attractors scene?
-		// // FIXME WE'RE FUCKED because attractors is in QT and critterding is in SDL
-
-		// const auto transform = getChild( "transform", 1 );
-		// if ( transform )
-		// 	m_transform = transform;
-
 		if ( m_s_elapsed == 0 )
 			m_s_elapsed = topParent()->getChild("sys", 1)->getChild("timer", 1)->getChild("s_elapsed", 1);
 
@@ -121,26 +112,18 @@
 		const float frustumHalfHeight = tan( m_fov_y->get_float() * 180 / M_PI * M_PI / 360.0 ) * m_z_near->get_float();
 		const float frustumHalfWidth = frustumHalfHeight * m_aspect_ratio->get_float();
 		glFrustum( -frustumHalfWidth, frustumHalfWidth, -frustumHalfHeight, frustumHalfHeight, m_z_near->get_float(), m_z_far->get_float() );
-
-		// std::cout << m_fov_y->get_float() << " " << -frustumHalfWidth << " " << frustumHalfWidth << " " << -frustumHalfHeight << " " << frustumHalfHeight << " " << m_z_near->get_float() << " " << m_z_far->get_float() << std::endl;
 		
-		// INVERSE MATRIX
+		// CREATE AND APPLY INVERSE MATRIX
 		m_sum_transform.m_transform = m_base_transform->m_transform * m_transform->m_transform;
-		m_sum_transform.apply( &m_gl_transform );
-		
-		// m_transform->apply( &m_gl_transform );
-		m_inversable_ops.setFromOpenGLMatrix ( m_gl_transform.m_value );
-		// m_inversable_ops = m_inversable_ops * m_transform->m_transform;
-		m_inversable_ops.inverse().getOpenGLMatrix( m_gl_transform.m_value );
-
+		m_sum_transform.m_transform.inverse().getOpenGLMatrix( m_gl_transform.m_value );
 		glMultMatrixf( m_gl_transform.m_value );
+
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
 
 	btVector3 BCamera::getScreenDirection(const int win_x, const int win_y, const int mouse_x, const int mouse_y)
 	{
-
 		// FIXME HACK: needs to be upstairs
 		m_aspect_ratio->set( (float)win_x/win_y );
 		

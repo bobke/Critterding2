@@ -259,6 +259,7 @@
 				auto physics_scale_x = physics_entity->addChild("scale_x", new BEntity_float_property());
 				auto physics_scale_y = physics_entity->addChild("scale_y", new BEntity_float_property());
 				auto physics_scale_z = physics_entity->addChild("scale_z", new BEntity_float_property());
+
 					physics_scale_x->set( 8.0f );
 					physics_scale_y->set( 1.0f );
 					physics_scale_z->set( 10.0f );
@@ -280,7 +281,7 @@
 					physics_scale_x->connectServerServer( graphics_transform->getChild("scale_x", 1) );
 					physics_scale_y->connectServerServer( graphics_transform->getChild("scale_y", 1) );
 					physics_scale_z->connectServerServer( graphics_transform->getChild("scale_z", 1) );
-					
+
 					graphics_transform->getChild("scale_x", 1)->set( 8.0f );
 					graphics_transform->getChild("scale_y", 1)->set( 1.0f );
 					graphics_transform->getChild("scale_z", 1)->set( 10.0f );
