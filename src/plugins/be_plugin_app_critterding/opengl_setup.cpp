@@ -10,7 +10,7 @@
 	
 	void OpenGL_Setup::construct()
 	{
-		m_glShadeModel_GL_SMOOTH = addChild( "glShadeModel_GL_SMOOTH", "bool" );
+		// m_glShadeModel_GL_SMOOTH = addChild( "glShadeModel_GL_SMOOTH", "bool" );
 		m_glEnable_GL_MULTISAMPLE = addChild( "GL_MULTISAMPLE", "bool" );
 		m_glEnable_GL_LINE_SMOOTH = addChild( "GL_LINE_SMOOTH", "bool" );
 		m_glEnable_GL_POLYGON_SMOOTH = addChild( "GL_POLYGON_SMOOTH", "bool" );
@@ -45,15 +45,15 @@
 		glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
 		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST);
 
-		// GL_SMOOTH
-			if ( m_glShadeModel_GL_SMOOTH->get_bool() )
-			{
-				glShadeModel(GL_SMOOTH);
-			}
-			else
-			{
-				glShadeModel(GL_FLAT);
-			}
+		// // GL_SMOOTH
+		// 	if ( m_glShadeModel_GL_SMOOTH->get_bool() )
+		// 	{
+		// 		glShadeModel(GL_SMOOTH);
+		// 	}
+		// 	else
+		// 	{
+		// 		glShadeModel(GL_FLAT);
+		// 	}
 		
 		// GL_MULTISAMPLE
 			if ( m_glEnable_GL_MULTISAMPLE->get_bool() )

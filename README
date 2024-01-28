@@ -6,6 +6,7 @@ REQUIREMENTS
 	SDL
 	glew
 	boost
+	glm
 	
 
 BUILDING

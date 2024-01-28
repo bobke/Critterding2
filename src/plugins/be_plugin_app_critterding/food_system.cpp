@@ -261,14 +261,25 @@
 					// color->set("G", 1.0f);
 					// color->set("B", 0.0f);
 
-					graphics_transform = graphics_entity_food->addChild("transform", "Transform");
-					graphics_entity_food->set("filename", "../share/modules/cube-food.obj");
+					// LOAD MODEL
+						// THIS IS ONLY FOR THE cube-food-t.obj
+								graphics_entity_food->getChild( "pre_scale_x", 1 )->set( 1.2f );
+								graphics_entity_food->getChild( "pre_scale_y", 1 )->set( 1.2f );
+								graphics_entity_food->getChild( "pre_scale_z", 1 )->set( 1.2f );
+						// FILENAME
+							graphics_entity_food->set("filename", "../share/modules/cube-food-t.obj");
+							graphics_transform = graphics_entity_food->addChild("transform", "Transform");
+							// graphics_entity_food->set("filename", "../share/modules/cube-food.obj");
 				}
 				else
 				{
 					graphics_transform = graphics_entity_food->addChild("transform", "Transform");
 				}
 
+				// graphics_transform->getChild( "scale_x", 1 )->set( 1.2f );
+				// graphics_transform->getChild( "scale_y", 1 )->set( 1.2f );
+				// graphics_transform->getChild( "scale_z", 1 )->set( 1.2f );
+		
 				// REFERENCE TO EXTERNAL CHILD
 					addChild( "external_graphics", new BEntity_external() )->set( graphics_transform );
 			}

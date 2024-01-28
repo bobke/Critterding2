@@ -4,6 +4,7 @@
 #include "kernel/be_entity_interface.h"
 #include "plugins/be_plugin_bullet/physicsmodel_rigid.h"
 
+	class BGraphicsModelSystem;
 
 	class CdVisionSystem: public BEntity
 	{
@@ -45,7 +46,11 @@
 			
 			BEntity* m_print;
 			BEntity* m_critter_sightrange;
+			BEntity* m_e_scale_x;
 		
+			unsigned int m_ProjectionViewMatrixID;
+			
+			BGraphicsModelSystem* m_graphics_system;
 	};
 
 #endif

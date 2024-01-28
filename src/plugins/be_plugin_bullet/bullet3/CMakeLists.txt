@@ -24,7 +24,7 @@ SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 #MESSAGE("CMAKE_CXX_FLAGS_DEBUG="+${CMAKE_CXX_FLAGS_DEBUG})
 
 OPTION(USE_DOUBLE_PRECISION "Use double precision"	OFF)
-OPTION(USE_GRAPHICAL_BENCHMARK "Use Graphical Benchmark" ON)
+OPTION(USE_GRAPHICAL_BENCHMARK "Use Graphical Benchmark" OFF)
 OPTION(BUILD_SHARED_LIBS "Use shared libraries" ON)
 OPTION(USE_SOFT_BODY_MULTI_BODY_DYNAMICS_WORLD "Use btSoftMultiBodyDynamicsWorld" ON)
 
@@ -203,7 +203,7 @@ ENDIF(INTERNAL_CREATE_MSVC_RELATIVE_PATH_PROJECTFILES)
 ENDIF (WIN32)
 
 
-OPTION(BUILD_CPU_DEMOS "Build original Bullet CPU examples" ON)
+OPTION(BUILD_CPU_DEMOS "Build original Bullet CPU examples" OFF)
 
 
 
@@ -325,16 +325,16 @@ IF(BUILD_PYBULLET)
 	FIND_PACKAGE(PythonLibs ${PYTHON_VERSION_STRING} EXACT)
 ENDIF(BUILD_PYBULLET)
 
-OPTION(BUILD_ENET "Set when you want to build apps with enet UDP networking support" ON)
-OPTION(BUILD_CLSOCKET "Set when you want to build apps with enet TCP networking support" ON)
+OPTION(BUILD_ENET "Set when you want to build apps with enet UDP networking support" OFF)
+OPTION(BUILD_CLSOCKET "Set when you want to build apps with enet TCP networking support" OFF)
 
 
 IF(BUILD_PYBULLET)
 	FIND_PACKAGE(PythonLibs)
 
 	OPTION(BUILD_PYBULLET_NUMPY "Set when you want to build pybullet with NumPy support" OFF)
-	OPTION(BUILD_PYBULLET_ENET "Set when you want to build pybullet with enet UDP networking support" ON)
-	OPTION(BUILD_PYBULLET_CLSOCKET "Set when you want to build pybullet with enet TCP networking support" ON)
+	OPTION(BUILD_PYBULLET_ENET "Set when you want to build pybullet with enet UDP networking support" OFF)
+	OPTION(BUILD_PYBULLET_CLSOCKET "Set when you want to build pybullet with enet TCP networking support" OFF)
 
 	OPTION(BUILD_PYBULLET_MAC_USE_PYTHON_FRAMEWORK "Set when you want to use the Python Framework on Mac" OFF)
 
@@ -388,7 +388,7 @@ IF(BUILD_BULLET3)
 			OPTION(BUILD_OPENGL3_DEMOS "Set when you want to build the OpenGL3+ demos" ON)
 		ENDIF()
 	ELSE()
-		OPTION(BUILD_OPENGL3_DEMOS "Set when you want to build Bullet 3 OpenGL3+ demos" ON)
+		OPTION(BUILD_OPENGL3_DEMOS "Set when you want to build Bullet 3 OpenGL3+ demos" OFF)
 	ENDIF()
 ELSE(BUILD_BULLET3)
 	unset(BUILD_OPENGL3_DEMOS CACHE)

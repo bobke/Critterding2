@@ -56,7 +56,7 @@
 
 		pluginManager()->load( "system", "src/plugins/be_plugin_system", "be_plugin_system" );
 		pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
-		pluginManager()->load( "opengl", "src/plugins/be_plugin_opengl", "be_plugin_opengl" );
+		pluginManager()->load( "opengl", "src/plugins/be_plugin_opengl_modern", "be_plugin_opengl_modern" );
 		pluginManager()->load( "bullet", "src/plugins/be_plugin_bullet", "be_plugin_bullet" );
 		pluginManager()->load( "brainz", "src/plugins/be_plugin_brainz", "be_plugin_brainz" );
 		pluginManager()->load( "qwt", "src/plugins/be_plugin_qwt", "be_plugin_qwt" ); // FIXME
@@ -122,8 +122,12 @@
 			glscene->set("on_close_destroy_entity", this);
 
 		// CAMERA
-			m_camera = new BCamera();
-			t_graphicsModelSystem->addChild("Camera", m_camera);
+			// m_camera = new BCamera();
+			// t_graphicsModelSystem->addChild("Camera", m_camera);
+			auto c = t_graphicsModelSystem->addChild("Camera", "Camera");
+			m_camera = dynamic_cast<BCamera*>(c);
+			
+			
 			auto transform = m_camera->getChild( "transform", 1 );
 
 			// transform->getChild( "position_x" )->connectServerServer( m_raycast_source_x );
@@ -215,30 +219,38 @@
 			binding_1->connectServerServer( look_roll_left );
 			binding_3->connectServerServer( look_roll_right );
 
-		// LIGHT
-		{
-			auto light = t_graphicsModelSystem->addChild( "light", "GLLight" );
-			
-			light->getChild( "model_ambient_r", 1 )->set( 0.5f );
-			light->getChild( "model_ambient_g", 1 )->set( 0.5f );
-			light->getChild( "model_ambient_b", 1 )->set( 0.5f );
-			light->getChild( "model_ambient_a", 1 )->set( 0.0f );
-			
-			light->getChild( "color_ambient_r", 1 )->set( 0.5f );
-			light->getChild( "color_ambient_g", 1 )->set( 0.5f );
-			light->getChild( "color_ambient_b", 1 )->set( 0.5f );
-			light->getChild( "color_ambient_a", 1 )->set( 0.0f );
-			
-			light->getChild( "color_diffuse_r", 1 )->set( 0.4f );
-			light->getChild( "color_diffuse_g", 1 )->set( 0.4f );
-			light->getChild( "color_diffuse_b", 1 )->set( 0.4f );
-			light->getChild( "color_diffuse_a", 1 )->set( 0.0f );
+		// "SHADERS" hack for now
+			auto shaders = t_graphicsModelSystem->addChild( "shaders", "entity" );
+			auto u_vec4_color = shaders->addChild( "u_Color", "ShaderUniformVec4" );
+			auto u_i14_textureSample = shaders->addChild( "u_textureSample", "ShaderUniformI1" );
+			shaders->addChild( "e_scale_x", "float" )->set(0.0f);
+			shaders->addChild( "e_scale_y", "float" )->set(0.0f);
+			shaders->addChild( "e_scale_z", "float" )->set(0.0f);
 
-			light->getChild( "color_specular_r", 1 )->set( 0.2f );
-			light->getChild( "color_specular_g", 1 )->set( 0.2f );
-			light->getChild( "color_specular_b", 1 )->set( 0.2f );
-			light->getChild( "color_specular_a", 1 )->set( 0.0f );
-		}
+// 		// LIGHT
+// 		{
+// 			auto light = t_graphicsModelSystem->addChild( "light", "GLLight" );
+// 			
+// 			light->getChild( "model_ambient_r", 1 )->set( 0.5f );
+// 			light->getChild( "model_ambient_g", 1 )->set( 0.5f );
+// 			light->getChild( "model_ambient_b", 1 )->set( 0.5f );
+// 			light->getChild( "model_ambient_a", 1 )->set( 0.0f );
+// 			
+// 			light->getChild( "color_ambient_r", 1 )->set( 0.5f );
+// 			light->getChild( "color_ambient_g", 1 )->set( 0.5f );
+// 			light->getChild( "color_ambient_b", 1 )->set( 0.5f );
+// 			light->getChild( "color_ambient_a", 1 )->set( 0.0f );
+// 			
+// 			light->getChild( "color_diffuse_r", 1 )->set( 0.4f );
+// 			light->getChild( "color_diffuse_g", 1 )->set( 0.4f );
+// 			light->getChild( "color_diffuse_b", 1 )->set( 0.4f );
+// 			light->getChild( "color_diffuse_a", 1 )->set( 0.0f );
+// 
+// 			light->getChild( "color_specular_r", 1 )->set( 0.2f );
+// 			light->getChild( "color_specular_g", 1 )->set( 0.2f );
+// 			light->getChild( "color_specular_b", 1 )->set( 0.2f );
+// 			light->getChild( "color_specular_a", 1 )->set( 0.0f );
+// 		}
 
 		// MAP
 		{

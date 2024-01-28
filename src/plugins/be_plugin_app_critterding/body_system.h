@@ -40,6 +40,7 @@
 				BEntity* m_bodypart_spacing;
 				BEntity* m_bodypart_friction;
 				BEntity* m_bodypart_restitution;
+				BEntity* m_bodypart_density;
 
 				// BEntity* m_mutationweight_bodypart_add;
 				// BEntity* m_mutationweight_bodypart_remove;

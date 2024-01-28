@@ -9,12 +9,13 @@
 // #include <sstream>
 
 		BEntity::BEntity() 
+		: m_id(0)
+		, m_be_parent(0)
+		, m_io_handler(0)
+		, m_flagbits(0)
 		{
-			m_id = 0;
-			m_be_parent = 0;
-			m_io_handler = 0;
-			m_flagbits = 0;
 		}
+
 	// SET VALUES
 		// bool BEntity::set() { return false; }
 		bool BEntity::set()

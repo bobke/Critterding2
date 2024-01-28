@@ -1,0 +1,11 @@
+
+newmtl Material.001
+Ns 44.509804
+Ka 0.000000 1.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.300000 0.300000 0.300000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd roundfood.png
+# map_bump roundfood_normal.png 

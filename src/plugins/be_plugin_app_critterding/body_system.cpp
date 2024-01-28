@@ -1,6 +1,6 @@
 #include "body_system.h"
 #include "kernel/be_entity_core_types.h"
-// #include <iostream>
+#include <iostream>
  
 	void BodySystem::construct()
 	{
@@ -29,6 +29,8 @@
 		m_bodypart_spacing = settings->addChild( "bodypart_spacing", new BEntity_float() );
 		m_bodypart_friction = settings->addChild( "bodypart_friction", new BEntity_float() );
 		m_bodypart_restitution = settings->addChild( "bodypart_restitution", new BEntity_float() );
+		m_bodypart_density = settings->addChild( "bodypart_density", new BEntity_float() );
+		settings->addChild( "bodypart_use_density", new BEntity_bool() )->set( false );
 
 		// auto mutation_weights = settings->addChild( "mutation_weights", new BEntity() );
 		// m_mutationweight_bodypart_add = mutation_weights->addChild( "mutationweight_bodypart_add", new BEntity_uint() );
@@ -65,6 +67,7 @@
 		m_bodypart_spacing->set( 0.07f );
 		m_bodypart_friction->set( 0.95f );
 		m_bodypart_restitution->set( 0.95f );
+		m_bodypart_density->set( 100.0f );
 
 		// m_mutationweight_bodypart_add->set( Buint(5) );
 		// m_mutationweight_bodypart_remove->set( Buint(6) );
@@ -608,28 +611,36 @@
 		
 		// PHYSICS
 			auto new_bodypart = physics_world->addChild( name, "PhysicsEntity_Cube" );
-			new_bodypart->addChild( "weight", new BEntity_float_property() )->set( 1.0f ); // FIXME SETTING
-			// new_bodypart->set("weight", 1.0f); // FIXME SETTING
-			new_bodypart->addChild( "wants_deactivation", new BEntity_bool_property() )->set( false ); // FIXME SETTING
+
+			auto settings = body->parent()->parent()->parent()->getChild( "settings", 1 );
 			
+			// WEIGHT
+				float weight;
+				if ( settings->getChild( "bodypart_use_density", 1 )->get_bool() )
+				{
+					weight = settings->getChild( "bodypart_density", 1 )->get_float() * (scale_x * scale_y * scale_z);
+				}
+				else
+				{
+					weight = 1.0f;
+				}
+				new_bodypart->addChild( "weight", new BEntity_float_property() )->set( weight ); // FIXME SETTING
+			
+			// DEACTIVATION
+				new_bodypart->addChild( "wants_deactivation", new BEntity_bool_property() )->set( false ); // FIXME SETTING
 
-			body->parent()->parent()->getChild( "settings", 1 );
-
-			new_bodypart->addChild( "scale_x", new BEntity_float_property() )->set( scale_x ); // FIXME SETTING
-			new_bodypart->addChild( "scale_y", new BEntity_float_property() )->set( scale_y ); // FIXME SETTING
-			new_bodypart->addChild( "scale_z", new BEntity_float_property() )->set( scale_z ); // FIXME SETTING
-			// new_bodypart->set("scale_y", scale_y); // FIXME SETTING
-			// new_bodypart->set("scale_x", scale_x); // FIXME SETTING
-			// new_bodypart->set("scale_z", scale_z); // FIXME SETTING
-			auto physics_transform = new_bodypart->getChild( "transform", 1 );
-
-			physics_transform->getChild("position_x", 1)->set( pos_x );
-			physics_transform->getChild("position_y", 1)->set( pos_y );
-			physics_transform->getChild("position_z", 1)->set( pos_z );
+			// SCALE
+				new_bodypart->addChild( "scale_x", new BEntity_float_property() )->set( scale_x ); // FIXME SETTING
+				new_bodypart->addChild( "scale_y", new BEntity_float_property() )->set( scale_y ); // FIXME SETTING
+				new_bodypart->addChild( "scale_z", new BEntity_float_property() )->set( scale_z ); // FIXME SETTING
+				
+			// POSTITION
+				auto physics_transform = new_bodypart->getChild( "transform", 1 );
+				physics_transform->getChild("position_x", 1)->set( pos_x );
+				physics_transform->getChild("position_y", 1)->set( pos_y );
+				physics_transform->getChild("position_z", 1)->set( pos_z );
 			
 			// REFERENCE TO EXTERNAL CHILD
-				// auto central_bodypart_external_reference = t_bodyparts->addChild( "_external_child", new BEntity_reference() );
-				// central_bodypart_external_reference->set( new_bodypart );
 				t_bodyparts->addChild( "external_bodypart_physics", new BEntity_external() )->set( new_bodypart );
 				
 		// GRAPHICS
@@ -646,7 +657,10 @@
 				{
 					graphics_entity_critter = graphicsmodelsystem->addChild("graphics_entity_critter", "GraphicsModel");
 					graphics_transform = graphics_entity_critter->addChild("transform", "Transform");
-					graphics_entity_critter->set("filename", "../share/modules/cube-critter.obj");
+					// graphics_entity_critter->set("filename", "../share/modules/cube-critter.obj");
+					graphics_entity_critter->set("filename", "../share/modules/cube-critter-t.obj");
+					// graphics_entity_critter->set("filename", "/projects/bengine-new/share/sandbox/modules/cube-critter.obj");
+					
 					
 					// std::cout << $0 << std::endl;
 				}

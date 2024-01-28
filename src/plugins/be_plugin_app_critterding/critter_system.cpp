@@ -69,7 +69,7 @@
 		// m_dropzone_size_z->set( Bfloat(180.0f) );
 		
 		m_insert_frame_interval = settings->addChild( "insert_frame_interval", new BEntity_uint() );
-		m_insert_frame_interval->set( (Buint)100 );
+		m_insert_frame_interval->set( (Buint)20 );
 
 		m_copy_random_position = settings->addChild( "copy_random_position", new BEntity_bool() );
 		m_copy_random_position->set( false );

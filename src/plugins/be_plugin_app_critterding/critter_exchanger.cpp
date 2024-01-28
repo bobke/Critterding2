@@ -37,7 +37,7 @@
 
 	void CdCritterExchanger::process()
 	{
-		unsigned int max_critters_on_exchange(100);
+		const unsigned int max_critters_on_exchange(100);
 		
 		if ( m_active->get_bool() )
 		{
@@ -48,7 +48,7 @@
 				std::cout << std::endl << "Critter Exchanger: " << std::endl;
 				
 				// SUM OF ALL WEIGHTS
-				int sum = m_weight_save->get_uint() + m_weight_load->get_uint();
+				const int sum = m_weight_save->get_uint() + m_weight_load->get_uint();
 
 				// PICK SAVE OR LOAD
 				m_rng->set( "min", Bint(0) );

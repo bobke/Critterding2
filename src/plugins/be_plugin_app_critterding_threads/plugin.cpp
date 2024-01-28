@@ -133,7 +133,7 @@
 
 		pluginManager()->load( "system", "src/plugins/be_plugin_system", "be_plugin_system" );
 		pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
-		pluginManager()->load( "opengl", "src/plugins/be_plugin_opengl", "be_plugin_opengl" );
+		pluginManager()->load( "opengl", "src/plugins/be_plugin_opengl_modern", "be_plugin_opengl_modern" );
 		pluginManager()->load( "bullet", "src/plugins/be_plugin_bullet", "be_plugin_bullet" );
 		pluginManager()->load( "brainz", "src/plugins/be_plugin_brainz", "be_plugin_brainz" );
 		pluginManager()->load( "qwt", "src/plugins/be_plugin_qwt", "be_plugin_qwt" );
@@ -239,31 +239,39 @@
 			binding_1->connectServerServer( look_roll_left );
 			binding_3->connectServerServer( look_roll_right );
 
-		// LIGHT
-		{
-			auto light = t_graphicsModelSystem->addChild( "light", "GLLight" );
-			
-			light->getChild( "model_ambient_r", 1 )->set( 0.5f );
-			light->getChild( "model_ambient_g", 1 )->set( 0.5f );
-			light->getChild( "model_ambient_b", 1 )->set( 0.5f );
-			light->getChild( "model_ambient_a", 1 )->set( 0.0f );
-			
-			light->getChild( "color_ambient_r", 1 )->set( 0.5f );
-			light->getChild( "color_ambient_g", 1 )->set( 0.5f );
-			light->getChild( "color_ambient_b", 1 )->set( 0.5f );
-			light->getChild( "color_ambient_a", 1 )->set( 0.0f );
-			
-			light->getChild( "color_diffuse_r", 1 )->set( 0.4f );
-			light->getChild( "color_diffuse_g", 1 )->set( 0.4f );
-			light->getChild( "color_diffuse_b", 1 )->set( 0.4f );
-			light->getChild( "color_diffuse_a", 1 )->set( 0.0f );
+// 		// LIGHT
+// 		{
+// 			auto light = t_graphicsModelSystem->addChild( "light", "GLLight" );
+// 			
+// 			light->getChild( "model_ambient_r", 1 )->set( 0.5f );
+// 			light->getChild( "model_ambient_g", 1 )->set( 0.5f );
+// 			light->getChild( "model_ambient_b", 1 )->set( 0.5f );
+// 			light->getChild( "model_ambient_a", 1 )->set( 0.0f );
+// 			
+// 			light->getChild( "color_ambient_r", 1 )->set( 0.5f );
+// 			light->getChild( "color_ambient_g", 1 )->set( 0.5f );
+// 			light->getChild( "color_ambient_b", 1 )->set( 0.5f );
+// 			light->getChild( "color_ambient_a", 1 )->set( 0.0f );
+// 			
+// 			light->getChild( "color_diffuse_r", 1 )->set( 0.4f );
+// 			light->getChild( "color_diffuse_g", 1 )->set( 0.4f );
+// 			light->getChild( "color_diffuse_b", 1 )->set( 0.4f );
+// 			light->getChild( "color_diffuse_a", 1 )->set( 0.0f );
+// 
+// 			light->getChild( "color_specular_r", 1 )->set( 0.2f );
+// 			light->getChild( "color_specular_g", 1 )->set( 0.2f );
+// 			light->getChild( "color_specular_b", 1 )->set( 0.2f );
+// 			light->getChild( "color_specular_a", 1 )->set( 0.0f );
+// 		}
 
-			light->getChild( "color_specular_r", 1 )->set( 0.2f );
-			light->getChild( "color_specular_g", 1 )->set( 0.2f );
-			light->getChild( "color_specular_b", 1 )->set( 0.2f );
-			light->getChild( "color_specular_a", 1 )->set( 0.0f );
-		}
-
+		// "SHADERS" hack for now
+			auto shaders = t_graphicsModelSystem->addChild( "shaders", "entity" );
+			auto u_vec4_color = shaders->addChild( "u_Color", "ShaderUniformVec4" );
+			auto u_i14_textureSample = shaders->addChild( "u_textureSample", "ShaderUniformI1" );
+			shaders->addChild( "e_scale_x", "float" )->set(0.0f);
+			shaders->addChild( "e_scale_y", "float" )->set(0.0f);
+			shaders->addChild( "e_scale_z", "float" )->set(0.0f);
+			
 		// GRAPHICS MAP
 		{
 			auto map = addChild( "graphics_map", new BEntity() );
@@ -301,28 +309,36 @@
 			auto server2 = thread2->addChild( "Critterding", new Server() );
 			
 			const float spacing( 2.0f );
-			server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
-			server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
-			server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f );
+			const unsigned int total_minimum_critters( 20 ); // FIXME TO GLOBAL ENTITY
+			const unsigned int total_minimum_food( 1500 ); // FIXME TO GLOBAL ENTITY
+			
+			
+			// FIXME why the fuck does "server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)" repeat here?????, so, I commented it away???
+			// server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
+			// server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
+			// server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f );
 
 			server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*spacing );
 			server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*spacing );
 			server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f + 0.5f*spacing );
 
 			const float critter_spacing( 1.0f );
-			server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
-			server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
-			server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f );
+			// FIXME why the fuck does "server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)" repeat here?????, so, I commented it away???
+			// server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
+			// server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
+			// server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f );
 
 			server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*critter_spacing );
 			server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*critter_spacing );
 			server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f + 0.5f*critter_spacing );
 			
+			// FIXME this 20 is minimum critters
+
 			// CRITTER AND FOOD SETTINGS
-			server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 20/2 ) );
-			server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 20/2 ) );
-			server1->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 1500/2 ) );
-			server2->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 1500/2 ) );
+			server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/2 ) );
+			server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/2 ) );
+			server1->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/2 ) );
+			server2->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/2 ) );
 			
 			// CRITTER THREAD MESHERS
 				// 1 : X moves RIGHT to 2
@@ -380,19 +396,19 @@
 				// server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 1 ) );
 				// server3->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 1 ) );
 				// server4->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 1 ) );
-				server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 20/4 ) );
-				server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 20/4 ) );
-				server3->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 20/4 ) );
-				server4->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 20/4 ) );
+				server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/4 ) );
+				server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/4 ) );
+				server3->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/4 ) );
+				server4->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/4 ) );
 
 				// server1->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 130 ) );
 				// server2->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 130 ) );
 				// server3->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 130 ) );
 				// server4->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 130 ) );
-				server1->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 1500/4 ) );
-				server2->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 1500/4 ) );
-				server3->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 1500/4 ) );
-				server4->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 1500/4 ) );
+				server1->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/4 ) );
+				server2->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/4 ) );
+				server3->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/4 ) );
+				server4->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/4 ) );
 				
 				
 				// CRITTER THREAD MESHERS

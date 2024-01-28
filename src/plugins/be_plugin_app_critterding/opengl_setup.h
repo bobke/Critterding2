@@ -11,7 +11,7 @@
 			void process();
 			
 		private:
-			BEntity* m_glShadeModel_GL_SMOOTH;
+			// BEntity* m_glShadeModel_GL_SMOOTH;
 			BEntity* m_glEnable_GL_MULTISAMPLE;
 			BEntity* m_glEnable_GL_LINE_SMOOTH;
 			BEntity* m_glEnable_GL_POLYGON_SMOOTH;

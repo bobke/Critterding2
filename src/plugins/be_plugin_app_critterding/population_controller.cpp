@@ -58,7 +58,6 @@
 				// KEEP REMOVING FIRST UNTIL LIMIT REACHED
 				while ( sumCritters > m_population_reduce_to->get_uint() )
 				{
-
 					// find container with highest number of critters
 						BEntity* highestcontainer( 0 );
 						for_all_children_of( m_critter_containers )
