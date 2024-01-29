@@ -11,8 +11,8 @@ REQUIREMENTS
 
 BUILDING
 --------
-    cd build
-    ./compile-release.sh [threads]
+    > cd build
+    > ./compile-release.sh [threads]
 
 RUNNING
 -------
@@ -44,6 +44,6 @@ KEYS
 MOUSE
 -----
     button 2    entity admin window
-    button 3    grab critter / food
+    button 3    grab critter / food (works only on single thread)
 
 bobke...
