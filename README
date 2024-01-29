@@ -1,49 +1,49 @@
 REQUIREMENTS
 ------------
 
-	Qt6
-	Qwt (compiled against Qt6)
-	SDL
-	glew
-	boost
-	glm
-	
+    Qt6
+    Qwt (compiled against Qt6)
+    SDL
+    glew
+    boost
+    glm
+    
 
 BUILDING
 --------
-	cd build
-	./compile-release.sh [threads]
+    cd build
+    ./compile-release.sh [threads]
 
 RUNNING
 -------
-	with a single thread: 
-	./src/bengine app_critterding
-	with 4 server threads:
-	./src/bengine app_critterding_threads
+    running single thread: 
+    > ./src/bengine app_critterding
+    running with 4 server threads:
+    > ./src/bengine app_critterding_threads
 
 KEYS
 ----
-	F1      open admin window
-	F2      open control panel
-	F3      open system monitor
+    F1      open admin window
+    F2      open control panel
+    F3      open system monitor
 
-	up      move forward
-	down    move backwards
-	left    move left
-	right   move right
-	home    move up
-	end     move down
+    up      move forward
+    down    move backwards
+    left    move left
+    right   move right
+    home    move up
+    end     move down
 
-	[4]     look left
-	[5]     look right
-	[8]     look down
-	[2]     look up
-	[1]     tilt left
-	[3]     tilt right
+    [4]     look left
+    [5]     look right
+    [8]     look down
+    [2]     look up
+    [1]     tilt left
+    [3]     tilt right
 
 MOUSE
 -----
-	button 2    entity admin window
-	button 3    grab critter / food
+    button 2    entity admin window
+    button 3    grab critter / food
 
 bobke...
