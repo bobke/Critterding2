@@ -111,6 +111,7 @@
 
 		// SDL & OPENGL
 			auto glwindow = addChild( "GLWindow", "GLWindow" );
+			glwindow->set("title", "Critterding 2");
 			glwindow->set("on_close_destroy_entity", this);
 			// glwindow->setFps(60);
 			glwindow->addChild("OpenGL_Setup", "OpenGL_Setup");
@@ -448,7 +449,7 @@
 	{
 		  PLUGIN_INFO
 		, SCENE
-		// , CRITTERDING
+		, CRITTERDING
 		, CD_CONTROL_PANEL
 		, CD_POPULATION_CONTROL
 		, CD_CRITTER_EXCHANGER
@@ -472,7 +473,7 @@
 			{
 				BClassesHelper i;
 					i.addClass( parent, CLASS::SCENE, "Scene" );
-					// i.addClass( parent, CLASS::CRITTERDING, "Critterding" );
+					i.addClass( parent, CLASS::CRITTERDING, "Critterding" );
 					i.addClass( parent, CLASS::CD_CONTROL_PANEL, "CdControlPanel" );
 					i.addClass( parent, CLASS::CD_POPULATION_CONTROL, "CdPopulationController" );
 					i.addClass( parent, CLASS::CD_CRITTER_EXCHANGER, "CdCritterExchanger" );
@@ -497,8 +498,8 @@
 
 				if ( type == CLASS::SCENE )
 					i = new Scene();
-				// else if ( type == CLASS::CRITTERDING )
-					// i = new Critterding();
+				else if ( type == CLASS::CRITTERDING )
+					i = new Scene();
 				else if ( type == CLASS::CD_CONTROL_PANEL )
 					i = new CdControlPanel();
 				else if ( type == CLASS::CD_POPULATION_CONTROL )

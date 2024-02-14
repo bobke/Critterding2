@@ -4,9 +4,25 @@
 
 	void BQFileDialog::construct()
 	{
-		auto selected_file = addChild( "selected_file", new BEntity_string() );
-		selected_file->set( QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Files (*.ent)")).toStdString().c_str() );
+		m_title = addChild("title", "string");
+		m_title->set("Open File");
+
+		m_filetype = addChild("filetype", "string");
+		m_filetype->set("*.*");
 	}
+
+	bool BQFileDialog::set()
+	{
+		std::string fileFull = "Files (";
+		fileFull.append(m_filetype->get_string());
+		fileFull.append(")");
+		
+		auto selected_file = addChild( "selected_file", new BEntity_string() );
+		selected_file->set( QFileDialog::getOpenFileName( this, tr( m_title->get_string() ), "", tr( fileFull.c_str() ) ).toStdString().c_str() );
+		// selected_file->set( QFileDialog::getOpenFileName( this, tr( m_title->get_string() ), "", tr( "Files (*.*)" ) ).toStdString().c_str() );
+		return true;
+	}
+	
 
 	// FIXME
 	// void BQFileDialog::closeEvent(QCloseEvent *event)

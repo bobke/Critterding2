@@ -21,7 +21,7 @@
 		{
 			public:
 				Scene() : BEntity() { setProcessing(); };
-				const char* class_id() const { return "Scene"; }
+				const char* class_id() const { return "Critterding_threads"; }
 				virtual ~Scene() {};
 				
 				virtual void construct();

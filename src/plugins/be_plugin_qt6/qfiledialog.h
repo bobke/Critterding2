@@ -13,6 +13,9 @@
 			const char* class_id() const { return "QFileDialog"; }
 			
 			void construct();
+			bool set();
+			BEntity* m_title;
+			BEntity* m_filetype;
 			
 			// virtual void closeEvent(QCloseEvent *event); // FIXME
 

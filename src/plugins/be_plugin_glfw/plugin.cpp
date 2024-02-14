@@ -1,6 +1,7 @@
 #include "plugin.h"
 #include "key_names.h"
 #include "callbacks.h"
+#include "swapbuffers.h"
 
 	void Scene::construct()
 	{
@@ -29,6 +30,7 @@
 	void BGLWindow::construct()
 	{
 		addChild( "bindings", new BEntity() );
+		m_title = addChild("title", new BEntity_string_property());
 		m_fullscreen = addChild("fullscreen", new BEntity_bool_property());
 		m_vsync = addChild("vsync", new BEntity_bool_property());
 		m_width = addChild("width", new BEntity_int());
@@ -38,9 +40,12 @@
 		m_mouse_x = addChild("mouse_x", new BEntity_int());
 		m_mouse_y = addChild("mouse_y", new BEntity_int());
 
+		
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		m_window = glfwCreateWindow(1224, 768, "FGLW Window", NULL, NULL);
+		m_window = glfwCreateWindow(1224, 768, "", NULL, NULL);
+		m_title->set( "FGL Window" );
+
 		if (!m_window)
 		{
 			std::cout << "WINDOW error: FLGW Create Window failed" << std::endl;
@@ -172,6 +177,34 @@
 			return false;
 		}
 		
+		bool BGLWindow::set( const Bstring& id, const char* value )
+		{
+			if ( id == "title" )
+			{
+				// QString s(value);
+				// if ( s != windowTitle() )
+				if ( m_stored_title != value )
+				{
+					m_stored_title = value;
+					glfwSetWindowTitle( m_window, value );
+					return true;
+				}
+
+				m_title->onUpdate();
+			}
+
+			return false;
+		}
+		
+		const char* BGLWindow::get_string( const Bstring& id )
+		{
+			if ( id == "title" )
+			{
+				return m_stored_title.c_str();
+			}
+
+			return "";
+		}		
 		
 // ---- FACTORIES
 	enum CLASS

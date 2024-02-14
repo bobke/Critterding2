@@ -1,6 +1,6 @@
 #include "be_entity_core_types.h"
 #include <string.h>
-#include <iostream>
+// #include <iostream>
 
 	// REFERENCE
 		BEntity_reference::BEntity_reference() : m_value(0) {};

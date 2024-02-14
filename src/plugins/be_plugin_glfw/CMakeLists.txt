@@ -3,6 +3,8 @@
 		plugin_SRCS 
 		plugin.cpp
 		plugin.h
+		swapbuffers.cpp
+		swapbuffers.h
 	)
 
 	# find_package(glfw3 3.3 REQUIRED)	

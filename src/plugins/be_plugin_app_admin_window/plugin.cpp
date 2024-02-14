@@ -11,18 +11,18 @@
 	{
 		std::cout << "Scene::construct()" << std::endl;
 
-		// LOAD QT APP
-			pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
-			auto spawner = addChild( "spawner", "QApplicationSpawner" );
-			auto t_parent_to_add_to = spawner->getChildCustom( this );
-			removeChild( spawner );
-
-		// load admin window
-		auto admin_window = t_parent_to_add_to->addChild("Admin App", new BAdminWindow());
-
-		// kill the scene when the main window is closed
-			auto qmainwindow = admin_window->getChild("QT MainWindow");
-			qmainwindow->set("on_close_destroy_entity", this);
+		// // LOAD QT APP
+		// 	pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
+		// 	auto spawner = addChild( "spawner", "QApplicationSpawner" );
+		// 	auto t_parent_to_add_to = spawner->getChildCustom( this );
+		// 	removeChild( spawner );
+  // 
+		// // load admin window
+		// auto admin_window = t_parent_to_add_to->addChild("Admin App", new BAdminWindow());
+  // 
+		// // kill the scene when the main window is closed
+		// 	auto qmainwindow = admin_window->getChild("QT MainWindow");
+		// 	qmainwindow->set("on_close_destroy_entity", this);
 	}
 
 	BAdminWindow::~BAdminWindow()
@@ -34,6 +34,18 @@
 	{
 		setAdminWindow( this );
 		
+		setName( "Admin Window" );
+		std::cout << "Scene::construct()" << std::endl;
+
+		// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
+		pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
+
+			auto spawner = addChild( "spawner", "QApplicationSpawner" );
+			// auto t_parent_to_add_to = spawner->getChildCustom( parent() );
+			auto t_parent_to_add_to = spawner->getChildCustom( this );
+			removeChild( spawner );
+		
+		
 		// LOAD REQUIRED LIBS
 		pluginManager()->load( "basetypes", "src/kernel", "be_base_entity_types" );
 		// pluginManager()->load( "vulkan", "src/plugins/be_plugin_vulkan", "be_plugin_vulkan" );
@@ -44,12 +56,12 @@
 		// pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
 		// pluginManager()->load( "bullet", "src/plugins/be_plugin_bullet", "be_plugin_bullet" );
 
-		pluginManager()->load( "test_editing", "src/plugins/be_plugin_test_editing", "be_plugin_test_editing" );
+		// pluginManager()->load( "test_editing", "src/plugins/be_plugin_test_editing", "be_plugin_test_editing" );
 		
-		pluginManager()->load( "system_monitor", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
+		// pluginManager()->load( "system_monitor", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
 		// pluginManager()->load( "attractors", "src/plugins/be_plugin_app_attractors", "be_plugin_app_attractors" );
-		pluginManager()->load( "critterding", "src/plugins/be_plugin_app_critterding", "be_plugin_app_critterding" );
-		pluginManager()->load( "stunt coureur", "src/plugins/be_plugin_app_stunt_coureur", "be_plugin_app_stunt_coureur" );
+		// pluginManager()->load( "critterding", "src/plugins/be_plugin_app_critterding", "be_plugin_app_critterding" );
+		// pluginManager()->load( "stunt coureur", "src/plugins/be_plugin_app_stunt_coureur", "be_plugin_app_stunt_coureur" );
 		
 		// SYSTEM MONITOR
 		// FIXME seems it hangs, multiple qt inits?
@@ -427,11 +439,46 @@
 			else if ( value->name() == "admin_load_entity" )
 			{
 				auto to_parent = value->get_reference();
-				auto file_dialog = addChild("file_dialog", "QFileDialog");
 				
-				m_entityLoad.loadEntity( to_parent, file_dialog->getChild("selected_file")->get_string() );
+				// FIX QFILEDIALOG FOR .SO's
+				auto libmanager = dynamic_cast<BEntity_Plugin_Manager*>( to_parent );
+				if ( libmanager )
+				{
+					auto file_dialog = addChild("file_dialog", "QFileDialog");
+					file_dialog->getChild("title", 1)->set( "Open Library" );
+					file_dialog->getChild("filetype", 1)->set( "*.so" );
+					file_dialog->set();
+
+					std::string selected_string = file_dialog->getChild("selected_file")->get_string();
+					auto const slashpos = selected_string.find_last_of("/");
+					
+					auto path = selected_string.substr( 0, slashpos );
+					auto filename = selected_string.substr( slashpos + 1 );
+
+					// remove .so from end
+					filename = filename.substr( 0, filename.size()-3 );
+
+					// remove lib from start
+					filename = filename.substr( 3, filename.size()-3 );
+					
+					pluginManager()->load( filename, path, filename );
+
+					// load( const std::string& name, const std::string& dir, const std::string& lib )
+
+					removeChild( file_dialog );
+				}
+				else
+				{
+					auto file_dialog = addChild("file_dialog", "QFileDialog");
+					file_dialog->getChild("title", 1)->set( "Open Entity" );
+					file_dialog->getChild("filetype", 1)->set( "*.ent" );
+					file_dialog->set();
+
+					m_entityLoad.loadEntity( to_parent, file_dialog->getChild("selected_file")->get_string() );
+					removeChild( file_dialog );
+				}
+
 				
-				removeChild( file_dialog );
 
 				// FIXME SPECIES
 				// // pick the last entity from m_unit_container
@@ -447,8 +494,6 @@
 				// 	}
 				// }
 			}
-			
-			
 		}
 
 		
@@ -825,18 +870,19 @@
 			}
 
 			// RECOMPILE LIBRARY
-			auto t_plugin = dynamic_cast<BEntity_Plugin*>( entity );
-			if ( t_plugin )
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
-				button->set("text", "update");
+				auto t_plugin = dynamic_cast<BEntity_Plugin*>( entity );
+				if ( t_plugin )
+				{
+					auto button = to_layout->addChild("qt button", "QPushButton" );
+					button->set("text", "update");
 
-				// COMMAND
-					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("update_plugin", new BEntity_reference() );
-					command->set(entity);
+					// COMMAND
+						auto actions = button->addChild("_commands", new BEntity() );
+						auto command = actions->addChild("update_plugin", new BEntity_reference() );
+						command->set(entity);
+				}
 			}
-			
 		
 	}
 
@@ -960,7 +1006,7 @@
 				BEntity* i(0);
 				
 				if ( type == CLASS::SCENE )
-					i = new Scene();
+					i = new BAdminWindow();
 				else if ( type == CLASS::ADMIN_WINDOW )
 					i = new BAdminWindow();
 				else if ( type == CLASS::CONFIG_LIBRARIES )

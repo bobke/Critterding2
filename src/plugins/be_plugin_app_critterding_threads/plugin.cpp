@@ -146,6 +146,7 @@
 
 		// SDL & OPENGL
 			auto glwindow = addChild( "GLWindow", "GLWindow" );
+			glwindow->set("title", "Critterding 2 (threads)");
 			glwindow->set("on_close_destroy_entity", this);
 			// glwindow->setFps(60);
 			glwindow->addChild("OpenGL_Setup", "OpenGL_Setup");
@@ -630,7 +631,7 @@
 	{
 		  PLUGIN_INFO
 		, SCENE
-		// , CRITTERDING_THREADS
+		, CRITTERDING_THREADS
 	};
 
 	extern "C" BEntity* create( BEntity* parent, const Buint type )
@@ -640,7 +641,7 @@
 			{
 				BClassesHelper i;
 					i.addClass( parent, CLASS::SCENE, "Scene" );
-					// i.addClass( parent, CLASS::CRITTERDING_THREADS, "Critterding_threads" );
+					i.addClass( parent, CLASS::CRITTERDING_THREADS, "Critterding_threads" );
 				return 0;
 			}
 
@@ -651,8 +652,8 @@
 
 				if ( type == CLASS::SCENE )
 					i = new Scene();
-				// else if ( type == CLASS::CRITTERDING_THREADS )
-					// i = new Critterding_threads();
+				else if ( type == CLASS::CRITTERDING_THREADS )
+					i = new Scene();
 
 				return i;
 			}
