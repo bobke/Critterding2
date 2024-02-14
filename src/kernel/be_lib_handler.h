@@ -16,8 +16,10 @@
 			bool open( const std::string& dir, const std::string& lib );
 			BEntity* create( BEntity* parent, const Buint id );
 			void destroy( BEntity* e );
-			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager ) { (void)hboxlayout; (void) plugin_manager; }
+			// void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager ) { (void)hboxlayout; (void) plugin_manager; }
 			const std::string& error() const;
+			std::string m_filename;
+			std::string m_location;
 		private:
 			bool open( const std::string& location );
 			void* m_sceneLibHandle;
@@ -34,7 +36,7 @@
 			BEntity_Plugin* load( const std::string& name, const std::string& dir, const std::string& lib );
 			BEntity* create( BEntity* parent, const std::string& name );
 			BEntity* create( BEntity* parent, const std::string& library, const std::string& name );
-			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager ) { (void)hboxlayout; (void) plugin_manager; }
+			// void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager ) { (void)hboxlayout; (void) plugin_manager; }
 		private:
 	};
 

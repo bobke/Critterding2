@@ -4,6 +4,8 @@
 #include "be_entity_core_types.h"
 #include <iostream>
 #include <algorithm>
+#include <array>
+#include <sstream>
 
 		BEntityTop::BEntityTop(bool connection_type)
 		: m_processor(new BProcessor())
@@ -350,6 +352,54 @@
 								}
 							}
 
+							else if ( c->name() == "update_plugin" )
+							{
+								auto plugin = dynamic_cast<BEntity_Plugin*>(c->get_reference());
+								if ( plugin )
+								{
+									if ( is_not_in_removed_entities( plugin ) )
+									{
+										auto location = plugin->m_location;
+										auto filename = plugin->m_filename;
+										auto name = plugin->name();
+										
+										// RECOMPILE LIBRARY
+											std::cout << "recompiling: " << plugin->name() << std::endl;
+											std::stringstream cmd;
+											// cmd << "cd src && cd plugins && cd be_plugin_" << "test_editing" << " && time make" << std::endl;
+											std::cout << "cd " << plugin->m_location << " && time make -j8" << std::endl;
+											cmd << "cd " << plugin->m_location << " && time make -j8" << std::endl;
+											
+											std::cout << exec( cmd.str().c_str() );
+
+										// // REMOVE LIB'S ENTITIES
+										// 	auto ent = getChild("bin")->getChild("test_editing");
+										// 	if ( ent )
+										// 	{
+										// 		std::cout << "removing entities" << std::endl;
+										// 		ent->parent()->removeChild(ent);
+										// 	}
+
+										// REMOVE LIBRARY
+											auto lib = getChild("lib", 1)->getChild(name.c_str(), 1);
+											if ( lib )
+											{
+												std::cout << "unloading library" << std::endl;
+												lib->parent()->removeChild(lib);
+											}
+										
+										// RELOAD LIBRARY
+											std::cout << "loading library" << std::endl;
+											pluginManager()->load( name, location, filename );
+										
+										
+// 										
+// 										m_entitySave.saveEntity( entity, t_filename );
+									}
+								}
+							}
+							
+							
 							else
 							{
 								std::cout << "WARNING::unknown command: " << c->id() << " " << c->name() << std::endl;
@@ -376,6 +426,21 @@
 			}
 		}
 
+		std::string BEntityTop::exec(const char* cmd)
+		{
+			std::array<char, 128> buffer;
+			std::string result;
+			std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+			if (!pipe) {
+				throw std::runtime_error("popen() failed!");
+			}
+			while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+				result += buffer.data();
+			}
+			return result;
+		}
+
+		
 		void BEntityTop::print( BEntity* entity, const Buint max_levels )
 		{
 			m_child_handler->print( entity, max_levels );

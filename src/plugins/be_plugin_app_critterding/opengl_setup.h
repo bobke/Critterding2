@@ -8,6 +8,7 @@
 			OpenGL_Setup();
 			virtual ~OpenGL_Setup() {};
 			void construct();
+			const char* class_id() const { return "OpenGL_Setup"; }
 			void process();
 			
 		private:

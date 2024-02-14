@@ -77,7 +77,7 @@
 
 		// load a opengltest
 		auto glApp = t_parent_to_add_to->addChild("GLAppApp", new BGLApp());
-// 		auto sdlwin = glApp->getChild("SDL GLWindow");
+// 		auto sdlwin = glApp->getChild("GLWindow");
 // 		sdlwin->set("on_close_destroy_entity", this);
 	}
 
@@ -726,7 +726,7 @@
 				auto physics_entity_transform = physics_entity->getChild("transform");
 			// OPENGL
 				BEntity* glscene;
-				glscene = addChild( "SDL GLWindow", "SDLWindow" );
+				glscene = addChild( "GLWindow", "SDLWindow" );
 				BEntity* t_graphicsModelSystem = glscene->addChild("GraphicsModelSystem", "GraphicsModelSystem");
 				t_graphicsModelSystem->addChild("Camera", "Camera");
 				BEntity* t_graphicsModel = t_graphicsModelSystem->addChild("GraphicsModel", "GraphicsModel");
@@ -759,7 +759,7 @@
 // 					BEntity* glscene;
 // 					
 // 					// SDL
-// 					glscene = addChild( "SDL GLWindow", "SDLWindow" );
+// 					glscene = addChild( "GLWindow", "SDLWindow" );
 // 	// 				glscene->setFps(165);
 // 
 // 	// 				// QT
@@ -874,6 +874,7 @@
 				
 				// AVERAGE FPS
 					m_line_edit_fps_avg->set( std::to_string((Bfloat)m_timer_frame->get_uint() / m_timer_s_total->get_float()).c_str() );
+					// m_line_edit_fps_avg->set( "disabled" );
 
 				// ENTITIES
 					m_line_edit_entities->set( topParent()->numTotalChildren() );

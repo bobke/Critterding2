@@ -1,5 +1,6 @@
 #include "be_entity_io_handler.h"
 #include "be_entity_core_types.h"
+#include <iostream> // NOTE: KEEPING THIS ONE HERES SAVES 3 SECONDS COMPILE TIME
 
 	// CONSTRUCTORS / DESTRUCTOR
 

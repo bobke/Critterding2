@@ -1,6 +1,6 @@
 #include "brain_system.h"
 #include "kernel/be_entity_io_handler.h"
-// #include <iostream>
+#include <iostream>
 #include <iomanip>
  
 	void BrainSystem::construct()

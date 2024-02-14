@@ -3,7 +3,7 @@ REQUIREMENTS
 
     Qt6
     Qwt (compiled against Qt6)
-    SDL
+    FGLW or SDL
     glew
     boost
     glm
@@ -26,6 +26,8 @@ KEYS
     F1      open admin window
     F2      open control panel
     F3      open system monitor
+    F11     toggle fullscreen
+    F12     toggle vsync
 
     up      move forward
     down    move backwards

@@ -3,7 +3,7 @@
 #include "be_entity_id_handler.h"
 #include "be_entity_io_handler.h"
 // #include "be_lib_handler.h"
-// #include <iostream>
+#include <iostream>
 // #include <sstream>
 
 

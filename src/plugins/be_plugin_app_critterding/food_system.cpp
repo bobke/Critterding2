@@ -248,7 +248,7 @@
 
 		// GRAPHICS ENTITY
 			BEntity* graphics_transform(0);
-			auto graphicsmodelsystem = topParent()->getChild("bin", 1)->getChild("Critterding", 1)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
+			auto graphicsmodelsystem = topParent()->getChild("bin", 1)->getChild("Critterding", 1)->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1);
 			if ( graphicsmodelsystem )
 			{
 				// LOAD MODEL IF NEEDED, ADD TRANSFORM

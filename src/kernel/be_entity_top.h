@@ -122,6 +122,9 @@
 				private:
 					BEntityCopy m_entityCopy;
 					BEntitySave m_entitySave;
+					
+			// COMMAND EXEC
+				std::string exec(const char* cmd);
 	};
 
 

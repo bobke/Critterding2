@@ -2,7 +2,7 @@
 #define BE_ENTITY_IO_HANDLER_H_INCLUDED
 
 #include <vector>
-#include <iostream> // NOTE: KEEPING THIS ONE HERES SAVES 3 SECONDS COMPILE TIME
+// #include <iostream> // NOTE: KEEPING THIS ONE HERES SAVES 3 SECONDS COMPILE TIME
 
 class BEntity;
 class BEInput;

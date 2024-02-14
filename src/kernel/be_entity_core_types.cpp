@@ -43,7 +43,12 @@
 
 		bool BEntity_trigger::apply( BEntity* e )
 		{
-// 			std::cout << "BEntity_trigger::apply : " << id() << std::endl;
+			// auto boolEntity = static_cast<BEntity_bool*>(e);
+			// if ( boolEntity )
+			// {
+			// 	std::cout << "BEntity_trigger::apply : " << id() << std::endl;
+			// 	return boolEntity->set( !boolEntity->get_bool() );
+			// }
 			return e->set();
 		}
 

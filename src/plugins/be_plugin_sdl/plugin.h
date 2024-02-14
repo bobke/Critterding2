@@ -23,7 +23,6 @@
 
 				virtual void construct();
 				void create(const std::string& title, const unsigned int t_width, const unsigned int t_height);
-				void createSafe(const std::string& title, const unsigned int t_width, const unsigned int t_height);
 
 				//	Destroy window and OpenGL Context, close the Display
 				virtual void process();
@@ -57,9 +56,8 @@
 				
 		};
 
-	ENTITY_SIMPLEST( SDL_SwapBuffers ) { SDL_GL_SwapBuffers(); } END
-
-	// SCENE
+	// SWAPBUFFERS
+		ENTITY_SIMPLEST( SDL_SwapBuffers ) { SDL_GL_SwapBuffers(); } END
 		// class SDL_SwapBuffers: public BEntity
 		// {
 		// 	public:

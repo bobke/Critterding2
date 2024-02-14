@@ -5,7 +5,7 @@
 
 #include "be_entity_children_handler.h"
 #include "be_lib_handler.h"
-// #include <iostream>
+#include <iostream>
 // #include <sstream>
 
 		BEntity::BEntity() 
@@ -175,8 +175,7 @@
 			(void)id;
 			return 0;
 		}
-		
-		
+
 	// SET NAMED VALUES
 		bool BEntity::set( const Bstring& id, BEntity* value )
 		{
@@ -224,6 +223,7 @@
 			std::cout << "BEntity::set( const Bstring& id, const char* value ): should be overriding this entity " << id << std::endl;
 			(void)id; (void)value; return false;
 		}
+
 
 		template <typename T>
 		bool BEntity::compareAndSetValue (T& original, T const& value)
@@ -700,7 +700,7 @@
 				const auto& end(children_vector.end());
 				for ( auto it(begin); it != end; ++it )
 				{
-					if ( (*it)->name() == name )
+					if ( std::string((*it)->name()) == std::string(name) )
 					{
 						return (*it);
 					}

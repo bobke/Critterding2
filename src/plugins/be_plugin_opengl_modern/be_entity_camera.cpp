@@ -22,7 +22,7 @@
 		m_z_near = addChild( "z_near", new BEntity_float() );
 		m_z_near->set( 0.1f );
 		m_z_far = addChild( "z_far", new BEntity_float() );
-		m_z_far->set( 12000.0f );
+		m_z_far->set( 10000.0f );
 		m_sensitivity_move = addChild( "sensitivity_move", new BEntity_float() );
 		m_sensitivity_move->set( 7.0f );
 		m_sensitivity_look = addChild( "sensitivity_look", new BEntity_float() );
@@ -139,10 +139,7 @@
 		// // PROJECTION MATRIX GLM 2
 		// 	perspective( m_fov_y->get_float(), m_aspect_ratio->get_float(), m_z_near->get_float(), m_z_far->get_float() );
 		// 	m_ProjectionMatrixGLM = glm::make_mat4(m_projectionMatrix);
-			
 
-
-			
 		// VIEW MATRIX
 			// m_ViewMatrix = (m_base_transform->m_transform * m_transform->m_transform).inverse();
 			// m_ViewMatrix.getOpenGLMatrix( m_viewMatrix );
@@ -167,16 +164,10 @@
 				m_e_scale_x = parent()->getChild("shaders", 1)->getChild("e_scale_x", 1);
 			}
 			m_e_scale_x->set(0.0f);
-
-
-
 	}
 
 	btVector3 BCamera::getScreenDirection(const int win_x, const int win_y, const int mouse_x, const int mouse_y)
 	{
-		// FIXME HACK: needs to be upstairs
-		m_aspect_ratio->set( (float)win_x/win_y );
-		
 		btVector3 rayForward( -m_transform->m_transform.getBasis()[0][2], -m_transform->m_transform.getBasis()[1][2], -m_transform->m_transform.getBasis()[2][2]); 
 		rayForward.normalize();
 		rayForward *= m_z_far->get_float();

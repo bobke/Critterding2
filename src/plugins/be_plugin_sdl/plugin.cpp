@@ -7,7 +7,7 @@
 	{
 		std::cout << "Scene::construct()" << std::endl;
 
-		addChild( "bindings", new BEntity() );
+		// addChild( "bindings", new BEntity() );
 	}
 
 	BGLWindow::BGLWindow()
@@ -45,125 +45,70 @@
 			exit(1);
 		}
 
+		const int width=t_width;
+		const int height=t_height;
+		const int colorBits=24;
+		const int depthBits=24;
+		const int stencilBits=8;
+		const int multisamples=1;
+		const int doublebuffer=1;
+		const int vsync=0;
+		const int fullscreen=0;
+		const int hardwareGl=1;
+		m_resizable = 1;
+		
+		if(colorBits==32||colorBits==24)
 		{
-			{
-				const int width=t_width;
-				const int height=t_height;
-				const int colorBits=24;
-				const int depthBits=24;
-				const int stencilBits=8;
-				const int multisamples=1;
-				const int doublebuffer=1;
-				const int vsync=0;
-				const int fullscreen=0;
-				const int hardwareGl=1;
-				m_resizable = 1;
-				
-				if(colorBits==32||colorBits==24)
-				{
-					SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-					SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-					SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-					SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 0);
-				}
-				else
-				{
-					SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 4);
-					SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
-					SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 4);
-					SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
-				}
-
-				SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, depthBits);
-				SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, stencilBits);
-
-				if(multisamples>1)
-				{
-					SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-					SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, multisamples);
-				}
-				else
-				{
-					SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
-					SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
-				}
-
-				SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, doublebuffer);
-				SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, vsync);
-
-				Uint32 videoFlags = SDL_OPENGL;
-
-				if(m_resizable)
-				{
-					videoFlags |= SDL_RESIZABLE;
-				}
-
-				if(fullscreen)
-				{
-					videoFlags |= SDL_FULLSCREEN;
-				}
-
-				SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, hardwareGl);
-
-
-				vidInfo = SDL_GetVideoInfo();
-
-				if ( !vidInfo )
-				{
-					std::cout << "WINDOW error: Cannot get SDL video information '" <<  SDL_GetError() << std::endl;
-					exit(1);
-				}
-
-				w_bpp = vidInfo->vfmt->BitsPerPixel;
-
-				vidFlags = SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_HWPALETTE;
-
-				hwaccel = false;
-				if( vidInfo->hw_available )
-				{
-					hwaccel = true;
-					vidFlags |= SDL_HWSURFACE;
-				}
-				else
-					vidFlags |= SDL_SWSURFACE;
-
-				if( vidInfo->blit_hw != 0 )
-					vidFlags |= SDL_HWACCEL;
-
-				w_bpp = colorBits;
-				
-				m_width->set( (int)width );
-				m_height->set( (int)height );
-				n_width = width;
-				n_height = height;
-
-				//Set window title
-				setTitle(title);
-
-				//Create window
-				m_surface = SDL_SetVideoMode(m_width->get_int(), m_height->get_int(), w_bpp, videoFlags);
-
-				//Enable GL multisampled rendering if required
-				int value;
-				SDL_GL_GetAttribute(SDL_GL_MULTISAMPLEBUFFERS, &value);
-
-				settingsfs = 0;
-				fs = 0;
-
-				return;
-
-			}
+			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+			SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 0);
 		}
-		createSafe(title, t_width, t_height);
-	}
+		else
+		{
+			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 4);
+			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
+			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 4);
+			SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
+		}
 
-	void BGLWindow::createSafe( const std::string& title, const unsigned int width, const unsigned int height )
-	{
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, depthBits);
+		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, stencilBits);
+
+		if(multisamples>1)
+		{
+			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, multisamples);
+		}
+		else
+		{
+			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+			SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+		}
+
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, doublebuffer);
+		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, vsync);
+
+		Uint32 videoFlags = SDL_OPENGL;
+
+		if(m_resizable)
+		{
+			videoFlags |= SDL_RESIZABLE;
+		}
+
+		if(fullscreen)
+		{
+			videoFlags |= SDL_FULLSCREEN;
+		}
+
+		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, hardwareGl);
+
+
 		vidInfo = SDL_GetVideoInfo();
 
 		if ( !vidInfo )
 		{
-// 			m_logDebug << "::WINDOW error: Cannot get SDL video information '" <<  SDL_GetError() << "'\n";
+			std::cout << "WINDOW error: Cannot get SDL video information '" <<  SDL_GetError() << std::endl;
 			exit(1);
 		}
 
@@ -183,37 +128,25 @@
 		if( vidInfo->blit_hw != 0 )
 			vidFlags |= SDL_HWACCEL;
 
-		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 4);
-		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 4);
-		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 4);
-		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 4);
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-		setTitle(title);
-		// 	SDL_WM_SetIcon(SDL_LoadBMP("other files/critterding icon.png"), 0);
-		// 	SDL_WM_SetIcon(SDL_LoadBMP("other files/cd.bmp"), 0);
-		// 	string pixmappath = Settings::Instance()->binarypath;
-		// 	pixmappath.append( "../share/critterding/pixmaps/cd.bmp" );
-		// 	SDL_WM_SetIcon(SDL_LoadBMP(pixmappath.c_str()), 0);
-		// 	SDL_WM_SetIcon(SDL_LoadBMP("/projects/lessons/lesson20/data/image2.bmp"), 0);
-
+		w_bpp = colorBits;
+		
 		m_width->set( (int)width );
 		m_height->set( (int)height );
 		n_width = width;
 		n_height = height;
 
-		// FIXME LOOKS LIKE HERE WE NEED TO FEIX FULLSCREEN TOGGLE?
-// 		Settings::Instance()->winWidth = &w_width;
-// 		Settings::Instance()->winHeight = &w_height;
-// 		settingsfs = Settings::Instance()->getCVarPtr("fullscreen");
-// 		fs = *settingsfs;
-		fs = 1;
+		//Set window title
+		setTitle(title);
 
-		if ( fs == 1 )
-			m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_FULLSCREEN );
-		else
-			m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_RESIZABLE );
+		//Create window
+		m_surface = SDL_SetVideoMode(m_width->get_int(), m_height->get_int(), w_bpp, videoFlags);
+
+		//Enable GL multisampled rendering if required
+		int value;
+		SDL_GL_GetAttribute(SDL_GL_MULTISAMPLEBUFFERS, &value);
+
+		settingsfs = 0;
+		fs = 0;
 
 	}
 
@@ -233,7 +166,9 @@
 
 		if ( m_width->get_int() == 0 ) m_width->set( (int)1 );
 		if ( m_height->get_int() == 0 ) m_height->set( (int)1 );
-		
+
+		getChild("GraphicsModelSystem", 1)->getChild("Camera", 1)->getChild("aspect_ratio", 1)->set( (float)m_width->get_int()/m_height->get_int() );
+
 		SDL_FreeSurface(m_surface);
 		m_surface = SDL_SetVideoMode( m_width->get_int(), m_height->get_int(), w_bpp, vidFlags | SDL_RESIZABLE );
 		
@@ -297,7 +232,8 @@
 				auto bindings = getChild( "bindings", 1 );
 				if( bindings )
 				{
-					auto binding = bindings->getChild( SDL_GetKeyName( event.key.keysym.sym ), 1 );
+					auto keyname = SDL_GetKeyName( event.key.keysym.sym );
+					auto binding = bindings->getChild( keyname, 1 );
 					if ( binding )
 					{
 						if ( binding->class_id() == std::string("bool") )
@@ -314,7 +250,7 @@
 					}
 
 					std::stringstream key_name;
-					key_name << "key_down_" << SDL_GetKeyName( event.key.keysym.sym );
+					key_name << "key_down_" << keyname;
 					auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
 					if ( binding2 )
 					{
@@ -331,7 +267,8 @@
 				auto bindings = getChild( "bindings", 1 );
 				if( bindings )
 				{
-					auto binding = bindings->getChild( SDL_GetKeyName( event.key.keysym.sym ), 1 );
+					auto keyname = SDL_GetKeyName( event.key.keysym.sym );
+					auto binding = bindings->getChild( keyname, 1 );
 					if ( binding )
 					{
 						if ( binding->class_id() == std::string("bool") )
@@ -348,7 +285,7 @@
 					}
 
 					std::stringstream key_name;
-					key_name << "key_up_" << SDL_GetKeyName( event.key.keysym.sym );
+					key_name << "key_up_" << keyname;
 					auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
 					if ( binding2 )
 					{
@@ -368,12 +305,12 @@
 			
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
 			{
-				std::stringstream mouseButton_name;
-				mouseButton_name << "mousebutton_down_" << (int)event.button.button;
-				
 				auto bindings = getChild( "bindings", 1 );
 				if( bindings )
 				{
+					std::stringstream mouseButton_name;
+					mouseButton_name << "mousebutton_down_" << (int)event.button.button - 1;
+
 					auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
 					if ( binding )
 					{
@@ -394,12 +331,12 @@
 
 			else if (event.type == SDL_MOUSEBUTTONUP)
 			{
-				std::stringstream mouseButton_name;
-				mouseButton_name << "mousebutton_up_" << (int)event.button.button;
-				
 				auto bindings = getChild( "bindings", 1 );
 				if( bindings )
 				{
+					std::stringstream mouseButton_name;
+					mouseButton_name << "mousebutton_up_" << (int)event.button.button;
+
 					auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
 					if ( binding )
 					{
@@ -471,8 +408,8 @@
 	{
 		  PLUGIN_INFO
 		, SCENE
-		, SDLWINDOW
-		, SDL_SWAPBUFFERS
+		, GLWINDOW
+		, GLSWAPBUFFERS
 	};
 
 	extern "C" BEntity* create( BEntity* parent, const Buint type )
@@ -482,8 +419,8 @@
 			{
 				BClassesHelper i;
 					i.addClass( parent, CLASS::SCENE, "Scene" );
-					i.addClass( parent, CLASS::SDLWINDOW, "SDLWindow" );
-					i.addClass( parent, CLASS::SDL_SWAPBUFFERS, "SDLSwapBuffers" );
+					i.addClass( parent, CLASS::GLWINDOW, "GLWindow" );
+					i.addClass( parent, CLASS::GLSWAPBUFFERS, "GLSwapBuffers" );
 				return 0;
 			}
 
@@ -494,9 +431,9 @@
 				
 				if ( type == CLASS::SCENE )
 					i = new Scene();
-				else if ( type == CLASS::SDLWINDOW )
+				else if ( type == CLASS::GLWINDOW )
 					i = new BGLWindow();
-				else if ( type == CLASS::SDL_SWAPBUFFERS )
+				else if ( type == CLASS::GLSWAPBUFFERS )
 					i = new SDL_SwapBuffers();
 
 				return i;

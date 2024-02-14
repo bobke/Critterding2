@@ -1,3 +1,32 @@
+// void calcClipPlanes(glm::mat4& view, glm::mat4& projection)
+// {
+//     glm::mat4 viewProjectionMatrix = projection * view;
+//     glm::vec4 row0 = glm::row(viewProjectionMatrix, 0);
+//     glm::vec4 row1 = glm::row(viewProjectionMatrix, 1);
+//     glm::vec4 row2 = glm::row(viewProjectionMatrix, 2);
+//     glm::vec4 row3 = glm::row(viewProjectionMatrix, 3);
+// 
+//     g_leftClipPlane = row0 + row3;
+//     g_rightClipPlane = row0 - row3;
+//     g_bottomClipPlane = row1 + row3;
+//     g_topClipPlane = row1 - row3;
+//     g_nearClipPlane = row2 + row3;
+//     g_farClipPlane = row2 - row3;
+// }
+// 
+// bool isPointInsideViewFrustum(const glm::vec3& point)
+// {
+//     glm::vec4 p(point, 1.0);
+// 
+//     return glm::dot(p, g_leftClipPlane) >= 0 &&
+//         glm::dot(p, g_rightClipPlane) <= 0 &&
+//         glm::dot(p, g_bottomClipPlane) >= 0 &&
+//         glm::dot(p, g_topClipPlane) <= 0 &&
+//         glm::dot(p, g_nearClipPlane) >= 0 &&
+//         glm::dot(p, g_farClipPlane) <= 0;
+// }
+
+
 #include "vision_system.h"
 #include "plugins/be_plugin_opengl_modern/be_entity_graphics_model.h"
 #include "plugins/be_plugin_bullet/be_entity_physics_entity.h"
@@ -48,11 +77,11 @@
 		// Go back to regular frame buffer rendering
 		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 		
-		m_graphics_system = dynamic_cast<BGraphicsModelSystem*>( parent()->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1) );
+		m_graphics_system = dynamic_cast<BGraphicsModelSystem*>( parent()->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1) );
 		m_ProjectionViewMatrixID = glGetUniformLocation(  m_graphics_system->m_effect->m_program.get()->handle(), "ProjectionViewMatrix_Camera" );
 		
 		// shortcut to reset scale uniform, hackish
-		m_e_scale_x = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1)->getChild("shaders", 1)->getChild("e_scale_x", 1);
+		m_e_scale_x = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->getChild("shaders", 1)->getChild("e_scale_x", 1);
 	} 
 
 	void CdVisionSystem::process()
@@ -62,7 +91,7 @@
 			// std::cout << "------------- vision system START" << std::endl;
 			if ( m_drawEntities == 0 )
 			{
-				m_drawEntities = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("SDL GLWindow", 1)->getChild("GraphicsModelSystem", 1);
+				m_drawEntities = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1);
 			}
 
 			glUseProgram( m_graphics_system->m_effect_critter->m_program.get()->handle() );
@@ -262,10 +291,9 @@
 					}
 				}
 			}
-			// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
 			// std::cout << "------------- vision system STOP" << std::endl;
 		}
-
 	}
 
 	bool CdVisionSystem::set( const Bstring& id, BEntity* value )

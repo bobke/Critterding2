@@ -11,14 +11,22 @@
 
 	BEntity_Plugin::~BEntity_Plugin()
 	{
-		m_create_plugin = 0;
-		m_destroy_plugin = 0;
-
-		#ifndef NDEBUG
+		// #ifndef NDEBUG
 			// NOTE COMMENTING THIS FIXES (<unknown module>) IN DEBUGGING
 			if ( m_sceneLibHandle != 0 )
 				dlclose(m_sceneLibHandle);
-		#endif
+		// #endif
+		
+		m_create_plugin = 0;
+		m_destroy_plugin = 0;
+		
+	}
+
+	void BEntity_Plugin::destroy( BEntity* e )
+	{
+		std::cout << "destroying" << std::endl;
+		e->clearChildren();
+		m_destroy_plugin( e );
 	}
 
 	const std::string& BEntity_Plugin::error() const
@@ -28,10 +36,14 @@
 
 	bool BEntity_Plugin::open( const std::string& dir, const std::string& lib )
 	{
-		if ( !open(dir+"/lib"+lib+".so") )
+		m_location = dir;
+		m_filename = lib;
+		
+		if ( !open( m_location+"/lib"+m_filename+".so" ) )
 		{ 
 			std::cout << error() << std::endl;
-			exit(0);
+			// exit(1);
+			return false;
 		}
 		BEntity* e = addChild("Classes", new BEntity());
 		create(e, 0);
@@ -76,11 +88,6 @@
 		return m_create_plugin( parent, id ); // FIXME MEMLEAK
 	}
 
-	void BEntity_Plugin::destroy( BEntity* e )
-	{
-		e->clearChildren();
-		m_destroy_plugin( e );
-	}
 
 
 
@@ -92,7 +99,10 @@
 
 		BEntity_Plugin* t(new BEntity_Plugin());
 		addChild(name, t);
-		t->open( dir, lib );
+		if ( !t->open( dir, lib ) )
+		{
+			return 0;
+		}
 		return t;
 	}
 

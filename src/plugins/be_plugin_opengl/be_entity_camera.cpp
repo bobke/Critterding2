@@ -124,9 +124,6 @@
 
 	btVector3 BCamera::getScreenDirection(const int win_x, const int win_y, const int mouse_x, const int mouse_y)
 	{
-		// FIXME HACK: needs to be upstairs
-		m_aspect_ratio->set( (float)win_x/win_y );
-		
 		btVector3 rayForward( -m_transform->m_transform.getBasis()[0][2], -m_transform->m_transform.getBasis()[1][2], -m_transform->m_transform.getBasis()[2][2]); 
 		rayForward.normalize();
 		rayForward *= m_z_far->get_float();

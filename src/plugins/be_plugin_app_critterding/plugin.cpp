@@ -29,7 +29,7 @@
 // 		// t_parent_to_add_to->addChild( "Admin App", "AdminWindow" );
 // 		// t_parent_to_add_to->addChild( "sysmon", "SystemMonitor" );
 // 
-// 		auto sdl_window = addChild("Critterding", new Critterding())->getChild("SDL GLWindow");
+// 		auto sdl_window = addChild("Critterding", new Critterding())->getChild("GLWindow");
 // 		sdl_window->set("on_close_destroy_entity", this);
 // 	}
 	
@@ -55,11 +55,15 @@
 			m_eat_transfer_energy->set( 100.0f );
 
 		pluginManager()->load( "system", "src/plugins/be_plugin_system", "be_plugin_system" );
-		pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
 		pluginManager()->load( "opengl", "src/plugins/be_plugin_opengl_modern", "be_plugin_opengl_modern" );
 		pluginManager()->load( "bullet", "src/plugins/be_plugin_bullet", "be_plugin_bullet" );
 		pluginManager()->load( "brainz", "src/plugins/be_plugin_brainz", "be_plugin_brainz" );
 		pluginManager()->load( "qwt", "src/plugins/be_plugin_qwt", "be_plugin_qwt" ); // FIXME
+
+		if ( !pluginManager()->load( "glfw", "src/plugins/be_plugin_glfw", "be_plugin_glfw" ) )
+		{
+			pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
+		}
 
 		// // TIMER
 		// 	addChild( "timer", "BTimer" );
@@ -106,20 +110,21 @@
 			ray_target->getChild("z")->connectServerServer( mouse_target->getChild("z") );
 
 		// SDL & OPENGL
-			auto glscene = addChild( "SDL GLWindow", "SDLWindow" );
-			// glscene->setFps(60);
-			glscene->addChild("OpenGL_Setup", "OpenGL_Setup");
+			auto glwindow = addChild( "GLWindow", "GLWindow" );
+			glwindow->set("on_close_destroy_entity", this);
+			// glwindow->setFps(60);
+			glwindow->addChild("OpenGL_Setup", "OpenGL_Setup");
 			
-			m_win_width = glscene->getChild( "width", 1 );
-			m_win_height = glscene->getChild( "height", 1 );
-			m_mouse_x = glscene->getChild( "mouse_x", 1 );
-			m_mouse_y = glscene->getChild( "mouse_y", 1 );
+			m_win_width = glwindow->getChild( "width", 1 );
+			m_win_height = glwindow->getChild( "height", 1 );
+			m_mouse_x = glwindow->getChild( "mouse_x", 1 );
+			m_mouse_y = glwindow->getChild( "mouse_y", 1 );
 
-			// SDL SWAPBUFFER, making sure this runs right after sdl_window and it's children are done processing
-				addChild("SDLSwapBuffers", "SDLSwapBuffers");
+		// SDL SWAPBUFFER, making sure this runs right after sdl_window and it's children are done processing
+			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
 			
-			auto t_graphicsModelSystem = glscene->addChild("GraphicsModelSystem", "GraphicsModelSystem");
-			glscene->set("on_close_destroy_entity", this);
+		// GRAPHICS MODELSYSTEM
+			auto t_graphicsModelSystem = glwindow->addChild("GraphicsModelSystem", "GraphicsModelSystem");
 
 		// CAMERA
 			// m_camera = new BCamera();
@@ -148,7 +153,7 @@
 			// transform->getChild( "rotation_euler_z" )->set( 0.0f );
 
 		// COMMANDS
-			auto commands = glscene->addChild( "commands", new BEntity() );
+			auto commands = glwindow->addChild( "commands", new BEntity() );
 			auto launchAdminWindow = commands->addChild( "launchAdminWindow", new cmd_launchAdminWindow() );
 			auto launchControlPanel = commands->addChild( "launchControlPanel", new cmd_launchControlPanel() );
 			auto launchSystemMonitor = commands->addChild( "launchSystemMonitor", new cmd_launchSystemMonitor() );
@@ -157,8 +162,17 @@
 			auto mouseUnpickBody = commands->addChild( "mouseUnpickBody", new cmd_mouseUnpickBody() );
 
 		// BINDINGS
-			auto bindings = glscene->getChild( "bindings", 1 );
+			auto bindings = glwindow->getChild( "bindings", 1 );
 
+			// fullscreen
+				auto fs = glwindow->getChild("fullscreen");
+				if ( fs )
+					bindings->addChild( "key_down_f11", new BEntity_bool() )->connectServerServer( fs );;
+			// vsync
+				auto vs = glwindow->getChild("vsync");
+				if ( vs )
+					bindings->addChild( "key_down_f12", new BEntity_bool() )->connectServerServer( vs );;
+			
 			auto binding_f1 = bindings->addChild( "f1", new BEntity_trigger() );
 			binding_f1->connectServerServer( launchAdminWindow );
 
@@ -172,9 +186,9 @@
 			auto binding_mouse_2 = bindings->addChild( "mousebutton_down_2", new BEntity_trigger() );  // FIXME CONNECT TO bool under std_window
 			binding_mouse_2->connectServerServer( launchSelectionWindow );
 
-			auto binding_mouse_3_down = bindings->addChild( "mousebutton_down_3", new BEntity_trigger() );  // FIXME CONNECT TO bool under std_window
+			auto binding_mouse_3_down = bindings->addChild( "mousebutton_down_1", new BEntity_trigger() );  // FIXME CONNECT TO bool under std_window
 			binding_mouse_3_down->connectServerServer( mousePickBody );
-			auto binding_mouse_3_up = bindings->addChild( "mousebutton_up_3", new BEntity_trigger() );  // FIXME CONNECT TO bool under std_window
+			auto binding_mouse_3_up = bindings->addChild( "mousebutton_up_1", new BEntity_trigger() );  // FIXME CONNECT TO bool under std_window
 			binding_mouse_3_up->connectServerServer( mouseUnpickBody );
 			
 			// bindings to movements
@@ -310,7 +324,7 @@
 
 		// VISION SYSTEM
 			auto vision_system = addChild( "vision_system", "CdVisionSystem" );
-			addChild("SDLSwapBuffers", "SDLSwapBuffers");
+  			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
 
 		// CRITTER SYSTEM
 			auto critter_system = addChild( "critter_system", new CdCritterSystem() );

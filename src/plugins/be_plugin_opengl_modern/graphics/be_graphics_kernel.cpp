@@ -1,4 +1,5 @@
 #include "be_graphics_kernel.h"
+#include <iostream>
 
 void BeGraphicsKernel::clear( const GLbitfield mask )
 {
@@ -244,7 +245,9 @@ void BeGraphicsKernel::attachShader( const GLuint program, const GLuint shader )
 
 void BeGraphicsKernel::linkProgram( const GLuint program )
 {
+	// std::cout << "a" << std::endl;
 	glLinkProgram(program);
+	// std::cout << "b" << std::endl;
 }
 
 void BeGraphicsKernel::getProgramInfoLog( const GLuint program, const GLsizei bufSize, GLsizei *length, GLchar* const infoLog )

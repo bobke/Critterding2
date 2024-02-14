@@ -145,13 +145,4 @@
 			{
 				glDisable(GL_NORMALIZE);
 			}
-		
-		// // FIXME MOVE TO CAMERA
-		// 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-  // 
-		// 	// glViewport( 0, 0, m_width->get_int(), m_height->get_int() );
-		// 	glViewport( 0, 0, 1224, 768 );
-				
-			// glUseProgram(0);
 	}

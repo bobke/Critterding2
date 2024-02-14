@@ -43,10 +43,13 @@
 		// pluginManager()->load( "test", "src/plugins/be_plugin_test", "be_plugin_test" );
 		// pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
 		// pluginManager()->load( "bullet", "src/plugins/be_plugin_bullet", "be_plugin_bullet" );
+
+		pluginManager()->load( "test_editing", "src/plugins/be_plugin_test_editing", "be_plugin_test_editing" );
 		
 		pluginManager()->load( "system_monitor", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
 		// pluginManager()->load( "attractors", "src/plugins/be_plugin_app_attractors", "be_plugin_app_attractors" );
-		// pluginManager()->load( "critterding", "src/plugins/be_plugin_app_critterding", "be_plugin_app_critterding" );
+		pluginManager()->load( "critterding", "src/plugins/be_plugin_app_critterding", "be_plugin_app_critterding" );
+		pluginManager()->load( "stunt coureur", "src/plugins/be_plugin_app_stunt_coureur", "be_plugin_app_stunt_coureur" );
 		
 		// SYSTEM MONITOR
 		// FIXME seems it hangs, multiple qt inits?
@@ -807,7 +810,7 @@
 						command->set(entity->get_reference());
 				}
 			}
-			
+
 			// GRAPH FOR FLOAT
 			auto t_float = dynamic_cast<BEntity_float*>( entity );
 			if ( t_float )
@@ -820,6 +823,20 @@
 					auto command = actions->addChild("admin_entity_graph", new BEntity_reference() );
 					command->set(entity);
 			}
+
+			// RECOMPILE LIBRARY
+			auto t_plugin = dynamic_cast<BEntity_Plugin*>( entity );
+			if ( t_plugin )
+			{
+				auto button = to_layout->addChild("qt button", "QPushButton" );
+				button->set("text", "update");
+
+				// COMMAND
+					auto actions = button->addChild("_commands", new BEntity() );
+					auto command = actions->addChild("update_plugin", new BEntity_reference() );
+					command->set(entity);
+			}
+			
 		
 	}
 

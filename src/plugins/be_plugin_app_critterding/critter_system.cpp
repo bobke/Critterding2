@@ -49,7 +49,7 @@
 		m_minimum_number_of_units->set( Buint(20) );
 		m_intitial_energy->set( Bfloat(1500.0f) );
 		m_procreate_minimum_energy->set( Bfloat(2501.0f) );
-		m_maximum_age->set( Buint(16000) );
+		m_maximum_age->set( Buint(18000) );
 		m_dropzone_position_x->set( Bfloat(-100.0f) );
 		m_dropzone_position_y->set( Bfloat(-18.0f) );
 		m_dropzone_position_z->set( Bfloat(-170.0f) );
