@@ -3,7 +3,6 @@
 // #include <iostream>
 
 	// REFERENCE
-		BEntity_reference::BEntity_reference() : m_value(0) {};
 		bool BEntity_reference::set( BEntity* value )
 		{
 			m_value = value;
@@ -27,13 +26,6 @@
 	
 	
 	// TRIGGER
-
-		BEntity_trigger::BEntity_trigger()
-		{
-// // 			setInput( new BEInput(this) );
-// 			setOutput( new BEOutput(this) );
-		};
-	
 		bool BEntity_trigger::set()
 		{
 // 			std::cout << "BEntity_trigger::set : " << id() << std::endl;
@@ -53,13 +45,6 @@
 		}
 
 	// BOOL
-		BEntity_bool::BEntity_bool()
-		: m_value(false)
-		{
-// 			setInput( new BEInput(this) );
-// 			setOutput( new BEOutput(this) );
-		};
-
 		bool BEntity_bool::set( const Bbool& value )
 		{
 			if ( m_value != value )
@@ -126,13 +111,6 @@
 
 		
 	// UINT
-		BEntity_uint::BEntity_uint()
-		: m_value(0)
-		{
-// 			setInput( new BEInput(this) );
-// 			setOutput( new BEOutput(this) );
-		};
-
 		bool BEntity_uint::set( const Buint& value )
 		{
 			if ( m_value != value )
@@ -294,13 +272,6 @@
 		}
 
 	// FLOAT
-		BEntity_float::BEntity_float()
-		: m_value(0.0f)
-		{
-// 			setInput( new BEInput(this) );
-// 			setOutput( new BEOutput(this) );
-		};
-
 		bool BEntity_float::set( const Bfloat& value )
 		{
 			if ( m_value != value )
@@ -365,13 +336,6 @@
 		}
 
 	// DOUBLE
-		BEntity_double::BEntity_double()
-		: m_value(0.0)
-		{
-// 			setInput( new BEInput(this) );
-// 			setOutput( new BEOutput(this) );
-		};
-
 		bool BEntity_double::set( const Bdouble& value )
 		{
 			if ( m_value != value )
@@ -423,11 +387,6 @@
 // 		}
 
 	// STRING
-		BEntity_string::BEntity_string()
-		: m_value(0)
-		{
-		};
-		
 		BEntity_string::~BEntity_string()
 		{
 			if ( m_value != 0 )

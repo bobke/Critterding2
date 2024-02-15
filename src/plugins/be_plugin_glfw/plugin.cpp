@@ -33,10 +33,10 @@
 		m_title = addChild("title", new BEntity_string_property());
 		m_fullscreen = addChild("fullscreen", new BEntity_bool_property());
 		m_vsync = addChild("vsync", new BEntity_bool_property());
-		m_width = addChild("width", new BEntity_int());
-		m_height = addChild("height", new BEntity_int());
-		m_position_x = addChild("position_x", new BEntity_int());
-		m_position_y = addChild("position_y", new BEntity_int());
+		m_width = addChild("width", new BEntity_int_propertyNew());
+		m_height = addChild("height", new BEntity_int_propertyNew());
+		m_position_x = addChild("position_x", new BEntity_int_propertyNew());
+		m_position_y = addChild("position_y", new BEntity_int_propertyNew());
 		m_mouse_x = addChild("mouse_x", new BEntity_int());
 		m_mouse_y = addChild("mouse_y", new BEntity_int());
 
@@ -135,8 +135,13 @@
 					}
 					else
 					{
+						// m_width->set( (int)m_windowed_width );
+						// m_height->set( (int)m_windowed_height );
+						// m_position_x->set( (int)m_windowed_pos_x );
+						// m_position_y->set( (int)m_windowed_pos_y );
 						const GLFWvidmode* mode = glfwGetVideoMode( m_primary_monitor );
 						glfwSetWindowMonitor( m_window, NULL, m_windowed_pos_x, m_windowed_pos_y, m_windowed_width, m_windowed_height, GLFW_DONT_CARE);
+						
 					}
 
 					m_fullscreen->onUpdate();
@@ -204,8 +209,61 @@
 			}
 
 			return "";
-		}		
+		}
+
+		bool BGLWindow::set( const Bstring& id, const Bint& value )
+		{
+			if ( id == "width" )
+			{
+				// fetch WIDTH through getWindowSize first because fullscreen toggle glitch
+				int width, height;
+				glfwGetWindowSize( m_window, &width, &height );
+				glfwSetWindowSize( m_window, value, height );
+			}
+			else if ( id == "height" )
+			{
+				glfwSetWindowSize( m_window, m_width->get_int(), value );
+			}
+			else if ( id == "position_x" )
+			{
+				// fetch position X through getWindowPos first because fullscreen toggle glitch
+				int pos_x, pos_y;
+				glfwGetWindowPos( m_window, &pos_x, &pos_y );
+				glfwSetWindowPos( m_window, value, pos_y );
+			}
+			else if ( id == "position_y" )
+			{
+				glfwSetWindowPos( m_window, m_position_x->get_int(), value );
+			}
+			else
+			{
+				return false;
+			}
+			return true;
+		}
 		
+		// Bint BGLWindow::get_int( const Bstring& id )
+		// {
+		// 	if ( id == "width" )
+		// 	{
+		// 		return m_width_value;
+		// 	}
+		// 	else if ( id == "height" )
+		// 	{
+		// 		return m_height_value;
+		// 	}
+		// 	else if ( id == "position_x" )
+		// 	{
+		// 		return m_pos_x_value;
+		// 	}
+		// 	else if ( id == "position_y" )
+		// 	{
+		// 		return m_pos_y_value;
+		// 	}
+  // 
+		// 	return 0;
+		// }
+
 // ---- FACTORIES
 	enum CLASS
 	{

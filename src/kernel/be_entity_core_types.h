@@ -5,7 +5,7 @@
 	class BEntity_reference : public BEntity
 	{
 		public:
-			BEntity_reference();
+			BEntity_reference() : m_value(0) {};
 			const char* class_id() const { return "reference"; }
 			virtual ~BEntity_reference() {};
 
@@ -31,7 +31,7 @@
 	class BEntity_trigger : public BEntity
 	{
 		public:
-			BEntity_trigger();
+			BEntity_trigger() {};
 			const char* class_id() const { return "trigger"; }
 			virtual ~BEntity_trigger() {};
 			virtual bool set();
@@ -44,7 +44,7 @@
 	class BEntity_bool : public BEntity
 	{
 		public:
-			BEntity_bool();
+			BEntity_bool() : m_value(false) {};;
 			const char* class_id() const { return "bool"; }
 			virtual ~BEntity_bool() {};
 
@@ -70,7 +70,7 @@
 	class BEntity_uint : public BEntity
 	{
 		public:
-			BEntity_uint();
+			BEntity_uint() : m_value(0) {};
 			const char* class_id() const { return "uint"; }
 			virtual ~BEntity_uint() {};
 
@@ -113,6 +113,27 @@
 			Bint m_value;
 	};
 
+	class BEntity_int_propertyNew : public BEntity_int
+	{
+		public:
+			BEntity_int_propertyNew() : BEntity_int() {};
+			const char* class_id() const { return "_int_propertyNew"; }
+			virtual ~BEntity_int_propertyNew() {};
+
+			virtual bool set( const Bint& value )
+			{
+				if ( compareAndSetValue( m_value, value ) )
+				{
+					parent()->set( name(), value );
+					onUpdate();
+					return true;
+				}
+				return false;
+			};
+			virtual bool apply( BEntity* e ) { return e->set( m_value ); };
+		protected:
+	};
+
 	class BEntity_int_property : public BEntity
 	{
 		public:
@@ -128,7 +149,7 @@
 	class BEntity_float : public BEntity
 	{
 		public:
-			BEntity_float();
+			BEntity_float() : m_value(0.0f) {};
 			const char* class_id() const { return "float"; }
 			virtual ~BEntity_float() {};
 
@@ -156,7 +177,7 @@
 	class BEntity_double : public BEntity
 	{
 		public:
-			BEntity_double();
+			BEntity_double() : m_value(0.0) {};
 			const char* class_id() const { return "double"; }
 			virtual ~BEntity_double() {};
 
@@ -185,7 +206,7 @@
 	class BEntity_string : public BEntity
 	{
 		public:
-			BEntity_string();
+			BEntity_string() : m_value(0) {};
 			const char* class_id() const { return "string"; }
 			virtual ~BEntity_string();
 

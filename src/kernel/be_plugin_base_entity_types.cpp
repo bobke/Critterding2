@@ -13,6 +13,7 @@
 		, UINT_PROPERTY
 		, INT
 		, INT_PROPERTY
+		, INT_PROPERTY_NEW
 		, FLOAT
 		, FLOAT_PROPERTY
 		, STRING
@@ -36,6 +37,7 @@
 					i.addClass( parent, CLASS::UINT_PROPERTY, "uint_property" );
 					i.addClass( parent, CLASS::INT, "int" );
 					i.addClass( parent, CLASS::INT_PROPERTY, "int_property" );
+					i.addClass( parent, CLASS::INT_PROPERTY_NEW, "int_property_new" );
 					i.addClass( parent, CLASS::FLOAT, "float" );
 					i.addClass( parent, CLASS::FLOAT_PROPERTY, "float_property" );
 					i.addClass( parent, CLASS::STRING, "string" );

@@ -511,6 +511,9 @@
 				if ( entityClass == "int_property" )
 					return addChild(name, new BEntity_int_property());
 
+				if ( entityClass == "int_property_new" )
+					return addChild(name, new BEntity_int_propertyNew());
+			
 				if ( entityClass == "float" )
 					return addChild(name, new BEntity_float());
 

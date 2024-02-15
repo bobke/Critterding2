@@ -33,6 +33,9 @@
 				virtual BEntity* get_reference( const Bstring& id );
 				virtual bool set( const Bstring& id, const Bbool& value );
 				virtual Bbool get_bool( const Bstring& id );
+				virtual bool set( const Bstring& id, const Bint& value );
+				// virtual Bint get_int( const Bstring& id );
+				
 				bool set( const Bstring& id, const char* value );
 				const char* get_string( const Bstring& id );
 				
@@ -42,10 +45,12 @@
 				BEntity* m_fullscreen;
 				BEntity* m_vsync;
 				BEntity* m_destroy_entity_on_close;
+
 				BEntity* m_width;
 				BEntity* m_height;
 				BEntity* m_position_x;
 				BEntity* m_position_y;
+
 				BEntity* m_mouse_x;
 				BEntity* m_mouse_y;
 				
@@ -57,6 +62,12 @@
 				int m_windowed_height;
 				int m_windowed_pos_x;
 				int m_windowed_pos_y;
+				
+				// int m_width_value;
+				// int m_height_value;
+				// int m_pos_x_value;
+				// int m_pos_y_value;
+				
 		};
 
 
