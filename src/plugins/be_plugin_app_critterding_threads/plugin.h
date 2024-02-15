@@ -33,6 +33,8 @@
 				BEntity* m_critter_unit_container;
 				BEntity* m_food_unit_container;
 
+				BEntity* getServer( const unsigned int row, const unsigned int column, const unsigned int rows, const unsigned int columns );
+				
 				BEntity* m_eat_transfer_energy;
 
 				BCamera* m_camera;

@@ -8,7 +8,6 @@
 #include "control_panel.h"
 #include "population_controller.h"
 #include "critter_exchanger.h"
-#include "critter_thread_mesher.h"
 #include "commands.h"
 // #include "plugins/be_plugin_bullet/be_entity_transform.h" // FIXME work this away
 #include "plugins/be_plugin_opengl/be_entity_camera.h"
@@ -283,13 +282,9 @@
 				auto physics_weight = physics_entity->addChild("weight", new BEntity_float_property());
 					physics_weight->set( 0.0f );
 
-				auto physics_scale_x = physics_entity->addChild("scale_x", new BEntity_float_property());
-				auto physics_scale_y = physics_entity->addChild("scale_y", new BEntity_float_property());
-				auto physics_scale_z = physics_entity->addChild("scale_z", new BEntity_float_property());
-
-					physics_scale_x->set( 8.0f );
-					physics_scale_y->set( 1.0f );
-					physics_scale_z->set( 10.0f );
+				auto physics_scale_x = physics_entity->addChild("scale_x", new BEntity_float_propertyNew());
+				auto physics_scale_y = physics_entity->addChild("scale_y", new BEntity_float_propertyNew());
+				auto physics_scale_z = physics_entity->addChild("scale_z", new BEntity_float_propertyNew());
 
 			// GRAPHICS
 				auto t_graphicsModel = t_graphicsModelSystem->addChild("graphics_entity_map", "GraphicsModel");
@@ -309,14 +304,16 @@
 					physics_scale_y->connectServerServer( graphics_transform->getChild("scale_y", 1) );
 					physics_scale_z->connectServerServer( graphics_transform->getChild("scale_z", 1) );
 
-					graphics_transform->getChild("scale_x", 1)->set( 8.0f );
-					graphics_transform->getChild("scale_y", 1)->set( 1.0f );
-					graphics_transform->getChild("scale_z", 1)->set( 10.0f );
+					physics_scale_x->set( 8.0f );
+					physics_scale_y->set( 1.0f );
+					physics_scale_z->set( 10.0f );
 
 					// CONNECT
 					physics_entity_transform->connectServerServer( graphics_transform );
 					physics_entity_transform->onUpdate();
 				}
+				
+				
 		}
 
 		// SKY DOME
@@ -454,7 +451,6 @@
 		, CD_POPULATION_CONTROL
 		, CD_CRITTER_EXCHANGER
 		, CD_CRITTER_SYSTEM
-		, CD_CRITTER_THREAD_MESHER
 		, CD_SPECIES_SYSTEM
 		, CD_VISION_SYSTEM
 		, CD_CRITTER
@@ -478,7 +474,6 @@
 					i.addClass( parent, CLASS::CD_POPULATION_CONTROL, "CdPopulationController" );
 					i.addClass( parent, CLASS::CD_CRITTER_EXCHANGER, "CdCritterExchanger" );
 					i.addClass( parent, CLASS::CD_CRITTER_SYSTEM, "CdCritterSystem" );
-					i.addClass( parent, CLASS::CD_CRITTER_THREAD_MESHER, "CdCritterThreadMesher" );
 					i.addClass( parent, CLASS::CD_SPECIES_SYSTEM, "CdSpeciesSystem" );
 					i.addClass( parent, CLASS::CD_VISION_SYSTEM, "CdVisionSystem" );
 					i.addClass( parent, CLASS::CD_CRITTER, "CdCritter" );
@@ -508,8 +503,6 @@
 					i = new CdCritterExchanger();
 				else if ( type == CLASS::CD_CRITTER_SYSTEM )
 					i = new CdCritterSystem();
-				else if ( type == CLASS::CD_CRITTER_THREAD_MESHER )
-					i = new CdCritterThreadMesher();
 				else if ( type == CLASS::CD_SPECIES_SYSTEM )
 					i = new CdSpeciesSystem();
 				else if ( type == CLASS::CD_VISION_SYSTEM )

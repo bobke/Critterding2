@@ -130,7 +130,6 @@
 				}
 				return false;
 			};
-			virtual bool apply( BEntity* e ) { return e->set( m_value ); };
 		protected:
 	};
 
@@ -161,6 +160,26 @@
 			Bfloat m_value;
 	};
 
+	class BEntity_float_propertyNew : public BEntity_float
+	{
+		public:
+			BEntity_float_propertyNew() : BEntity_float() {};
+			const char* class_id() const { return "_int_propertyNew"; }
+			virtual ~BEntity_float_propertyNew() {};
+
+			virtual bool set( const Bfloat& value )
+			{
+				if ( compareAndSetValue( m_value, value ) )
+				{
+					parent()->set( name(), value );
+					onUpdate();
+					return true;
+				}
+				return false;
+			};
+		protected:
+	};
+	
 	class BEntity_float_property : public BEntity
 	{
 		public:

@@ -24,8 +24,6 @@
 		population_controller.h
 		critter_exchanger.cpp
 		critter_exchanger.h
-		critter_thread_mesher.cpp
-		critter_thread_mesher.h
 		opengl_setup.cpp
 		opengl_setup.h
 	)

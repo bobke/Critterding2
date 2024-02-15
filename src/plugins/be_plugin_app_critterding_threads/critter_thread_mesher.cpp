@@ -1,6 +1,7 @@
 #include "critter_thread_mesher.h"
 #include "kernel/be_entity_core_types.h"
-#include "critter_system.h"
+#include "plugins/be_plugin_app_critterding/critter_system.h"
+// #include "critter_system.h"
 #include <iostream>
 
 	void CdCritterThreadMesher::construct()
@@ -28,6 +29,7 @@
 		// MOVE CRITTERS HAVING GONE PASSED BORDER
 		for_all_children_of( m_critter_unit_container )
 		{
+			// auto t = dynamic_cast<CdCritter*>( *child )->m_transform_shortcut;
 			auto t = (*child)->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference()->getChild("transform", 1);
 
 			if ( m_x_active->get_bool() )

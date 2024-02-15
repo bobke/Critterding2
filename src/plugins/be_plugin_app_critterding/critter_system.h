@@ -69,6 +69,7 @@
 				BEntity* m_brain;
 				BEntity* m_brain_inputs;
 
+				BEntity* m_transform_shortcut;
 				BEntity* m_physics_component;
 				// BEntity* m_always_firing_input;
 		private:

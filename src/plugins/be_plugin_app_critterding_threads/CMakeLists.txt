@@ -7,6 +7,8 @@
 		plugin.h
 		control_panel.cpp
 		control_panel.h
+		critter_thread_mesher.cpp
+		critter_thread_mesher.h
 	)
 
 	ADD_LIBRARY( be_plugin_app_critterding_threads SHARED ${plugin_SRCS} )

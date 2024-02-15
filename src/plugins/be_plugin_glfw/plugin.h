@@ -56,6 +56,5 @@
 			// int m_height_value;
 			// int m_pos_x_value;
 			// int m_pos_y_value;
-			
 	};
 

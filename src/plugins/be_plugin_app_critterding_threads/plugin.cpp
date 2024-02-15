@@ -2,10 +2,13 @@
 #include "kernel/be_lib_handler.h"
 #include "plugins/be_plugin_opengl/be_entity_camera.h"
 #include "plugins/be_plugin_app_critterding/food_system.h"
+// #include "plugins/be_plugin_app_critterding/critter_system.h"
 #include "plugins/be_plugin_app_critterding/commands.h"
+#include "critter_thread_mesher.h"
 // #include "plugins/be_plugin_bullet/be_entity_physics_entity.h"
 // #include "plugins/be_plugin_bullet/be_entity_transform.h" // FIXME work this away
 // #include <iostream>
+#include <sstream>
 
 	void Server::construct()
 	{
@@ -319,278 +322,316 @@
 			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
 
 		// SERVERS
-			auto thread1 = addChild("thread1", "thread");
-			// auto thread1 = addChild("thread1", new BEntity());
-			auto thread2 = addChild("thread2", "thread");
-			auto server1 = thread1->addChild( "Critterding", new Server() );
-			auto server2 = thread2->addChild( "Critterding", new Server() );
-			
 			const float spacing( 2.0f );
 			const unsigned int total_minimum_critters( 20 ); // FIXME TO GLOBAL ENTITY
 			const unsigned int total_minimum_food( 1500 ); // FIXME TO GLOBAL ENTITY
-			
-			
-			// FIXME why the fuck does "server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)" repeat here?????, so, I commented it away???
-			// server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
-			// server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
-			// server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f );
-
-			server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*spacing );
-			server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*spacing );
-			server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f + 0.5f*spacing );
-
 			const float critter_spacing( 1.0f );
-			// FIXME why the fuck does "server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)" repeat here?????, so, I commented it away???
-			// server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
-			// server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f );
-			// server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f );
-
-			server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*critter_spacing );
-			server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*critter_spacing );
-			server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f + 0.5f*critter_spacing );
 			
-			// FIXME this 20 is minimum critters
+			const unsigned int rows( 2 );
+			const unsigned int columns( 2 );
+			const unsigned int total_threads( rows * columns );
 
-			// CRITTER AND FOOD SETTINGS
-			server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/2 ) );
-			server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/2 ) );
-			server1->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/2 ) );
-			server2->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/2 ) );
-			
-			// CRITTER THREAD MESHERS
-				// 1 : X moves RIGHT to 2
-				auto mesher1 = server1->addChild( "thread_mesher", "CdCritterThreadMesher" );
-				mesher1->getChild( "x_active", 1 )->set( true );
-				mesher1->getChild( "x_border", 1 )->set( 0.1f );
-				mesher1->getChild( "x_direction_is_right", 1 )->set( true );
-				mesher1->getChild( "x_target", 1 )->set( server2->getChild("critter_system", 1)->getChild("unit_container", 1) );
+			const float dropzone_total_width( 190 );
+			const float dropzone_total_height( 130 );
+			const float dropzone_individual_width( dropzone_total_width / columns );
+			const float dropzone_individual_height( dropzone_total_height / rows );
 
-				// 2 : X moves LEFT  to 1
-				auto mesher2 = server2->addChild( "thread_mesher", "CdCritterThreadMesher" );
-				mesher2->getChild( "x_active", 1 )->set( true );
-				mesher2->getChild( "x_border", 1 )->set( -0.1f );
-				mesher2->getChild( "x_direction_is_right", 1 )->set( false );
-				mesher2->getChild( "x_target", 1 )->set( server1->getChild("critter_system", 1)->getChild("unit_container", 1) );
-			
-			// SERVERS 3 AND 4 
-			if ( true )
+			const float startposition_x = -1.0f * (dropzone_total_width / 2);
+			const float startposition_z = -100.0f - (dropzone_total_height / 2);
+
+			// THREADS AND SERVERS
 			{
-				auto thread3 = addChild("thread3", "thread");
-				auto thread4 = addChild("thread4", "thread");
-				auto server3 = thread3->addChild( "Critterding", new Server() );
-				auto server4 = thread4->addChild( "Critterding", new Server() );
-				
-				server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*spacing );
-				server1->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_z", 1)->set( 70.0f - 0.5f*spacing );
-				server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*spacing );
-				server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_z", 1)->set( 70.0f - 0.5f*spacing );
-				server3->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*spacing );
-				server3->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_z", 1)->set( 70.0f - 0.5f*spacing );
-				server4->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*spacing );
-				server4->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_z", 1)->set( 70.0f - 0.5f*spacing );
-	
-				server2->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f + 0.5f*spacing );
-				server3->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_z", 1)->set( -100.0f + 0.5f*spacing );
-				server4->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f + 0.5f*spacing );
-				server4->getChild("food_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_z", 1)->set( -100.0f + 0.5f*spacing );		
-				
-				server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*critter_spacing );
-				server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_z", 1)->set( 70.0f - 0.5f*critter_spacing );
-				server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*critter_spacing );
-				server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_z", 1)->set( 70.0f - 0.5f*critter_spacing );
-				server3->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*critter_spacing );
-				server3->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_z", 1)->set( 70.0f - 0.5f*critter_spacing );
-				server4->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_x", 1)->set( 100.0f - 0.5f*critter_spacing );
-				server4->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("size_z", 1)->set( 70.0f - 0.5f*critter_spacing );
-	
-				server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f + 0.5f*critter_spacing );
-				server3->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_z", 1)->set( -100.0f + 0.5f*critter_spacing );
-				server4->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_x", 1)->set( 0.0f + 0.5f*critter_spacing );
-				server4->getChild("critter_system", 1)->getChild("settings", 1)->getChild("dropzone", 1)->getChild("position_z", 1)->set( -100.0f + 0.5f*critter_spacing );
-				
-				// CRITTER AND FOOD SETTINGS
-				// server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 1 ) );
-				// server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 1 ) );
-				// server3->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 1 ) );
-				// server4->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( 1 ) );
-				server1->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/4 ) );
-				server2->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/4 ) );
-				server3->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/4 ) );
-				server4->getChild("critter_system", 1)->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters/4 ) );
-
-				// server1->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 130 ) );
-				// server2->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 130 ) );
-				// server3->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 130 ) );
-				// server4->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( 130 ) );
-				server1->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/4 ) );
-				server2->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/4 ) );
-				server3->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/4 ) );
-				server4->getChild("food_system", 1)->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food/4 ) );
-				
-				
-				// CRITTER THREAD MESHERS
+				unsigned int thread_counter(1);
+				for ( unsigned int current_row(0); current_row < rows; ++current_row )
 				{
-					// 1 : Y moves DOWN to 3
-					mesher1->getChild( "z_active", 1 )->set( true );
-					mesher1->getChild( "z_border", 1 )->set( -99.9f );
-					mesher1->getChild( "z_direction_is_down", 1 )->set( true );
-					mesher1->getChild( "z_target", 1 )->set( server3->getChild("critter_system", 1)->getChild("unit_container", 1) );
+					
+					for ( unsigned int current_column(0); current_column < columns; ++current_column )
+					{
+						// find current thread
+							std::stringstream thread_name_ss;
+							thread_name_ss << "thread" << thread_counter;
 
-					// 2 : Y moves DOWN to 4
-					mesher2->getChild( "z_active", 1 )->set( true );
-					mesher2->getChild( "z_border", 1 )->set( -99.9f );
-					mesher2->getChild( "z_direction_is_down", 1 )->set( true );
-					mesher2->getChild( "z_target", 1 )->set( server4->getChild("critter_system", 1)->getChild("unit_container", 1) );
+							auto thread = addChild(thread_name_ss.str().c_str(), "thread");
+							auto server = thread->addChild( "Critterding", new Server() );
 
-					// 3 : X moves RIGHT to 4 Y moves UP to 1
-					auto mesher3 = server3->addChild( "thread_mesher", "CdCritterThreadMesher" );
-					mesher3->getChild( "x_active", 1 )->set( true );
-					mesher3->getChild( "x_border", 1 )->set( 0.1f );
-					mesher3->getChild( "x_direction_is_right", 1 )->set( true );
-					mesher3->getChild( "x_target", 1 )->set( server4->getChild("critter_system", 1)->getChild("unit_container", 1) );
+						// shortcuts
+							auto food_system = server->getChild("food_system", 1);
+							auto critter_system = server->getChild("critter_system", 1);
+							auto dropzone_food = food_system->getChild("settings", 1)->getChild("dropzone", 1);
+							auto dropzone_critter = critter_system->getChild("settings", 1)->getChild("dropzone", 1);
 
-					mesher3->getChild( "z_active", 1 )->set( true );
-					mesher3->getChild( "z_border", 1 )->set( -100.1f );
-					mesher3->getChild( "z_direction_is_down", 1 )->set( false );
-					mesher3->getChild( "z_target", 1 )->set( server1->getChild("critter_system", 1)->getChild("unit_container", 1) );
+						// DROPZONE FOOD
+							dropzone_food->getChild("position_x", 1)->set( startposition_x + ( dropzone_individual_width * current_column ) + 0.5f*spacing );
+							dropzone_food->getChild("position_z", 1)->set( startposition_z + ( dropzone_individual_height * current_row ) + 0.5f*spacing );
+							dropzone_food->getChild("size_x", 1)->set( dropzone_individual_width - 0.5f*spacing );
+							dropzone_food->getChild("size_z", 1)->set( dropzone_individual_height - 0.5f*spacing );
 
-					// 4 : X moves LEFT to 3 Y moves up to 2
-					auto mesher4 = server4->addChild( "thread_mesher", "CdCritterThreadMesher" );
-					mesher4->getChild( "x_active", 1 )->set( true );
-					mesher4->getChild( "x_border", 1 )->set( -0.1f );
-					mesher4->getChild( "x_direction_is_right", 1 )->set( false );
-					mesher4->getChild( "x_target", 1 )->set( server3->getChild("critter_system", 1)->getChild("unit_container", 1) );
+						// DROPZONE CRITTER
+							dropzone_critter->getChild("position_x", 1)->set( startposition_x + ( dropzone_individual_width * current_column ) + 0.5f*critter_spacing );
+							dropzone_critter->getChild("position_z", 1)->set( startposition_z + ( dropzone_individual_height * current_row ) + 0.5f*critter_spacing );
+							dropzone_critter->getChild("size_x", 1)->set( dropzone_individual_width - 0.5f*critter_spacing );
+							dropzone_critter->getChild("size_z", 1)->set( dropzone_individual_height - 0.5f*critter_spacing );
 
-					mesher4->getChild( "z_active", 1 )->set( true );
-					mesher4->getChild( "z_border", 1 )->set( -100.1f );
-					mesher4->getChild( "z_direction_is_down", 1 )->set( false );
-					mesher4->getChild( "z_target", 1 )->set( server2->getChild("critter_system", 1)->getChild("unit_container", 1) );
-				}			
-				
+						// MINIMUM FOOD AND CRITTERS
+							food_system->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food / total_threads ) );
+							critter_system->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters / total_threads ) );
+						
+						++thread_counter;
+					}
+				}
 			}
-			
+
+			// THREADMESHERS
+			{
+				unsigned int thread_counter(1);
+				for ( int current_row(0); current_row < rows; ++current_row )
+				{
+					
+					for ( int current_column(0); current_column < columns; ++current_column )
+					{
+						// find current thread
+							std::stringstream thread_name_ss;
+							thread_name_ss << "thread" << thread_counter;
+				
+							auto thread = getChild( thread_name_ss.str().c_str(), 1 );
+							auto server = thread->getChild( "Critterding", 1 );
+							
+						// Migrate below
+							if ( current_row < rows - 1 )
+							{
+								// std::cout << thread_name_ss.str() << " should migrate to below " << std::endl;
+
+								// get the one below
+								auto server_target = getServer( current_row+1, current_column, rows, columns );
+								// std::cout << "Target Server : " << server_target->parent()->name() << std::endl;
+								{
+									auto mesher = server->addChild( "thread_mesher", "CdCritterThreadMesher" );
+
+									mesher->getChild( "z_active", 1 )->set( true );
+									auto v = startposition_z + ( dropzone_individual_height * (current_row+1) ) + 0.1f;
+									// std::cout << "!!! down " << v << std::endl;
+									mesher->getChild( "z_border", 1 )->set( v );
+									// mesher->getChild( "z_border", 1 )->set( -99.9f );
+									mesher->getChild( "z_direction_is_down", 1 )->set( true );
+									mesher->getChild( "z_target", 1 )->set( server_target->getChild("critter_system", 1)->getChild("unit_container", 1) );
+								}
+								
+							}
+
+						// Migrate up
+							if ( current_row > 0 )
+							{
+								// std::cout << thread_name_ss.str() << " should migrate to up " << std::endl;
+								
+								// get the one above
+								auto server_target = getServer( current_row-1, current_column, rows, columns );
+								// std::cout << "Target Server : " << server_target->parent()->name() << std::endl;
+								{
+									auto mesher = server->addChild( "thread_mesher", "CdCritterThreadMesher" );
+
+									mesher->getChild( "z_active", 1 )->set( true );
+									auto v = startposition_z + ( dropzone_individual_height * (current_row) ) - 0.1f;
+									// std::cout << "!!! up " << v << std::endl;
+									mesher->getChild( "z_border", 1 )->set( v );
+									// mesher->getChild( "z_border", 1 )->set( -100.1f );
+									mesher->getChild( "z_direction_is_down", 1 )->set( false );
+									mesher->getChild( "z_target", 1 )->set( server_target->getChild("critter_system", 1)->getChild("unit_container", 1) );
+								}
+								
+							}
+
+						// Migrate left
+							if ( current_column > 0 )
+							{
+								// std::cout << thread_name_ss.str() << " should migrate to left " << std::endl;
+
+								// get the one on the left
+								auto server_target = getServer( current_row, current_column-1, rows, columns );
+								// std::cout << "Target Server : " << server_target->parent()->name() << std::endl;
+								{
+									auto mesher = server->addChild( "thread_mesher", "CdCritterThreadMesher" );
+
+									mesher->getChild( "x_active", 1 )->set( true );
+									auto v = startposition_x + ( dropzone_individual_width * (current_column) ) - 0.1f;
+									// std::cout << "!!! left " << v << std::endl;
+									mesher->getChild( "x_border", 1 )->set( v );
+									// mesher->getChild( "x_border", 1 )->set( -0.1f );
+									mesher->getChild( "x_direction_is_right", 1 )->set( false );
+									mesher->getChild( "x_target", 1 )->set( server_target->getChild("critter_system", 1)->getChild("unit_container", 1) );
+								}
+								
+							}
+
+						// Migrate right
+							if ( current_column < columns - 1 )
+							{
+								// std::cout << thread_name_ss.str() << " should migrate to right " << std::endl;
+
+								// get the one on the right
+								auto server_target = getServer( current_row, current_column+1, rows, columns );
+								// std::cout << "Target Server : " << server_target->parent()->name() << std::endl;
+								{
+									auto mesher = server->addChild( "thread_mesher", "CdCritterThreadMesher" );
+
+									mesher->getChild( "x_active", 1 )->set( true );
+									auto v = startposition_x + ( dropzone_individual_width * (current_column+1) ) + 0.1f;
+									// std::cout << "!!! right " << v << std::endl;
+									mesher->getChild( "x_border", 1 )->set( v );
+									// mesher->getChild( "x_border", 1 )->set( 0.1f );
+									mesher->getChild( "x_direction_is_right", 1 )->set( true );
+									mesher->getChild( "x_target", 1 )->set( server_target->getChild("critter_system", 1)->getChild("unit_container", 1) );
+								}
+							}
+
+						++thread_counter;
+					}
+				}
+			}
+
 			// THREADS FINISH
 				addChild("threads_finish", "threads_finish");
-			
-		// RAYCAST
-		{
-			m_bullet_raycast1 = getChild("thread1", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
-			m_bullet_raycast2 = getChild("thread2", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
-			m_bullet_raycast3 = getChild("thread3", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
-			m_bullet_raycast4 = getChild("thread4", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
 
-			{
-				auto source = m_bullet_raycast1->getChild( "source", 1 );
-				m_raycast_source_x1 = source->getChild( "x", 1 );
-				m_raycast_source_y1 = source->getChild( "y", 1 );
-				m_raycast_source_z1 = source->getChild( "z", 1 );
-				auto target = m_bullet_raycast1->getChild( "target", 1 );
-				m_raycast_target_x1 = target->getChild( "x", 1 );
-				m_raycast_target_y1 = target->getChild( "y", 1 );
-				m_raycast_target_z1 = target->getChild( "z", 1 );
-			}
-			{
-				auto source = m_bullet_raycast2->getChild( "source", 1 );
-				m_raycast_source_x2 = source->getChild( "x", 1 );
-				m_raycast_source_y2 = source->getChild( "y", 1 );
-				m_raycast_source_z2 = source->getChild( "z", 1 );
-				auto target = m_bullet_raycast2->getChild( "target", 1 );
-				m_raycast_target_x2 = target->getChild( "x", 1 );
-				m_raycast_target_y2 = target->getChild( "y", 1 );
-				m_raycast_target_z2 = target->getChild( "z", 1 );
-			}
-			{
-				auto source = m_bullet_raycast3->getChild( "source", 1 );
-				m_raycast_source_x3 = source->getChild( "x", 1 );
-				m_raycast_source_y3 = source->getChild( "y", 1 );
-				m_raycast_source_z3 = source->getChild( "z", 1 );
-				auto target = m_bullet_raycast3->getChild( "target", 1 );
-				m_raycast_target_x3 = target->getChild( "x", 1 );
-				m_raycast_target_y3 = target->getChild( "y", 1 );
-				m_raycast_target_z3 = target->getChild( "z", 1 );
-			}
-			{
-				auto source = m_bullet_raycast4->getChild( "source", 1 );
-				m_raycast_source_x4 = source->getChild( "x", 1 );
-				m_raycast_source_y4 = source->getChild( "y", 1 );
-				m_raycast_source_z4 = source->getChild( "z", 1 );
-				auto target = m_bullet_raycast4->getChild( "target", 1 );
-				m_raycast_target_x4 = target->getChild( "x", 1 );
-				m_raycast_target_y4 = target->getChild( "y", 1 );
-				m_raycast_target_z4 = target->getChild( "z", 1 );
-			}
+		// // RAYCAST
+		// {
+		// 	m_bullet_raycast1 = getChild("thread", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
+		// 	m_bullet_raycast2 = getChild("thread", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
+		// 	m_bullet_raycast3 = getChild("thread", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
+		// 	m_bullet_raycast4 = getChild("thread", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
+  // 
+		// 	{
+		// 		auto source = m_bullet_raycast1->getChild( "source", 1 );
+		// 		m_raycast_source_x1 = source->getChild( "x", 1 );
+		// 		m_raycast_source_y1 = source->getChild( "y", 1 );
+		// 		m_raycast_source_z1 = source->getChild( "z", 1 );
+		// 		auto target = m_bullet_raycast1->getChild( "target", 1 );
+		// 		m_raycast_target_x1 = target->getChild( "x", 1 );
+		// 		m_raycast_target_y1 = target->getChild( "y", 1 );
+		// 		m_raycast_target_z1 = target->getChild( "z", 1 );
+		// 	}
+		// 	{
+		// 		auto source = m_bullet_raycast2->getChild( "source", 1 );
+		// 		m_raycast_source_x2 = source->getChild( "x", 1 );
+		// 		m_raycast_source_y2 = source->getChild( "y", 1 );
+		// 		m_raycast_source_z2 = source->getChild( "z", 1 );
+		// 		auto target = m_bullet_raycast2->getChild( "target", 1 );
+		// 		m_raycast_target_x2 = target->getChild( "x", 1 );
+		// 		m_raycast_target_y2 = target->getChild( "y", 1 );
+		// 		m_raycast_target_z2 = target->getChild( "z", 1 );
+		// 	}
+		// 	{
+		// 		auto source = m_bullet_raycast3->getChild( "source", 1 );
+		// 		m_raycast_source_x3 = source->getChild( "x", 1 );
+		// 		m_raycast_source_y3 = source->getChild( "y", 1 );
+		// 		m_raycast_source_z3 = source->getChild( "z", 1 );
+		// 		auto target = m_bullet_raycast3->getChild( "target", 1 );
+		// 		m_raycast_target_x3 = target->getChild( "x", 1 );
+		// 		m_raycast_target_y3 = target->getChild( "y", 1 );
+		// 		m_raycast_target_z3 = target->getChild( "z", 1 );
+		// 	}
+		// 	{
+		// 		auto source = m_bullet_raycast4->getChild( "source", 1 );
+		// 		m_raycast_source_x4 = source->getChild( "x", 1 );
+		// 		m_raycast_source_y4 = source->getChild( "y", 1 );
+		// 		m_raycast_source_z4 = source->getChild( "z", 1 );
+		// 		auto target = m_bullet_raycast4->getChild( "target", 1 );
+		// 		m_raycast_target_x4 = target->getChild( "x", 1 );
+		// 		m_raycast_target_y4 = target->getChild( "y", 1 );
+		// 		m_raycast_target_z4 = target->getChild( "z", 1 );
+		// 	}
+  // 
+		// 	m_raycasters = addChild( "raycasters", new BEntity() );
+		// 	m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast1 );
+		// 	m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast2 );
+		// 	m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast3 );
+		// 	m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast4 );
+		// }
 
-			m_raycasters = addChild( "raycasters", new BEntity() );
-			m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast1 );
-			m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast2 );
-			m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast3 );
-			m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast4 );
-		}
-
-		// MOUSE PICKERS
-			auto mousepicker1 = getChild("thread1", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
-			auto mousepicker2 = getChild("thread2", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
-			auto mousepicker3 = getChild("thread3", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
-			auto mousepicker4 = getChild("thread4", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
+// 		// MOUSE PICKERS
+// 			auto mousepicker1 = getChild("thread1", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
+// 			auto mousepicker2 = getChild("thread2", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
+// 			auto mousepicker3 = getChild("thread3", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
+// 			auto mousepicker4 = getChild("thread4", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
+// 		
+// 			auto mousepickers = addChild( "mousepickers", new BEntity() );
+// 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker1 );
+// 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker2 );
+// 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker3 );
+// 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker4 );
 		
-			auto mousepickers = addChild( "mousepickers", new BEntity() );
-			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker1 );
-			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker2 );
-			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker3 );
-			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker4 );
-		
-		// POPULATION CONTROLLER
-			auto population_controller = addChild( "CdPopulationController", "CdPopulationController" );
-			population_controller->set( "register_critter_container", getChild("thread1", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
-			population_controller->set( "register_critter_container", getChild("thread2", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
-			population_controller->set( "register_critter_container", getChild("thread3", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
-			population_controller->set( "register_critter_container", getChild("thread4", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
-			population_controller->set( "register_food_container", getChild("thread1", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
-			population_controller->set( "register_food_container", getChild("thread2", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
-			population_controller->set( "register_food_container", getChild("thread3", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
-			population_controller->set( "register_food_container", getChild("thread4", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
+		// // POPULATION CONTROLLER
+		// 	auto population_controller = addChild( "CdPopulationController", "CdPopulationController" );
+		// 	population_controller->set( "register_critter_container", getChild("thread1", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
+		// 	population_controller->set( "register_critter_container", getChild("thread2", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
+		// 	population_controller->set( "register_critter_container", getChild("thread3", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
+		// 	population_controller->set( "register_critter_container", getChild("thread4", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
+		// 	population_controller->set( "register_food_container", getChild("thread1", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
+		// 	population_controller->set( "register_food_container", getChild("thread2", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
+		// 	population_controller->set( "register_food_container", getChild("thread3", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
+		// 	population_controller->set( "register_food_container", getChild("thread4", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
 			
 		// CRITTER EXCHANGER
 			addChild( "CdCritterExchanger", "CdCritterExchanger" );
 	}
 
+	BEntity* Scene::getServer( const unsigned int row, const unsigned int column, const unsigned int rows, const unsigned int columns )
+	{
+		unsigned int thread_counter(1);
+		for ( unsigned int current_row(0); current_row < rows; ++current_row )
+		{
+			
+			for ( unsigned int current_column(0); current_column < columns; ++current_column )
+			{
+				if ( current_row == row && current_column == column )
+				{
+					// find current thread
+						std::stringstream thread_name_ss;
+						thread_name_ss << "thread" << thread_counter;
+						
+					return getChild( thread_name_ss.str().c_str(), 1 )->getChild("Critterding", 1);
+				}
+				++thread_counter;
+			}
+		}
+		
+	}
+
 	void Scene::process()
 	{
-		// std::cout << "a" << std::endl;
-		// CAST RAY FROM MOUSE
-			auto camera_position = m_camera->m_transform->m_transform.getOrigin();
-
-			m_raycast_source_x1->set( camera_position.x() );
-			m_raycast_source_y1->set( camera_position.y() );
-			m_raycast_source_z1->set( camera_position.z() );
-			m_raycast_source_x2->set( camera_position.x() );
-			m_raycast_source_y2->set( camera_position.y() );
-			m_raycast_source_z2->set( camera_position.z() );
-			m_raycast_source_x3->set( camera_position.x() );
-			m_raycast_source_y3->set( camera_position.y() );
-			m_raycast_source_z3->set( camera_position.z() );
-			m_raycast_source_x4->set( camera_position.x() );
-			m_raycast_source_y4->set( camera_position.y() );
-			m_raycast_source_z4->set( camera_position.z() );
-
-			btVector3 rayDirection = m_camera->getScreenDirection( m_win_width->get_int(), m_win_height->get_int(), m_mouse_x->get_int(), m_mouse_y->get_int() );
-			m_raycast_target_x1->set( rayDirection.x() );
-			m_raycast_target_y1->set( rayDirection.y() );
-			m_raycast_target_z1->set( rayDirection.z() );
-			m_raycast_target_x2->set( rayDirection.x() );
-			m_raycast_target_y2->set( rayDirection.y() );
-			m_raycast_target_z2->set( rayDirection.z() );
-			m_raycast_target_x3->set( rayDirection.x() );
-			m_raycast_target_y3->set( rayDirection.y() );
-			m_raycast_target_z3->set( rayDirection.z() );
-			m_raycast_target_x4->set( rayDirection.x() );
-			m_raycast_target_y4->set( rayDirection.y() );
-			m_raycast_target_z4->set( rayDirection.z() );
-			
-			m_bullet_raycast1->process();
-			m_bullet_raycast2->process();
-			m_bullet_raycast3->process();
-			m_bullet_raycast4->process();
+// 		// std::cout << "a" << std::endl;
+// 		// CAST RAY FROM MOUSE
+// 			auto camera_position = m_camera->m_transform->m_transform.getOrigin();
+// 
+// 			m_raycast_source_x1->set( camera_position.x() );
+// 			m_raycast_source_y1->set( camera_position.y() );
+// 			m_raycast_source_z1->set( camera_position.z() );
+// 			m_raycast_source_x2->set( camera_position.x() );
+// 			m_raycast_source_y2->set( camera_position.y() );
+// 			m_raycast_source_z2->set( camera_position.z() );
+// 			m_raycast_source_x3->set( camera_position.x() );
+// 			m_raycast_source_y3->set( camera_position.y() );
+// 			m_raycast_source_z3->set( camera_position.z() );
+// 			m_raycast_source_x4->set( camera_position.x() );
+// 			m_raycast_source_y4->set( camera_position.y() );
+// 			m_raycast_source_z4->set( camera_position.z() );
+// 
+// 			btVector3 rayDirection = m_camera->getScreenDirection( m_win_width->get_int(), m_win_height->get_int(), m_mouse_x->get_int(), m_mouse_y->get_int() );
+// 			m_raycast_target_x1->set( rayDirection.x() );
+// 			m_raycast_target_y1->set( rayDirection.y() );
+// 			m_raycast_target_z1->set( rayDirection.z() );
+// 			m_raycast_target_x2->set( rayDirection.x() );
+// 			m_raycast_target_y2->set( rayDirection.y() );
+// 			m_raycast_target_z2->set( rayDirection.z() );
+// 			m_raycast_target_x3->set( rayDirection.x() );
+// 			m_raycast_target_y3->set( rayDirection.y() );
+// 			m_raycast_target_z3->set( rayDirection.z() );
+// 			m_raycast_target_x4->set( rayDirection.x() );
+// 			m_raycast_target_y4->set( rayDirection.y() );
+// 			m_raycast_target_z4->set( rayDirection.z() );
+// 			
+// 			m_bullet_raycast1->process();
+// 			m_bullet_raycast2->process();
+// 			m_bullet_raycast3->process();
+// 			m_bullet_raycast4->process();
 		
 	}
 
@@ -632,6 +673,7 @@
 		  PLUGIN_INFO
 		, SCENE
 		, CRITTERDING_THREADS
+		, CD_CRITTER_THREAD_MESHER
 	};
 
 	extern "C" BEntity* create( BEntity* parent, const Buint type )
@@ -642,6 +684,7 @@
 				BClassesHelper i;
 					i.addClass( parent, CLASS::SCENE, "Scene" );
 					i.addClass( parent, CLASS::CRITTERDING_THREADS, "Critterding_threads" );
+					i.addClass( parent, CLASS::CD_CRITTER_THREAD_MESHER, "CdCritterThreadMesher" );
 				return 0;
 			}
 
@@ -654,6 +697,8 @@
 					i = new Scene();
 				else if ( type == CLASS::CRITTERDING_THREADS )
 					i = new Scene();
+				else if ( type == CLASS::CD_CRITTER_THREAD_MESHER )
+					i = new CdCritterThreadMesher();
 
 				return i;
 			}
