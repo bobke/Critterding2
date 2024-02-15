@@ -33,7 +33,7 @@
 			window->getChild("GraphicsModelSystem", 1)->getChild("Camera", 1)->getChild("aspect_ratio", 1)->set( (float)width/height );
 		};
 
-		// WINDOW POSITION
+	// WINDOW POSITION
 		auto windowposition_callback = [](GLFWwindow *w, int x, int y)
 		{
 			auto window = static_cast<BGLWindow*>(glfwGetWindowUserPointer( w ));

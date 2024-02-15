@@ -3,10 +3,6 @@
 #include "callbacks.h"
 #include "swapbuffers.h"
 
-	void Scene::construct()
-	{
-	}
-
 	BGLWindow::BGLWindow()
 	: BEntity()
 	, m_isFullscreen(false)
@@ -40,7 +36,6 @@
 		m_mouse_x = addChild("mouse_x", new BEntity_int());
 		m_mouse_y = addChild("mouse_y", new BEntity_int());
 
-		
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		m_window = glfwCreateWindow(1224, 768, "", NULL, NULL);
@@ -54,21 +49,21 @@
 		}
 
 		glfwMakeContextCurrent(m_window);
+		glfwSetWindowUserPointer(m_window, this);
 
 		m_primary_monitor = glfwGetPrimaryMonitor();
 		
 		glfwSwapInterval(0);
 		// glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		
-		glfwSetWindowPosCallback( m_window, windowposition_callback );
-		glfwSetWindowSizeCallback( m_window, window_size_callback );
-		glfwSetWindowCloseCallback( m_window, window_close_callback );
-		glfwSetKeyCallback( m_window, key_callback );
-		glfwSetCursorPosCallback( m_window, mousepos_callback );
-		glfwSetMouseButtonCallback( m_window, mouse_button_callback );
+		// setup callbacks
+			glfwSetWindowPosCallback( m_window, windowposition_callback );
+			glfwSetWindowSizeCallback( m_window, window_size_callback );
+			glfwSetWindowCloseCallback( m_window, window_close_callback );
+			glfwSetKeyCallback( m_window, key_callback );
+			glfwSetCursorPosCallback( m_window, mousepos_callback );
+			glfwSetMouseButtonCallback( m_window, mouse_button_callback );
 
-		glfwMakeContextCurrent(m_window);
-		glfwSetWindowUserPointer(m_window, this);
 
 		// set window dimensions once
 			int width, height;
@@ -97,14 +92,13 @@
 			// std::cout << "BQWindow::set " << id << " " << value->id() << std::endl;
 			if ( id == "on_close_destroy_entity" )
 			{
-				if ( compareAndSetValue( m_destroy_entity_on_close, value ) )
-				{
-					// std::cout << " is now " << m_destroy_entity_on_close->id() << std::endl;
-					return true;
-				}
+				compareAndSetValue( m_destroy_entity_on_close, value );
 			}
-
-			return false;
+			else
+			{
+				return false;
+			}
+			return true;
 		}
 
 		BEntity* BGLWindow::get_reference( const Bstring& id )
@@ -135,18 +129,12 @@
 					}
 					else
 					{
-						// m_width->set( (int)m_windowed_width );
-						// m_height->set( (int)m_windowed_height );
-						// m_position_x->set( (int)m_windowed_pos_x );
-						// m_position_y->set( (int)m_windowed_pos_y );
 						const GLFWvidmode* mode = glfwGetVideoMode( m_primary_monitor );
 						glfwSetWindowMonitor( m_window, NULL, m_windowed_pos_x, m_windowed_pos_y, m_windowed_width, m_windowed_height, GLFW_DONT_CARE);
-						
 					}
 
 					m_fullscreen->onUpdate();
 				}
-				return true;
 			}
 			else if ( id == "vsync" )
 			{
@@ -160,12 +148,15 @@
 					{
 						glfwSwapInterval(0);
 					}
+
 					m_vsync->onUpdate();
 				}
-				return true;
 			}
-
-			return false;
+			else
+			{
+				return false;
+			}
+			return true;
 		}
 
 		Bbool BGLWindow::get_bool( const Bstring& id )
@@ -192,13 +183,14 @@
 				{
 					m_stored_title = value;
 					glfwSetWindowTitle( m_window, value );
-					return true;
+					m_title->onUpdate();
 				}
-
-				m_title->onUpdate();
 			}
-
-			return false;
+			else
+			{
+				return false;
+			}
+			return true;
 		}
 		
 		const char* BGLWindow::get_string( const Bstring& id )
@@ -241,34 +233,13 @@
 			}
 			return true;
 		}
-		
-		// Bint BGLWindow::get_int( const Bstring& id )
-		// {
-		// 	if ( id == "width" )
-		// 	{
-		// 		return m_width_value;
-		// 	}
-		// 	else if ( id == "height" )
-		// 	{
-		// 		return m_height_value;
-		// 	}
-		// 	else if ( id == "position_x" )
-		// 	{
-		// 		return m_pos_x_value;
-		// 	}
-		// 	else if ( id == "position_y" )
-		// 	{
-		// 		return m_pos_y_value;
-		// 	}
-  // 
-		// 	return 0;
-		// }
+
 
 // ---- FACTORIES
 	enum CLASS
 	{
 		  PLUGIN_INFO
-		, SCENE
+		// , SCENE
 		, GLWINDOW
 		, GLSWAPBUFFERS
 	};
@@ -279,7 +250,7 @@
 			if ( type == PLUGIN_INFO )
 			{
 				BClassesHelper i;
-					i.addClass( parent, CLASS::SCENE, "Scene" );
+					// i.addClass( parent, CLASS::SCENE, "Scene" );
 					i.addClass( parent, CLASS::GLWINDOW, "GLWindow" );
 					i.addClass( parent, CLASS::GLSWAPBUFFERS, "GLSwapBuffers" );
 				return 0;
@@ -290,9 +261,9 @@
 			{
 				BEntity* i(0);
 				
-				if ( type == CLASS::SCENE )
+				/*if ( type == CLASS::SCENE )
 					i = new Scene();
-				else if ( type == CLASS::GLWINDOW )
+				else */if ( type == CLASS::GLWINDOW )
 					i = new BGLWindow();
 				else if ( type == CLASS::GLSWAPBUFFERS )
 					i = new GLSwapBuffers();
@@ -306,4 +277,4 @@
 	{
 		delete p;
 	}
-	
+
