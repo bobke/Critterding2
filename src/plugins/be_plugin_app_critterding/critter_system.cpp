@@ -199,8 +199,6 @@
 						// auto newBody = body_unit_system->addChild( "body", new BBody() );
 						auto newBody = m_body_system_unit_container->addChild( "body", new BEntity() );
 						auto fixed_1 = newBody->addChild( "body_fixed1", "BodyFixed1" );
-
-						critter_unit->m_transform_shortcut = fixed_1->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference()->getChild("transform", 1);
 						
 						// auto fixed_1 = body_unit_system->addChild( "body_fixed1", "BodyFixed1" );
 						

@@ -29,41 +29,47 @@
 		// MOVE CRITTERS HAVING GONE PASSED BORDER
 		for_all_children_of( m_critter_unit_container )
 		{
-			// auto t = dynamic_cast<CdCritter*>( *child )->m_transform_shortcut;
-			auto t = (*child)->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference()->getChild("transform", 1);
+			auto critter = dynamic_cast<CdCritter*>( *child );
+			if ( critter )
+			{
+				if ( critter->m_transform_shortcut == 0 )
+				{
+					critter->m_transform_shortcut = (*child)->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference()->getChild("transform", 1);
+				}
 
-			if ( m_x_active->get_bool() )
-			{
-				if ( m_x_direction_is_right->get_bool() )
+				if ( m_x_active->get_bool() )
 				{
-					if ( t->getChild("position_x", 1)->get_float() > m_x_border->get_float() )
+					if ( m_x_direction_is_right->get_bool() )
 					{
-						migrate( *child, m_x_target->get_reference() );
+						if ( critter->m_transform_shortcut->getChild("position_x", 1)->get_float() > m_x_border->get_float() )
+						{
+							migrate( *child, m_x_target->get_reference() );
+						}
+					}
+					else
+					{
+						if ( critter->m_transform_shortcut->getChild("position_x", 1)->get_float() < m_x_border->get_float() )
+						{
+							migrate( *child, m_x_target->get_reference() );
+						}
 					}
 				}
-				else
+				
+				if ( m_z_active->get_bool() )
 				{
-					if ( t->getChild("position_x", 1)->get_float() < m_x_border->get_float() )
+					if ( m_z_direction_is_down->get_bool() )
 					{
-						migrate( *child, m_x_target->get_reference() );
+						if ( critter->m_transform_shortcut->getChild("position_z", 1)->get_float() > m_z_border->get_float() )
+						{
+							migrate( *child, m_z_target->get_reference() );
+						}
 					}
-				}
-			}
-			
-			if ( m_z_active->get_bool() )
-			{
-				if ( m_z_direction_is_down->get_bool() )
-				{
-					if ( t->getChild("position_z", 1)->get_float() > m_z_border->get_float() )
+					else
 					{
-						migrate( *child, m_z_target->get_reference() );
-					}
-				}
-				else
-				{
-					if ( t->getChild("position_z", 1)->get_float() < m_z_border->get_float() )
-					{
-						migrate( *child, m_z_target->get_reference() );
+						if ( critter->m_transform_shortcut->getChild("position_z", 1)->get_float() < m_z_border->get_float() )
+						{
+							migrate( *child, m_z_target->get_reference() );
+						}
 					}
 				}
 			}
@@ -92,7 +98,7 @@
 		{
 			// COPY CRITTER
 			auto entity = value->getChild("entity")->get_reference();
-			auto critter_new = m_entityCopy.copyEntity( entity, value->getChild("target")->get_reference() );
+			auto critter_new = dynamic_cast<CdCritter*>( m_entityCopy.copyEntity( entity, value->getChild("target")->get_reference() ) );
 
 			// FIXME should be inherent?
 			// AGE, ENERGY, AD
@@ -110,7 +116,7 @@
 			// POSITION BODYPARTS
 				auto bodyparts_old = entity->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
 				auto bodyparts_new = critter_new->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-				
+
 				const auto& children_old = bodyparts_old->children();
 				auto old_child = children_old.begin();
 				// for ( auto child2(children_vector2.begin()); child2 != children_vector2.end(); ++child2 )

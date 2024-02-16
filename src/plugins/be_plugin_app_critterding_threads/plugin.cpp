@@ -328,7 +328,7 @@
 			const float critter_spacing( 1.0f );
 			
 			const unsigned int rows( 2 );
-			const unsigned int columns( 2 );
+			const unsigned int columns( 3 );
 			const unsigned int total_threads( rows * columns );
 
 			const float dropzone_total_width( 190 );

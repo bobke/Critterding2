@@ -42,11 +42,20 @@
 					// REMOVE CRITTERS FALLEN BELOW y
 					for_all_children_of( critter_unit_container )
 					{
-						if ( (*child)->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference()->getChild("transform", 1)->getChild("position_y", 1)->get_float() < m_below_y_trigger->get_float() )
+						auto critter = dynamic_cast<CdCritter*>( *child );
+						if ( critter )
 						{
-							auto critter_system = dynamic_cast<CdCritterSystem*>( critter_unit_container->parent() );
-							critter_system->removeCritter( *child, true );
-							return; // actually needed with how for loop is implemented
+							if ( critter->m_transform_shortcut == 0 )
+							{
+								critter->m_transform_shortcut = critter->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference()->getChild("transform", 1);
+							}
+
+							if ( critter->m_transform_shortcut->getChild("position_y", 1)->get_float() < m_below_y_trigger->get_float() )
+							{
+								auto critter_system = dynamic_cast<CdCritterSystem*>( critter_unit_container->parent() );
+								critter_system->removeCritter( critter, true );
+								return; // actually needed with how for loop is implemented
+							}
 						}
 					}
 				}

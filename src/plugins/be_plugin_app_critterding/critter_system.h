@@ -56,7 +56,7 @@
 		class CdCritter : public BEntity
 		{
 			public:
-				CdCritter() {};
+				CdCritter() : m_transform_shortcut(0) {};
 				const char* class_id() const { return "CdCritter"; }
 				virtual ~CdCritter() {};
 				void construct();
