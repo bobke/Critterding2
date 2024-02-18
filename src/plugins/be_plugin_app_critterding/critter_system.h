@@ -56,7 +56,7 @@
 		class CdCritter : public BEntity
 		{
 			public:
-				CdCritter() : m_transform_shortcut(0) {};
+				CdCritter() {};
 				const char* class_id() const { return "CdCritter"; }
 				virtual ~CdCritter() {};
 				void construct();
@@ -69,8 +69,10 @@
 				BEntity* m_brain;
 				BEntity* m_brain_inputs;
 
+				// performance shortcuts
 				BEntity* m_transform_shortcut;
-				BEntity* m_physics_component;
+				BEntity* m_physics_component_shortcut;
+				BEntity* m_bodyparts_shortcut;
 				// BEntity* m_always_firing_input;
 		private:
 				// PROPERTIES

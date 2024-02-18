@@ -21,7 +21,7 @@
 		{
 			public:
 				Scene() : BEntity() { setProcessing(); };
-				const char* class_id() const { return "Critterding_threads"; }
+				const char* class_id() const { return "Critterding"; }
 				virtual ~Scene() {};
 				
 				virtual void construct();
@@ -40,38 +40,14 @@
 				BCamera* m_camera;
 
 				BEntity* m_raycasters;
-				BEntity* m_bullet_raycast1;
-				BEntity* m_bullet_raycast2;
-				BEntity* m_bullet_raycast3;
-				BEntity* m_bullet_raycast4;
-				BEntity* m_raycast_source_x1;
-				BEntity* m_raycast_source_y1;
-				BEntity* m_raycast_source_z1;
-				BEntity* m_raycast_target_x1;
-				BEntity* m_raycast_target_y1;
-				BEntity* m_raycast_target_z1;
+				BEntity* m_bullet_raycast;
+				BEntity* m_raycast_source_x;
+				BEntity* m_raycast_source_y;
+				BEntity* m_raycast_source_z;
+				BEntity* m_raycast_target_x;
+				BEntity* m_raycast_target_y;
+				BEntity* m_raycast_target_z;
 
-				BEntity* m_raycast_source_x2;
-				BEntity* m_raycast_source_y2;
-				BEntity* m_raycast_source_z2;
-				BEntity* m_raycast_target_x2;
-				BEntity* m_raycast_target_y2;
-				BEntity* m_raycast_target_z2;
-
-				BEntity* m_raycast_source_x3;
-				BEntity* m_raycast_source_y3;
-				BEntity* m_raycast_source_z3;
-				BEntity* m_raycast_target_x3;
-				BEntity* m_raycast_target_y3;
-				BEntity* m_raycast_target_z3;
-
-				BEntity* m_raycast_source_x4;
-				BEntity* m_raycast_source_y4;
-				BEntity* m_raycast_source_z4;
-				BEntity* m_raycast_target_x4;
-				BEntity* m_raycast_target_y4;
-				BEntity* m_raycast_target_z4;
-				
 				
 				BEntity* m_win_width;
 				BEntity* m_win_height;

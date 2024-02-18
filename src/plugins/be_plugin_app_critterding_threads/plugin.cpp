@@ -2,7 +2,7 @@
 #include "kernel/be_lib_handler.h"
 #include "plugins/be_plugin_opengl/be_entity_camera.h"
 #include "plugins/be_plugin_app_critterding/food_system.h"
-// #include "plugins/be_plugin_app_critterding/critter_system.h"
+#include "plugins/be_plugin_app_critterding/critter_system.h"
 #include "plugins/be_plugin_app_critterding/commands.h"
 #include "critter_thread_mesher.h"
 // #include "plugins/be_plugin_bullet/be_entity_physics_entity.h"
@@ -47,8 +47,8 @@
 
 		// PHYSICS map
 			auto map = addChild( "map", new BEntity() );
-			// const char* map_location = "../share/modules/easy.obj";
-			const char* map_location = "../share/modules/hard.obj";
+			const char* map_location = "../share/modules/easy.obj";
+			// const char* map_location = "../share/modules/hard.obj";
 			auto physics_entity = m_physics_world->addChild( "physics_entity_map", "PhysicsEntity" );
 			// physics_entity->set("filename", map_location);
 			physics_entity->getChild( "filename", 1 )->set( map_location );
@@ -189,15 +189,23 @@
 		// BINDINGS
 			auto bindings = glwindow->getChild( "bindings", 1 );
 
+			// render
+				auto re = t_graphicsModelSystem->getChild("active", 1);
+				if ( re )
+				{
+					auto re_bool = bindings->addChild( "key_down_f10", new BEntity_bool() );
+					re_bool->set( true );
+					re_bool->connectServerServer( re );
+				}
 			// fullscreen
-				auto fs = glwindow->getChild("fullscreen");
+				auto fs = glwindow->getChild("fullscreen", 1);
 				if ( fs )
-					bindings->addChild( "key_down_f11", new BEntity_bool() )->connectServerServer( fs );;
+					bindings->addChild( "key_down_f11", new BEntity_bool() )->connectServerServer( fs );
 			// vsync
-				auto vs = glwindow->getChild("vsync");
+				auto vs = glwindow->getChild("vsync", 1);
 				if ( vs )
-					bindings->addChild( "key_down_f12", new BEntity_bool() )->connectServerServer( vs );;
-
+					bindings->addChild( "key_down_f12", new BEntity_bool() )->connectServerServer( vs );
+		
 			auto binding_f1 = bindings->addChild( "f1", new BEntity_trigger() );
 			binding_f1->connectServerServer( launchAdminWindow );
 
@@ -316,10 +324,20 @@
 			auto t_graphicsModelSkyDome = t_graphicsModelSystem->addChild("GraphicsModel_SkyDome", "GraphicsModel");
 			t_graphicsModelSkyDome->set("filename", "../share/modules/skydome3.obj");
 		}
-		
+
 		// VISION SYSTEM
 			auto vision_system = addChild( "vision_system", "CdVisionSystem" );
 			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
+
+		// THREADS FINISH
+			addChild("threads_finish", "threads_finish");
+
+		// POPLUATION CONTROLLER
+			auto population_controller = addChild( "CdPopulationController", "CdPopulationController" );
+
+		// MOUSEPICERS
+			auto mousepickers = addChild( "mousepickers", new BEntity() );
+			m_raycasters = addChild( "raycasters", new BEntity() );
 
 		// SERVERS
 			const float spacing( 2.0f );
@@ -328,7 +346,7 @@
 			const float critter_spacing( 1.0f );
 			
 			const unsigned int rows( 2 );
-			const unsigned int columns( 3 );
+			const unsigned int columns( 2 );
 			const unsigned int total_threads( rows * columns );
 
 			const float dropzone_total_width( 190 );
@@ -376,6 +394,33 @@
 							food_system->getChild("settings", 1)->getChild( "number_of_units", 1)->set( uint( total_minimum_food / total_threads ) );
 							critter_system->getChild("settings", 1)->getChild( "minimum_number_of_units", 1)->set( uint( total_minimum_critters / total_threads ) );
 						
+						// REGISTER TO POPULATION CONTROLLER
+							population_controller->set( "register_critter_container", critter_system->getChild("unit_container", 1) );
+							population_controller->set( "register_food_container", server->getChild("food_system", 1)->getChild("unit_container", 1) );
+
+						// RAYCAST
+						{
+							m_bullet_raycast = server->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
+							{
+								auto source = m_bullet_raycast->getChild( "source", 1 );
+								m_raycast_source_x = source->getChild( "x", 1 );
+								m_raycast_source_y = source->getChild( "y", 1 );
+								m_raycast_source_z = source->getChild( "z", 1 );
+								auto target = m_bullet_raycast->getChild( "target", 1 );
+								m_raycast_target_x = target->getChild( "x", 1 );
+								m_raycast_target_y = target->getChild( "y", 1 );
+								m_raycast_target_z = target->getChild( "z", 1 );
+							}
+				
+							m_raycasters->addChild( "external_raycaster", new BEntity_external() )->set( m_bullet_raycast );
+						}
+
+						// MOUSE PICKERS
+							auto mousepicker = server->getChild("physicsworld", 1)->addChild( "mousepicker", "Bullet_MousePicker" );
+							mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker );
+							
+							
+							
 						++thread_counter;
 					}
 				}
@@ -488,9 +533,12 @@
 				}
 			}
 
-			// THREADS FINISH
-				addChild("threads_finish", "threads_finish");
+		// // THREADS FINISH
+			// addChild("threads_finish", "threads_finish");
 
+		// CRITTER EXCHANGER
+			addChild( "CdCritterExchanger", "CdCritterExchanger" );
+				
 		// // RAYCAST
 		// {
 		// 	m_bullet_raycast1 = getChild("thread", 1)->getChild("Critterding", 1)->getChild("physicsworld", 1)->addChild( "raycaster", "Bullet_Raycast" );
@@ -557,20 +605,6 @@
 // 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker2 );
 // 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker3 );
 // 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker4 );
-		
-		// // POPULATION CONTROLLER
-		// 	auto population_controller = addChild( "CdPopulationController", "CdPopulationController" );
-		// 	population_controller->set( "register_critter_container", getChild("thread1", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
-		// 	population_controller->set( "register_critter_container", getChild("thread2", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
-		// 	population_controller->set( "register_critter_container", getChild("thread3", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
-		// 	population_controller->set( "register_critter_container", getChild("thread4", 1)->getChild("Critterding", 1)->getChild("critter_system", 1)->getChild("unit_container", 1) );
-		// 	population_controller->set( "register_food_container", getChild("thread1", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
-		// 	population_controller->set( "register_food_container", getChild("thread2", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
-		// 	population_controller->set( "register_food_container", getChild("thread3", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
-		// 	population_controller->set( "register_food_container", getChild("thread4", 1)->getChild("Critterding", 1)->getChild("food_system", 1)->getChild("unit_container", 1) );
-			
-		// CRITTER EXCHANGER
-			addChild( "CdCritterExchanger", "CdCritterExchanger" );
 	}
 
 	BEntity* Scene::getServer( const unsigned int row, const unsigned int column, const unsigned int rows, const unsigned int columns )
@@ -639,11 +673,21 @@
 	{
 		for_all_children_of2( m_critter_unit_container )
 		{
-			for_all_children_of3( (*child2)->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 ) )
+			
+			auto critter = dynamic_cast<CdCritter*>( *child2 );
+			if ( critter )
 			{
-				if ( (*child3)->get_reference() == e1 || (*child3)->get_reference() == e2 )
+				if ( critter->m_bodyparts_shortcut == 0 )
 				{
-					return (*child2);
+					critter->m_bodyparts_shortcut = critter->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+				}
+
+				for_all_children_of3( critter->m_bodyparts_shortcut )
+				{
+					if ( (*child3)->get_reference() == e1 || (*child3)->get_reference() == e2 )
+					{
+						return (*child2);
+					}
 				}
 			}
 		}
@@ -683,7 +727,7 @@
 			{
 				BClassesHelper i;
 					i.addClass( parent, CLASS::SCENE, "Scene" );
-					i.addClass( parent, CLASS::CRITTERDING_THREADS, "Critterding_threads" );
+					i.addClass( parent, CLASS::CRITTERDING_THREADS, "Critterding" );
 					i.addClass( parent, CLASS::CD_CRITTER_THREAD_MESHER, "CdCritterThreadMesher" );
 				return 0;
 			}

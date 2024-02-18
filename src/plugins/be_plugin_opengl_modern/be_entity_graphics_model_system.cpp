@@ -27,11 +27,17 @@
 		std::cout << "loading shaders" << std::endl;
 // 		m_effect.reset(new BeGraphicsEffect(m_filesystem, "/projects/bengine-new/share/sandbox/shaders/crittervision_new.vert", "/projects/bengine-new/share/sandbox/shaders/crittervision_new.frag"));
 		// m_effect.reset(new BeGraphicsEffect(m_filesystem, "/projects/bengine3/share/instancing.vert", "/projects/bengine3/share/instancing.frag"));
-		m_effect.reset(new BeGraphicsEffect(m_filesystem, "/projects/bengine3/share/vertex_shader.glsl", "/projects/bengine3/share/fragment_shader.glsl"));
-		m_effect_critter.reset(new BeGraphicsEffect(m_filesystem, "/projects/bengine3/share/vertex_shader_critter.glsl", "/projects/bengine3/share/fragment_shader_critter.glsl"));
+		m_effect.reset(new BeGraphicsEffect(m_filesystem, "../share/vertex_shader.glsl", "../share/fragment_shader.glsl"));
+		m_effect_critter.reset(new BeGraphicsEffect(m_filesystem, "../share/vertex_shader_critter.glsl", "../share/fragment_shader_critter.glsl"));
 		// {
 		// 	glUseProgram( m_effect_critter->m_program.get()->handle() );
 		// }
+	}
+	
+	void BGraphicsModelSystem::construct()
+	{
+		addChild("active", "bool" )->set( true );
+		
 	}
 	
 	BGraphicsModelSystem::~BGraphicsModelSystem()

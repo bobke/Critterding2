@@ -36,9 +36,9 @@
 		m_mutationweight_synapse_alter_weight_slightly = mutation_weights->addChild( "m_mutationweight_synapse_alter_weight_slightly", new BEntity_uint() );
 		m_slightly_percent = mutation_weights->addChild( "m_slightly_percent", new BEntity_uint() );
 		
-		m_mutation_chance->set( Buint(8) );
+		m_mutation_chance->set( Buint(10) );
 		m_mutationruns_min->set( Buint(1) );
-		m_mutationruns_max->set( Buint(16) );
+		m_mutationruns_max->set( Buint(20) );
 		// m_mutation_chance->set( Buint(30) );
 		// m_mutationruns_min->set( Buint(1) );
 		// m_mutationruns_max->set( Buint(20) );

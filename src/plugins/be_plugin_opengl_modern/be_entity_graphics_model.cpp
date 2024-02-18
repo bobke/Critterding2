@@ -24,6 +24,8 @@
 
 	void BGraphicsModel::construct()
 	{
+		m_active = parent()->getChild( "active", 1 );
+		
 		m_pre_scale_x = addChild( "pre_scale_x", new BEntity_float() );
 		m_pre_scale_y = addChild( "pre_scale_y", new BEntity_float() );
 		m_pre_scale_z = addChild( "pre_scale_z", new BEntity_float() );
@@ -47,7 +49,12 @@
 		m_pre_rotation_z->set( 0.0f );
 		
 		// COLOR UNIFORM
-		m_uniform_color = dynamic_cast<BShaderUniformVec4*>( parent()->getChild("shaders", 1)->getChild("u_Color", 1) );
+		auto shaders = parent()->getChild("shaders", 1);
+		if ( shaders )
+		{
+			std::cout << "shaders found " << std::endl;
+			m_uniform_color = dynamic_cast<BShaderUniformVec4*>( parent()->getChild("shaders", 1)->getChild("u_Color", 1) );
+		}
 		// m_color_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "u_Color" );
 		// glUniform4f( m_color_location, 0.2f, 0.8f, 0.4f, 1.0f );
 		
@@ -134,7 +141,7 @@
 
 	void BGraphicsModel::process()
 	{
-		if( getModel() && getModel()->isReady() )
+		if( m_active->get_bool() && getModel() && getModel()->isReady() )
 		{
 			bool found_child(false);
 

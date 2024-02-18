@@ -3,6 +3,7 @@
 
 #include "kernel/be_entity_interface.h"
 #include "plugins/be_plugin_bullet/physicsmodel_rigid.h"
+#include <glm/gtc/type_ptr.hpp>
 
 	class BGraphicsModelSystem;
 
@@ -30,9 +31,11 @@
 	
 			btTransform m_turn_180;
 			btTransform m_pos_transform;
-			BEntity* m_drawEntities;
+			BEntity* m_graphicsModelSystem;
 			btScalar m_drawingMatrix[16];
 			unsigned int m_retinasperrow;
+			
+			glm::mat4 m_ProjectionMatrixGLM;
 		
 		// Vision
 			unsigned int m_critter_retinasize;

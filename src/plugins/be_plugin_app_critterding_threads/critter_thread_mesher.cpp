@@ -115,13 +115,12 @@
 
 			// POSITION BODYPARTS
 				auto bodyparts_old = entity->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-				auto bodyparts_new = critter_new->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+				critter_new->m_bodyparts_shortcut = critter_new->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
 
 				const auto& children_old = bodyparts_old->children();
 				auto old_child = children_old.begin();
-				// for ( auto child2(children_vector2.begin()); child2 != children_vector2.end(); ++child2 )
 
-				for_all_children_of3( bodyparts_new )
+				for_all_children_of3( critter_new->m_bodyparts_shortcut )
 				{
 					auto t = (*child3)->get_reference()->getChild( "transform", 1 );
 					auto oldt = (*old_child)->get_reference()->getChild( "transform", 1 );

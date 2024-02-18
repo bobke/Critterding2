@@ -615,14 +615,10 @@
 			auto settings = body->parent()->parent()->parent()->getChild( "settings", 1 );
 			
 			// WEIGHT
-				float weight;
+				float weight(1.0f);
 				if ( settings->getChild( "bodypart_use_density", 1 )->get_bool() )
 				{
 					weight = settings->getChild( "bodypart_density", 1 )->get_float() * (scale_x * scale_y * scale_z);
-				}
-				else
-				{
-					weight = 1.0f;
 				}
 				new_bodypart->addChild( "weight", new BEntity_float_property() )->set( weight ); // FIXME SETTING
 			

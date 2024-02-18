@@ -37,6 +37,8 @@
 			// float m_projectionMatrixGLM[16];
 
 		private:
+			BEntity* m_active;
+			
 			BEntity* m_s_elapsed;
 
 			// BEntity* m_transform;

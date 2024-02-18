@@ -19,6 +19,8 @@
 			BGraphicsModelSystem();
 			virtual ~BGraphicsModelSystem();
 			
+			void construct();
+			
 			boost::shared_ptr<BeGraphicsModelResource> load( const std::string& filename, boost::shared_ptr<BeGraphicsSystem> graphicsSystem, BGraphicsModelSystem* instance, const btVector3& scale, const btTransform& transform );
 			boost::shared_ptr<BeGraphicsSystem> m_graphicsSystem;
 			boost::shared_ptr<BeGraphicsEffect> m_effect;

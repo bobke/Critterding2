@@ -120,9 +120,6 @@
 			m_mouse_x = glwindow->getChild( "mouse_x", 1 );
 			m_mouse_y = glwindow->getChild( "mouse_y", 1 );
 
-		// SDL SWAPBUFFER, making sure this runs right after sdl_window and it's children are done processing
-			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
-			
 		// GRAPHICS MODELSYSTEM
 			auto t_graphicsModelSystem = glwindow->addChild("GraphicsModelSystem", "GraphicsModelSystem");
 
@@ -405,24 +402,31 @@
 
 	BEntity* Scene::findCritter( BEntity* e1, BEntity* e2 )
 	{
-		BEntity* critter_bp( e1 );
-		if ( e2->name() == "bodypart_central" )
-		{
-			critter_bp = e2;
-		}
 		for_all_children_of2( m_critter_unit_container )
 		{
-			for_all_children_of3( (*child2)->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 ) )
+			
+			auto critter = dynamic_cast<CdCritter*>( *child2 );
+			if ( critter )
 			{
-				if ( (*child3)->get_reference() == critter_bp )
+				if ( critter->m_bodyparts_shortcut == 0 )
 				{
-					return (*child2);
+					critter->m_bodyparts_shortcut = critter->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+				}
+
+				for_all_children_of3( critter->m_bodyparts_shortcut )
+				{
+					if ( (*child3)->get_reference() == e1 || (*child3)->get_reference() == e2 )
+					{
+						return (*child2);
+					}
 				}
 			}
 		}
+
 		return 0;
 	}
-	
+
+	// FIXME like findCritter above
 	BEntity* Scene::findFood( BEntity* e1, BEntity* e2 )
 	{
 		BEntity* food_bp( e1 );

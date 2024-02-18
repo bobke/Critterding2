@@ -32,8 +32,6 @@
 #include "plugins/be_plugin_bullet/be_entity_physics_entity.h"
 #include "kernel/be_plugin_base_entity_types.h"
 #include "critter_system.h"
-#include <glm/gtc/type_ptr.hpp>
-// #include <iostream>
 
 	void CdVisionSystem::construct()
 	{
@@ -44,7 +42,7 @@
 
 		m_critter_containers = addChild("critter_containers", new BEntity());
 		
-		m_drawEntities = 0;
+		m_graphicsModelSystem = 0;
 		m_turn_180 = btTransform( btQuaternion( SIMD_PI, 0.0f, 0.0f ) );
 
 		m_critter_retinasize = 6; // FIXME max 8?
@@ -82,6 +80,8 @@
 		
 		// shortcut to reset scale uniform, hackish
 		m_e_scale_x = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->getChild("shaders", 1)->getChild("e_scale_x", 1);
+		
+		m_ProjectionMatrixGLM = glm::perspective( SIMD_PI / 4, 1280.0f/800.0f, 0.1f, m_critter_sightrange->get_float() );
 	} 
 
 	void CdVisionSystem::process()
@@ -89,9 +89,9 @@
 		if ( m_critter_sightrange->get_float() > 0.0f )
 		{
 			// std::cout << "------------- vision system START" << std::endl;
-			if ( m_drawEntities == 0 )
+			if ( m_graphicsModelSystem == 0 )
 			{
-				m_drawEntities = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1);
+				m_graphicsModelSystem = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1);
 			}
 
 			glUseProgram( m_graphics_system->m_effect_critter->m_program.get()->handle() );
@@ -109,7 +109,6 @@
 			for_all_children_of2( m_critter_containers )
 			{
 				auto container = (*child2)->get_reference();
-				// for_all_children_of( m_unit_container )
 				for_all_children_of( container )
 				{
 					calcFramePos( critter_counter );
@@ -117,58 +116,47 @@
 					empty = false;
 					CdCritter* critter = dynamic_cast<CdCritter*>( (*child) );
 
-					if ( critter->m_physics_component == 0 )
+					if ( critter->m_physics_component_shortcut == 0 )
 					{
-						critter->m_physics_component = critter->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference();
+						critter->m_physics_component_shortcut = critter->getChild("external_body", 1)->get_reference()->getChild("body_fixed1", 1)->getChild("bodyparts", 1)->getChild("external_bodypart_physics", 1)->get_reference();
 					}
 
-					auto bodypart_to_attach_cam = dynamic_cast<BPhysicsEntity*>( critter->m_physics_component )->getPhysicsComponent();
+					auto bodypart_to_attach_cam = dynamic_cast<BPhysicsEntity*>( critter->m_physics_component_shortcut )->getPhysicsComponent();
 					
 					if ( bodypart_to_attach_cam != 0 )
 					{
 						glViewport(framePosX, framePosY, m_critter_retinasize, m_critter_retinasize);
-		// 
-						auto ProjectionMatrixGLM = glm::perspective( SIMD_PI / 4, 1280.0f/800.0f, 0.1f, m_critter_sightrange->get_float() );
-						
+
 						// VIEW MATRIX GLM
 							auto ViewMatrix = bodypart_to_attach_cam->getTransform() * m_turn_180;
 							ViewMatrix.inverse().getOpenGLMatrix( buffer );
 							glm::mat4 viewMatrix = glm::make_mat4( buffer );
 							// glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, glm::value_ptr(theMatrix) );
 
-
-				// 		// PROJECTIONVIEW MATRIX GLM
-							// glm::mat4 pvMatrix = glm::mat4(1.0f);
-							// pvMatrix = m_ProjectionMatrixGLM * theMatrix;
-							glm::mat4 pvMatrix = ProjectionMatrixGLM * viewMatrix;
+						// PROJECTIONVIEW MATRIX GLM
+							glm::mat4 pvMatrix = m_ProjectionMatrixGLM * viewMatrix;
 							glUniformMatrix4fv( m_ProjectionViewMatrixID, 1, GL_FALSE, glm::value_ptr(pvMatrix) );					
-						
-						
-						// glMatrixMode(GL_PROJECTION);
-						// glLoadIdentity();
-						// glFrustum( -0.05f, 0.05f, -0.05, 0.05, 0.1f, m_critter_sightrange->get_float());
 
-						// // GET MATRIX
-						// // bodypart_to_attach_cam->getTransform().getOpenGLMatrix( m_drawingMatrix );
-						// m_pos_transform = bodypart_to_attach_cam->getTransform() * m_turn_180;
-						// m_pos_transform.inverse().getOpenGLMatrix( m_drawingMatrix );
-						// glMultMatrixf( m_drawingMatrix );
-
-						// glMatrixMode(GL_MODELVIEW);
-						// glLoadIdentity();
-						
 						// DRAW WORLD
-							if ( m_drawEntities )
+							if ( m_graphicsModelSystem )
 							{
-								for_all_children_of3( m_drawEntities )
-								{
-									auto model = dynamic_cast<BGraphicsModel*>( (*child3) );
-									if ( model )
+								// record and set active state of modelsystem
+									auto active = m_graphicsModelSystem->getChild("active", 1);
+									bool activeState = active->get_bool();
+									active->set( true );
+
+								// draw entities within sight
+									for_all_children_of3( m_graphicsModelSystem )
 									{
-										// (*child2)->process();
-										model->processWhenInSight( &bodypart_to_attach_cam->getTransform(), m_critter_sightrange->get_float() );
+										auto model = dynamic_cast<BGraphicsModel*>( (*child3) );
+										if ( model )
+										{
+											model->processWhenInSight( &bodypart_to_attach_cam->getTransform(), m_critter_sightrange->get_float() );
+										}
 									}
-								}
+
+								// reset active
+									active->set( activeState );
 							}
 
 						++critter_counter;
@@ -182,13 +170,11 @@
 				unsigned int picwidth = m_retinasperrow * (m_critter_retinasize);
 				unsigned int picheight = m_critter_retinasize;
 				
-				// unsigned int sum(0);
 				unsigned int rows(0);
 				for_all_children_of( m_critter_containers )
 				{
 					rows += (*child)->get_reference()->numChildren();
 				}
-				// unsigned int rows = m_unit_container->numChildren();
 				
 				while ( rows > m_retinasperrow )
 				{
@@ -199,98 +185,97 @@
 				glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
 				glReadPixels(0, 0, picwidth, picheight, GL_RGBA, GL_UNSIGNED_BYTE, retina);
 				
-				
 				// FEED TO BRAIN
-				critter_counter = 0;
-				float value;
-				float fvalue;
-				for_all_children_of2( m_critter_containers )
-				{
-					auto container = (*child2)->get_reference();
-					for_all_children_of( container )
-					// for_all_children_of( m_unit_container )
-					{
-						CdCritter* critter = dynamic_cast<CdCritter*>( (*child) );
-
-						// while vision_value_R not found
-						if ( critter->m_brain_inputs == 0 )
-						{
-							critter->m_brain_inputs = (*child)->getChild("external_brain", 1)->get_reference()->getChild("inputs", 1);
-						}
-						
-						// setup inputs and cycle through to the correct input
-						const auto& brain_inputs_children_vector = critter->m_brain_inputs->children();
-						const auto& brain_inputs_begin = brain_inputs_children_vector.begin();
-						const auto& brain_inputs_end = brain_inputs_children_vector.end();
-						auto brain_input = brain_inputs_begin;
-						while ( brain_input != brain_inputs_end && (*brain_input)->name() != "vision_value_R" )
-						{
-							// std::cout << (*brain_input)->name() << std::endl;
-							++brain_input;
-						}
-
-						// FEED
-						calcFramePos( critter_counter );
-						for ( unsigned int h=retinaRowStart; h < retinaRowStart+(m_critter_retinasize*retinaRowLength); h += retinaRowLength )
-						{
-							for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+(m_critter_retinasize*4); ++w )
-							{
-								value = (int)retina[w];
-								if ( value > 0 )
-								{
-									fvalue = (float)value / 255;
-									// std::cout << "setting brain_input " << (*brain_input)->name() << " to " << ((float)(int)retina[w]) / 255 << std::endl;
-
-									// if it's the same, force update to outputs
-									if ( !(*brain_input)->set( fvalue ) )
-									{
-										(*brain_input)->onUpdate();
-									}
-								}
-								++brain_input;
-							}
-						}
-
-						++critter_counter;
-					}
-				}
-				
-				
-				// PRINT
-				if ( m_print->get_bool() )
-				{
 					critter_counter = 0;
+					float value;
+					float fvalue;
 					for_all_children_of2( m_critter_containers )
 					{
 						auto container = (*child2)->get_reference();
 						for_all_children_of( container )
 						// for_all_children_of( m_unit_container )
 						{
-							calcFramePos(critter_counter);
-							std::cout << "critter " << critter_counter << ":" << " x:" << retinaColumnStart << " y:" << retinaRowStart << " retinaRowLength: " << retinaRowLength << std::endl;
+							CdCritter* critter = dynamic_cast<CdCritter*>( (*child) );
 
+							// while vision_value_R not found
+							if ( critter->m_brain_inputs == 0 )
+							{
+								critter->m_brain_inputs = (*child)->getChild("external_brain", 1)->get_reference()->getChild("inputs", 1);
+							}
+							
+							// setup inputs and cycle through to the correct input
+							const auto& brain_inputs_children_vector = critter->m_brain_inputs->children();
+							const auto& brain_inputs_begin = brain_inputs_children_vector.begin();
+							const auto& brain_inputs_end = brain_inputs_children_vector.end();
+							auto brain_input = brain_inputs_begin;
+							while ( brain_input != brain_inputs_end && (*brain_input)->name() != "vision_value_R" )
+							{
+								// std::cout << (*brain_input)->name() << std::endl;
+								++brain_input;
+							}
+
+							// FEED
+							calcFramePos( critter_counter );
 							for ( unsigned int h=retinaRowStart; h < retinaRowStart+(m_critter_retinasize*retinaRowLength); h += retinaRowLength )
 							{
-								for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+(m_critter_retinasize*4); w+=4 )
+								for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+(m_critter_retinasize*4); ++w )
 								{
-									if ( (int)retina[w+0] > 80 ) std::cout << "\033[1;31mR\033[0m";
-									else std::cout << ".";
-									if ( (int)retina[w+1] > 80 ) std::cout << "\033[1;32mG\033[0m";
-									else std::cout << ".";
-									if ( (int)retina[w+2] > 80 ) std::cout << "\033[1;34mB\033[0m";
-									else std::cout << ".";
-									if ( (int)retina[w+3] > 80 ) std::cout << "\033[1;35mA\033[0m";
-									else std::cout << ".";
-								}
-								std::cout << std::endl;
-							}
-							std::cout << std::endl;
+									value = (int)retina[w];
+									if ( value > 0 )
+									{
+										fvalue = (float)value / 255;
+										// std::cout << "setting brain_input " << (*brain_input)->name() << " to " << ((float)(int)retina[w]) / 255 << std::endl;
 
-							critter_counter++;
+										// if it's the same, force update to outputs
+										if ( !(*brain_input)->set( fvalue ) )
+										{
+											(*brain_input)->onUpdate();
+										}
+									}
+									++brain_input;
+								}
+							}
+
+							++critter_counter;
 						}
 					}
-				}
+
+				// PRINT
+					if ( m_print->get_bool() )
+					{
+						critter_counter = 0;
+						for_all_children_of2( m_critter_containers )
+						{
+							auto container = (*child2)->get_reference();
+							for_all_children_of( container )
+							// for_all_children_of( m_unit_container )
+							{
+								calcFramePos(critter_counter);
+								std::cout << "critter " << critter_counter << ":" << " x:" << retinaColumnStart << " y:" << retinaRowStart << " retinaRowLength: " << retinaRowLength << std::endl;
+
+								for ( unsigned int h=retinaRowStart; h < retinaRowStart+(m_critter_retinasize*retinaRowLength); h += retinaRowLength )
+								{
+									for ( unsigned int w=h+retinaColumnStart; w < h+retinaColumnStart+(m_critter_retinasize*4); w+=4 )
+									{
+										if ( (int)retina[w+0] > 80 ) std::cout << "\033[1;31mR\033[0m";
+										else std::cout << ".";
+										if ( (int)retina[w+1] > 80 ) std::cout << "\033[1;32mG\033[0m";
+										else std::cout << ".";
+										if ( (int)retina[w+2] > 80 ) std::cout << "\033[1;34mB\033[0m";
+										else std::cout << ".";
+										if ( (int)retina[w+3] > 80 ) std::cout << "\033[1;35mA\033[0m";
+										else std::cout << ".";
+									}
+									std::cout << std::endl;
+								}
+								std::cout << std::endl;
+
+								critter_counter++;
+							}
+						}
+					}
 			}
+
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
 			// std::cout << "------------- vision system STOP" << std::endl;
 		}

@@ -291,7 +291,7 @@
 			// critter_unit->setAge( Buint(0) );
 			
 			// COPY CRITTER
-				auto critter_new = m_entityCopy.copyEntity( critter_unit );
+				auto critter_new = dynamic_cast<CdCritter*>( m_entityCopy.copyEntity( critter_unit ) );
 				critter_new->getChild( "age", 1 )->set( Buint(0) );
 				// critter_new->getChild( "energy", 1 )->set( Buint(0) );
 
@@ -299,13 +299,12 @@
 			if ( !m_copy_random_position->get_bool() )
 			{
 				auto bodyparts_old = critter_unit->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-				auto bodyparts_new = critter_new->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+				critter_new->m_bodyparts_shortcut = critter_new->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
 				
 				const auto& children_old = bodyparts_old->children();
 				auto old_child = children_old.begin();
-				// for ( auto child2(children_vector2.begin()); child2 != children_vector2.end(); ++child2 )
 
-				for_all_children_of3( bodyparts_new )
+				for_all_children_of3( critter_new->m_bodyparts_shortcut )
 				{
 					auto t = (*child3)->get_reference()->getChild( "transform", 1 );
 					auto oldt = (*old_child)->get_reference()->getChild( "transform", 1 );
@@ -360,19 +359,27 @@
 
 	void CdCritterSystem::removeCritter( BEntity* entity, bool force_direct_deletion )
 	{
-		// shortcut
-			auto bodyparts = entity->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
-
-		// COLLISIONS
-			while ( removeFromCollisions( bodyparts ) ) {;}
-
-		// MOUSEPICKER, loop all bodyparts
-			if ( m_mouse_picker )
+			auto critter = dynamic_cast<CdCritter*>( entity );
+			if ( critter )
 			{
-				for_all_children_of3( bodyparts )
-				{
-					m_mouse_picker->removeGrabbedEntity( (*child3)->get_reference() );
-				}
+				// shortcut 
+					if ( critter->m_bodyparts_shortcut == 0 )
+					{
+						critter->m_bodyparts_shortcut = critter->getChild( "external_body", 1 )->get_reference()->getChild( "body_fixed1", 1 )->getChild( "bodyparts", 1 );
+					}
+
+				// COLLISIONS
+					while ( removeFromCollisions( critter->m_bodyparts_shortcut ) ) {;}
+					
+				// MOUSEPICKER, loop all bodyparts
+					if ( m_mouse_picker )
+					{
+						for_all_children_of3( critter->m_bodyparts_shortcut )
+						{
+							m_mouse_picker->removeGrabbedEntity( (*child3)->get_reference() );
+						}
+					}
+				
 			}
 
 		// // SPECIES
@@ -424,7 +431,9 @@
 		addChild( "adam_distance", new BEntity_uint() )->set( Buint(0) );
 		
 		m_brain_inputs = 0;
-		m_physics_component = 0;
+		m_transform_shortcut = 0;
+		m_physics_component_shortcut = 0;
+		m_bodyparts_shortcut = 0;
 	}
 	
 	

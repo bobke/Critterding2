@@ -13,6 +13,8 @@
 
 	void BCamera::construct()
 	{
+		m_active = parent()->getChild( "active", 1 );
+
 		m_fov_y = addChild( "fov_y", new BEntity_float() );
 		m_fov_y->set( SIMD_PI / 4 );
 		// m_fov_y->set( 45.0f );
@@ -67,103 +69,106 @@
 	// FIXME do this in the transform itself?
 	void BCamera::process()
 	{
-		// Pick Shader
-		glUseProgram( dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle() );
-		// glUseProgram( dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle() );
-		
-		// std::cout << "BCamera::process()_modern " << m_aspect_ratio->get_float() << std::endl;
-		
-		if ( m_s_elapsed == 0 )
-			m_s_elapsed = topParent()->getChild("sys", 1)->getChild("timer", 1)->getChild("s_elapsed", 1);
+		if( m_active->get_bool() )
+		{
+			// Pick Shader
+			glUseProgram( dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle() );
+			// glUseProgram( dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle() );
+			
+			// std::cout << "BCamera::process()_modern " << m_aspect_ratio->get_float() << std::endl;
+			
+			if ( m_s_elapsed == 0 )
+				m_s_elapsed = topParent()->getChild("sys", 1)->getChild("timer", 1)->getChild("s_elapsed", 1);
 
-		// process movement
-		if ( m_forward->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, 0.0f, -m_sensitivity_move->get_float() * m_s_elapsed->get_float() ));
-		}
-		if ( m_backward->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, 0.0f, m_sensitivity_move->get_float() * m_s_elapsed->get_float() ));
-		}
-		if ( m_left->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( -m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.0f, 0.f ));
-		}
-		if ( m_right->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.0f, 0.f ));
-		}
-		if ( m_up->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.f ));
-		}
-		if ( m_down->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, -m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.f ));
-		}
-		
-		// process looking
-		if ( m_look_left->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f, 0.0f ));
-		}
-		if ( m_look_right->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( -m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f, 0.0f ));
-		}
-		if ( m_look_up->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f ));
-		}
-		if ( m_look_down->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, -m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f ));
-		}
-		if ( m_look_roll_left->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, m_sensitivity_look->get_float() * m_s_elapsed->get_float() ));
-		}
-		if ( m_look_roll_right->get_bool() )
-		{
-			m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, -m_sensitivity_look->get_float() * m_s_elapsed->get_float() ));
-		}
-
-		// PROJECTION MATRIX
-			// perspective( m_fov_y->get_float(), m_aspect_ratio->get_float(), m_z_near->get_float(), m_z_far->get_float() );
-			// glUniformMatrix4fv( m_ProjectionMatrixID, 1, GL_FALSE, m_projectionMatrix );
-
-		// PROJECTION MATRIX GLM
-			m_ProjectionMatrixGLM = glm::perspective( m_fov_y->get_float(), m_aspect_ratio->get_float(), m_z_near->get_float(), m_z_far->get_float() );
-			// glUniformMatrix4fv(m_ProjectionMatrixID, 1, GL_FALSE, glm::value_ptr(m_ProjectionMatrixGLM));
-
-		// // PROJECTION MATRIX GLM 2
-		// 	perspective( m_fov_y->get_float(), m_aspect_ratio->get_float(), m_z_near->get_float(), m_z_far->get_float() );
-		// 	m_ProjectionMatrixGLM = glm::make_mat4(m_projectionMatrix);
-
-		// VIEW MATRIX
-			// m_ViewMatrix = (m_base_transform->m_transform * m_transform->m_transform).inverse();
-			// m_ViewMatrix.getOpenGLMatrix( m_viewMatrix );
-			// glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, m_viewMatrix );
-
-		// VIEW MATRIX GLM
-			m_ViewMatrix = (m_base_transform->m_transform * m_transform->m_transform).inverse();
-			m_ViewMatrix.getOpenGLMatrix( m_viewMatrix );
-			glm::mat4 viewMatrix = glm::make_mat4(m_viewMatrix);
-			// glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, glm::value_ptr(theMatrix) );
-
-
-// 		// PROJECTIONVIEW MATRIX GLM
-			// glm::mat4 pvMatrix = glm::mat4(1.0f);
-			// pvMatrix = m_ProjectionMatrixGLM * theMatrix;
-			glm::mat4 pvMatrix = m_ProjectionMatrixGLM * viewMatrix;
-			glUniformMatrix4fv( m_ProjectionViewMatrixID, 1, GL_FALSE, glm::value_ptr(pvMatrix) );
-
-		// FIXME HACK  RESET ALL THE SHADERS?, idea is we don't have to brute force a change to the scale uniform down the line, do it here
-			if ( m_e_scale_x == 0 )
+			// process movement
+			if ( m_forward->get_bool() )
 			{
-				m_e_scale_x = parent()->getChild("shaders", 1)->getChild("e_scale_x", 1);
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, 0.0f, -m_sensitivity_move->get_float() * m_s_elapsed->get_float() ));
 			}
-			m_e_scale_x->set(0.0f);
+			if ( m_backward->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, 0.0f, m_sensitivity_move->get_float() * m_s_elapsed->get_float() ));
+			}
+			if ( m_left->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( -m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.0f, 0.f ));
+			}
+			if ( m_right->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.0f, 0.f ));
+			}
+			if ( m_up->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.f ));
+			}
+			if ( m_down->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, 0.0f ), btVector3( 0.0f, -m_sensitivity_move->get_float() * m_s_elapsed->get_float(), 0.f ));
+			}
+			
+			// process looking
+			if ( m_look_left->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f, 0.0f ));
+			}
+			if ( m_look_right->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( -m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f, 0.0f ));
+			}
+			if ( m_look_up->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f ));
+			}
+			if ( m_look_down->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, -m_sensitivity_look->get_float() * m_s_elapsed->get_float(), 0.0f ));
+			}
+			if ( m_look_roll_left->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, m_sensitivity_look->get_float() * m_s_elapsed->get_float() ));
+			}
+			if ( m_look_roll_right->get_bool() )
+			{
+				m_transform->m_transform = m_transform->m_transform * btTransform(btQuaternion( 0.0f, 0.0f, -m_sensitivity_look->get_float() * m_s_elapsed->get_float() ));
+			}
+
+			// PROJECTION MATRIX
+				// perspective( m_fov_y->get_float(), m_aspect_ratio->get_float(), m_z_near->get_float(), m_z_far->get_float() );
+				// glUniformMatrix4fv( m_ProjectionMatrixID, 1, GL_FALSE, m_projectionMatrix );
+
+			// PROJECTION MATRIX GLM
+				m_ProjectionMatrixGLM = glm::perspective( m_fov_y->get_float(), m_aspect_ratio->get_float(), m_z_near->get_float(), m_z_far->get_float() );
+				// glUniformMatrix4fv(m_ProjectionMatrixID, 1, GL_FALSE, glm::value_ptr(m_ProjectionMatrixGLM));
+
+			// // PROJECTION MATRIX GLM 2
+			// 	perspective( m_fov_y->get_float(), m_aspect_ratio->get_float(), m_z_near->get_float(), m_z_far->get_float() );
+			// 	m_ProjectionMatrixGLM = glm::make_mat4(m_projectionMatrix);
+
+			// VIEW MATRIX
+				// m_ViewMatrix = (m_base_transform->m_transform * m_transform->m_transform).inverse();
+				// m_ViewMatrix.getOpenGLMatrix( m_viewMatrix );
+				// glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, m_viewMatrix );
+
+			// VIEW MATRIX GLM
+				m_ViewMatrix = (m_base_transform->m_transform * m_transform->m_transform).inverse();
+				m_ViewMatrix.getOpenGLMatrix( m_viewMatrix );
+				glm::mat4 viewMatrix = glm::make_mat4(m_viewMatrix);
+				// glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, glm::value_ptr(theMatrix) );
+
+
+	// 		// PROJECTIONVIEW MATRIX GLM
+				// glm::mat4 pvMatrix = glm::mat4(1.0f);
+				// pvMatrix = m_ProjectionMatrixGLM * theMatrix;
+				glm::mat4 pvMatrix = m_ProjectionMatrixGLM * viewMatrix;
+				glUniformMatrix4fv( m_ProjectionViewMatrixID, 1, GL_FALSE, glm::value_ptr(pvMatrix) );
+
+			// FIXME HACK  RESET ALL THE SHADERS?, idea is we don't have to brute force a change to the scale uniform down the line, do it here
+				if ( m_e_scale_x == 0 )
+				{
+					m_e_scale_x = parent()->getChild("shaders", 1)->getChild("e_scale_x", 1);
+				}
+				m_e_scale_x->set(0.0f);
+		}
 	}
 
 	btVector3 BCamera::getScreenDirection(const int win_x, const int win_y, const int mouse_x, const int mouse_y)

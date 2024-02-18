@@ -1,5 +1,5 @@
 #include "be_graphics_kernel.h"
-#include <iostream>
+// #include <iostream>
 
 void BeGraphicsKernel::clear( const GLbitfield mask )
 {

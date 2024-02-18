@@ -18,7 +18,7 @@ RUNNING
 -------
     running single thread: 
     > ./src/bengine app_critterding
-    running with 4 server threads:
+    running with server threads:
     > ./src/bengine app_critterding_threads
 
 KEYS
@@ -26,6 +26,7 @@ KEYS
     F1      open admin window
     F2      open control panel
     F3      open system monitor
+    F10     toggle rendering
     F11     toggle fullscreen
     F12     toggle vsync
 

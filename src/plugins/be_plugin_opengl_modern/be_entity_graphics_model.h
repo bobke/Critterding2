@@ -35,6 +35,7 @@
 			virtual void draw( boost::shared_ptr<BeGraphicsModel> model, bool doTextures=true );
 			void scale( const float x, const float y, const float z );
 
+			BEntity* m_active;
 			boost::shared_ptr<BeGraphicsModelResource> m_model;
 			std::string m_loaded_path;
 			BEntity* m_pre_scale_x;

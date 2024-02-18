@@ -703,7 +703,8 @@
 				const auto& end(children_vector.end());
 				for ( auto it(begin); it != end; ++it )
 				{
-					if ( std::string((*it)->name()) == std::string(name) )
+					if ( (*it)->name() == name )
+					// if ( std::string((*it)->name()) == std::string(name) )
 					{
 						return (*it);
 					}
