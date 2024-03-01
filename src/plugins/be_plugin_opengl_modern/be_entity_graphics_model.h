@@ -42,7 +42,7 @@
 			
 			virtual void draw( boost::shared_ptr<BeGraphicsModel> model, bool doTextures=true );
 			void drawInstanced(boost::shared_ptr<BeGraphicsModel> model, int instanceCount, bool doTextures=true);
-			void scale( const float x, const float y, const float z );
+			// void scale( const float x, const float y, const float z );
 			
 			BEntity* m_active;
 			boost::shared_ptr<BeGraphicsModelResource> m_model;
@@ -68,12 +68,12 @@
 			// GLuint m_transformBuffer;
 			GLuint m_scaledTransformsBufferID;
 			GLuint m_scaledTransformsBufferID_critter;
-			GLuint m_scaleBufferID;
-			GLuint m_ModelMatrixID;
 			GLint m_instanceModelMatrixAttrib;
 			float m_ScaleBuffer[16];
-			
-			
+
+			// GLuint m_ModelMatrixID;
+			// GLuint m_scaleBufferID;
+
 			// GLint m_instanceScaleAttrib;
 			// GLuint m_ViewModelMatrixID;
 			// GLuint m_ProjectionViewMatrixID;

@@ -109,7 +109,7 @@
 
 	BEntityThreadsFinish::~BEntityThreadsFinish()
 	{
-		// process();
+		process();
 	}
 		
 	void BEntityThreadsFinish::process()

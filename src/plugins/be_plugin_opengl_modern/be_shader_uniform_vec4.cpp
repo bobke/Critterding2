@@ -13,7 +13,7 @@
 	void BShaderUniformVec4::construct()
 	{
 		m_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent()->parent() )->m_effect->m_program.get()->handle(), name().c_str() );
-		std::cout << "created UNIFORM VEC4 with name " << name() << std::endl;
+		// std::cout << "created UNIFORM VEC4 with name " << name() << std::endl;
 	}
 
 	void BShaderUniformVec4::setValue(const float x, const float y, const float z, const float w)

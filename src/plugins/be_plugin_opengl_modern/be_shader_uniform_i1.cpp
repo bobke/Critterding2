@@ -10,7 +10,7 @@
 	void BShaderUniformI1::construct()
 	{
 		m_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent()->parent() )->m_effect->m_program.get()->handle(), name().c_str() );
-		std::cout << "created UNIFORM I1 with name " << name() << std::endl;
+		// std::cout << "created UNIFORM I1 with name " << name() << std::endl;
 	}
 
 	bool BShaderUniformI1::set( const Bint& value )

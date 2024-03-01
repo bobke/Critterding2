@@ -52,7 +52,6 @@
 		auto shaders = parent()->getChild("shaders", 1);
 		if ( shaders )
 		{
-			std::cout << "shaders found " << std::endl;
 			m_uniform_color = dynamic_cast<BShaderUniformVec4*>( parent()->getChild("shaders", 1)->getChild("u_Color", 1) );
 		}
 		m_color_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle(), "u_Color" );
@@ -64,11 +63,9 @@
 		// // m_ProjectionMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ProjectionMatrix_Model" );
 		// // m_ViewMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ViewMatrix_Model" );
 		// // m_uniform_scale = dynamic_cast<BShaderUniformVec3*>( parent()->getChild("shaders", 1)->getChild("u_Scale", 1) );
-		m_ModelMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle(), "ModelMatrix_Model" );
-		std::cout << "m_ModelMatrixID = glGetUniformLocation " << glGetError() << std::endl;
-		m_scaleBufferID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle(), "u_Scale" );
-		std::cout << "m_scaleBufferID = glGetUniformLocation " << glGetError() << std::endl;
 		
+		// m_ModelMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle(), "ModelMatrix_Model" );
+		// m_scaleBufferID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle(), "u_Scale" );
 
 		m_uniform_textureSample = parent()->getChild("shaders", 1)->getChild("u_textureSample", 1);
 		// m_textureSample_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "u_textureSample" );
@@ -102,9 +99,7 @@
 
 	BGraphicsModel::~BGraphicsModel()
 	{
-		std::cout << "deleting buffers" << std::endl;
 		glDeleteBuffers( 1, &m_scaledTransformsBufferID );
-		std::cout << "ok" << std::endl;
 	};
 	
 	
@@ -614,26 +609,26 @@
 		}
 	}
 
-	void BGraphicsModel::scale( const float x, const float y, const float z )
-	{
-		if ( x != m_scale_x_current->get_float() || y != m_scale_y_current->get_float() || z != m_scale_z_current->get_float() )
-		{
-			m_ScaleBuffer[0] = x;
-			m_ScaleBuffer[5] = y;
-			m_ScaleBuffer[10] = z;
- 
-			m_scale_x_current->set( x );
-			m_scale_y_current->set( y );
-			m_scale_z_current->set( z );
- 
-			glUniformMatrix4fv( m_scaleBufferID, 1, GL_FALSE, m_ScaleBuffer );
-			// std::cout << " DO";
-		}
-		// else
-		// {
-		// 	std::cout << " SKIP";
-		// }
-	}
+// 	void BGraphicsModel::scale( const float x, const float y, const float z )
+// 	{
+// 		if ( x != m_scale_x_current->get_float() || y != m_scale_y_current->get_float() || z != m_scale_z_current->get_float() )
+// 		{
+// 			m_ScaleBuffer[0] = x;
+// 			m_ScaleBuffer[5] = y;
+// 			m_ScaleBuffer[10] = z;
+//  
+// 			m_scale_x_current->set( x );
+// 			m_scale_y_current->set( y );
+// 			m_scale_z_current->set( z );
+//  
+// 			glUniformMatrix4fv( m_scaleBufferID, 1, GL_FALSE, m_ScaleBuffer );
+// 			// std::cout << " DO";
+// 		}
+// 		// else
+// 		// {
+// 		// 	std::cout << " SKIP";
+// 		// }
+// 	}
 
 	void BGraphicsModel::draw( boost::shared_ptr<BeGraphicsModel> model, bool doTextures )
 	{
