@@ -59,58 +59,63 @@
 		auto mouse_button_callback = [](GLFWwindow *w, int button, int action, int mods)
 		{
 			auto window = static_cast<BGLWindow*>(glfwGetWindowUserPointer( w ));
-			if ( action == GLFW_PRESS )
+			
+			// ignore if imgui captured
+			auto imgui = window->getChild("ImGuiContext", 1);
+			if ( !imgui || ( imgui && !imgui->getChild("capture_mouse", 1)->get_bool() ) ) // FIXME optimize
 			{
-				auto bindings = window->getChild( "bindings", 1 );
-				if( bindings )
+				if ( action == GLFW_PRESS )
 				{
-					std::stringstream mouseButton_name;
-					mouseButton_name << "mousebutton_down_" << button;
-
-					auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
-					if ( binding )
+					auto bindings = window->getChild( "bindings", 1 ); // FIXME optimize
+					if( bindings )
 					{
-						if ( binding->class_id() == std::string("bool") )
+						std::stringstream mouseButton_name;
+						mouseButton_name << "mousebutton_down_" << button;
+
+						auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
+						if ( binding )
 						{
-							if ( binding->get_bool() == false )
+							if ( binding->class_id() == std::string("bool") )
 							{
-								binding->set( true );
+								if ( binding->get_bool() == false )
+								{
+									binding->set( true );
+								}
+							}
+							else if ( binding->class_id() == std::string("trigger") )
+							{
+								binding->set();
 							}
 						}
-						else if ( binding->class_id() == std::string("trigger") )
+					}
+				}
+				
+				if ( action == GLFW_RELEASE )
+				{
+					auto bindings = window->getChild( "bindings", 1 ); // FIXME optimize
+					if( bindings )
+					{
+						std::stringstream mouseButton_name;
+						mouseButton_name << "mousebutton_up_" << button;
+
+						auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
+						if ( binding )
 						{
-							binding->set();
+							if ( binding->class_id() == std::string("bool") )
+							{
+								if ( binding->get_bool() == false )
+								{
+									binding->set( true );
+								}
+							}
+							else if ( binding->class_id() == std::string("trigger") )
+							{
+								binding->set();
+							}
 						}
 					}
 				}
 			}
-			
-			if ( action == GLFW_RELEASE )
-			{
-				auto bindings = window->getChild( "bindings", 1 );
-				if( bindings )
-				{
-					std::stringstream mouseButton_name;
-					mouseButton_name << "mousebutton_up_" << button;
-
-					auto binding = bindings->getChild( mouseButton_name.str().c_str(), 1 );
-					if ( binding )
-					{
-						if ( binding->class_id() == std::string("bool") )
-						{
-							if ( binding->get_bool() == false )
-							{
-								binding->set( true );
-							}
-						}
-						else if ( binding->class_id() == std::string("trigger") )
-						{
-							binding->set();
-						}
-					}
-				}
-			}
-			
 		};
 
 	// KEY PRESSES
@@ -122,91 +127,95 @@
 				// std::cout << " key_name2: " << get_key_name( key ) << std::endl;
 
 				auto window = static_cast<BGLWindow*>(glfwGetWindowUserPointer( w ));
-				if ( action == GLFW_PRESS )
+				
+				// ignore if imgui captured
+				auto imgui = window->getChild("ImGuiContext", 1);
+				if ( !imgui || ( imgui && !imgui->getChild("capture_keyboard", 1)->get_bool() ) ) // FIXME optimize
 				{
-					// std::cout << " press ";
-					
-					auto bindings = window->getChild( "bindings", 1 );
-					if( bindings )
+					if ( action == GLFW_PRESS )
 					{
-						// const char* keyname = glfwGetKeyName( key, scancode );
-						const char* keyname = get_key_name( key );
-						
-						if ( keyname )
+						auto bindings = window->getChild( "bindings", 1 ); // FIXME optimize
+						if( bindings )
 						{
-							auto binding = bindings->getChild( keyname, 1 );
-							if ( binding )
+							// const char* keyname = glfwGetKeyName( key, scancode );
+							const char* keyname = get_key_name( key );
+							
+							if ( keyname )
 							{
-								if ( binding->class_id() == std::string("bool") )
+								auto binding = bindings->getChild( keyname, 1 );
+								if ( binding )
 								{
-									if ( binding->get_bool() == false )
+									if ( binding->class_id() == std::string("bool") )
 									{
-										binding->set( true );
+										if ( binding->get_bool() == false )
+										{
+											binding->set( true );
+										}
+									}
+									else if ( binding->class_id() == std::string("trigger") )
+									{
+										binding->set();
 									}
 								}
-								else if ( binding->class_id() == std::string("trigger") )
-								{
-									binding->set();
-								}
-							}
 
-							std::stringstream key_name;
-							key_name << "key_down_" << keyname;
-							auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
-							if ( binding2 )
-							{
-								if ( binding2->class_id() == std::string("bool") )
+								std::stringstream key_name;
+								key_name << "key_down_" << keyname;
+								auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
+								if ( binding2 )
 								{
-									binding2->set( !binding2->get_bool() );
-								}
-								if ( binding2->class_id() == std::string("trigger") )
-								{
-									binding2->set();
+									if ( binding2->class_id() == std::string("bool") )
+									{
+										binding2->set( !binding2->get_bool() );
+									}
+									if ( binding2->class_id() == std::string("trigger") )
+									{
+										binding2->set();
+									}
 								}
 							}
 						}
-					}
 
-				}
-				if ( action == GLFW_RELEASE )
-				{
-					// std::cout << " release";
-					
-					auto bindings = window->getChild( "bindings", 1 );
-					if( bindings )
+					}
+					if ( action == GLFW_RELEASE )
 					{
-						// const char* keyname = glfwGetKeyName( key, scancode );
-						const char* keyname = get_key_name( key );
-						if ( keyname )
+						// std::cout << " release";
+						
+						auto bindings = window->getChild( "bindings", 1 ); // FIXME optimize
+						if( bindings )
 						{
-							auto binding = bindings->getChild( keyname, 1 );
-							if ( binding )
+							// const char* keyname = glfwGetKeyName( key, scancode );
+							const char* keyname = get_key_name( key );
+							if ( keyname )
 							{
-								if ( binding->class_id() == std::string("bool") )
+								auto binding = bindings->getChild( keyname, 1 );
+								if ( binding )
 								{
-									if ( binding->get_bool() == true )
+									if ( binding->class_id() == std::string("bool") )
 									{
-										binding->set( false );
+										if ( binding->get_bool() == true )
+										{
+											binding->set( false );
+										}
+									}
+									else if ( binding->class_id() == std::string("trigger") )
+									{
+										binding->set();
 									}
 								}
-								else if ( binding->class_id() == std::string("trigger") )
-								{
-									binding->set();
-								}
-							}
 
-							std::stringstream key_name;
-							key_name << "key_up_" << keyname;
-							auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
-							if ( binding2 )
-							{
-								if ( binding2->class_id() == std::string("bool") )
+								std::stringstream key_name;
+								key_name << "key_up_" << keyname;
+								auto binding2 = bindings->getChild( key_name.str().c_str(), 1 );
+								if ( binding2 )
 								{
-									binding2->set( !binding2->get_bool() );
-								}
-								if ( binding2->class_id() == std::string("trigger") )
-								{
-									binding2->set();
+									if ( binding2->class_id() == std::string("bool") )
+									{
+										binding2->set( !binding2->get_bool() );
+									}
+									if ( binding2->class_id() == std::string("trigger") )
+									{
+										binding2->set();
+									}
 								}
 							}
 						}

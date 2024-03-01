@@ -62,7 +62,7 @@
 			auto physics_scale_z = physics_entity->addChild("scale_z", new BEntity_float_property());
 			physics_scale_x->set( 8.0f );
 			physics_scale_y->set( 1.0f );
-			physics_scale_z->set( 10.0f );			
+			physics_scale_z->set( 10.0f );
 
 			auto physics_entity_transform = physics_entity->getChild("transform", 1);
 			if ( physics_entity_transform )
@@ -141,6 +141,7 @@
 		pluginManager()->load( "brainz", "src/plugins/be_plugin_brainz", "be_plugin_brainz" );
 		pluginManager()->load( "qwt", "src/plugins/be_plugin_qwt", "be_plugin_qwt" );
 		pluginManager()->load( "thread", "src/plugins/be_plugin_thread", "be_plugin_thread" );
+		pluginManager()->load( "imgui", "src/plugins/be_plugin_imgui", "be_plugin_imgui" );
 
 		if ( !pluginManager()->load( "glfw", "src/plugins/be_plugin_glfw", "be_plugin_glfw" ) )
 		{
@@ -152,13 +153,60 @@
 			glwindow->set("title", "Critterding 2 (threads)");
 			glwindow->set("on_close_destroy_entity", this);
 			// glwindow->setFps(60);
-			glwindow->addChild("OpenGL_Setup", "OpenGL_Setup");
-
 			m_win_width = glwindow->getChild( "width", 1 );
 			m_win_height = glwindow->getChild( "height", 1 );
 			m_mouse_x = glwindow->getChild( "mouse_x", 1 );
 			m_mouse_y = glwindow->getChild( "mouse_y", 1 );
 
+		// DEAR IMGUI
+			auto imgui = glwindow->addChild( "ImGuiContext", "ImGuiContext" );
+			imgui->set( "init_glfw", glwindow );
+
+			// auto imguiwindow = glwindow->addChild( "ImGuiWindow", "ImGuiWindow" );
+			// 	auto hbox = imguiwindow->addChild( "hbox", "ImGuiHBoxLayout" );
+			// 	{
+			// 		{
+			// 			auto groupbox = hbox->addChild( "groupbox", "ImGuiGroupBox" );
+			// 			{
+			// 				auto groupbox2 = groupbox->addChild( "groupbox", "ImGuiGroupBox" );
+			// 				{
+			// 					{
+			// 						auto hbox2 = groupbox2->addChild( "hbox", "ImGuiHBoxLayout" );
+			// 							auto lineedit = hbox2->addChild( "ImGuiLineEdit_uint", "ImGuiLineEdit_uint" );
+			// 							auto pushbutton = hbox2->addChild( "ImGuiPushButton", "ImGuiPushButton" );
+			// 							pushbutton->set("text", "+");
+			// 					}
+			// 					{
+			// 						auto hbox2 = groupbox2->addChild( "hbox", "ImGuiHBoxLayout" );
+			// 							auto lineedit = hbox2->addChild( "ImGuiLineEdit_uint", "ImGuiLineEdit_uint" );
+			// 							auto pushbutton = hbox2->addChild( "ImGuiPushButton", "ImGuiPushButton" );
+			// 							pushbutton->set("text", "+");
+			// 					}
+			// 					groupbox2->addChild( "end", "ImGuiGroupBox_end" );
+			// 				}
+			// 				groupbox->addChild( "end", "ImGuiGroupBox_end" );
+			// 			}
+			// 		}
+			// 		{
+			// 			auto groupbox = hbox->addChild( "groupbox", "ImGuiGroupBox" );
+			// 			{
+			// 				auto hbox2 = groupbox->addChild( "hbox", "ImGuiHBoxLayout" );
+			// 					auto lineedit = hbox2->addChild( "ImGuiLineEdit_uint", "ImGuiLineEdit_uint" );
+			// 					auto pushbutton = hbox2->addChild( "ImGuiPushButton", "ImGuiPushButton" );
+			// 					pushbutton->set("text", "+");
+			// 				groupbox->addChild( "end", "ImGuiGroupBox_end" );
+			// 			}
+			// 		}
+			// 	}
+			// imguiwindow->addChild( "ImGuiWindow_end", "ImGuiWindow_end" );
+
+
+		// OPENGL SETUP
+			glwindow->addChild("OpenGL_Setup", "OpenGL_Setup");
+
+		// IMGUI RENDER
+			addChild( "ImGuiRender", "ImGuiRender" );
+			
 		// SDL SWAPBUFFER, making sure this runs right after sdl_window and it's children are done processing
 			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
 
@@ -293,6 +341,8 @@
 
 		// "SHADERS" hack for now
 			auto shaders = t_graphicsModelSystem->addChild( "shaders", "entity" );
+			// auto u_instanceModelMatrixAttrib = shaders->addChild( "InstanceModelMatrix", "ShaderAttrib" );
+			// auto u_instanceScale = shaders->addChild( "InstanceScale", "ShaderAttrib" );
 			auto u_vec4_color = shaders->addChild( "u_Color", "ShaderUniformVec4" );
 			auto u_i14_textureSample = shaders->addChild( "u_textureSample", "ShaderUniformI1" );
 			shaders->addChild( "e_scale_x", "float" )->set(0.0f);
@@ -330,7 +380,7 @@
 			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
 
 		// THREADS FINISH
-			addChild("threads_finish", "threads_finish");
+			auto threads_finish = addChild("threads_finish", "threads_finish");
 
 		// POPLUATION CONTROLLER
 			auto population_controller = addChild( "CdPopulationController", "CdPopulationController" );
@@ -342,7 +392,7 @@
 		// SERVERS
 			const float spacing( 2.0f );
 			const unsigned int total_minimum_critters( 20 ); // FIXME TO GLOBAL ENTITY
-			const unsigned int total_minimum_food( 1500 ); // FIXME TO GLOBAL ENTITY
+			const unsigned int total_minimum_food( 1400 ); // FIXME TO GLOBAL ENTITY
 			const float critter_spacing( 1.0f );
 			
 			const unsigned int rows( 2 );
@@ -538,6 +588,14 @@
 
 		// CRITTER EXCHANGER
 			addChild( "CdCritterExchanger", "CdCritterExchanger" );
+			
+		// ASSURES NICE CLEANUP FOR THREADS
+			addChild( "thread_finish_external", new BEntity_external() )->set( threads_finish );
+		
+		// DEAR IMGUI
+			// auto imgui = glwindow->addChild( "ImGuiWindow", "ImGuiWindow" );
+			// imgui->set( "init_glfw", glwindow );
+			// glwindow->addChild( "ImGuiRender", "ImGuiRender" );
 				
 		// // RAYCAST
 		// {

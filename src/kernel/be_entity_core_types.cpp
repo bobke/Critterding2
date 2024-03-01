@@ -402,14 +402,14 @@
 				{
 					free(m_value);
 					m_value = strdup(value);
-						onUpdate();
+					onUpdate();
 					return true;
 				}
 			}
 			else
 			{
 				m_value = strdup(value);
-					onUpdate();
+				onUpdate();
 				return true;
 			}
 			return false;

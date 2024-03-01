@@ -104,6 +104,8 @@
 		be_worker_pool.h
 		be_worker_pool.cpp
 		
+		be_shader_attrib.h
+		be_shader_attrib.cpp
 		be_shader_uniform_vec3.h
 		be_shader_uniform_vec3.cpp
 		be_shader_uniform_vec4.h

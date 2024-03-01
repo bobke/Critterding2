@@ -89,7 +89,6 @@
 
 			if ( m_flag_exit )
 				break;
-			
 
 			// PROCESS
 			m_processor->run();
@@ -108,6 +107,11 @@
 			parent()->setAdminWindow( entity );
 		}
 
+	BEntityThreadsFinish::~BEntityThreadsFinish()
+	{
+		// process();
+	}
+		
 	void BEntityThreadsFinish::process()
 	{
 		// FIXME DISABLED THIS AT IMPORT

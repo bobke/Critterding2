@@ -1,5 +1,4 @@
-#ifndef CRITTER_SYSTEM_H_INCLUDED
-#define CRITTER_SYSTEM_H_INCLUDED
+#pragma once
 
 #include "kernel/be_entity_interface.h"
 #include "kernel/be_entity_ops_copy.h"
@@ -81,5 +80,3 @@
 				BEntity* m_species;
 		};
 
-#endif
- 

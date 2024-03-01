@@ -7,20 +7,38 @@
 		if ( !getAdminWindow() )
 		{
 			auto bin = topParent()->getChild( "bin", 1 );
-			auto qt_app = bin->getChild( "QT Application", 2 );
-			
-			// if ( !qt_app )
-			// {
-			// 	// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
-			// 		auto spawner = bin->addChild( "spawner", "QApplicationSpawner" );
-			// 		auto t_parent_to_add_to = spawner->getChildCustom( bin );
-			// 		bin->removeChild( spawner );
-			// }
-			
-			if ( qt_app )
+			auto glwindow = bin->getChild( "GLWindow", 2 );
+			auto fs = glwindow->getChild( "fullscreen", 1 )->get_bool();
+
+			if ( fs )
 			{
-				qt_app->addChild( "Admin App", "AdminWindow" );
-				return true;
+				// IMGUI
+					auto imgui_app = bin->getChild( "GLWindow", 2 );
+	
+					if ( imgui_app )
+					{
+						imgui_app->addChild( "Admin App", "AdminWindow" );
+						return true;
+					}
+			}
+			else
+			{
+				// QT
+					auto qt_app = bin->getChild( "QT Application", 2 );
+					
+					// if ( !qt_app )
+					// {
+					// 	// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
+					// 		auto spawner = bin->addChild( "spawner", "QApplicationSpawner" );
+					// 		auto t_parent_to_add_to = spawner->getChildCustom( bin );
+					// 		bin->removeChild( spawner );
+					// }
+					
+					if ( qt_app )
+					{
+						qt_app->addChild( "Admin App", "AdminWindow" );
+						return true;
+					}
 			}
 		}
 		return false;
@@ -42,15 +60,33 @@
 
 	bool cmd_launchSystemMonitor::set()
 	{
-		auto qt_app = topParent()->getChild( "bin", 1 )->getChild( "QT Application", 2 );
-		if ( qt_app )
-		{
-			if ( !qt_app->getChild( "SystemMonitor", 1 ) )
+			auto bin = topParent()->getChild( "bin", 1 );
+			auto glwindow = bin->getChild( "GLWindow", 2 );
+			auto fs = glwindow->getChild( "fullscreen", 1 )->get_bool();
+
+			if ( fs )
 			{
-				qt_app->addChild( "SystemMonitor", "SystemMonitor" );
+				// IMGUI
+					auto imgui_app = bin->getChild( "GLWindow", 2 );
+	
+					if ( imgui_app )
+					{
+						imgui_app->addChild( "SystemMonitor", "SystemMonitor" );
+						return true;
+					}
 			}
-			return true;
-		}
+			else
+			{
+				auto qt_app = bin->getChild( "QT Application", 2 );
+				if ( qt_app )
+				{
+					if ( !qt_app->getChild( "SystemMonitor", 1 ) )
+					{
+						qt_app->addChild( "SystemMonitor", "SystemMonitor" );
+					}
+					return true;
+				}
+			}
 		return false;
 	}
 

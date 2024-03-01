@@ -32,120 +32,158 @@
 	
 	void BAdminWindow::construct()
 	{
-		setAdminWindow( this );
-		
-		setName( "Admin Window" );
-		std::cout << "Scene::construct()" << std::endl;
-
-		// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
-		pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
-
-			auto spawner = addChild( "spawner", "QApplicationSpawner" );
-			// auto t_parent_to_add_to = spawner->getChildCustom( parent() );
-			auto t_parent_to_add_to = spawner->getChildCustom( this );
-			removeChild( spawner );
-		
-		
-		// LOAD REQUIRED LIBS
-		pluginManager()->load( "basetypes", "src/kernel", "be_base_entity_types" );
-		// pluginManager()->load( "vulkan", "src/plugins/be_plugin_vulkan", "be_plugin_vulkan" );
-// 		pluginManager()->load( "thread", "src/plugins/be_plugin_thread", "be_plugin_thread" );
-
-		// RANDOM TESTING LIBS
-		// pluginManager()->load( "test", "src/plugins/be_plugin_test", "be_plugin_test" );
-		// pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
-		// pluginManager()->load( "bullet", "src/plugins/be_plugin_bullet", "be_plugin_bullet" );
-
-		// pluginManager()->load( "test_editing", "src/plugins/be_plugin_test_editing", "be_plugin_test_editing" );
-		
-		// pluginManager()->load( "system_monitor", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
-		// pluginManager()->load( "attractors", "src/plugins/be_plugin_app_attractors", "be_plugin_app_attractors" );
-		// pluginManager()->load( "critterding", "src/plugins/be_plugin_app_critterding", "be_plugin_app_critterding" );
-		// pluginManager()->load( "stunt coureur", "src/plugins/be_plugin_app_stunt_coureur", "be_plugin_app_stunt_coureur" );
-		
-		// SYSTEM MONITOR
-		// FIXME seems it hangs, multiple qt inits?
-// 		pluginManager()->load( "sysmon", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
-// 		addChild( "System Monitor", "sysmon", "Scene" );
-// 		auto t_qtapp = getChild( "QT Application" );
-
-		// CREATE A WINDOW
-// 		auto t_qtapp = parent()->getChild("BAdminWindow QT Application", 1); // FIXME THIS HAS TO WORK
-
-		// if we couldn't find a our qt application then assume one already exists
-		// FIXME we'll need a system for this
-		auto qwindow = addChild( "QT MainWindow", "QMainWindow" );
-		qwindow->addChild( "title", "string_property" )->set("Admin Window");
-		qwindow->addChild( "x", "uint_property" )->set(Buint(100));
-		qwindow->addChild( "y", "uint_property" )->set(Buint(30));
-		qwindow->addChild( "width", "uint_property" )->set(Buint(500));
-		qwindow->addChild( "height", "uint_property" )->set(Buint(500));
-		qwindow->set("on_close_destroy_entity", this);
-
-// 		// CREATE MENUS
-// 		auto menu_file = qwindow->addChild( "menu_file", "QMenu" );
-// 		menu_file->addChild( "title", "string_property" )->set("&File");
-// 
-// 			// ACTION
-// 			auto action_open = menu_file->addChild( "action_open", "QAction" );
-// 			action_open->addChild( "title", "string_property" )->set("&Open");
-// 
-// 			// COMMAND
-// 			auto command_open_config_libraries = action_open->addChild("command_load_entity", new BEntity_trigger());
-// 			command_open_config_libraries->addChild("parent", new BEntity_reference())->set( qwindow );
-// 			command_open_config_libraries->addChild("class_id", new BEntity_string())->set( "ConfigLibraries" );
-// 			
-// 			auto command_open_admin_window = addChild("command_load_entity", new BEntity_trigger());
-// 			command_open_admin_window->addChild("parent", new BEntity_reference())->set( parent() );
-// 			command_open_admin_window->addChild("class_id", new BEntity_string())->set( "AdminWindow" );
-// 
-// 			// CONNECT COMMANDS
-// 			action_open->connectServerServer(command_open_config_libraries);
-// 
-// 			// // COMMAND
-// 			// auto command = actions->addChild("load_entity", new BEntity_reference() );
-// 			// command->set(entity);
-// 			// auto layout_target = command->addChild("layout_target", new BEntity_reference() );
-// 			// layout_target->set(vboxlayout_entity);
-
-			auto general_layout_H = qwindow->addChild( "QT HBoxlayout", "QHBoxLayout" );
-		
-		// CREATE LEFT ENTITIES
-			auto entity_groupbox = general_layout_H->addChild( "Entity Groupbox", "QGroupBox" );
-			entity_groupbox->addChild( "title", "string_property" )->set("Entities");
-			auto groupVbox = entity_groupbox->addChild( "QT VBoxlayout", "QVBoxLayout" );
-// 			auto edit = groupVbox->addChild( "edit test", "QLineEdit" );
-			// ENTITIES
+		// std::cout << "HELLO " << parent()->name() << std::endl;
+		if ( getAdminWindow() == 0 )
+		{
+			if ( parent()->name() == "GLWindow" )
 			{
-				add_admin_entity_groupbox(groupVbox, topParent());
+				// COMMENTING SWITCHES FROM IMGUI TO QT
+				m_imgui_translation_map.add( "QMainWindow", "ImGuiWindow" );
+				m_imgui_translation_map.add( "QMainWindow_end", "ImGuiWindow_end" );
+				m_imgui_translation_map.add( "QLineEdit", "ImGuiLineEdit_uint" );
+				m_imgui_translation_map.add( "QLineEdit_float", "ImGuiLineEdit_float" );
+				m_imgui_translation_map.add( "QLineEdit_int", "ImGuiLineEdit_int" );
+				m_imgui_translation_map.add( "QLineEdit_uint", "ImGuiLineEdit_uint" );
+				m_imgui_translation_map.add( "QLineEdit_string", "ImGuiLineEdit" );
+				m_imgui_translation_map.add( "QLabel", "ImGuiPushButton" );
+				m_imgui_translation_map.add( "QCheckBox", "ImGuiCheckBox" );
+				m_imgui_translation_map.add( "QPushButton", "ImGuiPushButton" );
+				m_imgui_translation_map.add( "QPushButtonDraggable", "ImGuiPushButton" );
+				m_imgui_translation_map.add( "QPushButtonDragAndDroppable", "ImGuiPushButton" );
+				m_imgui_translation_map.add( "QVBoxLayout", "ImGuiVBoxLayout" );
+				m_imgui_translation_map.add( "QHBoxLayout", "ImGuiHBoxLayout" );
+				m_imgui_translation_map.add( "QGroupBox", "ImGuiGroupBox" );
+				m_imgui_translation_map.add( "QGroupBox_end", "ImGuiGroupBox_end" );
 			}
+
+			setAdminWindow( this );
 			
-			// // RIGHT BOX (MDI)
-			// {
-			// 	// MDI AREA
-			// 	{
-			// 		auto mdi_area = general_layout_H->addChild("mdi area", "QMdiArea");
-			// 		auto subwindow = mdi_area->addChild("admin subwindow", "QMdiWindow" );
-			// 		auto subwindowlayout = subwindow->addChild( "QT HBoxlayout", "QHBoxLayout" );
-   // 
-			// 		add_admin_entity_groupbox(subwindowlayout, topParent());
-   // 
-			// 		// ADD VIEWPORT TO MDIAREA
-			// 			auto viewport = subwindowlayout->addChild("viewport", "QGraphicsView");
-			// 			auto viewscene = viewport->addChild("viewscene", "QGraphicsScene");
-			// 	}
-			// }
+			setName( "Admin Window" );
+			// std::cout << "Scene::construct()" << std::endl;
+
+			// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
+			pluginManager()->load( "qt6", "src/plugins/be_plugin_qt6", "be_plugin_qt6" );
+
+				auto spawner = addChild( "spawner", "QApplicationSpawner" );
+				// auto t_parent_to_add_to = spawner->getChildCustom( parent() );
+				auto t_parent_to_add_to = spawner->getChildCustom( this );
+				removeChild( spawner );
+			
+			
+			// LOAD REQUIRED LIBS
+			pluginManager()->load( "basetypes", "src/kernel", "be_base_entity_types" );
+			// pluginManager()->load( "vulkan", "src/plugins/be_plugin_vulkan", "be_plugin_vulkan" );
+	// 		pluginManager()->load( "thread", "src/plugins/be_plugin_thread", "be_plugin_thread" );
+
+			// RANDOM TESTING LIBS
+			// pluginManager()->load( "test", "src/plugins/be_plugin_test", "be_plugin_test" );
+			// pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
+			// pluginManager()->load( "bullet", "src/plugins/be_plugin_bullet", "be_plugin_bullet" );
+
+			// pluginManager()->load( "test_editing", "src/plugins/be_plugin_test_editing", "be_plugin_test_editing" );
+			
+			// pluginManager()->load( "system_monitor", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
+			// pluginManager()->load( "attractors", "src/plugins/be_plugin_app_attractors", "be_plugin_app_attractors" );
+			// pluginManager()->load( "critterding", "src/plugins/be_plugin_app_critterding", "be_plugin_app_critterding" );
+			// pluginManager()->load( "stunt coureur", "src/plugins/be_plugin_app_stunt_coureur", "be_plugin_app_stunt_coureur" );
+			
+			// SYSTEM MONITOR
+			// FIXME seems it hangs, multiple qt inits?
+	// 		pluginManager()->load( "sysmon", "src/plugins/be_plugin_app_sysmon", "be_plugin_app_sysmon" );
+	// 		addChild( "System Monitor", "sysmon", "Scene" );
+	// 		auto t_qtapp = getChild( "QT Application" );
+
+			// CREATE A WINDOW
+	// 		auto t_qtapp = parent()->getChild("BAdminWindow QT Application", 1); // FIXME THIS HAS TO WORK
+
+			// if we couldn't find a our qt application then assume one already exists
+			// FIXME we'll need a system for this
+			
+			auto mw = m_imgui_translation_map.get("QMainWindow");
+			auto qwindow = addChild( mw, mw );
+				
+			qwindow->addChild( "title", "string_property" )->set("Admin Window");
+			qwindow->addChild( "x", "uint_property" )->set(Buint(100));
+			qwindow->addChild( "y", "uint_property" )->set(Buint(30));
+			qwindow->addChild( "width", "uint_property" )->set(Buint(500));
+			qwindow->addChild( "height", "uint_property" )->set(Buint(500));
+			qwindow->set("on_close_destroy_entity", this);
+
+	// 		// CREATE MENUS
+	// 		auto menu_file = qwindow->addChild( "menu_file", "QMenu" );
+	// 		menu_file->addChild( "title", "string_property" )->set("&File");
+	// 
+	// 			// ACTION
+	// 			auto action_open = menu_file->addChild( "action_open", "QAction" );
+	// 			action_open->addChild( "title", "string_property" )->set("&Open");
+	// 
+	// 			// COMMAND
+	// 			auto command_open_config_libraries = action_open->addChild("command_load_entity", new BEntity_trigger());
+	// 			command_open_config_libraries->addChild("parent", new BEntity_reference())->set( qwindow );
+	// 			command_open_config_libraries->addChild("class_id", new BEntity_string())->set( "ConfigLibraries" );
+	// 			
+	// 			auto command_open_admin_window = addChild("command_load_entity", new BEntity_trigger());
+	// 			command_open_admin_window->addChild("parent", new BEntity_reference())->set( parent() );
+	// 			command_open_admin_window->addChild("class_id", new BEntity_string())->set( "AdminWindow" );
+	// 
+	// 			// CONNECT COMMANDS
+	// 			action_open->connectServerServer(command_open_config_libraries);
+	// 
+	// 			// // COMMAND
+	// 			// auto command = actions->addChild("load_entity", new BEntity_reference() );
+	// 			// command->set(entity);
+	// 			// auto layout_target = command->addChild("layout_target", new BEntity_reference() );
+	// 			// layout_target->set(vboxlayout_entity);
+
+				auto general_layout_H = qwindow->addChild( "QT HBoxlayout", m_imgui_translation_map.get("QHBoxLayout") );
+			
+			// CREATE LEFT ENTITIES
+				auto entity_groupbox = general_layout_H->addChild( "Entity Groupbox", m_imgui_translation_map.get("QGroupBox") );
+				entity_groupbox->addChild( "title", "string_property" )->set("Entities");
+				auto groupVbox = entity_groupbox->addChild( "QT VBoxlayout", m_imgui_translation_map.get("QVBoxLayout") );
+				entity_groupbox->addChild( "QGroupBox_end", m_imgui_translation_map.get("QGroupBox_end") );
+				
+	// 			auto edit = groupVbox->addChild( "edit test", m_imgui_translation_map.get("QLineEdit") );
+				// ENTITIES
+				{
+					add_admin_entity_groupbox(groupVbox, topParent());
+				}
+				
+				// // RIGHT BOX (MDI)
+				// {
+				// 	// MDI AREA
+				// 	{
+				// 		auto mdi_area = general_layout_H->addChild("mdi area", "QMdiArea");
+				// 		auto subwindow = mdi_area->addChild("admin subwindow", "QMdiWindow" );
+				// 		auto subwindowlayout = subwindow->addChild( "QT HBoxlayout", m_imgui_translation_map.get("QHBoxLayout") );
+	// 
+				// 		add_admin_entity_groupbox(subwindowlayout, topParent());
+	// 
+				// 		// ADD VIEWPORT TO MDIAREA
+				// 			auto viewport = subwindowlayout->addChild("viewport", "QGraphicsView");
+				// 			auto viewscene = viewport->addChild("viewscene", "QGraphicsScene");
+				// 	}
+				// }
 
 
-// 		auto general_layout_V = general_layout_H->addChild( "QT VBoxlayout", "QVBoxLayout" );
-// 		general_layout_V->addChild("droppable label", "QLabelDroppable")->set("text", "drop here");
-		
-// 		auto general_layout_V = general_layout_H->addChild( "QT VBoxlayout", "QVBoxLayout" );
-// 		auto topfiller = general_layout_V->addChild( "topfiller", "QWidget" );
-// 		auto infolabel = general_layout_V->addChild( "infolabel", "QLabel" );
-// 		auto bottomfiller = general_layout_V->addChild( "bottomfiller", "QWidget" );
-// 		auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
+	// 		auto general_layout_V = general_layout_H->addChild( "QT VBoxlayout", m_imgui_translation_map.get("QVBoxLayout") );
+	// 		general_layout_V->addChild("droppable label", "QLabelDroppable")->set("text", "drop here");
+			
+	// 		auto general_layout_V = general_layout_H->addChild( "QT VBoxlayout", m_imgui_translation_map.get("QVBoxLayout") );
+	// 		auto topfiller = general_layout_V->addChild( "topfiller", "QWidget" );
+	// 		auto infolabel = general_layout_V->addChild( "infolabel", m_imgui_translation_map.get("QLabel") );
+	// 		auto bottomfiller = general_layout_V->addChild( "bottomfiller", "QWidget" );
+	// 		auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", m_imgui_translation_map.get("QHBoxLayout") );
 
+
+			
+			// BEntityCopy copy;
+			// copy.setClassTranslationMap( &m_imgui_translation_map );
+			// copy.copyEntity( qwindow, topParent()->getChild("bin", 1)->getChild("GLWindow") );
+	
+			qwindow->addChild( "QMainWindow_end", m_imgui_translation_map.get("QMainWindow_end") );
+
+		}
 	}
 
 	bool BAdminWindow::set( const Bstring& id, BEntity* value )
@@ -332,24 +370,27 @@
 				// get entity
 				auto entity = value->get_reference();
 
-				auto qwindow = addChild( "QT MainWindow", "QMainWindow" );
+				auto mw = m_imgui_translation_map.get("QMainWindow");
+				auto qwindow = addChild( mw, mw );
+
+			// auto qwindow = addChild( "QT MainWindow", m_imgui_translation_map.get("QMainWindow") );
 				qwindow->addChild( "title", "string_property" )->set( entity->name().c_str() );
 				qwindow->addChild( "x", "uint_property" )->set(Buint(1000));
 				qwindow->addChild( "y", "uint_property" )->set(Buint(300));
 				qwindow->addChild( "width", "uint_property" )->set(Buint(460));
 				qwindow->addChild( "height", "uint_property" )->set(Buint(350));
 
-				auto general_layout_V = qwindow->addChild( "QT VBoxlayout", "QVBoxLayout" );
+				auto general_layout_V = qwindow->addChild( "QT VBoxlayout", m_imgui_translation_map.get("QVBoxLayout") );
 
 				{
-					auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
+					auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", m_imgui_translation_map.get("QHBoxLayout") );
 
 					// ID
-						// auto id_label = general_layout_H->addChild( "id_label", "QLabel" );
+						// auto id_label = general_layout_H->addChild( "id_label", m_imgui_translation_map.get("QLabel") );
 						// id_label->set( (Buint)entity->id() );
 
 					// CLASS ID
-						auto class_id_label = general_layout_H->addChild( "class_id_label", "QLabel" );
+						auto class_id_label = general_layout_H->addChild( "class_id_label", m_imgui_translation_map.get("QLabel") );
 						class_id_label->set( entity->class_id() );
 
 					// VALUE FIELDS
@@ -362,18 +403,21 @@
 						}
 				}
 				{
-					auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
+					auto general_layout_H = general_layout_V->addChild( "QT HBoxlayout", m_imgui_translation_map.get("QHBoxLayout") );
 					
 					// CREATE LEFT ENTITIES
-						auto entity_groupbox = general_layout_H->addChild( "Entity Groupbox", "QGroupBox" );
+						auto entity_groupbox = general_layout_H->addChild( "Entity Groupbox", m_imgui_translation_map.get("QGroupBox") );
 						entity_groupbox->addChild( "title", "string_property" )->set("Entities");
-						auto groupVbox = entity_groupbox->addChild( "QT VBoxlayout", "QVBoxLayout" );
+						auto groupVbox = entity_groupbox->addChild( "QT VBoxlayout", m_imgui_translation_map.get("QVBoxLayout") );
 
 						add_admin_entity_groupbox(groupVbox, entity);
+						entity_groupbox->addChild( "QGroupBox_end", m_imgui_translation_map.get("QGroupBox_end") );
 
 						m_lookup_buffer.registerAdminEntity( entity, groupVbox );
 						m_lookup_buffer.registerAdminEntity( entity, qwindow );
 				}
+				
+				qwindow->addChild( "QMainWindow_end", m_imgui_translation_map.get("QMainWindow_end") );
 
 				return true;
 			}
@@ -383,14 +427,14 @@
 				// get entity
 				auto entity = value->get_reference();
 				
-				auto qwindow = addChild( "QT MainWindow", "QMainWindow" );
+				auto qwindow = addChild( "QT MainWindow", m_imgui_translation_map.get("QMainWindow") );
 				qwindow->addChild( "title", "string_property" )->set( "Graph" );
 				qwindow->addChild( "x", "uint_property" )->set(Buint(1000));
 				qwindow->addChild( "y", "uint_property" )->set(Buint(300));
 				qwindow->addChild( "width", "uint_property" )->set(Buint(460));
 				qwindow->addChild( "height", "uint_property" )->set(Buint(350));
 
-				auto general_layout_H = qwindow->addChild( "QT HBoxlayout", "QHBoxLayout" );
+				auto general_layout_H = qwindow->addChild( "QT HBoxlayout", m_imgui_translation_map.get("QHBoxLayout") );
 
 				auto qwt_plot = general_layout_H->addChild( "plot", "QwtPlot" );
 
@@ -422,6 +466,7 @@
 
 				m_lookup_buffer.registerAdminEntity( entity, qwindow );
 
+				qwindow->addChild( "QMainWindow_end", m_imgui_translation_map.get("QMainWindow_end") );
 				return true;
 			}
 			
@@ -504,14 +549,22 @@
 	void BAdminWindow::add_admin_entity_groupbox( BEntity* parent, BEntity* entity )
 	{
 		// GROUPBOX
-			auto groupbox_entities = parent->addChild("qt groupbox entities", "QGroupBox" );
-				// groupbox_entities->set("title", entity->name().c_str());
+		
+		
+			auto groupbox_entities = parent->addChild("qt groupbox entities", m_imgui_translation_map.get("QGroupBox") );
+			// calculate height of groupbox
+				// const unsigned int height = 17 * entity->numChildren();
+				// std::cout << "height: " << height << std::endl;
+				// groupbox_entities->set("height", height);
+
+			// groupbox_entities->set("title", entity->name().c_str());
 			// VBOX
-				auto vboxlayout_entities = groupbox_entities->addChild("qt vboxlayout", "QVBoxLayout" );
+				auto vboxlayout_entities = groupbox_entities->addChild("qt vboxlayout", m_imgui_translation_map.get("QVBoxLayout") );
 
 		// ENTITY LIST
 			add_admin_entity_list( vboxlayout_entities, entity );
-	
+			
+		groupbox_entities->addChild( "QGroupBox_end", m_imgui_translation_map.get("QGroupBox_end") );
 	}
 	// GROUPBOX OF ENTITIES
 	void BAdminWindow::add_admin_entity_list( BEntity* parent, BEntity* entity )
@@ -542,7 +595,7 @@
 	// 								std::cout << "opening " << stream.str() << std::endl;
 			
 			// SPAWN VBOX TO EXPAND INTO with unique name
-				auto vboxlayout_entity = parent->addChild(stream.str(), "QVBoxLayout" );
+				auto vboxlayout_entity = parent->addChild(stream.str(), m_imgui_translation_map.get("QVBoxLayout") );
 				
 			// REGISTER IN LOOKUP BUFFER
 				m_lookup_buffer.registerAdminEntity( entity, vboxlayout_entity );
@@ -551,11 +604,11 @@
 
 			// HBOX
 			{
-				auto hboxlayout_entity = vboxlayout_entity->addChild("qt hboxlayout", "QHBoxLayout" );
+				auto hboxlayout_entity = vboxlayout_entity->addChild("qt hboxlayout", m_imgui_translation_map.get("QHBoxLayout") );
 
 	// 								// OPEN WINDOW
 	// 								{
-	// 									auto button_add = hboxlayout_entity->addChild("qt button", "QPushButton" );
+	// 									auto button_add = hboxlayout_entity->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 	// 									button_add->set( "text", "W" );
 	// 
 	// 									// COMMAND
@@ -566,7 +619,7 @@
 
 				// EXPAND & COLLAPSE (command will change to collapse when command is ran)
 				{
-					auto button_add = hboxlayout_entity->addChild("admin_button_expand", "QPushButton" );
+					auto button_add = hboxlayout_entity->addChild("admin_button_expand", m_imgui_translation_map.get("QPushButton") );
 					
 					// CHILDREN
 					if ( entity->hasChildren() )
@@ -610,7 +663,7 @@
 
 	// 								// DROPPABLE LABEL & SET ID
 	// 								{
-	// 									auto label = hboxlayout_entity->addChild("button_expand", "QPushButton" );
+	// 									auto label = hboxlayout_entity->addChild("button_expand", m_imgui_translation_map.get("QPushButton") );
 	// // 									auto label = hboxlayout_entity->addChild("qt label", "qt5_label_droppable" );
 	// 									
 	// 									std::stringstream childid;
@@ -624,9 +677,9 @@
 
 				// DROPPABLE LABEL & SET NAME
 				{
-	// 									auto label = hboxlayout_entity->addChild("qt label", "QPushButton" );
+	// 									auto label = hboxlayout_entity->addChild("qt label", m_imgui_translation_map.get("QPushButton") );
 	// 									auto label = hboxlayout_entity->addChild("qt label", "QPushButtonDraggable" );
-					auto label = hboxlayout_entity->addChild("qt label", "QPushButtonDragAndDroppable" );
+					auto label = hboxlayout_entity->addChild("qt label", m_imgui_translation_map.get("QPushButtonDragAndDroppable") );
 					// std::cout << entity->name().c_str() << std::endl;
 					label->set( "text", entity->name().c_str() );
 					label->set( "width", Buint(220) );
@@ -650,7 +703,7 @@
 			auto t_bool = dynamic_cast<BEntity_bool*>( entity );
 			if ( t_bool )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QCheckBox" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QCheckBox") );
 				// edit->set( "width", Buint(80) );
 				// edit->set( "height", Buint(14) );
 				edit->set( t_bool->get_bool() );
@@ -662,7 +715,7 @@
 			auto t_boolp = dynamic_cast<BEntity_bool_property*>( entity );
 			if ( t_boolp )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QCheckBox" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QCheckBox") );
 				// edit->set( "width", Buint(80) );
 				// edit->set( "height", Buint(14) );
 				edit->set( t_boolp->get_bool() );
@@ -674,7 +727,7 @@
 			auto t_uint = dynamic_cast<BEntity_uint*>( entity );
 			if ( t_uint )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QLineEdit") );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_uint->get_uint() );
@@ -686,7 +739,7 @@
 			auto t_uintp = dynamic_cast<BEntity_uint_property*>( entity );
 			if ( t_uintp )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QLineEdit") );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_uintp->get_uint() );
@@ -698,7 +751,7 @@
 			auto t_int = dynamic_cast<BEntity_int*>( entity );
 			if ( t_int && entity->name() != "random_number_generator" )  // HACK "random_number_generator", this ensures the clockwork universe when scrolling admin window
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_int" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QLineEdit_int") );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_int->get_int() );
@@ -710,7 +763,7 @@
 			auto t_intp = dynamic_cast<BEntity_int_property*>( entity );
 			if ( t_intp )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_int" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QLineEdit_int") );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_intp->get_int() );
@@ -722,7 +775,7 @@
 			auto t_float = dynamic_cast<BEntity_float*>( entity );
 			if ( t_float )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_float" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QLineEdit_float") );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_float->get_float() );
@@ -734,7 +787,7 @@
 			auto t_floatp = dynamic_cast<BEntity_float_property*>( entity );
 			if ( t_floatp )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_float" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QLineEdit_float") );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_floatp->get_float() );
@@ -747,7 +800,7 @@
 			auto t_string = dynamic_cast<BEntity_string*>( entity );
 			if ( t_string )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_string" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QLineEdit_string") );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_string->get_string() );
@@ -759,7 +812,7 @@
 			auto t_stringp = dynamic_cast<BEntity_string_property*>( entity );
 			if ( t_stringp )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_string" );
+				auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QLineEdit_string") );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_stringp->get_string() );
@@ -770,7 +823,7 @@
 			// auto t_float = dynamic_cast<BEntity_float*>( *child );
 			// if ( t_float )
 			// {
-			// 	auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
+			// 	auto edit = to_layout->addChild( "value_lineedit", m_imgui_translation_map.get("QLineEdit") );
 			// 	edit->set( "width", Buint(80) );
 			// 	edit->set( "height", Buint(14) );
 			// 	auto value_property = edit->addChild( "value", new BEntity_float_property() );
@@ -785,7 +838,7 @@
 	{
 // 			// RM
 // 			{
-// 				auto button = to_layout->addChild("qt button", "QPushButton" );
+// 				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 // 				button->set("text", "rm");
 //    
 // 				// COMMAND
@@ -800,7 +853,7 @@
 //    
 // 			// COPY
 // 			{
-// 				auto button = to_layout->addChild("qt button", "QPushButton" );
+// 				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 // 				button->set("text", "cp");
 //    
 // 				// COMMAND
@@ -810,8 +863,12 @@
 // 			}
 
 			// LOAD
+			auto lib = topParent()->getChild("lib", 1);
+			auto sys = topParent()->getChild("sys", 1);
+			auto bin = topParent()->getChild("bin", 1);
+			if ( entity != sys && !entity->hasParent( sys ) && !entity->hasParent( lib ) )
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "ld");
 
 				// COMMAND
@@ -821,8 +878,9 @@
 			}
 
 			// SAVE
+			if ( entity != lib && !entity->hasParent( lib ) && entity != sys && !entity->hasParent( sys ) && entity != bin )
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "sv");
 
 				// COMMAND
@@ -833,7 +891,7 @@
 
 			// OPEN ADMIN WINDOW
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "wi");
 
 				// COMMAND
@@ -846,7 +904,7 @@
 			{
 				if ( dynamic_cast<BEntity_external*>( entity ) || dynamic_cast<BEntity_reference*>( entity ) )
 				{
-					auto button = to_layout->addChild("qt button", "QPushButton" );
+					auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 					button->set("text", "rf");
 
 					// COMMAND
@@ -860,7 +918,7 @@
 			auto t_float = dynamic_cast<BEntity_float*>( entity );
 			if ( t_float )
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "gr");
 
 				// COMMAND
@@ -874,7 +932,7 @@
 				auto t_plugin = dynamic_cast<BEntity_Plugin*>( entity );
 				if ( t_plugin )
 				{
-					auto button = to_layout->addChild("qt button", "QPushButton" );
+					auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 					button->set("text", "update");
 
 					// COMMAND
@@ -890,7 +948,7 @@
 	{
 			// OPEN PARENT
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "parent");
 
 				// COMMAND
@@ -901,7 +959,7 @@
 
 			// COPY
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "copy");
 
 				// COMMAND
@@ -911,8 +969,12 @@
 			}
 
 			// SAVE
+			auto lib = topParent()->getChild("lib", 1);
+			auto sys = topParent()->getChild("sys", 1);
+			auto bin = topParent()->getChild("bin", 1);
+			if ( entity != lib && !entity->hasParent( lib ) && entity != sys && !entity->hasParent( sys ) && entity != bin )
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "save");
 
 				// COMMAND
@@ -922,8 +984,9 @@
 			}
 
 			// LOAD
+			if ( entity != sys && !entity->hasParent( sys ) && !entity->hasParent( lib ) )
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "load");
 
 				// COMMAND
@@ -933,8 +996,9 @@
 			}
 
 			// RM
+			if ( entity != lib && entity != sys && !entity->hasParent( sys ) && entity != bin )
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "remove");
 
 				// COMMAND
@@ -952,7 +1016,7 @@
 			{
 				if ( dynamic_cast<BEntity_external*>( entity ) || dynamic_cast<BEntity_reference*>( entity ) )
 				{
-					auto button = to_layout->addChild("qt button", "QPushButton" );
+					auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 					button->set("text", "referenced");
 
 					// COMMAND
@@ -966,7 +1030,7 @@
 			auto t_float = dynamic_cast<BEntity_float*>( entity );
 			if ( t_float )
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
+				auto button = to_layout->addChild("qt button", m_imgui_translation_map.get("QPushButton") );
 				button->set("text", "graph");
 
 				// COMMAND

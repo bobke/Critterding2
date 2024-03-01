@@ -77,7 +77,7 @@
 					// SET PROCESSING BIT
 						setProcessing();
 				}
-				virtual ~BEntityThreadsFinish() {};
+				virtual ~BEntityThreadsFinish();
 				const char* class_id() const { return "threads_finish"; }
             protected:
                 virtual void process();

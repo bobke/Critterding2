@@ -1,5 +1,4 @@
-#ifndef PLUGIN_H_INCLUDED
-#define PLUGIN_H_INCLUDED
+#pragma once
 
 #include "kernel/be_plugin_interface.h"
 #include "kernel/be_entity_core_types.h"
@@ -53,5 +52,3 @@
 				BEntity* m_mouse_x;
 				BEntity* m_mouse_y;
 		};
-
-#endif

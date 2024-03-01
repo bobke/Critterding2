@@ -173,9 +173,8 @@
 					m_physics_world->removeRigidBody(physics_entity->getPhysicsComponent()->getBody());
 					return true;
 				}
-				
 			}
-			
+
 			auto physics_constraint_hinge = dynamic_cast<BConstraintHinge*>(entity);
 			if ( physics_constraint_hinge )
 			{
@@ -192,7 +191,7 @@
 				if ( vehicle->m_vehicle )
 				{
 					m_physics_world->removeVehicle(vehicle->m_vehicle.get());
-					std::cout << "vehicle->m_vehicle removed" << std::endl;
+					// std::cout << "vehicle->m_vehicle removed" << std::endl;
 				}
 				return true;
 			}

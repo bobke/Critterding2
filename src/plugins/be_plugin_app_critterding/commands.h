@@ -1,5 +1,4 @@
-#ifndef COMMANDS_H_INCLUDED
-#define COMMANDS_H_INCLUDED
+#pragma once
 
 #include "kernel/be_entity_core_types.h"
 
@@ -50,5 +49,3 @@
 			virtual ~cmd_mouseUnpickBody() {};
 			bool set();
 	};
-	
-#endif

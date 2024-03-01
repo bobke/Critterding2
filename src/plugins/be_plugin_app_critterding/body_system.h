@@ -1,5 +1,4 @@
-#ifndef BRAIN_SYSTEM_H_INCLUDED
-#define BRAIN_SYSTEM_H_INCLUDED
+#pragma once
 
 #include "kernel/be_entity_interface.h"
 
@@ -90,5 +89,3 @@
 				virtual BEntity* customCopy( BEntity* to_parent, BEntity* entity, std::map<BEntity*, BEntity*>& translation_map );
 		};
 
-#endif
- 

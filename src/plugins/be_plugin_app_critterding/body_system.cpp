@@ -664,7 +664,7 @@
 				{
 					graphics_transform = graphics_entity_critter->addChild("transform", "Transform");
 				}
-				
+
 				graphics_transform->getChild( "scale_x", 1 )->set( scale_x );
 				graphics_transform->getChild( "scale_y", 1 )->set( scale_y );
 				graphics_transform->getChild( "scale_z", 1 )->set( scale_z );

@@ -1,5 +1,4 @@
-#ifndef VISION_SYSTEM_H_INCLUDED
-#define VISION_SYSTEM_H_INCLUDED
+#pragma once
 
 #include "kernel/be_entity_interface.h"
 #include "plugins/be_plugin_bullet/physicsmodel_rigid.h"
@@ -36,6 +35,7 @@
 			unsigned int m_retinasperrow;
 			
 			glm::mat4 m_ProjectionMatrixGLM;
+			BEntity* m_skyDome;
 		
 		// Vision
 			unsigned int m_critter_retinasize;
@@ -56,5 +56,3 @@
 			BGraphicsModelSystem* m_graphics_system;
 	};
 
-#endif
- 

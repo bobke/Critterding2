@@ -15,6 +15,7 @@
 ADD_SUBDIRECTORY(be_plugin_opengl)
 ADD_SUBDIRECTORY(be_plugin_opengl_modern)
 
+ADD_SUBDIRECTORY(be_plugin_imgui)
 ADD_SUBDIRECTORY(be_plugin_thread)
 ADD_SUBDIRECTORY(be_plugin_qt6)
 ADD_SUBDIRECTORY(be_plugin_system)

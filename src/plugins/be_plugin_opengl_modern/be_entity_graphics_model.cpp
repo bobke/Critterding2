@@ -13,11 +13,11 @@
 #include "be_shader_uniform_vec4.h"
 #include "be_shader_uniform_vec3.h"
 #include "be_texture_2d_resource.h"
-#include <glm/gtc/type_ptr.hpp>
 
 
 	BGraphicsModel::BGraphicsModel()
-		: BEntity()
+	: BEntity()
+	, setup_done(false)
 	{
 		setProcessing();
 	}
@@ -55,17 +55,20 @@
 			std::cout << "shaders found " << std::endl;
 			m_uniform_color = dynamic_cast<BShaderUniformVec4*>( parent()->getChild("shaders", 1)->getChild("u_Color", 1) );
 		}
-		// m_color_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "u_Color" );
+		m_color_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle(), "u_Color" );
 		// glUniform4f( m_color_location, 0.2f, 0.8f, 0.4f, 1.0f );
 		
-		m_ModelMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ModelMatrix_Model" );
-		// m_ViewModelMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ViewModelMatrix_Model" );
-		// m_ProjectionViewMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ProjectionViewMatrix_Model" );
-		// m_ProjectionViewModelMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ProjectionViewModelMatrix_Model" );
-		// m_ProjectionMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ProjectionMatrix_Model" );
-		// m_ViewMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ViewMatrix_Model" );
-		// m_uniform_scale = dynamic_cast<BShaderUniformVec3*>( parent()->getChild("shaders", 1)->getChild("u_Scale", 1) );
-		m_scale_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "u_Scale" );
+		// // m_ViewModelMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ViewModelMatrix_Model" );
+		// // m_ProjectionViewMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ProjectionViewMatrix_Model" );
+		// // m_ProjectionViewModelMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ProjectionViewModelMatrix_Model" );
+		// // m_ProjectionMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ProjectionMatrix_Model" );
+		// // m_ViewMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ViewMatrix_Model" );
+		// // m_uniform_scale = dynamic_cast<BShaderUniformVec3*>( parent()->getChild("shaders", 1)->getChild("u_Scale", 1) );
+		m_ModelMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle(), "ModelMatrix_Model" );
+		std::cout << "m_ModelMatrixID = glGetUniformLocation " << glGetError() << std::endl;
+		m_scaleBufferID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle(), "u_Scale" );
+		std::cout << "m_scaleBufferID = glGetUniformLocation " << glGetError() << std::endl;
+		
 
 		m_uniform_textureSample = parent()->getChild("shaders", 1)->getChild("u_textureSample", 1);
 		// m_textureSample_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "u_textureSample" );
@@ -94,41 +97,17 @@
 			m_ScaleBuffer[13] = 0.0f;
 			m_ScaleBuffer[14] = 0.0f;
 			m_ScaleBuffer[15] = 1.0f;
-		
-// 		// std::cout << "// Create the VAO" << std::endl;
-// 		// !!!!!!!! FIXME ?
-// 		// Create the VAO
-// 		glGenVertexArrays(1, &m_vao);
-// 		glBindVertexArray(m_vao);
-// 
-// 		// Create the VBO for transforms
-// 		auto maxInstances  = 10000;
-// 		glGenBuffers(1, &m_transformBuffer);
-// 		glBindBuffer(GL_ARRAY_BUFFER, m_transformBuffer);
-// 		glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(float[16]), nullptr, GL_DYNAMIC_DRAW);
-// 			
-// 		// Set up vertex attribute pointers for the transform matrix
-// 		for (int i = 0; i < 4; ++i) {
-// 			glEnableVertexAttribArray(3 + i);
-// 			glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(float[16]), (void*)(i * sizeof(float[16])));
-// 			glVertexAttribDivisor(3 + i, 1);
-// 		}
-// 
-// 		// Create the VBO for scales
-// 		glGenBuffers(1, &m_scaleBuffer);
-// 		glBindBuffer(GL_ARRAY_BUFFER, m_scaleBuffer);
-// 		glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(float[3]), nullptr, GL_DYNAMIC_DRAW);
-// 		
-// 		// Set up vertex attribute pointer for the scale vector
-// 		glEnableVertexAttribArray(7);
-// 		glVertexAttribPointer(7, 3, GL_FLOAT, GL_FALSE, sizeof(float[3]), (void*)0);
-// 		glVertexAttribDivisor(7, 1);
-// 
-// 		// Unbind
-// 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-// 		glBindVertexArray(0);
+
 	}
 
+	BGraphicsModel::~BGraphicsModel()
+	{
+		std::cout << "deleting buffers" << std::endl;
+		glDeleteBuffers( 1, &m_scaledTransformsBufferID );
+		std::cout << "ok" << std::endl;
+	};
+	
+	
 	void BGraphicsModel::setModel( boost::shared_ptr<BeGraphicsModelResource> model )
 	{
 		m_model=model;
@@ -139,91 +118,404 @@
 		return m_model;
 	}
 
+	void BGraphicsModel::doSetup()
+	{
+		if ( !setup_done )
+		{
+			// Create the VBO for transforms
+			constexpr auto buffer_max_instances = 32768;
+			glGenBuffers(1, &m_scaledTransformsBufferID);
+			glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
+			glBufferData(GL_ARRAY_BUFFER, buffer_max_instances * sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
+
+			m_instanceModelMatrixAttrib = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect->m_program.get()->handle(), "InstanceModelMatrix");
+			m_scaledTransformsBufferID_critter = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect_critter->m_program.get()->handle(), "InstanceModelMatrix");
+
+			// Set up per-instance attribute pointers
+			if ( m_instanceModelMatrixAttrib > -1 )
+			{
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib+1);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib+1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(1 * sizeof(glm::vec4)));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib+2);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib+2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib+3);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib+3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
+
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib+1, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib+2, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib+3, 1);
+			}
+			if ( m_scaledTransformsBufferID_critter > -1 )
+			{
+				glEnableVertexAttribArray(m_scaledTransformsBufferID_critter);
+				glVertexAttribPointer(m_scaledTransformsBufferID_critter, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0));
+				glEnableVertexAttribArray(m_scaledTransformsBufferID_critter+1);
+				glVertexAttribPointer(m_scaledTransformsBufferID_critter+1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(1 * sizeof(glm::vec4)));
+				glEnableVertexAttribArray(m_scaledTransformsBufferID_critter+2);
+				glVertexAttribPointer(m_scaledTransformsBufferID_critter+2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
+				glEnableVertexAttribArray(m_scaledTransformsBufferID_critter+3);
+				glVertexAttribPointer(m_scaledTransformsBufferID_critter+3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
+
+				glVertexAttribDivisor(m_scaledTransformsBufferID_critter, 1);
+				glVertexAttribDivisor(m_scaledTransformsBufferID_critter+1, 1);
+				glVertexAttribDivisor(m_scaledTransformsBufferID_critter+2, 1);
+				glVertexAttribDivisor(m_scaledTransformsBufferID_critter+3, 1);
+			}
+
+			setup_done = true;
+		}
+	}	
+	
 	void BGraphicsModel::process()
 	{
-		if( m_active->get_bool() && getModel() && getModel()->isReady() )
+		glGetError();
+		
+		if (m_active->get_bool() && getModel() && getModel()->isReady())
 		{
-			bool found_child(false);
+			glBindVertexArray( getModel()->get()->m_vertexArray.get() ? getModel()->get()->m_vertexArray.get()->handle() : 0 );
 
 			// SET COLOR HACK
-			const auto& ambient = getModel()->get()->matlist.begin()->second.m_material.getAmbient();
-			// glUniform4f( m_color_location, ambient.x(), ambient.y(), ambient.z(), 1.0f );
-			m_uniform_color->setValue( ambient.x(), ambient.y(), ambient.z(), 1.0f );
+			const auto &ambient = getModel()->get()->matlist.begin()->second.m_material.getAmbient();
+			m_uniform_color->setValue(ambient.x(), ambient.y(), ambient.z(), 1.0f);
 
 			for_all_children
 			{
-				auto t = dynamic_cast<glTransform*>(*child);
-				if ( (t) )
+				auto t = dynamic_cast<glTransform*>( *child );
+				if ( t )
 				{
-					// transform value
-					// m_modelMatrix = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ModelMatrix" );
-					// glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE, t->m_value );
+					auto m = glm::scale( 
+						glm::make_mat4( t->m_value ), glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), 
+						t->m_scale_z->get_float() )
+					);
 
-					// m_ViewModelMatrix.setFromOpenGLMatrix( t->m_value );
-
-					// FIXME m_useCamera->m_ProjectionMatrix
-					
-					// m_useCamera->m_ProjectionMatrix.getOpenGLMatrix( m_ViewModelBuffer );
-					// std::cout << "z" << m_ViewModelBuffer[14] << std::endl;
-					
-					// MODEL
-						// m_ModelMatrix.setFromOpenGLMatrix( t->m_value );
-						// m_ModelMatrix.getOpenGLMatrix( m_ModelBuffer );
-						// glUniformMatrix4fv( m_ModelMatrixID, 1, GL_FALSE, m_ModelBuffer );
-						glUniformMatrix4fv( m_ModelMatrixID, 1, GL_FALSE, t->m_value );
-
-// 					// VIEW
-// 						m_useCamera->m_ViewMatrix.getOpenGLMatrix( m_ViewModelBuffer );
-// 						glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
-// 
-// 					// MODEL VIEW
-// 						m_ViewModelMatrix = m_useCamera->m_ViewMatrix * m_ModelMatrix;
-// 						m_ViewModelMatrix.getOpenGLMatrix( m_ViewModelBuffer );
-// 						glUniformMatrix4fv( m_ViewModelMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
-// 
-// 					// PROJECTION FIXME WTF
-// 						// m_useCamera->m_ProjectionMatrix.getOpenGLMatrix( m_ViewModelBuffer );
-// 						// glUniformMatrix4fv( m_ProjectionMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
-// 						
-// 						// btTransform tr;
-// 						// tr.setFromOpenGLMatrix( m_useCamera->m_projectionMatrix );
-// 						// float buffer[16];
-// 						// tr.getOpenGLMatrix( buffer );
-// 						// glUniformMatrix4fv( m_ProjectionMatrixID, 1, GL_FALSE, buffer );
-// 
-// 						glUniformMatrix4fv( m_ProjectionMatrixID, 1, GL_FALSE, m_useCamera->m_projectionMatrix );
-// 
-// 					// PROJECTION VIEW
-// 						m_ProjectionViewMatrix = m_useCamera->m_ProjectionMatrix * m_useCamera->m_ViewMatrix;
-// 						m_ProjectionViewMatrix.getOpenGLMatrix( m_ViewModelBuffer );
-// 						glUniformMatrix4fv( m_ProjectionViewMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
-// 
-// 					// PROJECTION VIEW MODEL
-// 						m_ProjectionViewModelMatrix = m_ProjectionViewMatrix * m_ModelMatrix;
-// 						m_ProjectionViewModelMatrix.getOpenGLMatrix( m_ViewModelBuffer );
-// 						glUniformMatrix4fv( m_ProjectionViewModelMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
-
-					// SCALE
-						scale( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() );
-
-					// DRAW
-					// 		std::cout << "BeGraphicsModel::draw():: " << std::endl;
-							draw( getModel()->get() );
-							// getModel()->get()->draw();
-					
-					found_child = true;
+					m_modelMatrices.push_back( m );
+					// m_scales.push_back( glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) );
 				}
 			}
 
-			// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
-			if ( !found_child )
+			doSetup();
+
+			if ( !m_modelMatrices.empty() )
 			{
-				scale( 1.0f, 1.0f, 1.0f );
+				// MODEL MATRICES
+					glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
+					glBufferData(GL_ARRAY_BUFFER, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]), GL_STATIC_DRAW);
+					glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+					// glBufferSubData(GL_ARRAY_BUFFER, 0, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]));
+					// getModel()->get()->m_arrayBuffer->bind();
+					// glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind any existing buffer to avoid issues
+					// glBindBuffer(GL_ARRAY_BUFFER, dynamic_cast<BGraphicsModelSystem*>( parent() )->m_scaledTransformsBufferID);
+					// glUniformMatrix4fv(m_instanceModelMatrixAttrib, m_modelMatrices.size(), GL_FALSE, glm::value_ptr(m_modelMatrices[0]));
+				
+				// Use glVertexAttribDivisor instead of glUniform3fv
+					// glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind any existing buffer to avoid issues
+					// glVertexAttribDivisor(m_instanceModelMatrixAttrib, 1);
+					// glBufferData(GL_ARRAY_BUFFER, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]), GL_DYNAMIC_DRAW);
+					// glBindBuffer(GL_ARRAY_BUFFER, dynamic_cast<BGraphicsModelSystem*>(parent())->m_scaledTransformsBufferID);
+					// glBufferData(GL_ARRAY_BUFFER, 1 * sizeof(glm::vec4) * 4, glm::value_ptr(glm::mat4(1.0f)), GL_STATIC_DRAW);
+					// glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind any existing buffer to avoid issues
+				
+					// glBindBuffer(GL_ARRAY_BUFFER, dynamic_cast<BGraphicsModelSystem*>(parent())->m_scaledTransformsBufferID);
+					// glBufferData(GL_ARRAY_BUFFER, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]), GL_DYNAMIC_DRAW);
+				
+				// PIC HOW TO RENDER, INSTANCED OR NORMAL
+					if ( m_modelMatrices.size() == 1 )
+					{
+						// DRAW NORMAL
+							draw( getModel()->get() );
+					}
+					else
+					{
+						// DRAW INSTANCED
+							drawInstanced( getModel()->get(), m_modelMatrices.size() );
+					}
+			}
+			else
+			{
+				// glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
+				// glBufferData(GL_ARRAY_BUFFER, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]), GL_STATIC_DRAW);
+				// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
+				// glUniformMatrix4fv(m_instanceModelMatrixAttrib, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+				
+				// glBindBuffer(GL_ARRAY_BUFFER, dynamic_cast<BGraphicsModelSystem*>( parent() )->m_scaledTransformsBufferID);
+				// glVertexAttribDivisor(dynamic_cast<BGraphicsModelSystem*>( parent() )->m_instanceModelMatrixAttrib, 1);
+				// glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), glm::value_ptr(glm::mat4(1.0f)), GL_DYNAMIC_DRAW);
+
+				// glUniform3f(m_instanceScaleAttrib, 1.0f, 1.0f, 1.0f);
+				
+				glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
+				glBufferData(GL_ARRAY_BUFFER, 1 * sizeof(glm::mat4), glm::value_ptr(glm::mat4( 1.0f )), GL_STATIC_DRAW);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+				// drawInstanced(getModel()->get(), 1);
 				draw( getModel()->get() );
-				// getModel()->get()->draw();
+			}
+
+			m_modelMatrices.clear();
+			glBindVertexArray(0);
+			
+		}
+		auto e = glGetError(); if ( e != 0 ) { std::cout << "BGraphicsModel::process() glError: " << e << std::endl; exit(0); }
+	}
+	
+	void BGraphicsModel::drawInstanced(boost::shared_ptr<BeGraphicsModel> model, int instanceCount, bool doTextures)
+	{
+		// glGetError();
+
+		// glBindVertexArray( getModel()->get()->m_vertexArray.get() ? getModel()->get()->m_vertexArray.get()->handle() : 0 );
+
+		if (model->matlist.size() > 0)
+		{
+			// glEnable(GL_TEXTURE_2D);
+			
+			BeGraphicsMaterial* material;
+			auto it = model->matlist.begin();
+			
+			size_t minPriority=0;
+			size_t maxPriority=0;
+
+			while( it != model->matlist.end() )
+			{
+				size_t priority = 0;
+				material = model->m_system->getEffect( (*it).first );
+				if ( material )
+				{
+					priority = material->getPriority();
+				}
+				if( priority < minPriority )
+					minPriority = priority;
+				if( priority > maxPriority )
+					maxPriority = priority;
+
+				++it;
+			}
+
+			for (size_t priority = minPriority; priority <= maxPriority; ++priority)
+			{
+				size_t i = 0;
+				it = model->matlist.begin();
+				while (it != model->matlist.end())
+				{
+					size_t pr = 0;
+					material = model->m_system->getEffect( (*it).first );
+					if ( material )
+					{
+						pr = (int)material->getPriority();
+					}
+
+					if (pr == priority)
+					{
+						if (doTextures == true)
+						{
+							const Material& material = (*it).second;
+
+							if ( material.m_imageTexture2D != 0 )
+							{
+								if ( material.m_imageTexture2D->get().get() )
+								{
+									glBindTexture(GL_TEXTURE_2D, material.m_imageTexture2D->get().get()->handle());
+									m_uniform_textureSample->set( 1 );
+								}
+							}
+							else
+							{
+								glBindTexture(GL_TEXTURE_2D, 0); // THINK IT'S OK TO COMMENT THIS?
+								m_uniform_textureSample->set( 0 );
+							}
+						}
+						else
+						{
+							glBindTexture(GL_TEXTURE_2D, 0);
+							m_uniform_textureSample->set(0);
+						}
+
+						auto &drawCall = model->m_drawCalls[i];
+						glDrawElementsInstanced(GL_TRIANGLES, drawCall.m_count, GL_UNSIGNED_INT, (char *)nullptr + ((drawCall.m_first) * sizeof(GLint)), instanceCount);
+						// glDrawElementsInstanced(GL_TRIANGLES, drawCall.m_count, GL_UNSIGNED_INT, (void*)(drawCall.m_first * sizeof(GLuint)), instanceCount);
+
+						// std::cout << glGetError() << std::endl;
+					}
+
+					++it;
+					++i;
+				}
 			}
 		}
+		else
+		{
+	// 		m_graphicsSystem.bindTexture2D(0);
+			//m_graphicsSystem.applyMaterial(GL_FRONT_AND_BACK, 0);
+			glDrawElementsInstanced(GL_TRIANGLES, model->elementArrayBuffer.size(), GL_UNSIGNED_INT, nullptr, instanceCount);
+		}
+
+		// auto e = glGetError(); if ( e != 0 ) { std::cout << "BGraphicsModel::drawInstanced glError: " << e << std::endl; exit(0); }
 	}
+
+// 	void BGraphicsModel::process()
+// 	{
+// 		if( m_active->get_bool() && getModel() && getModel()->isReady() )
+// 		{
+// 			bool found_child(false);
+// 
+// 			// SET COLOR HACK
+// 			const auto& ambient = getModel()->get()->matlist.begin()->second.m_material.getAmbient();
+// 			// glUniform4f( m_color_location, ambient.x(), ambient.y(), ambient.z(), 1.0f );
+// 			m_uniform_color->setValue( ambient.x(), ambient.y(), ambient.z(), 1.0f );
+// 
+// 			for_all_children
+// 			{
+// 				auto t = dynamic_cast<glTransform*>(*child);
+// 				if ( (t) )
+// 				{
+// 					// transform value
+// 					// m_modelMatrix = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ModelMatrix" );
+// 					// glUniformMatrix4fv( m_modelMatrix, 1, GL_FALSE, t->m_value );
+// 
+// 					// m_ViewModelMatrix.setFromOpenGLMatrix( t->m_value );
+// 
+// 					// FIXME m_useCamera->m_ProjectionMatrix
+// 					
+// 					// m_useCamera->m_ProjectionMatrix.getOpenGLMatrix( m_ViewModelBuffer );
+// 					// std::cout << "z" << m_ViewModelBuffer[14] << std::endl;
+// 					
+// 					// MODEL
+// 						// m_ModelMatrix.setFromOpenGLMatrix( t->m_value );
+// 						// m_ModelMatrix.getOpenGLMatrix( m_ModelBuffer );
+// 						// glUniformMatrix4fv( m_ModelMatrixID, 1, GL_FALSE, m_ModelBuffer );
+// 						glUniformMatrix4fv( m_ModelMatrixID, 1, GL_FALSE, t->m_value );
+// 
+// // 					// VIEW
+// // 						m_useCamera->m_ViewMatrix.getOpenGLMatrix( m_ViewModelBuffer );
+// // 						glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
+// // 
+// // 					// MODEL VIEW
+// // 						m_ViewModelMatrix = m_useCamera->m_ViewMatrix * m_ModelMatrix;
+// // 						m_ViewModelMatrix.getOpenGLMatrix( m_ViewModelBuffer );
+// // 						glUniformMatrix4fv( m_ViewModelMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
+// // 
+// // 					// PROJECTION FIXME WTF
+// // 						// m_useCamera->m_ProjectionMatrix.getOpenGLMatrix( m_ViewModelBuffer );
+// // 						// glUniformMatrix4fv( m_ProjectionMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
+// // 						
+// // 						// btTransform tr;
+// // 						// tr.setFromOpenGLMatrix( m_useCamera->m_projectionMatrix );
+// // 						// float buffer[16];
+// // 						// tr.getOpenGLMatrix( buffer );
+// // 						// glUniformMatrix4fv( m_ProjectionMatrixID, 1, GL_FALSE, buffer );
+// // 
+// // 						glUniformMatrix4fv( m_ProjectionMatrixID, 1, GL_FALSE, m_useCamera->m_projectionMatrix );
+// // 
+// // 					// PROJECTION VIEW
+// // 						m_ProjectionViewMatrix = m_useCamera->m_ProjectionMatrix * m_useCamera->m_ViewMatrix;
+// // 						m_ProjectionViewMatrix.getOpenGLMatrix( m_ViewModelBuffer );
+// // 						glUniformMatrix4fv( m_ProjectionViewMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
+// // 
+// // 					// PROJECTION VIEW MODEL
+// // 						m_ProjectionViewModelMatrix = m_ProjectionViewMatrix * m_ModelMatrix;
+// // 						m_ProjectionViewModelMatrix.getOpenGLMatrix( m_ViewModelBuffer );
+// // 						glUniformMatrix4fv( m_ProjectionViewModelMatrixID, 1, GL_FALSE, m_ViewModelBuffer );
+// 
+// 					// SCALE
+// 						scale( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() );
+// 
+// 					// DRAW
+// 					// 		std::cout << "BeGraphicsModel::draw():: " << std::endl;
+// 							draw( getModel()->get() );
+// 							// getModel()->get()->draw();
+// 					
+// 					found_child = true;
+// 				}
+// 			}
+// 
+// 			// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
+// 			if ( !found_child )
+// 			{
+// 				scale( 1.0f, 1.0f, 1.0f );
+// 				draw( getModel()->get() );
+// 				// getModel()->get()->draw();
+// 			}
+// 		}
+// 	}
+
+
+// 	void BGraphicsModel::processWhenInSight( const btTransform* transformHead, float sightrange )	
+// 	{
+// 		// glGetError();
+// 
+// 		// FIXME add a bool "update_instanced_vector" so we only update vector all once  per frame (important when crittervision is implemented)
+// 		if( getModel() && getModel()->isReady() )
+// 		{
+// 			bool always_render(false);
+// 			if ( name() == "graphics_entity_map" )
+// 			{
+// 				always_render = true;
+// 			}
+// 
+// 			// SET COLOR HACK
+// 			const auto& ambient = getModel()->get()->matlist.begin()->second.m_material.getAmbient();
+// 			glUniform4f( m_color_location, ambient.x(), ambient.y(), ambient.z(), 1.0f );
+// 			// m_uniform_color->setValue( ambient.x(), ambient.y(), ambient.z(), 1.0f );
+// 
+// 			bool found_child(false);
+// 			btVector3 position = transformHead->getOrigin();
+// 			btVector3 positionB;
+// 			for_all_children
+// 			{
+// 				auto t = dynamic_cast<glTransform*>(*child);
+// 				if ( (t) )
+// 				{
+// 					// positionB = btVector3( t->m_value[12], t->m_value[13], t->m_value[14] );
+// 					positionB.setX( t->m_value[12] );
+// 					positionB.setY( t->m_value[13] );
+// 					positionB.setZ( t->m_value[14] );
+// 					
+// 					// check if position is in vicinity of mouth
+// 					if ( always_render || position.distance( positionB ) < sightrange )
+// 					{
+// 						// check if position is in front of mouth
+// 						positionB -=  position;
+// 						positionB.normalize();
+// 
+// 						// dot of forwardVector
+// 						if( always_render || positionB.dot( btVector3( transformHead->getBasis()[0][2], transformHead->getBasis()[1][2], transformHead->getBasis()[2][2] ) ) >= 0.5 )
+// 						{
+// 							// std::cout << "  drawing : " << t->parent()->name() << std::endl;
+// 
+// 							// // MODEL MATRIX & scale
+// 							// 	auto m = glm::scale( glm::make_mat4( t->m_value ), glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) );
+// 							// 	glUniformMatrix4fv( m_ModelMatrixID, 1, GL_FALSE, glm::value_ptr(m) );
+// 
+// 							// MODEL MATRIX
+// 								glUniformMatrix4fv( m_ModelMatrixID, 1, GL_FALSE, t->m_value );
+// 
+// 							// SCALE
+// 								scale( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() );
+// 
+// 							// DRAW
+// 								draw( getModel()->get(), false );
+// 						}
+// 						// else
+// 						// {
+// 							// std::cout << "skip" << std::endl;
+// 						// }
+// 					}
+// 					found_child = true;
+// 				}
+// 			}
+// 
+// 			// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
+// 			if ( !found_child )
+// 			{
+// 				draw( getModel()->get() );
+// 				// getModel()->get()->draw();
+// 			}
+// 		}
+// 		// auto e = glGetError(); if ( e != 0 ) { std::cout << "BGraphicsModel::processWhenInSight glError: " << e << std::endl; exit(0); }
+// 	}
 
 	void BGraphicsModel::processWhenInSight( const btTransform* transformHead, float sightrange )	
 	{
@@ -235,9 +527,12 @@
 		// FIXME add a bool "update_instanced_vector" so we only update vector all once  per frame (important when crittervision is implemented)
 		if( getModel() && getModel()->isReady() )
 		{
-			// FORCES THE SCALE UNIFORM UPLOAD
-			// m_ScaleBuffer[0] = 0.0f;
-			
+			glBindVertexArray( getModel()->get()->m_vertexArray.get() ? getModel()->get()->m_vertexArray.get()->handle() : 0 );
+
+			doSetup();
+
+			glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
+
 			bool always_render(false);
 			if ( name() == "graphics_entity_map" )
 			{
@@ -249,7 +544,6 @@
 			// glUniform4f( m_color_location, ambient.x(), ambient.y(), ambient.z(), 1.0f );
 			m_uniform_color->setValue( ambient.x(), ambient.y(), ambient.z(), 1.0f );
 
-			bool found_child(false);
 			btVector3 position = transformHead->getOrigin();
 			btVector3 positionB;
 			for_all_children
@@ -269,35 +563,56 @@
 						// dot of forwardVector
 						if( always_render || positionB.dot( btVector3( transformHead->getBasis()[0][2], transformHead->getBasis()[1][2], transformHead->getBasis()[2][2] ) ) >= 0.5 )
 						{
-							// std::cout << "  drawing : " << t->name() << std::endl;
+							auto m = glm::scale( glm::make_mat4( t->m_value ), glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) );
 
-							// MODEL MATRIX
-								glUniformMatrix4fv( m_ModelMatrixID, 1, GL_FALSE, t->m_value );
-
-							// SCALE
-								scale( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() );
-
-							// DRAW
-								draw( getModel()->get(), false );
-								// getModel()->get()->draw();
+							// direct draw
+							// glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), glm::value_ptr(m), GL_STATIC_DRAW);
+							// draw( getModel()->get() );
+							
+							// add to buffer for instanced rendering 
+							m_modelMatrices.push_back( m );
 						}
 						// else
 						// {
 							// std::cout << "skip" << std::endl;
 						// }
 					}
-					found_child = true;
 				}
 			}
 
-			// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
-			if ( !found_child )
+			if ( !m_modelMatrices.empty() )
 			{
-				draw( getModel()->get() );
-				// getModel()->get()->draw();
+				glBufferData(GL_ARRAY_BUFFER, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]), GL_STATIC_DRAW);
+   
+				// PIC HOW TO RENDER, INSTANCED OR NORMAL
+					if ( m_modelMatrices.size() == 1 )
+					{
+						// DRAW NORMAL
+							draw( getModel()->get() );
+							// std::cout << "normal draw " << name() << " :: " << m_modelMatrices.size() << std::endl;
+					}
+					else
+					{
+						// DRAW INSTANCED
+							drawInstanced( getModel()->get(), m_modelMatrices.size() );
+							// std::cout << "instan draw " << name() << " :: " << m_modelMatrices.size() << std::endl;
+					}
 			}
+
+			// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
+			else
+			{
+				glBufferData(GL_ARRAY_BUFFER, 1 * sizeof(glm::mat4), glm::value_ptr(glm::mat4( 1.0f )), GL_STATIC_DRAW);
+				// scale( 1.0f, 1.0f, 1.0f );
+
+				draw( getModel()->get() );
+			}
+
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
+ 			m_modelMatrices.clear();
 		}
-	}	
+	}
 
 	void BGraphicsModel::scale( const float x, const float y, const float z )
 	{
@@ -306,12 +621,12 @@
 			m_ScaleBuffer[0] = x;
 			m_ScaleBuffer[5] = y;
 			m_ScaleBuffer[10] = z;
-
+ 
 			m_scale_x_current->set( x );
 			m_scale_y_current->set( y );
 			m_scale_z_current->set( z );
-
-			glUniformMatrix4fv( m_scale_location, 1, GL_FALSE, m_ScaleBuffer );
+ 
+			glUniformMatrix4fv( m_scaleBufferID, 1, GL_FALSE, m_ScaleBuffer );
 			// std::cout << " DO";
 		}
 		// else
@@ -319,11 +634,11 @@
 		// 	std::cout << " SKIP";
 		// }
 	}
-	
+
 	void BGraphicsModel::draw( boost::shared_ptr<BeGraphicsModel> model, bool doTextures )
 	{
 		glBindVertexArray(model->m_vertexArray.get() ? model->m_vertexArray.get()->handle() : 0);
-
+	
 		if ( model->matlist.size() > 0 )
 		{
 			// glEnable(GL_TEXTURE_2D);
@@ -409,7 +724,7 @@
 // 								}
 // 							}
 
-						if ( doTextures == true )
+						if ( doTextures == true ) // only called from Critter Vision so don't set uniform disabled below
 						{
 							const Material& material = (*it).second;
 
@@ -463,7 +778,8 @@
 						// }
 
 						auto& drawCall = model->m_drawCalls[i];
-						glDrawElements( GL_TRIANGLES, drawCall.m_count, GL_UNSIGNED_INT, (char *)NULL + ((drawCall.m_first)*sizeof(GLint)) );
+						glDrawElements( GL_TRIANGLES, drawCall.m_count, GL_UNSIGNED_INT, (char *)nullptr + ((drawCall.m_first)*sizeof(GLint)) );
+
 					}
 
 					++it;
@@ -478,10 +794,8 @@
 	// 		m_graphicsSystem.bindTexture2D(0);
 			//m_graphicsSystem.applyMaterial(GL_FRONT_AND_BACK, 0);
 
-			glDrawElements(GL_TRIANGLES, model->elementArrayBuffer.size(), GL_UNSIGNED_INT, NULL);
+			glDrawElements(GL_TRIANGLES, model->elementArrayBuffer.size(), GL_UNSIGNED_INT, nullptr);
 		}
-
-		glBindVertexArray(0);
 	}
 	
 	

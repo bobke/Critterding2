@@ -31,7 +31,6 @@
 // 				Bfloat m_float; // HACK
 				Buint m_width;
 				Buint m_height;
-				
 		};
 
 	// QLINEEDIT_INT

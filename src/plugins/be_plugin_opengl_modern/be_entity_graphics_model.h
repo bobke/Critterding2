@@ -5,6 +5,7 @@
 // #include "kernel/be_entity_interface.h"
 // #include "LinearMath/btTransform.h"
 // #include <boost/shared_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 	class BeGraphicsModelResource;
 	class btTransform;
@@ -17,7 +18,7 @@
 		public:
 			BGraphicsModel();
 			const char* class_id() const { return "GraphicsModel"; }
-			virtual ~BGraphicsModel() {};
+			virtual ~BGraphicsModel();
 			virtual void construct();
 
 			void setModel( boost::shared_ptr<BeGraphicsModelResource> model );
@@ -30,11 +31,19 @@
 			virtual void processWhenInSight( const btTransform* transformHead, float sightrange );
 // 			void onAdd(BEntity* entity);
 			// BCamera* m_useCamera;
+			GLuint m_buffer;
 
 		private:
-			virtual void draw( boost::shared_ptr<BeGraphicsModel> model, bool doTextures=true );
-			void scale( const float x, const float y, const float z );
+			inline void doSetup();
+			bool setup_done;
 
+			std::vector<glm::mat4> m_modelMatrices;
+			// std::vector<glm::vec3> m_scales;
+			
+			virtual void draw( boost::shared_ptr<BeGraphicsModel> model, bool doTextures=true );
+			void drawInstanced(boost::shared_ptr<BeGraphicsModel> model, int instanceCount, bool doTextures=true);
+			void scale( const float x, const float y, const float z );
+			
 			BEntity* m_active;
 			boost::shared_ptr<BeGraphicsModelResource> m_model;
 			std::string m_loaded_path;
@@ -53,20 +62,27 @@
 			BEntity* m_scale_z_current;
 
 // 			btScalar m_matrix[16];
-// 			btVector3 m_scale;
+			btVector3 m_scale;
 
 			// GLuint m_vao;
 			// GLuint m_transformBuffer;
-			GLuint m_scaleBuffer;
+			GLuint m_scaledTransformsBufferID;
+			GLuint m_scaledTransformsBufferID_critter;
+			GLuint m_scaleBufferID;
 			GLuint m_ModelMatrixID;
+			GLint m_instanceModelMatrixAttrib;
+			float m_ScaleBuffer[16];
+			
+			
+			// GLint m_instanceScaleAttrib;
 			// GLuint m_ViewModelMatrixID;
 			// GLuint m_ProjectionViewMatrixID;
 			// GLuint m_ProjectionViewModelMatrixID;
 			// GLuint m_ViewMatrixID;
 			// GLuint m_ProjectionMatrixID;
 			
-			GLuint m_scale_location;
-			// GLuint m_color_location;
+			// GLuint m_scale_location;
+			GLuint m_color_location;
 			// GLuint m_textureSample_location;
 
 			// btTransform m_ModelMatrix;
@@ -74,14 +90,17 @@
 			// btTransform m_ProjectionViewMatrix;
 			// btTransform m_ProjectionViewModelMatrix;
 			// float m_ViewModelBuffer[16];
-			float m_ScaleBuffer[16];
 			
 			// float m_ModelBuffer[16];
 			
 			BShaderUniformVec4* m_uniform_color;
 			BEntity* m_uniform_textureSample;
-			BShaderUniformVec3* m_uniform_scale;
+			// BShaderUniformVec3* m_uniform_scale;
 			
+			
+			// FIXME cache test
+			// std::unordered_map<glTransform*, btTransform*> m_culling_cache;
+
 	}; 
 
 	// TRANSFORM

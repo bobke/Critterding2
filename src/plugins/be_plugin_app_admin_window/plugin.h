@@ -38,6 +38,8 @@
 				void add_admin_genButtons( BEntity* to_layout, BEntity* entity );
 				void add_admin_genButtonsWindow( BEntity* to_layout, BEntity* entity );
 				void add_admin_genValueFields( BEntity* to_layout, BEntity* entity );
+
+				BClassTranslationMap m_imgui_translation_map;
 		};
 
 

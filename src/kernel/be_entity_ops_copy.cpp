@@ -135,7 +135,23 @@
 				// ENTITIES WITH CLASS ID
 				else if ( std::string(entity->class_id()) != "entity" )
 				{
-					entity_new = to_parent->addChild( entity->name(), entity->class_id() );
+					if ( m_class_translation_map == 0 )
+					{
+						entity_new = to_parent->addChild( entity->name(), entity->class_id() );
+					}
+					else
+					{
+						std::string translation = m_class_translation_map->get( entity->class_id() );
+						std::cout << "translating '" << entity->class_id() << "' to '" << translation << "'" << std::endl;
+						if ( translation.size() > 0 )
+						{
+							entity_new = to_parent->addChild( entity->name(), translation );
+						}
+						else
+						{
+							entity_new = to_parent->addChild( entity->name(), entity->class_id() );
+						}
+					}
 				}
 
 				else
@@ -252,7 +268,7 @@
 		// }
 
 		return 0;
-	}	
+	}
 
 	// SAVING
 		void BEntitySave::saveEntity( BEntity* entity, const std::string& filename )

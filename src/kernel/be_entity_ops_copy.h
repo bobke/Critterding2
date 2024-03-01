@@ -6,6 +6,7 @@
 // #include "be_entity_interface.h"
 // #include "be_timer.h"
 
+#include "be_lib_handler.h"
 #include "tinyxml/tinyxml.h"
 // #include <sstream>
 #include <map>
@@ -14,47 +15,60 @@
 	class BEntity;
 	// class TiXmlElement;
 	typedef std::map<BEntity*, BEntity*> Btranslation_map;
-	
 
+	// class BClassTranslationMap
+	// {
+	// 	public:
+	// 		BClassTranslationMap() {};
+	// 		virtual ~BClassTranslationMap() {};
+	// 		void add( std::string a, std::string b );
+	// 		std::string get( std::string a );
+ // 
+	// 	private:
+	// 		std::map<std::string, std::string> m_translation_map;
+	// };
+	
 	class BEntityCopy
 	{
-			public:
-				BEntityCopy() {};
-				virtual ~BEntityCopy() {};
+		public:
+			BEntityCopy() : m_class_translation_map(0) {};
+			virtual ~BEntityCopy() {};
 
-				BEntity* copyEntity( BEntity* entity );
-				BEntity* copyEntity( BEntity* entity, BEntity* to_parent );
-			private:
-				BEntity* _copyEntity( BEntity* entity, BEntity* to_parent, bool force=false );
-				BEntity* _wireNewEntity();
-				
-				Btranslation_map m_translation_map;
+			BEntity* copyEntity( BEntity* entity );
+			BEntity* copyEntity( BEntity* entity, BEntity* to_parent );
+			void setClassTranslationMap( BClassTranslationMap* map ) { m_class_translation_map = map; }
+		private:
+			BEntity* _copyEntity( BEntity* entity, BEntity* to_parent, bool force=false );
+			BEntity* _wireNewEntity();
+			
+			Btranslation_map m_translation_map;
+			BClassTranslationMap* m_class_translation_map;
 	};
 
 	class BEntitySave
 	{
-			public:
-				BEntitySave() {};
-				virtual ~BEntitySave() {};
+		public:
+			BEntitySave() {};
+			virtual ~BEntitySave() {};
 
-				void saveEntity( BEntity* entity, const std::string& filename );
-			private:
-				void save_entity(BEntity* entity_to_save, std::stringstream& file_content, std::map<unsigned int, BEntity*>& external_entity_list, const bool isBuiltin, const bool isExternal, const unsigned int level);
+			void saveEntity( BEntity* entity, const std::string& filename );
+		private:
+			void save_entity(BEntity* entity_to_save, std::stringstream& file_content, std::map<unsigned int, BEntity*>& external_entity_list, const bool isBuiltin, const bool isExternal, const unsigned int level);
 	};
 
 	class BEntityLoad
 	{
-			public:
-				BEntityLoad() {};
-				virtual ~BEntityLoad() {};
+		public:
+			BEntityLoad() {};
+			virtual ~BEntityLoad() {};
 
-				void loadEntity( BEntity* parent, const std::string& filename );
-				void loadExternalParentFromXML( BEntity* parent, const TiXmlElement& element, std::map<unsigned int, BEntity*>& external_entity_list);
-				void loadEntityFromXML(BEntity* parent, const TiXmlElement& element, std::map<unsigned int, BEntity*>& translation_map, std::map<unsigned int, BEntity*>& external_entity_list, const unsigned int scene_server_client);
-				void loadEntityFromXMLConnections(const TiXmlElement& element, std::map<unsigned int, BEntity*>& translation_map);
-			private:
-				// void save_entity(BEntity* entity_to_save, std::stringstream& file_content, std::map<unsigned int, BEntity*>& external_entity_list, const bool isBuiltin, const bool isExternal, const unsigned int level);
-				// Btranslation_map m_translation_map;
+			void loadEntity( BEntity* parent, const std::string& filename );
+			void loadExternalParentFromXML( BEntity* parent, const TiXmlElement& element, std::map<unsigned int, BEntity*>& external_entity_list);
+			void loadEntityFromXML(BEntity* parent, const TiXmlElement& element, std::map<unsigned int, BEntity*>& translation_map, std::map<unsigned int, BEntity*>& external_entity_list, const unsigned int scene_server_client);
+			void loadEntityFromXMLConnections(const TiXmlElement& element, std::map<unsigned int, BEntity*>& translation_map);
+		private:
+			// void save_entity(BEntity* entity_to_save, std::stringstream& file_content, std::map<unsigned int, BEntity*>& external_entity_list, const bool isBuiltin, const bool isExternal, const unsigned int level);
+			// Btranslation_map m_translation_map;
 	};
 
 	class BeXmlHelper

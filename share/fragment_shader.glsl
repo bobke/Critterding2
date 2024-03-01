@@ -13,7 +13,6 @@
         if( u_textureSample == 1 )
         {
             // Texture present
-            vec4 texColor = 
             color = texture(u_Texture, v_texCoord) * u_Color;
         }
         else

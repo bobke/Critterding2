@@ -13,11 +13,11 @@
 		GLuint handle() const { return m_handle; }
 		void data(GLsizeiptr size, const GLvoid* const d, const GLenum usage);
 		void subData(const GLintptr offset, const GLsizeiptr size, const GLvoid* const data);
+		void bind();
 	protected:
 		BeBuffer(const GLenum target);
 		virtual ~BeBuffer();
 	private:
-		void bind();
 		void unbind();
 		BeGraphicsKernel m_graphicsKernel;
 		GLuint m_handle;

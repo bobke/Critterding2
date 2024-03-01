@@ -106,7 +106,7 @@
 			public:
 				virtual void process_general();
 				virtual void process() {};
-				virtual void process_post() {};
+				// virtual void process_post() {};
 				void process_children() const;
 // 				void process_children_post() const;
 				Bbool hasProcessing() const;
@@ -165,7 +165,8 @@
 				BEntity* parent() const; // FIXME be_parent()
 				void setParent( BEntity* const parent );
 				virtual bool hasParent() const;
-				virtual bool hasParent( const Buint64 t_id ) const;
+				// virtual bool hasParent( const Buint64 t_id ) const;
+				virtual bool hasParent( const BEntity* entity ) const;
 				BEntity* topParent() const;
 		// TOP FUNCTIONS
 				virtual BEntity* getNearestTop();

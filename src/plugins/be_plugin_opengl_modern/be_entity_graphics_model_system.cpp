@@ -5,6 +5,7 @@
 #include "graphics/be_graphics_system.h"
 #include "math/vector4f.h"
 #include "graphics/be_shader.h"
+#include <glm/gtc/type_ptr.hpp>
 
 	BGraphicsModelSystem::BGraphicsModelSystem() // FIXME move to cpp
 	: BEntity()
@@ -37,7 +38,6 @@
 	void BGraphicsModelSystem::construct()
 	{
 		addChild("active", "bool" )->set( true );
-		
 	}
 	
 	BGraphicsModelSystem::~BGraphicsModelSystem()

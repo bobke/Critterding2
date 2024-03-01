@@ -26,37 +26,37 @@
 		
 		bool BEntity::set( BEntity* value )
 		{ 
-			std::cout << "WARNING: BEntity::set(BEntity*) not overloaded for entity " << id() << "(" << name() << ")" << " to " << value->id() << "(" << value->name() << ")" << std::endl;
+			std::cout << "WARNING: BEntity::set(BEntity*) not overloaded for entity " << id() << "(" << name() << ")" << " to " << class_id() << std::endl;
 			return false;
 		}
 
 		bool BEntity::set( const bool& value )
 		{
-			std::cout << "WARNING: BEntity::set( const Bbool value ) not overloaded for entity " << id() << " to " << class_id() << std::endl;
+			std::cout << "WARNING: BEntity::set( const Bbool value ) not overloaded for entity " << id() << "(" << name() << ")" << " to " << class_id() << std::endl;
 			(void)value; return false;
 		}
 
 		bool BEntity::set( const Buint& value )
 		{
-			std::cout << "WARNING: BEntity::set( const Buint& value ) not overloaded for entity " << id() << " to " << class_id() << std::endl;
+			std::cout << "WARNING: BEntity::set( const Buint& value ) not overloaded for entity " << id() << "(" << name() << ")" << " to " << class_id() << std::endl;
 			(void)value; return false;
 		}
 
 		bool BEntity::set( const Bint& value )
 		{
-			std::cout << "WARNING: BEntity::set( const Bint& value ) not overloaded for entity " << id() << " to " << class_id() << std::endl;
+			std::cout << "WARNING: BEntity::set( const Bint& value ) not overloaded for entity " << id() << "(" << name() << ")" << " to " << class_id() << std::endl;
 			(void)value; return false;
 		}
 
 		bool BEntity::set( const Bfloat& value )
 		{
-			std::cout << "WARNING: BEntity::set( const Bfloat& value ) not overloaded for entity " << id() << " to " << class_id() << std::endl;
+			std::cout << "WARNING: BEntity::set( const Bfloat& value ) not overloaded for entity " << id() << "(" << name() << ")" << " to " << class_id() << std::endl;
 			(void)value; return false;
 		}
 
 		bool BEntity::set( const Bdouble& value )
 		{
-			std::cout << "WARNING: BEntity::set( const Bdouble& value ) not overloaded for entity " << id() << " to " << class_id() << std::endl;
+			std::cout << "WARNING: BEntity::set( const Bdouble& value ) not overloaded for entity " << id() << "(" << name() << ")" << " to " << class_id() << std::endl;
 			(void)value; return false;
 		}
 
@@ -67,111 +67,111 @@
 
 		bool BEntity::set( const char* value )
 		{
-// 			std::cout << "WARNING: BEntity::set( const char* value ) not overloaded for entity " << id() << "(" << name() << ")" << " to " << value << std::endl;
+// 			std::cout << "WARNING: BEntity::set( const char* value ) not overloaded for entity " << id() << "(" << name() << ")" << "(" << name() << ")" << " to " << value << std::endl;
 			(void)value; return false;
 		}
 
 	// GET VALUES
 		BEntity* BEntity::get_reference()
 		{
-			std::cout << "BEntity::get_reference(): should be overriding this entity " << id() << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_reference(): should be overriding this entity " << id() << "(" << name() << ")" << "(" << class_id() << ")" << std::endl;
 			return 0;
 		}
 
 		Bbool BEntity::get_bool()
 		{
-			std::cout << "BEntity::get_bool(): should be overriding this entity " << id() << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_bool(): should be overriding this entity " << id() << "(" << name() << ")" << "(" << class_id() << ")" << std::endl;
 			return false;
 		}
 
 		Buint BEntity::get_uint()
 		{
-			std::cout << "BEntity::get_uint(): should be overriding this entity " << id() << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_uint(): should be overriding this entity " << id() << "(" << name() << ")" << "(" << class_id() << ")" << std::endl;
 			return 0;
 		}
 
 		Bint BEntity::get_int()
 		{
-			std::cout << "BEntity::get_int(): should be overriding this entity " << id() << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_int(): should be overriding this entity " << id() << "(" << name() << ")" << "(" << class_id() << ")" << std::endl;
 			return 0;
 		}
 
 		Bfloat BEntity::get_float()
 		{
-			std::cout << "BEntity::get_float(): should be overriding this entity " << id() << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_float(): should be overriding this entity " << id() << "(" << name() << ")" << "(" << class_id() << ")" << std::endl;
 			return 0.0f;
 		}
 
 		Bdouble BEntity::get_double()
 		{
-			std::cout << "BEntity::get_double(): should be overriding this entity " << id() << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_double(): should be overriding this entity " << id() << "(" << name() << ")" << "(" << class_id() << ")" << std::endl;
 			return 0.0;
 		}
 
 // 		Bstring* BEntity::get_string()
 // 		{
-// 			std::cout << "BEntity::get_string(): should be overriding this entity " << id() << "(" << class_id() << ")" << std::endl;
+// 			std::cout << "BEntity::get_string(): should be overriding this entity " << id() << "(" << name() << ")" << "(" << class_id() << ")" << std::endl;
 // 			return 0;
 // 		}
 
 		const char* BEntity::get_string()
 		{
-			std::cout << "BEntity::get_string(): should be overriding this entity " << id() << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_string(): should be overriding this entity " << id() << "(" << name() << ")" << "(" << class_id() << ")" << std::endl;
 			return 0;
 		}
 
 		
 		BEntity* BEntity::get_reference( const Bstring& id )
 		{
-			std::cout << "BEntity::get_reference(id): wrong type for entity " << id << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_reference(id): wrong type for entity : '" << id << "'(" << class_id() << ")" << std::endl;
 			(void)id;
 			return 0;
 		}
 
 		Bbool BEntity::get_bool( const Bstring& id )
 		{
-			std::cout << "BEntity::get_uint(id): wrong type for entity " << id << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_uint(id): wrong type for entity : '" << id << "'(" << class_id() << ")" << std::endl;
 			(void)id;
 			return 0;
 		}
 
 		Buint BEntity::get_uint( const Bstring& id )
 		{
-			std::cout << "BEntity::get_uint(id): wrong type for entity " << id << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_uint(id): wrong type for entity : '" << id << "'(" << class_id() << ")" << std::endl;
 			(void)id;
 			return 0;
 		}
 
 		Bint BEntity::get_int( const Bstring& id )
 		{
-			std::cout << "BEntity::get_int(id): wrong type for entity " << id << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_int(id): wrong type for entity : '" << id << "'(" << class_id() << ")" << std::endl;
 			(void)id;
 			return 0;
 		}
 
 		Bfloat BEntity::get_float( const Bstring& id )
 		{
-			std::cout << "BEntity::get_float(id): wrong type for entity " << id << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_float(id): wrong type for entity : '" << id << "'(" << class_id() << ")" << std::endl;
 			(void)id;
 			return 0.0f;
 		}
 
 		Bdouble BEntity::get_double( const Bstring& id )
 		{
-			std::cout << "BEntity::get_double(id): wrong type for entity " << id << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_double(id): wrong type for entity : '" << id << "'(" << class_id() << ")" << std::endl;
 			(void)id;
 			return 0.0f;
 		}
 // 		Bstring* BEntity::get_string( const Bstring& id )
 // 		{
-// 			std::cout << "BEntity::get_string(id): wrong type for entity " << id << "(" << class_id() << ")" << std::endl;
+// 			std::cout << "BEntity::get_string(id): wrong type for entity : '" << id << "'(" << class_id() << ")" << std::endl;
 // 			(void)id;
 // 			return 0;
 // 		}
 
 		const char* BEntity::get_string( const Bstring& id )
 		{
-			std::cout << "BEntity::get_string(id): wrong type for entity " << id << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_string(id): wrong type for entity : '" << id << "'(" << class_id() << ")" << std::endl;
 			(void)id;
 			return 0;
 		}
@@ -179,37 +179,37 @@
 	// SET NAMED VALUES
 		bool BEntity::set( const Bstring& id, BEntity* value )
 		{
-			std::cout << "BEntity::set( const Bstring& id, BEntity* value ): should be overriding this entity " << id << std::endl;
+			std::cout << "BEntity::set( const Bstring& id, BEntity* value ): should be overriding this entity : '" << id << "' class=" << class_id() << std::endl;
 			(void)id; (void)value; return false;
 		}
 
 		bool BEntity::set( const Bstring& id, const Bbool& value ) // FIXME KILLS SHIT WHEN UNCOMMENTED
 		{
-			std::cout << "BEntity::set( const Bstring& id, const Bbool& value ): should be overriding this entity " << id << std::endl;
+			std::cout << "BEntity::set( const Bstring& id, const Bbool& value ): should be overriding this entity : '" << id << "' class=" << class_id() << std::endl;
 			(void)id; (void)value; return false;
 		}
 
 		bool BEntity::set( const Bstring& id, const Buint& value )
 		{
-			std::cout << "BEntity::set( const Bstring& id, const Buint& value ): should be overriding this entity " << id << std::endl;
+			std::cout << "BEntity::set( const Bstring& id, const Buint& value ): should be overriding this entity : '" << id << "' class=" << class_id() << std::endl;
 			(void)id; (void)value; return false;
 		}
 
 		bool BEntity::set( const Bstring& id, const Bint& value )
 		{
-			std::cout << "BEntity::set( const Bstring& id, const Bint& value ): should be overriding this entity " << id << std::endl;
+			std::cout << "BEntity::set( const Bstring& id, const Bint& value ): should be overriding this entity : '" << id << "' class=" << class_id() << std::endl;
 			(void)id; (void)value; return false;
 		}
 
 		bool BEntity::set( const Bstring& id, const Bfloat& value )
 		{
-			std::cout << "BEntity::set( const Bstring& id, const Bfloat& value ): should be overriding this entity " << id << std::endl;
+			std::cout << "BEntity::set( const Bstring& id, const Bfloat& value ): should be overriding this entity : '" << id << "' class=" << class_id() << std::endl;
 			(void)id; (void)value; return false;
 		}
 
 		bool BEntity::set( const Bstring& id, const Bdouble& value )
 		{
-			std::cout << "BEntity::set( const Bstring& id, const Bdouble& value ): should be overriding this entity " << id << std::endl;
+			std::cout << "BEntity::set( const Bstring& id, const Bdouble& value ): should be overriding this entity : '" << id << "' class=" << class_id() << std::endl;
 			(void)id; (void)value; return false;
 		}
 
@@ -220,7 +220,7 @@
 
 		bool BEntity::set( const Bstring& id, const char* value )
 		{
-			std::cout << "BEntity::set( const Bstring& id, const char* value ): should be overriding this entity " << id << std::endl;
+			std::cout << "BEntity::set( const Bstring& id, const char* value ): should be overriding this entity : '" << id << "' class=" << class_id() << std::endl;
 			(void)id; (void)value; return false;
 		}
 
@@ -278,8 +278,8 @@
 					// CHILDREN
 						process_children();
 						
-					// POST PROCESS
-// 						process_post();
+					// // POST PROCESS
+						// process_post();
 		}
 
 // 		void BEntity::process_children_post() const
@@ -765,19 +765,19 @@
 			return false;
 		}
 
-		bool BEntity::hasParent( const Buint64 t_id ) const
+		bool BEntity::hasParent( const BEntity* entity ) const
 		{
 			BEntity* e = parent();
 			if ( e != 0 )
 			{
-				if ( e->id() == t_id )
+				if ( e == entity )
 				{
 					return true;
 				}
-
+  
 				while ( e->parent() != 0 )
 				{
-					if ( e->id() == t_id )
+					if ( e == entity )
 					{
 						return true;
 					}
@@ -786,6 +786,28 @@
 			}
 			return false;
 		}
+		
+		// bool BEntity::hasParent( const Buint64 t_id ) const
+		// {
+		// 	BEntity* e = parent();
+		// 	if ( e != 0 )
+		// 	{
+		// 		if ( e->id() == t_id )
+		// 		{
+		// 			return true;
+		// 		}
+  // 
+		// 		while ( e->parent() != 0 )
+		// 		{
+		// 			if ( e->id() == t_id )
+		// 			{
+		// 				return true;
+		// 			}
+		// 			e = e->parent();
+		// 		}
+		// 	}
+		// 	return false;
+		// }
 		
 		BEntity* BEntity::topParent() const
 		{

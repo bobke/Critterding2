@@ -7,12 +7,6 @@
 	class BGLWindow: public BEntity
 	{
 		public:
-			enum ID
-			{
-				FULLSCREEN,
-				VSYNC
-			};
-			
 			BGLWindow();
 			const char* class_id() const { return "GLWindow"; }
 			virtual ~BGLWindow();

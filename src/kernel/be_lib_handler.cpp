@@ -2,6 +2,24 @@
 #include <dlfcn.h>
 #include <iostream>
 
+	// CLASS TRANSLATION
+		void BClassTranslationMap::add( const char* a, const char* b )
+		{
+			m_translation_map.insert( std::make_pair( a, b ) );
+			// m_translation_map.insert( std::make_pair( b, a ) );
+		}
+
+		const char* BClassTranslationMap::get( const char* a )
+		{
+			// return m_translation_map[a];
+			auto r = m_translation_map.find( a );
+			if ( r != m_translation_map.end() )
+			{
+				return r->second;
+			}
+			return a;
+		}
+
 	BEntity_Plugin::BEntity_Plugin()
 	 : m_sceneLibHandle(0)
 	 , m_create_plugin(0)

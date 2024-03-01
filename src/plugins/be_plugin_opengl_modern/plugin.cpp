@@ -6,6 +6,7 @@
 #include "be_shader_uniform_vec3.h"
 #include "be_shader_uniform_vec4.h"
 #include "be_shader_uniform_i1.h"
+#include "be_shader_attrib.h"
 // #include "graphics/be_graphics_system.h"
 // #include "kernel/be_plugin_interface.h"
 
@@ -29,6 +30,7 @@
 		, SHADERUNIFORMVEC3
 		, SHADERUNIFORMVEC4
 		, SHADERUNIFORMI1
+		, SHADERATTRIB
 		
 	};
 
@@ -54,6 +56,7 @@
 					i.addClass( parent, CLASS::SHADERUNIFORMVEC3, "ShaderUniformVec3" );
 					i.addClass( parent, CLASS::SHADERUNIFORMVEC4, "ShaderUniformVec4" );
 					i.addClass( parent, CLASS::SHADERUNIFORMI1, "ShaderUniformI1" );
+					i.addClass( parent, CLASS::SHADERATTRIB, "ShaderAttrib" );
 					
 				return 0;
 				
@@ -102,6 +105,8 @@
 					i = new BShaderUniformVec4();
 				else if ( type == CLASS::SHADERUNIFORMI1 )
 					i = new BShaderUniformI1();
+				else if ( type == CLASS::SHADERATTRIB )
+					i = new BShaderAttrib();
 				
 				
 

@@ -47,10 +47,11 @@
 
 			unsigned int 		numberOfMaterials();
 // 			virtual void		draw( const btTransform& transform );
-			void				draw();
+			// void				draw();
 
 			boost::scoped_ptr<BeVertexArray>	m_vertexArray;
 			boost::shared_ptr<BeGraphicsSystem> m_system;
+			boost::scoped_ptr<BeArrayBuffer>	m_arrayBuffer;
 			
 		private:
 			
@@ -64,7 +65,6 @@
 			unsigned int m_numberTexCoor;
 			unsigned int m_numberVIndices;
 			
-			boost::scoped_ptr<BeArrayBuffer>	m_arrayBuffer;
 			boost::scoped_ptr<BeElementArrayBuffer>	m_elementArrayBuffer;
 			GLint tex1Loc;
 

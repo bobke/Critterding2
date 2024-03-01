@@ -65,7 +65,6 @@
 				if ( s != text() )
 				{
 					setText(s);
-					return true;
 				}
 			}
 			
@@ -74,7 +73,6 @@
 				if ( width() != (int)value )
 				{
 					setFixedSize(QSize(value, height()));  //HACK
-					return true;
 				}
 			}
 
@@ -83,12 +81,13 @@
 				if ( height() != (int)value )
 				{
 					setFixedSize(QSize(width(), value));  //HACK
-					return true;
 				}
 			}
+			else
+				return false;
 			
-			return false;
-		}		
+			return true;
+		}
 
 
 	// QBUTTONDRAGABLE

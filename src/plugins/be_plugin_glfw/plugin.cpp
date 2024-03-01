@@ -36,8 +36,12 @@
 		m_mouse_x = addChild("mouse_x", new BEntity_int());
 		m_mouse_y = addChild("mouse_y", new BEntity_int());
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		
+	
 		m_window = glfwCreateWindow(1224, 768, "", NULL, NULL);
 		m_title->set( "FGL Window" );
 

@@ -120,6 +120,9 @@
 			m_mouse_x = glwindow->getChild( "mouse_x", 1 );
 			m_mouse_y = glwindow->getChild( "mouse_y", 1 );
 
+		// SDL SWAPBUFFER, making sure this runs right after sdl_window and it's children are done processing
+			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
+			
 		// GRAPHICS MODELSYSTEM
 			auto t_graphicsModelSystem = glwindow->addChild("GraphicsModelSystem", "GraphicsModelSystem");
 
@@ -161,15 +164,23 @@
 		// BINDINGS
 			auto bindings = glwindow->getChild( "bindings", 1 );
 
+			// render
+				auto re = t_graphicsModelSystem->getChild("active", 1);
+				if ( re )
+				{
+					auto re_bool = bindings->addChild( "key_down_f10", new BEntity_bool() );
+					re_bool->set( true );
+					re_bool->connectServerServer( re );
+				}
 			// fullscreen
-				auto fs = glwindow->getChild("fullscreen");
+				auto fs = glwindow->getChild("fullscreen", 1);
 				if ( fs )
-					bindings->addChild( "key_down_f11", new BEntity_bool() )->connectServerServer( fs );;
+					bindings->addChild( "key_down_f11", new BEntity_bool() )->connectServerServer( fs );
 			// vsync
-				auto vs = glwindow->getChild("vsync");
+				auto vs = glwindow->getChild("vsync", 1);
 				if ( vs )
-					bindings->addChild( "key_down_f12", new BEntity_bool() )->connectServerServer( vs );;
-			
+					bindings->addChild( "key_down_f12", new BEntity_bool() )->connectServerServer( vs );
+
 			auto binding_f1 = bindings->addChild( "f1", new BEntity_trigger() );
 			binding_f1->connectServerServer( launchAdminWindow );
 
