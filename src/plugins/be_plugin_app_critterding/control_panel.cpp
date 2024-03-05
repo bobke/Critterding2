@@ -61,6 +61,7 @@
 					{
 						auto text_min_critters = layout_H->addChild( "min_critters", "QLabel" );
 						text_min_critters->set("text", "minimum critters");
+						// text_min_critters->set("width", Buint(164));
 						auto line_edit_min_critters= layout_H->addChild( "min_critters_lineedit", "QLineEdit" );
 						line_edit_min_critters->set("min_critters");
 						line_edit_min_critters->set("width", Buint(164));

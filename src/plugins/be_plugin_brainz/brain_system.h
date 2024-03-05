@@ -64,7 +64,7 @@
 				void construct();
 				BEntity* m_neurons;
 		};
-		
+
 	//  NEURON
 		class BNeuron : public BEntity_float
 		{
@@ -79,6 +79,7 @@
 				BEntity* m_synapses;
 		};
 
+		// FIXME why isn't the weight value just the m_value here?  no need for m_weight entity.
 	//  SYNAPSE // FIXME TO FIGURE OUT, I removed some warnings removing property when going into tree to synapses, so warnings when going in admin window to synapses in a neuron :: WHICH MEANS RETHINK THIS OBJECT
 		class Synapse : public BEntity_float
 // 		class Synapse : public BEntity_float_property

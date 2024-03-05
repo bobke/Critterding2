@@ -17,7 +17,7 @@
 			if (ImGui::IsItemDeactivatedAfterEdit() )
 			{
 				// set ( m_buf );
-				std::cout << "edited to '" << m_value << "'" << std::endl;
+				// std::cout << "edited to '" << m_value << "'" << std::endl;
 			}
 
 			ImGui::PopItemWidth();
@@ -104,7 +104,7 @@
 			if ( id == "width" )
 			{
 				m_width = value;
-				std::cout << name() << ": " << m_width << std::endl;
+				// std::cout << name() << ": " << m_width << std::endl;
 			}
 			else if ( id == "height" )
 			{
@@ -247,7 +247,7 @@
 			{
 				float num = std::stof(m_buf);
 				set ( num );
-				std::cout << "edited to '" << m_buf << "'" << std::endl;
+				// std::cout << "edited to '" << m_buf << "'" << std::endl;
 			}
 
 			ImGui::PopItemWidth();
