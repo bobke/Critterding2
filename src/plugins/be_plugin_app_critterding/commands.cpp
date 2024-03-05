@@ -1,93 +1,192 @@
 #include "commands.h"
 #include "plugins/be_plugin_bullet/bullet3/src/LinearMath/btVector3.h"
 // #include <iostream>
- 
+
+	bool cmd_toggleFullscreen::set()
+	{
+		// inverse value
+		auto fs = topParent()->getChild( "bin", 1 )->getChild( "GLWindow", 2 )->getChild( "fullscreen", 1 );
+		fs->set( !fs->get_bool() );
+		
+		// set / unset GUI tranlation
+		auto lib = topParent()->getChild( "lib", 1 );
+		if ( fs->get_bool() && !lib->getChild("Translate_QT_IMGUI", 1) )
+		{
+			lib->addChild("Translate_QT_IMGUI", "Translate_QT_IMGUI");
+			return true;
+		}
+		else
+		{
+			// lib->removeChild( lib->getChild("Translate_QT_IMGUI", 1) );
+			return true;
+		}
+	}
+
 	bool cmd_launchAdminWindow::set()
 	{
 		if ( !getAdminWindow() )
 		{
-			auto bin = topParent()->getChild( "bin", 1 );
-			auto glwindow = bin->getChild( "GLWindow", 2 );
-			auto fs = glwindow->getChild( "fullscreen", 1 )->get_bool();
+			// auto qt_app = topParent()->getChild( "bin", 1 )->getChild( "QT Application", 2 );
+			// if ( qt_app )
+			// {
+			// 	qt_app->addChild( "Admin App", "AdminWindow" );
+			// 	return true;
+			// }
+			
 
-			if ( fs )
+			auto bin = topParent()->getChild( "bin", 1 );
+			auto lib = topParent()->getChild( "lib", 1 );
+			BEntity* p;
+			if ( lib->getChild("Translate_QT_IMGUI", 1) )
 			{
-				// IMGUI
-					auto imgui_app = bin->getChild( "GLWindow", 2 );
-	
-					if ( imgui_app )
-					{
-						imgui_app->addChild( "Admin App", "AdminWindow" );
-						return true;
-					}
+				p = bin->getChild( "GLWindow", 2 );
 			}
 			else
 			{
-				// QT
-					auto qt_app = bin->getChild( "QT Application", 2 );
-					
-					// if ( !qt_app )
-					// {
-					// 	// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
-					// 		auto spawner = bin->addChild( "spawner", "QApplicationSpawner" );
-					// 		auto t_parent_to_add_to = spawner->getChildCustom( bin );
-					// 		bin->removeChild( spawner );
-					// }
-					
-					if ( qt_app )
-					{
-						qt_app->addChild( "Admin App", "AdminWindow" );
-						return true;
-					}
+				p = bin->getChild( "QT Application", 2 );
 			}
+			p->addChild( "Admin App", "AdminWindow" );
+			return true;
+
+
+			
+			
+// 			auto bin = topParent()->getChild( "bin", 1 );
+// 			auto glwindow = bin->getChild( "GLWindow", 2 );
+// 			auto fs = glwindow->getChild( "fullscreen", 1 )->get_bool();
+// 			BEntity* p;
+// 			if ( fs )
+// 			{
+// 				p = glwindow;
+// 			}
+// 			else
+// 			{
+// 				p = bin->getChild( "QT Application", 2 );
+// 			}
+// 			p->addChild( "Admin App", "AdminWindow" );
+// 			return true;
+			
+			
+			
+
+// 			auto bin = topParent()->getChild( "bin", 1 );
+// 			auto glwindow = bin->getChild( "GLWindow", 2 );
+// 			auto fs = glwindow->getChild( "fullscreen", 1 )->get_bool();
+// 
+// 			if ( fs )
+// 			{
+// 				// IMGUI
+// 					auto imgui_app = bin->getChild( "GLWindow", 2 );
+// 	
+// 					if ( imgui_app )
+// 					{
+// 						imgui_app->addChild( "Admin App", "AdminWindow" );
+// 						return true;
+// 					}
+// 			}
+// 			else
+// 			{
+// 				// QT
+// 					auto qt_app = bin->getChild( "QT Application", 2 );
+// 					
+// 					// if ( !qt_app )
+// 					// {
+// 					// 	// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
+// 					// 		auto spawner = bin->addChild( "spawner", "QApplicationSpawner" );
+// 					// 		auto t_parent_to_add_to = spawner->getChildCustom( bin );
+// 					// 		bin->removeChild( spawner );
+// 					// }
+// 					
+// 					if ( qt_app )
+// 					{
+// 						qt_app->addChild( "Admin App", "AdminWindow" );
+// 						return true;
+// 					}
+// 			}
 		}
 		return false;
 	}
 
 	bool cmd_launchControlPanel::set()
 	{
-		auto qt_app = topParent()->getChild( "bin", 1 )->getChild( "QT Application", 2 );
-		if ( qt_app )
+		auto bin = topParent()->getChild( "bin", 1 );
+		auto lib = topParent()->getChild( "lib", 1 );
+		BEntity* p;
+		if ( lib->getChild("Translate_QT_IMGUI", 1) )
 		{
-			if ( !qt_app->getChild( "CdControlPanel", 1 ) )
-			{
-				qt_app->addChild( "CdControlPanel", "CdControlPanel" );
-			}
+			p = bin->getChild( "GLWindow", 2 );
+		}
+		else
+		{
+			p = bin->getChild( "QT Application", 2 );
+		}
+		if ( !p->getChild( "CdControlPanel", 1 ) )
+		{
+			p->addChild( "CdControlPanel", "CdControlPanel" );
 			return true;
 		}
+		
+		// auto qt_app = topParent()->getChild( "bin", 1 )->getChild( "QT Application", 2 );
+		// if ( qt_app )
+		// {
+		// 	if ( !qt_app->getChild( "CdControlPanel", 1 ) )
+		// 	{
+		// 		qt_app->addChild( "CdControlPanel", "CdControlPanel" );
+		// 	}
+		// 	return true;
+		// }
 		return false;
 	}
 
 	bool cmd_launchSystemMonitor::set()
 	{
-			auto bin = topParent()->getChild( "bin", 1 );
-			auto glwindow = bin->getChild( "GLWindow", 2 );
-			auto fs = glwindow->getChild( "fullscreen", 1 )->get_bool();
-
-			if ( fs )
-			{
-				// IMGUI
-					auto imgui_app = bin->getChild( "GLWindow", 2 );
-	
-					if ( imgui_app )
-					{
-						imgui_app->addChild( "SystemMonitor", "SystemMonitor" );
-						return true;
-					}
-			}
-			else
-			{
-				auto qt_app = bin->getChild( "QT Application", 2 );
-				if ( qt_app )
-				{
-					if ( !qt_app->getChild( "SystemMonitor", 1 ) )
-					{
-						qt_app->addChild( "SystemMonitor", "SystemMonitor" );
-					}
-					return true;
-				}
-			}
+		auto bin = topParent()->getChild( "bin", 1 );
+		auto lib = topParent()->getChild( "lib", 1 );
+		BEntity* p;
+		if ( lib->getChild("Translate_QT_IMGUI", 1) )
+		{
+			p = bin->getChild( "GLWindow", 2 );
+		}
+		else
+		{
+			p = bin->getChild( "QT Application", 2 );
+		}
+		if ( !p->getChild( "SystemMonitor", 1 ) )
+		{
+			p->addChild( "SystemMonitor", "SystemMonitor" );
+			return true;
+		}
 		return false;
+		
+		
+// // 			auto bin = topParent()->getChild( "bin", 1 );
+// // 			auto glwindow = bin->getChild( "GLWindow", 2 );
+// // 			auto fs = glwindow->getChild( "fullscreen", 1 )->get_bool();
+// // 
+// // 			if ( fs )
+// // 			{
+// // 				// IMGUI
+// // 					auto imgui_app = bin->getChild( "GLWindow", 2 );
+// // 	
+// // 					if ( imgui_app )
+// // 					{
+// // 						imgui_app->addChild( "SystemMonitor", "SystemMonitor" );
+// // 						return true;
+// // 					}
+// // 			}
+// // 			else
+// // 			{
+// // 				auto qt_app = bin->getChild( "QT Application", 2 );
+// // 				if ( qt_app )
+// // 				{
+// // 					if ( !qt_app->getChild( "SystemMonitor", 1 ) )
+// // 					{
+// // 						qt_app->addChild( "SystemMonitor", "SystemMonitor" );
+// // 					}
+// // 					return true;
+// // 				}
+// // 			}
+// 		return false;
 	}
 
 	bool cmd_launchSelectionWindow::set()
@@ -322,4 +421,4 @@
 		}
 		return false;
 	}
-	
+

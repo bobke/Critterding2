@@ -12,6 +12,7 @@
 // 			setSizeConstraint(QLayout::SetMinimumSize);
 			setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 			// setContentsMargins(10,5,5,5); // HACK
+			setFixedSize(QSize(100, 27));
 		}
 
 		bool BQLabel::set( const Bstring& id, const Buint& value )
@@ -68,6 +69,7 @@
 				setText( value );
 				return true;
 			}
+			return false;
 		}
 
 		bool BQLabel::set( const Buint& value )

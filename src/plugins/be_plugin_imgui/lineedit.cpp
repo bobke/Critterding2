@@ -48,6 +48,21 @@
 			return false;
 		}
 		
+		bool BImGuiLineEdit::set( const Buint& value )
+		{
+			std::stringstream s;
+			s << value;
+
+			if ( m_value != s.str() )
+			{
+				// m_value = s.str();
+				strcpy(m_value, s.str().c_str());
+				onUpdate();
+				return true;
+			}
+			return false;
+		}
+		
 		bool BImGuiLineEdit::set( const Bstring& id, const Buint& value )
 		{
 			if ( id == "width" )
@@ -89,6 +104,7 @@
 			if ( id == "width" )
 			{
 				m_width = value;
+				std::cout << name() << ": " << m_width << std::endl;
 			}
 			else if ( id == "height" )
 			{
@@ -113,9 +129,34 @@
 			return false;
 		}
 
+		bool BImGuiLineEdit_uint::set( const char* value )
+		{
+			if (m_value)
+			{
+				unsigned int ui = std::stoul(value);
+				if ( m_value != ui )
+				{
+					m_value = ui;
+					// m_value = strdup(value);
+					// std::cout << "setting '" << value << "'" << std::endl;
+					strcpy(m_buf, value);
+					// std::cout << "setting '" << value << "' done" << std::endl;
+					onUpdate();
+					return true;
+				}
+			}
+			else
+			{
+				strcpy(m_buf, value);
+					onUpdate();
+				return true;
+			}
+			return false;
+		}
+
 		bool BImGuiLineEdit_uint::set( const Bint& value )
 		{
-			if ( m_value != value )
+			if ( m_value != (unsigned int)value )
 			{
 				m_value = (unsigned int)value;
 				std::stringstream s;
@@ -127,6 +168,19 @@
 			return false;
 		}
 
+		bool BImGuiLineEdit_uint::set( const Bfloat& value )
+		{
+			if ( m_value != (unsigned int)value )
+			{
+				m_value = (unsigned int)value;
+				std::stringstream s;
+				s << value;
+				strcpy(m_buf, s.str().c_str());
+				onUpdate();
+				return true;
+			}
+			return false;
+		}
 
 		
 	// INT

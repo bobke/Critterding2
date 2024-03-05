@@ -1,6 +1,6 @@
 #include "plugin.h"
 #include "kernel/be_lib_handler.h"
-#include "plugins/be_plugin_opengl/be_entity_camera.h"
+#include "plugins/be_plugin_opengl_modern/be_entity_camera.h"
 #include "plugins/be_plugin_app_critterding/food_system.h"
 #include "plugins/be_plugin_app_critterding/critter_system.h"
 #include "plugins/be_plugin_app_critterding/commands.h"
@@ -227,6 +227,7 @@
 
 		// COMMANDS
 			auto commands = glwindow->addChild( "commands", new BEntity() );
+			auto toggleFullscreen = commands->addChild( "toggleFullscreen", new cmd_toggleFullscreen() );
 			auto launchAdminWindow = commands->addChild( "launchAdminWindow", new cmd_launchAdminWindow() );
 			auto launchControlPanel = commands->addChild( "launchControlPanel", new cmd_launchControlPanel() );
 			auto launchSystemMonitor = commands->addChild( "launchSystemMonitor", new cmd_launchSystemMonitor() );
@@ -246,9 +247,10 @@
 					re_bool->connectServerServer( re );
 				}
 			// fullscreen
-				auto fs = glwindow->getChild("fullscreen", 1);
-				if ( fs )
-					bindings->addChild( "key_down_f11", new BEntity_bool() )->connectServerServer( fs );
+				bindings->addChild( "key_down_f11", new BEntity_trigger() )->connectServerServer( toggleFullscreen );
+				// auto fs = glwindow->getChild("fullscreen", 1);
+				// if ( fs )
+					// bindings->addChild( "key_down_f11", new BEntity_bool() )->connectServerServer( fs );
 			// vsync
 				auto vs = glwindow->getChild("vsync", 1);
 				if ( vs )

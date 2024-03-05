@@ -235,25 +235,25 @@
 						// m_line_edit_avg_crittersperspecies->set("height", Buint(28));
 					}
 
-				// ROW WQT
-					layout_H_row = layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
-					layout_H = layout_H_row->addChild( "graph layout", "QHBoxLayout" );
-					{
-						auto qwt_plot = layout_H->addChild( "plot", "QwtPlot" );
-						
-						{
-							m_qwt_curve_critters = qwt_plot->addChild( "curve", "QwtCurve" );
-							auto qpen = m_qwt_curve_critters->addChild( "pen", "QPen" );
-							qpen->set( "color_r", Buint(50) );
-							qpen->set( "color_g", Buint(50) );
-							qpen->set( "color_b", Buint(255) );
-						}
-						{
-							m_qwt_curve_food = qwt_plot->addChild( "curve", "QwtCurve" );
-							auto qpen = m_qwt_curve_food->addChild( "pen", "QPen" );
-							qpen->set( "color_g", Buint(200) );
-						}
-					}
+// 				// ROW WQT
+// 					layout_H_row = layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
+// 					layout_H = layout_H_row->addChild( "graph layout", "QHBoxLayout" );
+// 					{
+// 						auto qwt_plot = layout_H->addChild( "plot", "QwtPlot" );
+// 						
+// 						{
+// 							m_qwt_curve_critters = qwt_plot->addChild( "curve", "QwtCurve" );
+// 							auto qpen = m_qwt_curve_critters->addChild( "pen", "QPen" );
+// 							qpen->set( "color_r", Buint(50) );
+// 							qpen->set( "color_g", Buint(50) );
+// 							qpen->set( "color_b", Buint(255) );
+// 						}
+// 						{
+// 							m_qwt_curve_food = qwt_plot->addChild( "curve", "QwtCurve" );
+// 							auto qpen = m_qwt_curve_food->addChild( "pen", "QPen" );
+// 							qpen->set( "color_g", Buint(200) );
+// 						}
+// 					}
 /*
 					layout_H = layout_H_row->addChild( "avg crittersperspecies layout", "QHBoxLayout" );
 					{

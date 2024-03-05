@@ -7,13 +7,14 @@
 	typedef BEntity* create_t( BEntity* parent, const Buint type );
 	typedef void destroy_t( BEntity* );
 
-	class BClassTranslationMap
+	class BClassTranslationMap : public BEntity
 	{
 		public:
-			BClassTranslationMap() {};
+			BClassTranslationMap() : BEntity() {};
 			virtual ~BClassTranslationMap() {};
 			void add( const char* a, const char* b );
-			const char* get( const char* a );
+			// const char* get( const char* a );
+			virtual const char* get_string( const Bstring& id );
 
 		private:
 			std::map<const char*, const char*> m_translation_map;
@@ -44,14 +45,17 @@
 	class BEntity_Plugin_Manager : public BEntity
 	{
 		public:
-			BEntity_Plugin_Manager() {}
+			BEntity_Plugin_Manager() : m_use_translation_map(0) {}
 			virtual const char* class_id() const { return "BEntity_Plugin_Manager"; }
 			virtual ~BEntity_Plugin_Manager() {};
 			BEntity_Plugin* load( const std::string& name, const std::string& dir, const std::string& lib );
 			BEntity* create( BEntity* parent, const std::string& name );
 			BEntity* create( BEntity* parent, const std::string& library, const std::string& name );
 			// void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager ) { (void)hboxlayout; (void) plugin_manager; }
+			virtual Bbool onAddChild( BEntity* entity );
+			virtual Bbool onRemoveChild( BEntity* entity );
 		private:
+			BClassTranslationMap* m_use_translation_map;
 	};
 
 #endif

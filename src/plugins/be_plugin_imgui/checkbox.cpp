@@ -16,7 +16,8 @@
 
 		ImGui::PushID( id() );
 
-		if ( ImGui::Checkbox( name().c_str(), &m_value ) )
+		// if ( ImGui::Checkbox( name().c_str(), &m_value ) )
+		if ( ImGui::Checkbox( "", &m_value ) )
 		{
 			onUpdate();
 		}

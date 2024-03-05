@@ -10,7 +10,7 @@
 #include "critter_exchanger.h"
 #include "commands.h"
 // #include "plugins/be_plugin_bullet/be_entity_transform.h" // FIXME work this away
-#include "plugins/be_plugin_opengl/be_entity_camera.h"
+#include "plugins/be_plugin_opengl_modern/be_entity_camera.h"
 #include "opengl_setup.h"
 // #include <iostream>
 
@@ -154,6 +154,7 @@
 
 		// COMMANDS
 			auto commands = glwindow->addChild( "commands", new BEntity() );
+			auto toggleFullscreen = commands->addChild( "toggleFullscreen", new cmd_toggleFullscreen() );
 			auto launchAdminWindow = commands->addChild( "launchAdminWindow", new cmd_launchAdminWindow() );
 			auto launchControlPanel = commands->addChild( "launchControlPanel", new cmd_launchControlPanel() );
 			auto launchSystemMonitor = commands->addChild( "launchSystemMonitor", new cmd_launchSystemMonitor() );

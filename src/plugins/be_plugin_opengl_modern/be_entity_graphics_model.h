@@ -35,7 +35,7 @@
 
 		private:
 			inline void doSetup();
-			bool setup_done;
+			bool m_setup_done;
 
 			std::vector<glm::mat4> m_modelMatrices;
 			// std::vector<glm::vec3> m_scales;
@@ -97,7 +97,11 @@
 			BEntity* m_uniform_textureSample;
 			// BShaderUniformVec3* m_uniform_scale;
 			
-			
+			btVector3 m_position;
+			btVector3 m_positionB;
+			bool m_always_render;
+			glm::mat4 m_basic_mat4;
+
 			// FIXME cache test
 			// std::unordered_map<glTransform*, btTransform*> m_culling_cache;
 

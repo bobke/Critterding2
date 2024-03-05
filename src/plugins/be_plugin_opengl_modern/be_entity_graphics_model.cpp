@@ -17,7 +17,9 @@
 
 	BGraphicsModel::BGraphicsModel()
 	: BEntity()
-	, setup_done(false)
+	, m_setup_done(false)
+	, m_always_render(false)
+	, m_basic_mat4(1.0f)
 	{
 		setProcessing();
 	}
@@ -25,6 +27,11 @@
 	void BGraphicsModel::construct()
 	{
 		m_active = parent()->getChild( "active", 1 );
+		
+		if ( name() == "graphics_entity_map" )
+		{
+			m_always_render = true;
+		}
 		
 		m_pre_scale_x = addChild( "pre_scale_x", new BEntity_float() );
 		m_pre_scale_y = addChild( "pre_scale_y", new BEntity_float() );
@@ -115,7 +122,7 @@
 
 	void BGraphicsModel::doSetup()
 	{
-		if ( !setup_done )
+		if ( !m_setup_done )
 		{
 			// Create the VBO for transforms
 			constexpr auto buffer_max_instances = 32768;
@@ -160,7 +167,7 @@
 				glVertexAttribDivisor(m_scaledTransformsBufferID_critter+3, 1);
 			}
 
-			setup_done = true;
+			m_setup_done = true;
 		}
 	}	
 	
@@ -181,12 +188,7 @@
 				auto t = dynamic_cast<glTransform*>( *child );
 				if ( t )
 				{
-					auto m = glm::scale( 
-						glm::make_mat4( t->m_value ), glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), 
-						t->m_scale_z->get_float() )
-					);
-
-					m_modelMatrices.push_back( m );
+					m_modelMatrices.push_back( glm::scale( glm::make_mat4( t->m_value ), glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) ) );
 					// m_scales.push_back( glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) );
 				}
 			}
@@ -198,10 +200,10 @@
 				// MODEL MATRICES
 					glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
 					glBufferData(GL_ARRAY_BUFFER, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]), GL_STATIC_DRAW);
-					glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 					// glBufferSubData(GL_ARRAY_BUFFER, 0, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]));
-					// getModel()->get()->m_arrayBuffer->bind();
+					// glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+					
 					// glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind any existing buffer to avoid issues
 					// glBindBuffer(GL_ARRAY_BUFFER, dynamic_cast<BGraphicsModelSystem*>( parent() )->m_scaledTransformsBufferID);
 					// glUniformMatrix4fv(m_instanceModelMatrixAttrib, m_modelMatrices.size(), GL_FALSE, glm::value_ptr(m_modelMatrices[0]));
@@ -211,7 +213,7 @@
 					// glVertexAttribDivisor(m_instanceModelMatrixAttrib, 1);
 					// glBufferData(GL_ARRAY_BUFFER, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]), GL_DYNAMIC_DRAW);
 					// glBindBuffer(GL_ARRAY_BUFFER, dynamic_cast<BGraphicsModelSystem*>(parent())->m_scaledTransformsBufferID);
-					// glBufferData(GL_ARRAY_BUFFER, 1 * sizeof(glm::vec4) * 4, glm::value_ptr(glm::mat4(1.0f)), GL_STATIC_DRAW);
+					// glBufferData(GL_ARRAY_BUFFER, 1 * sizeof(glm::vec4) * 4, glm::value_ptr(m_basic_mat4), GL_STATIC_DRAW);
 					// glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind any existing buffer to avoid issues
 				
 					// glBindBuffer(GL_ARRAY_BUFFER, dynamic_cast<BGraphicsModelSystem*>(parent())->m_scaledTransformsBufferID);
@@ -234,17 +236,17 @@
 				// glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
 				// glBufferData(GL_ARRAY_BUFFER, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]), GL_STATIC_DRAW);
 				// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
-				// glUniformMatrix4fv(m_instanceModelMatrixAttrib, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+				// glUniformMatrix4fv(m_instanceModelMatrixAttrib, 1, GL_FALSE, glm::value_ptr(m_basic_mat4));
 				
 				// glBindBuffer(GL_ARRAY_BUFFER, dynamic_cast<BGraphicsModelSystem*>( parent() )->m_scaledTransformsBufferID);
 				// glVertexAttribDivisor(dynamic_cast<BGraphicsModelSystem*>( parent() )->m_instanceModelMatrixAttrib, 1);
-				// glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), glm::value_ptr(glm::mat4(1.0f)), GL_DYNAMIC_DRAW);
+				// glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), glm::value_ptr(m_basic_mat4), GL_DYNAMIC_DRAW);
 
 				// glUniform3f(m_instanceScaleAttrib, 1.0f, 1.0f, 1.0f);
 				
 				glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
-				glBufferData(GL_ARRAY_BUFFER, 1 * sizeof(glm::mat4), glm::value_ptr(glm::mat4( 1.0f )), GL_STATIC_DRAW);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				glBufferData(GL_ARRAY_BUFFER, 1 * sizeof(glm::mat4), glm::value_ptr(m_basic_mat4), GL_STATIC_DRAW);
+				// glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				// drawInstanced(getModel()->get(), 1);
 				draw( getModel()->get() );
@@ -514,11 +516,6 @@
 
 	void BGraphicsModel::processWhenInSight( const btTransform* transformHead, float sightrange )	
 	{
-		if ( name() == "GraphicsModel_SkyDome" )
-		{
-			return;
-		}
-
 		// FIXME add a bool "update_instanced_vector" so we only update vector all once  per frame (important when crittervision is implemented)
 		if( getModel() && getModel()->isReady() )
 		{
@@ -528,49 +525,47 @@
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
 
-			bool always_render(false);
-			if ( name() == "graphics_entity_map" )
-			{
-				always_render = true;
-			}
-
 			// SET COLOR HACK
 			const auto& ambient = getModel()->get()->matlist.begin()->second.m_material.getAmbient();
 			// glUniform4f( m_color_location, ambient.x(), ambient.y(), ambient.z(), 1.0f );
 			m_uniform_color->setValue( ambient.x(), ambient.y(), ambient.z(), 1.0f );
 
-			btVector3 position = transformHead->getOrigin();
-			btVector3 positionB;
+			m_position = transformHead->getOrigin();
 			for_all_children
 			{
 				auto t = dynamic_cast<glTransform*>(*child);
 				if ( (t) )
 				{
-					positionB = btVector3( t->m_value[12], t->m_value[13], t->m_value[14] );
-					
-					// check if position is in vicinity of mouth
-					if ( always_render || position.distance( positionB ) < sightrange )
+					if ( m_always_render )
 					{
-						// check if position is in front of mouth
-						positionB -=  position;
-						positionB.normalize();
+						m_modelMatrices.push_back( glm::scale( glm::make_mat4( t->m_value ), glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) ) );
+					}
 
-						// dot of forwardVector
-						if( always_render || positionB.dot( btVector3( transformHead->getBasis()[0][2], transformHead->getBasis()[1][2], transformHead->getBasis()[2][2] ) ) >= 0.5 )
+					// check if m_position is in vicinity of mouth
+					else
+					{
+						m_positionB = btVector3( t->m_value[12], t->m_value[13], t->m_value[14] );
+						if ( m_position.distance( m_positionB ) < sightrange )
 						{
-							auto m = glm::scale( glm::make_mat4( t->m_value ), glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) );
+							// check if m_position is in front of mouth
+							m_positionB -=  m_position;
+							m_positionB.normalize();
 
-							// direct draw
-							// glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), glm::value_ptr(m), GL_STATIC_DRAW);
-							// draw( getModel()->get() );
-							
-							// add to buffer for instanced rendering 
-							m_modelMatrices.push_back( m );
+							// dot of forwardVector
+							if( m_positionB.dot( btVector3( transformHead->getBasis()[0][2], transformHead->getBasis()[1][2], transformHead->getBasis()[2][2] ) ) >= 0.5 )
+							{
+								// direct draw
+								// glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4), glm::value_ptr(m), GL_STATIC_DRAW);
+								// draw( getModel()->get() );
+								
+								// add to buffer for instanced rendering 
+								m_modelMatrices.push_back( glm::scale( glm::make_mat4( t->m_value ), glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) ) );
+							}
+							// else
+							// {
+								// std::cout << "skip" << std::endl;
+							// }
 						}
-						// else
-						// {
-							// std::cout << "skip" << std::endl;
-						// }
 					}
 				}
 			}
@@ -597,13 +592,13 @@
 			// just draw it once on 0,0,0 if we did not find a child above, basically a skybox hack
 			else
 			{
-				glBufferData(GL_ARRAY_BUFFER, 1 * sizeof(glm::mat4), glm::value_ptr(glm::mat4( 1.0f )), GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, 1 * sizeof(glm::mat4), glm::value_ptr(m_basic_mat4), GL_STATIC_DRAW);
 				// scale( 1.0f, 1.0f, 1.0f );
 
 				draw( getModel()->get() );
 			}
 
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			// glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindVertexArray(0);
  			m_modelMatrices.clear();
 		}

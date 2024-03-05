@@ -9,15 +9,15 @@
 			// m_translation_map.insert( std::make_pair( b, a ) );
 		}
 
-		const char* BClassTranslationMap::get( const char* a )
+		const char* BClassTranslationMap::get_string( const Bstring& id )
 		{
-			// return m_translation_map[a];
-			auto r = m_translation_map.find( a );
-			if ( r != m_translation_map.end() )
+			for ( auto it = m_translation_map.begin(); it != m_translation_map.end(); it++ )
 			{
-				return r->second;
+				if ( it->first == id )
+					return it->second;
 			}
-			return a;
+
+			return id.c_str();
 		}
 
 	BEntity_Plugin::BEntity_Plugin()
@@ -124,6 +124,27 @@
 		return t;
 	}
 
+	Bbool BEntity_Plugin_Manager::onAddChild( BEntity* entity )
+	{
+		auto tmap = dynamic_cast<BClassTranslationMap*>( entity );
+		if ( tmap )
+		{
+			m_use_translation_map = tmap;
+			return true;
+		}
+		return false;
+	}
+
+	Bbool BEntity_Plugin_Manager::onRemoveChild( BEntity* entity )
+	{
+		if ( m_use_translation_map == entity )
+		{
+			m_use_translation_map = 0;
+			return true;
+		}
+		return false;
+	}
+	
 	BEntity* BEntity_Plugin_Manager::create( BEntity* parent, const std::string& name )
 	{
 		return create( parent, "", name );
@@ -131,6 +152,17 @@
 
 	BEntity* BEntity_Plugin_Manager::create( BEntity* parent, const std::string& library, const std::string& name )
 	{
+		// IF TRANSLATION ENTITY FIND NEW NAME
+		std::string newName;
+		if ( m_use_translation_map != 0 )
+		{
+			newName = m_use_translation_map->get_string( name );
+		}
+		else
+		{
+			newName = name;
+		}
+		
 		// std::cout << "searching for plugin \"" << name << "\"" << std::endl;
 		if ( hasChildren() )
 		{
@@ -154,9 +186,9 @@
 									// FIND NAME IN PLUGIN INFO
 									for_all_children_of3( (*child2) )
 									{
-										if ( (*child3)->name() == name )
+										if ( (*child3)->name() == newName )
 										{
-											// std::cout << "FOUND " << name << std::endl;
+											// std::cout << "FOUND " << newName << std::endl;
 											BEntity_Plugin* p = dynamic_cast<BEntity_Plugin*>(*child);
 											return p->create( parent, (*child3)->get_uint() );
 										}
@@ -169,7 +201,7 @@
 			}
 		}
 
-		std::cout << "ERROR: entity '" << name << "' was not found" << std::endl;
+		std::cout << "BEntity_Plugin_Manager::create warning: entity class '" << newName << "' was found" << std::endl;
 		return 0;
 	}
 	

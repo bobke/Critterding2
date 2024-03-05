@@ -50,6 +50,12 @@
 			BEntity* m_print;
 			BEntity* m_critter_sightrange;
 			BEntity* m_e_scale_x;
+			
+			float m_buffer[16];
+			btTransform m_ViewMatrix;
+			glm::mat4 m_viewMatrix;
+			glm::mat4 m_pvMatrix;
+			
 		
 			unsigned int m_ProjectionViewMatrixID;
 			

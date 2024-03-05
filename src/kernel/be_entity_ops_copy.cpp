@@ -141,7 +141,7 @@
 					}
 					else
 					{
-						std::string translation = m_class_translation_map->get( entity->class_id() );
+						std::string translation = m_class_translation_map->get_string( entity->class_id() );
 						std::cout << "translating '" << entity->class_id() << "' to '" << translation << "'" << std::endl;
 						if ( translation.size() > 0 )
 						{

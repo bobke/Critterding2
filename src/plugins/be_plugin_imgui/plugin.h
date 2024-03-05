@@ -71,14 +71,14 @@
 			void process();
 	};
 
-	class BTranslate_QT_IMGUI: public BEntity
+	class BTranslate_QT_IMGUI: public BClassTranslationMap
 	{
 		public:
-			BTranslate_QT_IMGUI() : BEntity() {};
+			BTranslate_QT_IMGUI() : BClassTranslationMap() {};
 			virtual ~BTranslate_QT_IMGUI() {};
 
 			virtual void construct();
-			virtual const char* get_string( const Bstring& id );
+			// virtual const char* get_string( const Bstring& id );
 		private:
-			BClassTranslationMap m_imgui_translation_map;
+			// BClassTranslationMap m_imgui_translation_map;
 	};

@@ -11,6 +11,7 @@
 			void process();
 			bool set( const char* value );
 			bool set( const Bstring& id, const Buint& value );
+			bool set( const Buint& value );
 			// char m_buf[2048];
 		private:
 			unsigned int m_width;
@@ -24,9 +25,11 @@
 			virtual ~BImGuiLineEdit_uint() {};
 			const char* class_id() const { return "ImGuiLineEdit_uint"; }
 			void process();
+			bool set( const char* value );
 			bool set( const Buint& value );
 			bool set( const Bstring& id, const Buint& value );
 			bool set( const Bint& value );
+			bool set( const Bfloat& value );
 			char m_buf[12];
 		private:
 			unsigned int m_width;

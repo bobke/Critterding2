@@ -9,10 +9,10 @@
 # ADD_SUBDIRECTORY(be_plugin_test)
 # ADD_SUBDIRECTORY(be_plugin_test_editing)
 
+# ADD_SUBDIRECTORY(be_plugin_opengl)
 # ADD_SUBDIRECTORY(be_plugin_app_attractors)
 # ADD_SUBDIRECTORY(be_plugin_app_stunt_coureur)
 
-ADD_SUBDIRECTORY(be_plugin_opengl)
 ADD_SUBDIRECTORY(be_plugin_opengl_modern)
 
 ADD_SUBDIRECTORY(be_plugin_imgui)

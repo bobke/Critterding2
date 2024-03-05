@@ -9,6 +9,7 @@
 #include "groupbox.h"
 #include "boxlayouts.h"
 #include "checkbox.h"
+#include "label.h"
 #include <iostream>
 #include <sstream>
 
@@ -219,28 +220,29 @@
 	void BTranslate_QT_IMGUI::construct()
 	{
 		// COMMENTING SWITCHES FROM IMGUI TO QT
-		m_imgui_translation_map.add( "QMainWindow", 				"ImGuiWindow" );
-		m_imgui_translation_map.add( "QMainWindow_end",				"ImGuiWindow_end" );
-		m_imgui_translation_map.add( "QLineEdit",					"ImGuiLineEdit_uint" );
-		m_imgui_translation_map.add( "QLineEdit_float",				"ImGuiLineEdit_float" );
-		m_imgui_translation_map.add( "QLineEdit_int",				"ImGuiLineEdit_int" );
-		m_imgui_translation_map.add( "QLineEdit_uint",				"ImGuiLineEdit_uint" );
-		m_imgui_translation_map.add( "QLineEdit_string",			"ImGuiLineEdit" );
-		m_imgui_translation_map.add( "QLabel", 						"ImGuiPushButton" );
-		m_imgui_translation_map.add( "QCheckBox",					"ImGuiCheckBox" );
-		m_imgui_translation_map.add( "QPushButton",					"ImGuiPushButton" );
-		m_imgui_translation_map.add( "QPushButtonDraggable",		"ImGuiPushButton" );
-		m_imgui_translation_map.add( "QPushButtonDragAndDroppable",	"ImGuiPushButton" );
-		m_imgui_translation_map.add( "QVBoxLayout",					"ImGuiVBoxLayout" );
-		m_imgui_translation_map.add( "QHBoxLayout",					"ImGuiHBoxLayout" );
-		m_imgui_translation_map.add( "QGroupBox",					"ImGuiGroupBox" );
-		m_imgui_translation_map.add( "QGroupBox_end",				"ImGuiGroupBox_end" );
+		add( "QMainWindow", 				"ImGuiWindow" );
+		add( "QMainWindow_end",				"ImGuiWindow_end" );
+		add( "QLineEdit",					"ImGuiLineEdit_uint" );
+		add( "QLineEdit_float",				"ImGuiLineEdit_float" );
+		add( "QLineEdit_int",				"ImGuiLineEdit_int" );
+		add( "QLineEdit_uint",				"ImGuiLineEdit_uint" );
+		add( "QLineEdit_string",			"ImGuiLineEdit" );
+		// add( "QLabel", 						"ImGuiPushButton" );
+		add( "QLabel", 						"ImGuiLabel" );
+		add( "QCheckBox",					"ImGuiCheckBox" );
+		add( "QPushButton",					"ImGuiPushButton" );
+		add( "QPushButtonDraggable",		"ImGuiPushButton" );
+		add( "QPushButtonDragAndDroppable",	"ImGuiPushButton" );
+		add( "QVBoxLayout",					"ImGuiVBoxLayout" );
+		add( "QHBoxLayout",					"ImGuiHBoxLayout" );
+		add( "QGroupBox",					"ImGuiGroupBox" );
+		add( "QGroupBox_end",				"ImGuiGroupBox_end" );
 	}
 	
-	const char* BTranslate_QT_IMGUI::get_string( const Bstring& id )
-	{
-		return m_imgui_translation_map.get( id.c_str() );
-	}
+	// const char* BTranslate_QT_IMGUI::get_string( const Bstring& id )
+	// {
+	// 	return get( id.c_str() );
+	// }
 	
 
 // ---- FACTORIES
@@ -257,6 +259,7 @@
 		, IMGUI_LINEEDIT_UINT
 		, IMGUI_LINEEDIT_FLOAT
 		, IMGUI_PUSHBUTTON
+		, IMGUI_LABEL
 		, IMGUI_VBOXLAYOUT
 		, IMGUI_HBOXLAYOUT
 		, IMGUI_GROUPBOX
@@ -282,6 +285,7 @@
 					i.addClass( parent, CLASS::IMGUI_LINEEDIT_UINT, "ImGuiLineEdit_uint" );
 					i.addClass( parent, CLASS::IMGUI_LINEEDIT_FLOAT, "ImGuiLineEdit_float" );
 					i.addClass( parent, CLASS::IMGUI_PUSHBUTTON, "ImGuiPushButton" );
+					i.addClass( parent, CLASS::IMGUI_LABEL, "ImGuiLabel" );
 					i.addClass( parent, CLASS::IMGUI_VBOXLAYOUT, "ImGuiVBoxLayout" );
 					i.addClass( parent, CLASS::IMGUI_HBOXLAYOUT, "ImGuiHBoxLayout" );
 					i.addClass( parent, CLASS::IMGUI_GROUPBOX, "ImGuiGroupBox" );
@@ -317,6 +321,8 @@
 					i = new BImGuiLineEdit_float();
 				else if ( type == CLASS::IMGUI_PUSHBUTTON )
 					i = new BImGuiPushButton;
+				else if ( type == CLASS::IMGUI_LABEL )
+					i = new BImGuiLabel;
 				else if ( type == CLASS::IMGUI_VBOXLAYOUT )
 					i = new BImGuiVBoxLayout;
 				else if ( type == CLASS::IMGUI_HBOXLAYOUT )

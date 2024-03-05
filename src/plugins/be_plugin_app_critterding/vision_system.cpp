@@ -112,7 +112,6 @@
 
 			bool empty(true);
 			unsigned int critter_counter = 0;
-			float buffer[16];
 			for_all_children_of2( m_critter_containers )
 			{
 				auto container = (*child2)->get_reference();
@@ -135,13 +134,13 @@
 						glViewport(framePosX, framePosY, m_critter_retinasize, m_critter_retinasize);
 
 						// VIEW MATRIX GLM
-							auto ViewMatrix = bodypart_to_attach_cam->getTransform() * m_turn_180;
-							ViewMatrix.inverse().getOpenGLMatrix( buffer );
-							glm::mat4 viewMatrix = glm::make_mat4( buffer );
+							m_ViewMatrix = bodypart_to_attach_cam->getTransform() * m_turn_180;
+							m_ViewMatrix.inverse().getOpenGLMatrix( m_buffer );
+							m_viewMatrix = glm::make_mat4( m_buffer );
 							// glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, glm::value_ptr(theMatrix) );
 						// PROJECTIONVIEW MATRIX GLM
-							glm::mat4 pvMatrix = m_ProjectionMatrixGLM * viewMatrix;
-							glUniformMatrix4fv( m_ProjectionViewMatrixID, 1, GL_FALSE, glm::value_ptr(pvMatrix) );					
+							m_pvMatrix = m_ProjectionMatrixGLM * m_viewMatrix;
+							glUniformMatrix4fv( m_ProjectionViewMatrixID, 1, GL_FALSE, glm::value_ptr(m_pvMatrix) );
 
 						// DRAW WORLD
 							if ( m_graphicsModelSystem )

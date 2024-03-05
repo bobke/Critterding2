@@ -2,6 +2,14 @@
 
 #include "kernel/be_entity_core_types.h"
 
+	class cmd_toggleFullscreen: public BEntity_trigger
+	{
+		public:
+			cmd_toggleFullscreen() { };
+			virtual ~cmd_toggleFullscreen() {};
+			bool set();
+	};
+	
 	class cmd_launchAdminWindow: public BEntity_trigger
 	{
 		public:

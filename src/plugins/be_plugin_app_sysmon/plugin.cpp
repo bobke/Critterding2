@@ -184,6 +184,7 @@
 					{
 						BEntity* text_frame_counter = layout_H->addChild( "text_frame_counter", "QLabel" );
 						text_frame_counter->set("text", "current frame");
+						text_frame_counter->set("width", Buint(164));
 						m_line_edit_frame_counter = layout_H->addChild( "Frames", "QLineEdit" );
 						m_line_edit_frame_counter->set("frames");
 						m_line_edit_frame_counter->set("width", Buint(164));
@@ -194,6 +195,7 @@
 					{
 						BEntity* text_current_fps = layout_H->addChild( "text_current_fps", "QLabel" );
 						text_current_fps->set("text", "current fps");
+						text_current_fps->set("width", Buint(164));
 						m_line_edit_fps_cur = layout_H->addChild( "Current FPS", "QLineEdit" );
 						m_line_edit_fps_cur->set("current fps");
 						m_line_edit_fps_cur->set("width", Buint(164));
@@ -204,6 +206,7 @@
 					{
 						BEntity* text_average_fps = layout_H->addChild( "text_average_fps", "QLabel" );
 						text_average_fps->set("text", "average fps");
+						text_average_fps->set("width", Buint(164));
 						m_line_edit_fps_avg = layout_H->addChild( "Average FPS", "QLineEdit" );
 						m_line_edit_fps_avg->set("average fps");
 						m_line_edit_fps_avg->set("width", Buint(164));
@@ -214,6 +217,7 @@
 					{
 						BEntity* text_entities = layout_H->addChild( "text_entities", "QLabel" );
 						text_entities->set("text", "entities");
+						text_entities->set("width", Buint(164));
 						m_line_edit_entities = layout_H->addChild( "Entities", "QLineEdit" );
 						m_line_edit_entities->set("entities");
 						m_line_edit_entities->set("width", Buint(164));
@@ -224,6 +228,7 @@
 					{
 						BEntity* text_last_entity_id = layout_H->addChild( "text_last_entity_id", "QLabel" );
 						text_last_entity_id->set("text", "last entity id");
+						text_last_entity_id->set("width", Buint(164));
 						m_line_edit_last_entity_id = layout_H->addChild( "Last Entity ID", "QLineEdit" );
 						m_line_edit_last_entity_id->set("last entity id");
 						m_line_edit_last_entity_id->set("width", Buint(164));
@@ -234,7 +239,8 @@
 					{
 						BEntity* text_uptime = layout_H->addChild( "text_uptime", "QLabel" );
 						text_uptime->set("text", "uptime");
-						m_line_edit_uptime = layout_H->addChild( "Uptime", "QLineEdit" );
+						text_uptime->set("width", Buint(164));
+						m_line_edit_uptime = layout_H->addChild( "Uptime", "QLineEdit_float" );
 						m_line_edit_uptime->set("uptime");
 						m_line_edit_uptime->set("width", Buint(164));
 						m_line_edit_uptime->set("height", Buint(28));
@@ -242,11 +248,12 @@
 
 					layout_H = layout_V->addChild( "memory", "QHBoxLayout" );
 					{
-						BEntity* text_uptime = layout_H->addChild( "text_memory", "QLabel" );
-						text_uptime->set("text", "memory");
-						m_line_edit_memory = layout_H->addChild( "Memory", "QLineEdit" );
+						BEntity* text_memory = layout_H->addChild( "text_memory", "QLabel" );
+						text_memory->set("text", "memory");
+						text_memory->set("width", Buint(164));
+						m_line_edit_memory = layout_H->addChild( "Memory", "QLineEdit_string" );
 						m_line_edit_memory->set("memory");
-						m_line_edit_memory->set("width", Buint(164));
+						m_line_edit_memory->set("width", Buint(165));
 						m_line_edit_memory->set("height", Buint(28));
 					}
 
@@ -895,7 +902,7 @@
 						if(s.substr(0, 6) == "VmSize")
 						{
 							mem << s;
-							m_line_edit_memory->set(mem.str().c_str());
+							m_line_edit_memory->set( mem.str().c_str() );
 // 							return mem.str();
 							break;
 						}

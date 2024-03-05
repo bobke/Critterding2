@@ -11,6 +11,8 @@
 		groupbox.h
 		checkbox.cpp
 		checkbox.h
+		label.cpp
+		label.h
 	)
 	
 	set(IMGUI_SOURCES
