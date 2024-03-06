@@ -30,7 +30,6 @@
 	
 			btTransform m_turn_180;
 			btTransform m_pos_transform;
-			BEntity* m_graphicsModelSystem;
 			btScalar m_drawingMatrix[16];
 			unsigned int m_retinasperrow;
 			
@@ -59,6 +58,6 @@
 		
 			unsigned int m_ProjectionViewMatrixID;
 			
-			BGraphicsModelSystem* m_graphics_system;
+			BGraphicsModelSystem* m_graphics_model_system;
 	};
 

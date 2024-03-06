@@ -115,4 +115,5 @@
 	)
 
 	ADD_LIBRARY( be_plugin_opengl_modern SHARED ${plugin_SRCS} )
-	TARGET_LINK_LIBRARIES( be_plugin_opengl_modern be_base_entity_types ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} LinearMath  ${Boost_LIBRARIES} Qt6::Widgets Qt6::Gui Qt6::OpenGLWidgets be_plugin_bullet )
+	# TARGET_LINK_LIBRARIES( be_plugin_opengl_modern be_base_entity_types ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} LinearMath  ${Boost_LIBRARIES} Qt6::Widgets Qt6::Gui Qt6::OpenGLWidgets be_plugin_bullet )
+	TARGET_LINK_LIBRARIES( be_plugin_opengl_modern be_plugin_bullet )

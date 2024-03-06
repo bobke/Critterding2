@@ -12,6 +12,6 @@
 	)
 
 	ADD_LIBRARY( be_plugin_app_critterding_threads SHARED ${plugin_SRCS} )
-	TARGET_LINK_LIBRARIES( be_plugin_app_critterding_threads be_base_entity_types be_plugin_opengl_modern be_plugin_bullet be_plugin_app_critterding )
+	TARGET_LINK_LIBRARIES( be_plugin_app_critterding_threads be_plugin_app_critterding )
 
 

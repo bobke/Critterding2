@@ -1,18 +1,18 @@
 #version 330 core
 
     layout (location = 0) in vec3 inPosition;
-//     layout (location = 1) in vec3 normals;
+    layout (location = 1) in vec3 normals;
     layout (location = 2) in vec2 inTexCoord;
 
 //     layout (location = 3) in mat4 InstanceModelMatrix;
 //     layout (location = 4) in vec3 InstanceScale;
     
     in mat4 InstanceModelMatrix;  // Per-instance model matrix
-//     in vec3 InstanceScale;        // Per-instance scale
+    in vec3 InstanceScale;        // Per-instance scale
 
     uniform mat4 ProjectionViewMatrix_Camera;
-//     uniform mat4 ModelMatrix_Model;
-//     uniform mat4 u_Scale;
+    uniform mat4 ModelMatrix_Model;
+    uniform mat4 u_Scale;
     out vec2 v_texCoord;
 
     void main()

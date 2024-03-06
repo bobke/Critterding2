@@ -42,7 +42,6 @@
 
 		m_critter_containers = addChild("critter_containers", new BEntity());
 		
-		m_graphicsModelSystem = 0;
 		m_turn_180 = btTransform( btQuaternion( SIMD_PI, 0.0f, 0.0f ) );
 
 		m_critter_retinasize = 6; // FIXME max 8?
@@ -75,8 +74,8 @@
 		// Go back to regular frame buffer rendering
 		// glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 		
-		m_graphics_system = dynamic_cast<BGraphicsModelSystem*>( parent()->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1) );
-		m_ProjectionViewMatrixID = glGetUniformLocation(  m_graphics_system->m_effect_critter->m_program.get()->handle(), "ProjectionViewMatrix_Camera" );
+		m_graphics_model_system = dynamic_cast<BGraphicsModelSystem*>( parent()->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1) );
+		m_ProjectionViewMatrixID = glGetUniformLocation(  m_graphics_model_system->m_effect_critter->m_program.get()->handle(), "ProjectionViewMatrix_Camera" );
 		
 		// shortcut to reset scale uniform, hackish
 		m_e_scale_x = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->getChild("shaders", 1)->getChild("e_scale_x", 1);
@@ -92,16 +91,12 @@
 		if ( m_critter_sightrange->get_float() > 0.0f )
 		{
 			// std::cout << "------------- vision system START" << std::endl;
-			if ( m_graphicsModelSystem == 0 )
-			{
-				m_graphicsModelSystem = topParent()->getChild("bin", 1)->getChild("Critterding", 2)->getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1);
-			}
 			if ( !m_skyDome )
 			{
-				m_skyDome = m_graphicsModelSystem->getChild("GraphicsModel_SkyDome", 1);
+				m_skyDome = m_graphics_model_system->getChild("GraphicsModel_SkyDome", 1);
 			}
 
-			glUseProgram( m_graphics_system->m_effect_critter->m_program.get()->handle() );
+			glUseProgram( m_graphics_model_system->m_effect_critter->m_program.get()->handle() );
 
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb); 
 			glClearColor (0.0f, 0.0f, 0.0f, 0.0f);
@@ -143,21 +138,18 @@
 							glUniformMatrix4fv( m_ProjectionViewMatrixID, 1, GL_FALSE, glm::value_ptr(m_pvMatrix) );
 
 						// DRAW WORLD
-							if ( m_graphicsModelSystem )
-							{
-								// draw entities within sight, but not skydome
-									for_all_children_of3( m_graphicsModelSystem )
+							// draw entities within sight, but not skydome
+								for_all_children_of3( m_graphics_model_system )
+								{
+									if (  (*child3) != m_skyDome )
 									{
-										if (  (*child3) != m_skyDome )
+										auto model = dynamic_cast<BGraphicsModel*>( (*child3) );
+										if ( model )
 										{
-											auto model = dynamic_cast<BGraphicsModel*>( (*child3) );
-											if ( model )
-											{
-												model->processWhenInSight( &bodypart_to_attach_cam->getTransform(), m_critter_sightrange->get_float() );
-											}
+											model->processWhenInSight( &bodypart_to_attach_cam->getTransform(), m_critter_sightrange->get_float() );
 										}
 									}
-							}
+								}
 
 						++critter_counter;
 					}
