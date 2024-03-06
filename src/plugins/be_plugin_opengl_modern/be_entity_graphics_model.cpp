@@ -167,6 +167,17 @@
 				glVertexAttribDivisor(m_scaledTransformsBufferID_critter+3, 1);
 			}
 
+			// // Create and bind the VBO for texture coordinates
+			// glGenBuffers(1, &textureCoordBuffer);
+			// glBindBuffer(GL_ARRAY_BUFFER, textureCoordBuffer);
+			// glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data() + 2, GL_STATIC_DRAW);
+   // 
+			// // Specify the layout of the "texCoord" attribute
+			// m_texCoordAttrib = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect->m_program.get()->handle(), "texCoord");
+			// glVertexAttribPointer(texCoord, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+			// glEnableVertexAttribArray(texCoord;
+
+			
 			m_setup_done = true;
 		}
 	}	
@@ -203,7 +214,6 @@
 					// glBufferSubData(GL_ARRAY_BUFFER, 0, m_modelMatrices.size() * sizeof(glm::mat4), glm::value_ptr(m_modelMatrices[0]));
 					// glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-					
 					// glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind any existing buffer to avoid issues
 					// glBindBuffer(GL_ARRAY_BUFFER, dynamic_cast<BGraphicsModelSystem*>( parent() )->m_scaledTransformsBufferID);
 					// glUniformMatrix4fv(m_instanceModelMatrixAttrib, m_modelMatrices.size(), GL_FALSE, glm::value_ptr(m_modelMatrices[0]));
@@ -256,18 +266,17 @@
 			glBindVertexArray(0);
 			
 		}
-		auto e = glGetError(); if ( e != 0 ) { std::cout << "BGraphicsModel::process() glError: " << e << std::endl; exit(0); }
+		// auto e = glGetError(); if ( e != 0 ) { std::cout << "BGraphicsModel::process() glError: " << e << std::endl; exit(0); }
 	}
 	
 	void BGraphicsModel::drawInstanced(boost::shared_ptr<BeGraphicsModel> model, int instanceCount, bool doTextures)
 	{
-		// glGetError();
+		glGetError();
 
 		// glBindVertexArray( getModel()->get()->m_vertexArray.get() ? getModel()->get()->m_vertexArray.get()->handle() : 0 );
 
 		if (model->matlist.size() > 0)
 		{
-			// glEnable(GL_TEXTURE_2D);
 			
 			BeGraphicsMaterial* material;
 			auto it = model->matlist.begin();
@@ -316,6 +325,11 @@
 								{
 									glBindTexture(GL_TEXTURE_2D, material.m_imageTexture2D->get().get()->handle());
 									m_uniform_textureSample->set( 1 );
+								}
+								else
+								{
+									glBindTexture(GL_TEXTURE_2D, 0); // THINK IT'S OK TO COMMENT THIS?
+									m_uniform_textureSample->set( 0 );
 								}
 							}
 							else
@@ -724,21 +738,23 @@
 								{
 									glBindTexture(GL_TEXTURE_2D, material.m_imageTexture2D->get().get()->handle());
 									m_uniform_textureSample->set( 1 );
-									// glUniform1i( m_textureSample_location, 1 );
+								}
+								else
+								{
+									glBindTexture(GL_TEXTURE_2D, 0); // THINK IT'S OK TO COMMENT THIS?
+									m_uniform_textureSample->set( 0 );
 								}
 							}
 							else
 							{
 								glBindTexture(GL_TEXTURE_2D, 0); // THINK IT'S OK TO COMMENT THIS?
 								m_uniform_textureSample->set( 0 );
-								// glUniform1i( m_textureSample_location, 0 );
 							}
 						}
 						else
 						{
 							glBindTexture(GL_TEXTURE_2D, 0);
 							m_uniform_textureSample->set( 0 );
-							// glUniform1i( m_textureSample_location, 0 );
 						}
 
 						// // SPECIFIC MATERIALS, COMMENTED OUT FOR CRITTERDING PERFORMANCE

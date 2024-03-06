@@ -70,6 +70,8 @@
 			GLuint m_scaledTransformsBufferID_critter;
 			GLint m_instanceModelMatrixAttrib;
 			float m_ScaleBuffer[16];
+			GLuint textureCoordBuffer;
+			GLint m_texCoordAttrib;
 
 			// GLuint m_ModelMatrixID;
 			// GLuint m_scaleBufferID;

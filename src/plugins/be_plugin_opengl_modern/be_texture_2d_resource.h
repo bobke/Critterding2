@@ -42,8 +42,8 @@ public:
 					// FIXME get the format from the image
 //                     m_texture->data(0, 4, image->width(), image->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image->bits());
 // 	                    m_texture->data(0, 4, image->width(), image->height(), 0, image->format(), GL_UNSIGNED_BYTE, image->bits());
-	                    m_texture->data(0, 4, image->width(), image->height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, image->bits());
-				
+	                    m_texture->data(0, GL_RGB, image->width(), image->height(), 0, GL_BGRA, GL_UNSIGNED_BYTE, image->bits());
+
 					m_texture->parameter(GL_TEXTURE_MAX_LEVEL,4);
 					m_texture->parameter(GL_TEXTURE_MAX_LOD,4);
 

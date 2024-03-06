@@ -2,7 +2,7 @@
 
     layout (location = 0) in vec3 inPosition;
 //     layout (location = 1) in vec3 normals;
-    layout (location = 2) in vec2 texCoord;
+    layout (location = 2) in vec2 inTexCoord;
 
 //     layout (location = 3) in mat4 InstanceModelMatrix;
 //     layout (location = 4) in vec3 InstanceScale;
@@ -11,7 +11,7 @@
 //     in vec3 InstanceScale;        // Per-instance scale
 
     uniform mat4 ProjectionViewMatrix_Camera;
-    uniform mat4 ModelMatrix_Model;
+//     uniform mat4 ModelMatrix_Model;
 //     uniform mat4 u_Scale;
     out vec2 v_texCoord;
 
@@ -19,7 +19,7 @@
     {
         gl_Position =  ProjectionViewMatrix_Camera /** scale*/ * InstanceModelMatrix * vec4(inPosition, 1.0);
 //         gl_Position =  ProjectionViewMatrix_Camera * ModelMatrix_Model * u_Scale * vec4(inPosition, 1.0);
-        v_texCoord = texCoord;
+        v_texCoord = inTexCoord;
     }
 
 // #version 330 core

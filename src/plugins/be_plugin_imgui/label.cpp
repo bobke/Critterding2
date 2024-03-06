@@ -18,7 +18,7 @@
 			// ImGui::Text("Hello, world %d", 123);
 			// ImGui::TextColored( ImVec4(1.0f, 1.0f, 1.0f, 1.0f), m_value );
 			ImGui::Text( "%s", m_value );
-			ImGui::SameLine(m_width); ImGui::Text("");
+			// ImGui::SameLine(m_width); ImGui::Text("");
 		// ImGui::InpuText( m_value, &s );
 			
 			
