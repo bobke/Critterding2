@@ -100,6 +100,8 @@
 		be_entity_graphics_model.h
 		be_entity_light.cpp
 		be_entity_light.h
+		be_entity_depthmap_viewer.cpp
+		be_entity_depthmap_viewer.h
 		
 		be_worker_pool.h
 		be_worker_pool.cpp

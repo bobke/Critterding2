@@ -64,6 +64,9 @@
 			BEntity* m_look_roll_left;
 			BEntity* m_look_roll_right;
 	
+			BEntity* m_window_width;
+			BEntity* m_window_height;
+			
 			// GLuint m_ViewMatrixID;
 			// GLuint m_ProjectionMatrixID;
 			GLuint m_ProjectionViewMatrixID;

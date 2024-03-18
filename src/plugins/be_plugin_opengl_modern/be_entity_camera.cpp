@@ -58,6 +58,9 @@
 		
 		m_e_scale_x = 0;
 		
+		m_window_width = parent()->parent()->getChild("width", 1);
+		m_window_height = parent()->parent()->getChild("height", 1);
+		
 		// glTransform t;
 		// btTransform bt;
 		// bt.setIdentity();
@@ -69,10 +72,15 @@
 	// FIXME do this in the transform itself?
 	void BCamera::process()
 	{
+		glViewport( 0, 0, m_window_width->get_int(), m_window_height->get_int() );
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 		if( m_active->get_bool() )
 		{
+			
 			// Pick Shader
-			glUseProgram( dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle() );
+			// glUseProgram( dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle() );
 			// glUseProgram( dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle() );
 			
 			// std::cout << "BCamera::process()_modern " << m_aspect_ratio->get_float() << std::endl;

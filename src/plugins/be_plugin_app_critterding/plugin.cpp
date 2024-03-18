@@ -122,7 +122,7 @@
 
 		// SDL SWAPBUFFER, making sure this runs right after sdl_window and it's children are done processing
 			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
-			
+
 		// GRAPHICS MODELSYSTEM
 			auto t_graphicsModelSystem = glwindow->addChild("GraphicsModelSystem", "GraphicsModelSystem");
 
@@ -410,6 +410,13 @@
 			m_raycast_target_z->set( rayDirection.z() );
 			
 			m_bullet_raycast->process();
+
+		// DEPTHMAP VIEWER
+			static unsigned int counter = 0;
+			if ( ++counter == 1000 && !getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->getChild("DepthMapViewer", 1 ) )
+			{
+				getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->addChild("DepthMapViewer", "DepthMapViewer");
+			}			
 	}
 
 	BEntity* Scene::findCritter( BEntity* e1, BEntity* e2 )

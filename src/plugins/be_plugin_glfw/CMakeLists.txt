@@ -17,7 +17,7 @@
 		
 		ADD_LIBRARY( be_plugin_glfw SHARED ${plugin_SRCS} )
 		# TARGET_LINK_LIBRARIES( be_plugin_glfw be_base_entity_types glfw )
-		TARGET_LINK_LIBRARIES( be_plugin_glfw glfw )
+		TARGET_LINK_LIBRARIES( be_plugin_glfw kernel glfw )
 
 		ELSE ()
 		MESSAGE("GLFW NOT FOUND")

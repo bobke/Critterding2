@@ -32,6 +32,8 @@
 // 			void onAdd(BEntity* entity);
 			// BCamera* m_useCamera;
 			GLuint m_buffer;
+			
+			bool m_render_to_depth;
 
 		private:
 			inline void doSetup();
@@ -67,8 +69,9 @@
 			// GLuint m_vao;
 			// GLuint m_transformBuffer;
 			GLuint m_scaledTransformsBufferID;
-			GLuint m_scaledTransformsBufferID_critter;
 			GLint m_instanceModelMatrixAttrib;
+			GLint m_instanceModelMatrixAttrib_critter;
+			GLint m_instanceModelMatrixAttrib_depthmap;
 			float m_ScaleBuffer[16];
 
 			GLuint m_ModelMatrixID;

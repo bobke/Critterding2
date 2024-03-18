@@ -23,8 +23,8 @@
 			BEntity* m_glEnable_GL_ALPHA_TEST;
 			BEntity* m_glEnable_GL_NORMALIZE;
 			
-			BEntity* m_window_width;
-			BEntity* m_window_height;
+			// BEntity* m_window_width;
+			// BEntity* m_window_height;
 			
 	};
 

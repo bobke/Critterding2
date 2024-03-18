@@ -7,6 +7,7 @@
 #include "be_shader_uniform_vec4.h"
 #include "be_shader_uniform_i1.h"
 #include "be_shader_attrib.h"
+#include "be_entity_depthmap_viewer.h"
 // #include "graphics/be_graphics_system.h"
 // #include "kernel/be_plugin_interface.h"
 
@@ -31,6 +32,7 @@
 		, SHADERUNIFORMVEC4
 		, SHADERUNIFORMI1
 		, SHADERATTRIB
+		, DEPTHMAP_VIEWER
 		
 	};
 
@@ -57,6 +59,7 @@
 					i.addClass( parent, CLASS::SHADERUNIFORMVEC4, "ShaderUniformVec4" );
 					i.addClass( parent, CLASS::SHADERUNIFORMI1, "ShaderUniformI1" );
 					i.addClass( parent, CLASS::SHADERATTRIB, "ShaderAttrib" );
+					i.addClass( parent, CLASS::DEPTHMAP_VIEWER, "DepthMapViewer" );
 					
 				return 0;
 				
@@ -107,6 +110,8 @@
 					i = new BShaderUniformI1();
 				else if ( type == CLASS::SHADERATTRIB )
 					i = new BShaderAttrib();
+				else if ( type == CLASS::DEPTHMAP_VIEWER )
+					i = new BDepthMapViewer();
 				
 				
 

@@ -106,7 +106,7 @@
 			public:
 				virtual void process_general();
 				virtual void process() {};
-				// virtual void process_post() {};
+				// virtual void process_post() {}; // no longer works with processor
 				void process_children() const;
 // 				void process_children_post() const;
 				Bbool hasProcessing() const;

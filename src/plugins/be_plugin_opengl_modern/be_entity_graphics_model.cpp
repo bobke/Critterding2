@@ -19,6 +19,7 @@
 	: BEntity()
 	, m_setup_done(false)
 	, m_always_render(false)
+	, m_render_to_depth(false)
 	, m_basic_mat4(1.0f)
 	{
 		setProcessing();
@@ -123,6 +124,8 @@
 	{
 		if ( !m_setup_done )
 		{
+			glGetError();
+
 			// Create the VBO for transforms
 			constexpr auto buffer_max_instances = 32768;
 			glGenBuffers(1, &m_scaledTransformsBufferID);
@@ -130,10 +133,11 @@
 			glBufferData(GL_ARRAY_BUFFER, buffer_max_instances * sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
 
 			m_instanceModelMatrixAttrib = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect->m_program.get()->handle(), "InstanceModelMatrix");
-			m_scaledTransformsBufferID_critter = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect_critter->m_program.get()->handle(), "InstanceModelMatrix");
+			m_instanceModelMatrixAttrib_critter = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect_critter->m_program.get()->handle(), "InstanceModelMatrix");
+			m_instanceModelMatrixAttrib_depthmap = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect_depthmap->m_program.get()->handle(), "InstanceModelMatrix");
 
 			// Set up per-instance attribute pointers
-			if ( m_instanceModelMatrixAttrib > -1 )
+			if ( m_instanceModelMatrixAttrib > -1 && m_instanceModelMatrixAttrib < 40000 )
 			{
 				glEnableVertexAttribArray(m_instanceModelMatrixAttrib);
 				glVertexAttribPointer(m_instanceModelMatrixAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0));
@@ -149,24 +153,43 @@
 				glVertexAttribDivisor(m_instanceModelMatrixAttrib+2, 1);
 				glVertexAttribDivisor(m_instanceModelMatrixAttrib+3, 1);
 			}
-			if ( m_scaledTransformsBufferID_critter > -1 )
+			if ( m_instanceModelMatrixAttrib_critter > -1 && m_instanceModelMatrixAttrib_critter < 40000 )
 			{
-				glEnableVertexAttribArray(m_scaledTransformsBufferID_critter);
-				glVertexAttribPointer(m_scaledTransformsBufferID_critter, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0));
-				glEnableVertexAttribArray(m_scaledTransformsBufferID_critter+1);
-				glVertexAttribPointer(m_scaledTransformsBufferID_critter+1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(1 * sizeof(glm::vec4)));
-				glEnableVertexAttribArray(m_scaledTransformsBufferID_critter+2);
-				glVertexAttribPointer(m_scaledTransformsBufferID_critter+2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
-				glEnableVertexAttribArray(m_scaledTransformsBufferID_critter+3);
-				glVertexAttribPointer(m_scaledTransformsBufferID_critter+3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter+1);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter+1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(1 * sizeof(glm::vec4)));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter+2);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter+2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter+3);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter+3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
+   
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter+1, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter+2, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter+3, 1);
+			}
+			if ( m_instanceModelMatrixAttrib_depthmap > -1 && m_instanceModelMatrixAttrib_depthmap < 40000 )
+			{
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_depthmap);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib_depthmap, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_depthmap+1);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib_depthmap+1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(1 * sizeof(glm::vec4)));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_depthmap+2);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib_depthmap+2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
+				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_depthmap+3);
+				glVertexAttribPointer(m_instanceModelMatrixAttrib_depthmap+3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
 
-				glVertexAttribDivisor(m_scaledTransformsBufferID_critter, 1);
-				glVertexAttribDivisor(m_scaledTransformsBufferID_critter+1, 1);
-				glVertexAttribDivisor(m_scaledTransformsBufferID_critter+2, 1);
-				glVertexAttribDivisor(m_scaledTransformsBufferID_critter+3, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib_depthmap, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib_depthmap+1, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib_depthmap+2, 1);
+				glVertexAttribDivisor(m_instanceModelMatrixAttrib_depthmap+3, 1);
 			}
 
+			std::cout << m_instanceModelMatrixAttrib << " " << m_instanceModelMatrixAttrib_critter << " " << m_instanceModelMatrixAttrib_depthmap << std::endl;
+
 			m_setup_done = true;
+			auto e = glGetError(); if ( e != 0 ) { std::cout << "BGraphicsModel::process() glError: " << e << std::endl; exit(0); }
 		}
 	}	
 	
@@ -303,7 +326,7 @@
 
 					if (pr == priority)
 					{
-						if (doTextures == true)
+						if (doTextures == true && !m_render_to_depth)
 						{
 							const Material& material = (*it).second;
 
@@ -716,7 +739,7 @@
 // 								}
 // 							}
 
-						if ( doTextures == true ) // only called from Critter Vision so don't set uniform disabled below
+						if ( doTextures == true && !m_render_to_depth )
 						{
 							const Material& material = (*it).second;
 

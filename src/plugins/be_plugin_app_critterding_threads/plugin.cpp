@@ -379,7 +379,11 @@
 
 		// VISION SYSTEM
 			auto vision_system = addChild( "vision_system", "CdVisionSystem" );
-			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
+			// addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
+
+		// MOUSEPICERS
+			auto mousepickers = addChild( "mousepickers", new BEntity() );
+			m_raycasters = addChild( "raycasters", new BEntity() );
 
 		// THREADS FINISH
 			auto threads_finish = addChild("threads_finish", "threads_finish");
@@ -387,18 +391,14 @@
 		// POPLUATION CONTROLLER
 			auto population_controller = addChild( "CdPopulationController", "CdPopulationController" );
 
-		// MOUSEPICERS
-			auto mousepickers = addChild( "mousepickers", new BEntity() );
-			m_raycasters = addChild( "raycasters", new BEntity() );
-
 		// SERVERS
 			const float spacing( 2.0f );
 			const unsigned int total_minimum_critters( 20 ); // FIXME TO GLOBAL ENTITY
 			const unsigned int total_minimum_food( 1400 ); // FIXME TO GLOBAL ENTITY
 			const float critter_spacing( 1.0f );
 			
-			const unsigned int rows( 2 );
-			const unsigned int columns( 2 );
+			const unsigned int rows( 1 );
+			const unsigned int columns( 4 );
 			const unsigned int total_threads( rows * columns );
 
 			const float dropzone_total_width( 190 );
@@ -726,6 +726,14 @@
 // 			m_bullet_raycast2->process();
 // 			m_bullet_raycast3->process();
 // 			m_bullet_raycast4->process();
+		
+		// DEPTHMAP VIEWER
+		static unsigned int counter = 0;
+		if ( ++counter == 1000 && !getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->getChild("DepthMapViewer", 1 ) )
+		{
+			getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->addChild("DepthMapViewer", "DepthMapViewer");
+		}
+		
 		
 	}
 

@@ -102,6 +102,11 @@
 			glClearColor (0.0f, 0.0f, 0.0f, 0.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+			// DISABLE SHADOWS
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glActiveTexture(GL_TEXTURE0);
+
 		// FIXME HACK RESET ALL THE SHADERS?, idea is we don't have to brute force a change to the scale uniform down the line, do it here
 			m_e_scale_x->set( 0.0f );
 
