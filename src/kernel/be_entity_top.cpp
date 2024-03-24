@@ -7,6 +7,11 @@
 #include <array>
 #include <sstream>
 
+// #include <sys/types.h>
+#include <sys/stat.h>
+// #include <unistd.h>
+
+
 		BEntityTop::BEntityTop(bool connection_type)
 		: m_processor(new BProcessor())
 		, m_reconstruct_list(false)
@@ -363,6 +368,18 @@
 										auto filename = plugin->m_filename;
 										auto name = plugin->name();
 										
+					
+					struct stat result;
+					std::string full_filename = location + "/lib" + filename + ".so";
+					// std::cout << "!!!" << full_filename << std::endl;
+					unsigned int orig_mod_time;
+					if( stat(full_filename.c_str(), &result) == 0 )
+					{
+						orig_mod_time = result.st_mtime;
+						// std::cout << "original timestamp" << orig_mod_time << std::endl;
+					}
+
+										
 										// RECOMPILE LIBRARY
 											std::cout << "recompiling: " << plugin->name() << std::endl;
 											std::stringstream cmd;
@@ -380,6 +397,15 @@
 										// 		ent->parent()->removeChild(ent);
 										// 	}
 
+					unsigned int new_mod_time;
+					if( stat(full_filename.c_str(), &result) == 0 )
+					{
+						new_mod_time = result.st_mtime;
+						// std::cout << "new timestamp" << new_mod_time << std::endl;
+					}
+											
+										if ( orig_mod_time != orig_mod_time )
+										{
 										// REMOVE LIBRARY
 											auto lib = getChild("lib", 1)->getChild(name.c_str(), 1);
 											if ( lib )
@@ -391,6 +417,11 @@
 										// RELOAD LIBRARY
 											std::cout << "loading library" << std::endl;
 											pluginManager()->load( name, location, filename );
+										}
+										else
+										{
+											std::cout << "warning: library is unchanged" << std::endl;
+										}
 										
 										
 // 										
