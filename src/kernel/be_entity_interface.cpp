@@ -480,51 +480,51 @@
 
 		BEntity* BEntity::addChild( const std::string& name, const std::string& library, const std::string& entityClass )
 		{
-			// PRIMITIVES
-				if ( entityClass == "entity" )
-					return addChild(name, new BEntity());
-
-				if ( entityClass == "reference" )
-					return addChild(name, new BEntity_reference());
-
-				if ( entityClass == "external_child" )
-					return addChild(name, new BEntity_external());
-
-				if ( entityClass == "trigger" )
-					return addChild(name, new BEntity_trigger());
-
-				if ( entityClass == "bool" )
-					return addChild(name, new BEntity_bool());
-
-				if ( entityClass == "bool_property" )
-					return addChild(name, new BEntity_bool_property());
-
-				if ( entityClass == "uint" )
-					return addChild(name, new BEntity_uint());
-
-				if ( entityClass == "uint_property" )
-					return addChild(name, new BEntity_uint_property());
-				
-				if ( entityClass == "int" )
-					return addChild(name, new BEntity_int());
-
-				if ( entityClass == "int_property" )
-					return addChild(name, new BEntity_int_property());
-
-				if ( entityClass == "int_property_new" )
-					return addChild(name, new BEntity_int_propertyNew());
-			
-				if ( entityClass == "float" )
-					return addChild(name, new BEntity_float());
-
-				if ( entityClass == "float_property" )
-					return addChild(name, new BEntity_float_property());
-				
-				if ( entityClass == "string" )
-					return addChild(name, new BEntity_string());
-
-				if ( entityClass == "string_property" )
-					return addChild(name, new BEntity_string_property());
+// 			// PRIMITIVES
+// 				if ( entityClass == "entity" )
+// 					return addChild(name, new BEntity());
+// 
+// 				if ( entityClass == "reference" )
+// 					return addChild(name, new BEntity_reference());
+// 
+// 				if ( entityClass == "external_child" )
+// 					return addChild(name, new BEntity_external());
+// 
+// 				if ( entityClass == "trigger" )
+// 					return addChild(name, new BEntity_trigger());
+// 
+// 				if ( entityClass == "bool" )
+// 					return addChild(name, new BEntity_bool());
+// 
+// 				if ( entityClass == "bool_property" )
+// 					return addChild(name, new BEntity_bool_property());
+// 
+// 				if ( entityClass == "uint" )
+// 					return addChild(name, new BEntity_uint());
+// 
+// 				if ( entityClass == "uint_property" )
+// 					return addChild(name, new BEntity_uint_property());
+// 				
+// 				if ( entityClass == "int" )
+// 					return addChild(name, new BEntity_int());
+// 
+// 				if ( entityClass == "int_property" )
+// 					return addChild(name, new BEntity_int_property());
+// 
+// 				if ( entityClass == "int_property_new" )
+// 					return addChild(name, new BEntity_int_propertyNew());
+// 			
+// 				if ( entityClass == "float" )
+// 					return addChild(name, new BEntity_float());
+// 
+// 				if ( entityClass == "float_property" )
+// 					return addChild(name, new BEntity_float_property());
+// 				
+// 				if ( entityClass == "string" )
+// 					return addChild(name, new BEntity_string());
+// 
+// 				if ( entityClass == "string_property" )
+// 					return addChild(name, new BEntity_string_property());
 
 			return addChild(name, pluginManager()->create( this, library, entityClass ));
 		}

@@ -41,14 +41,13 @@
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	
 		m_window = glfwCreateWindow(1224, 768, "", NULL, NULL);
-		m_title->set( "FGL Window" );
-
 		if (!m_window)
 		{
 			std::cout << "WINDOW error: FLGW Create Window failed" << std::endl;
 			glfwTerminate();
 			exit(1);
 		}
+		m_title->set( "FGL Window" );
 
 		glfwMakeContextCurrent(m_window);
 		glfwSetWindowUserPointer(m_window, this);

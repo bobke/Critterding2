@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec4 FragPos; // FragPos from the vertex shader
 in vec3 Normal;  // Normal from the vertex shader
 in vec2 v_texCoord;
+in vec3 viewPos;
 
 uniform sampler2D u_Texture;
 uniform sampler2D depthMap;
@@ -12,6 +13,8 @@ uniform mat4 lightSpaceMatrix;
 uniform vec4 u_Color;
 
     vec3 lightPos = vec3( 0.0, 50.0, -100.0 );
+    
+// vec3 viewPos = vec3(0.0, 0.0, 0.0); // Assuming the view position is at the origin
 
     void main()
     {
@@ -34,6 +37,12 @@ uniform vec4 u_Color;
         vec3 lightDir = vec3(0.0, 1.0, 0.0);
         float diff = max(dot(normal, lightDir), 0.0);
 
+        
+// Calculate specular lighting
+// vec3 viewDir = normalize(viewPos - FragPos.xyz);
+// vec3 reflectDir = reflect(-lightDir, normal);
+// float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0); // You can adjust the shininess value (32.0) as needed        
+        
         // bias
         // float bias = 0.002;
         // Calculate bias to reduce shadow acne
@@ -55,6 +64,8 @@ uniform vec4 u_Color;
         // Apply shadow factor to diffuse lighting
         vec3 diffuse = diff * shadow * vec3(0.7);
 
+// vec3 specular = spec * shadow * vec3(1.0); // Specular color is usually white        
+
     //     // Final color output
     //     FragColor = texture(u_Texture, v_texCoord) * vec4(diffuse, 1.0) * u_Color;
         
@@ -63,8 +74,10 @@ uniform vec4 u_Color;
         vec3 ambient = ambient_color * u_Color.rgb;
 
         // Final color output
+// FragColor = texture(u_Texture, v_texCoord) * vec4(diffuse + specular + ambient, 1.0);    
         FragColor = texture(u_Texture, v_texCoord) * vec4(diffuse + ambient, 1.0);    
     }
+
 
 
 // #version 330 core

@@ -381,6 +381,9 @@
 			auto vision_system = addChild( "vision_system", "CdVisionSystem" );
 			// addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
 
+		// DEPTHMAP VIEWER
+			t_graphicsModelSystem->addChild("DepthMapViewer", "DepthMapViewer");
+
 		// MOUSEPICERS
 			auto mousepickers = addChild( "mousepickers", new BEntity() );
 			m_raycasters = addChild( "raycasters", new BEntity() );
@@ -726,15 +729,6 @@
 // 			m_bullet_raycast2->process();
 // 			m_bullet_raycast3->process();
 // 			m_bullet_raycast4->process();
-		
-		// DEPTHMAP VIEWER
-		static unsigned int counter = 0;
-		if ( ++counter == 1000 && !getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->getChild("DepthMapViewer", 1 ) )
-		{
-			getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->addChild("DepthMapViewer", "DepthMapViewer");
-		}
-		
-		
 	}
 
 	BEntity* Server::findCritter( BEntity* e1, BEntity* e2 )

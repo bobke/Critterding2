@@ -48,8 +48,8 @@
 			// Set up the depth map framebuffer
 			glGenFramebuffers(1, &depthMapFBO);
 
-			m_depth_map_resolution_x = 3072;
-			m_depth_map_resolution_y = 3072;
+			m_depth_map_resolution_x = 2048;
+			m_depth_map_resolution_y = 2048;
 
 			// Set up the depth map texture
 			glGenTextures(1, &depthMap);

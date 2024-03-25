@@ -13,6 +13,8 @@
 		checkbox.h
 		label.cpp
 		label.h
+		graph.cpp
+		graph.h
 	)
 	
 	set(IMGUI_SOURCES

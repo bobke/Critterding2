@@ -67,7 +67,7 @@
 			BEntity* m_window_width;
 			BEntity* m_window_height;
 			
-			// GLuint m_ViewMatrixID;
+			GLuint m_ViewMatrixID;
 			// GLuint m_ProjectionMatrixID;
 			GLuint m_ProjectionViewMatrixID;
 

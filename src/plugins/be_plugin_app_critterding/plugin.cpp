@@ -329,6 +329,9 @@
 			auto t_graphicsModelSkyDome = t_graphicsModelSystem->addChild("GraphicsModel_SkyDome", "GraphicsModel");
 			t_graphicsModelSkyDome->set("filename", "../share/modules/skydome3.obj");
 
+		// DEPTHMAP VIEWER
+			t_graphicsModelSystem->addChild("DepthMapViewer", "DepthMapViewer");
+			
 		// VISION SYSTEM
 			auto vision_system = addChild( "vision_system", "CdVisionSystem" );
   			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
@@ -410,13 +413,6 @@
 			m_raycast_target_z->set( rayDirection.z() );
 			
 			m_bullet_raycast->process();
-
-		// DEPTHMAP VIEWER
-			static unsigned int counter = 0;
-			if ( ++counter == 1000 && !getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->getChild("DepthMapViewer", 1 ) )
-			{
-				getChild("GLWindow", 1)->getChild("GraphicsModelSystem", 1)->addChild("DepthMapViewer", "DepthMapViewer");
-			}			
 	}
 
 	BEntity* Scene::findCritter( BEntity* e1, BEntity* e2 )

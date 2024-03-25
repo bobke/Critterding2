@@ -11,12 +11,15 @@
 //     in vec3 InstanceScale;        // Per-instance scale
 
     uniform mat4 ProjectionViewMatrix_Camera;
+    uniform mat4 ViewMatrix_Camera;
 //     uniform mat4 ModelMatrix_Model;
 //     uniform mat4 u_Scale;
 //     uniform mat4 lightSpaceMatrix;
+
     out vec2 v_texCoord;
     out vec4 FragPos; // Output the fragment position in world space
     out vec3 Normal;  // Output the normal in world space
+    out vec3 viewPos;  // Output the normal in world space
 
     void main()
     {
@@ -32,6 +35,7 @@
         gl_Position =  ProjectionViewMatrix_Camera * InstanceModelMatrix * vec4(inPosition, 1.0);
 //         gl_Position =  ProjectionViewMatrix_Camera * ModelMatrix_Model * u_Scale * vec4(inPosition, 1.0);
         v_texCoord = inTexCoord;
+        viewPos = ViewMatrix_Camera[3].xyz;
     }
 
 // #version 330 core

@@ -10,6 +10,7 @@
 #include "boxlayouts.h"
 #include "checkbox.h"
 #include "label.h"
+#include "graph.h"
 #include <iostream>
 #include <sstream>
 
@@ -237,6 +238,12 @@
 		add( "QHBoxLayout",					"ImGuiHBoxLayout" );
 		add( "QGroupBox",					"ImGuiGroupBox" );
 		add( "QGroupBox_end",				"ImGuiGroupBox_end" );
+		add( "QwtPlot",						"entity" );
+		add( "QwtCurve",					"ImGuiGraph" );
+		add( "QwtCurve_Poll",				"ImGuiGraph_Float_Poll" );
+		add( "QPen",						"ImGuiPen" );
+		
+		
 	}
 	
 	// const char* BTranslate_QT_IMGUI::get_string( const Bstring& id )
@@ -266,6 +273,9 @@
 		, IMGUI_GROUPBOX_END
 		, IMGUI_CHECKBOX
 		, IMGUI_RENDER
+		, IMGUI_GRAPH
+		, IMGUI_GRAPH_FLOAT_POLL
+		, IMGUI_PEN
 		, IMGUI_DEMOWINDOW
 	};
 
@@ -292,6 +302,9 @@
 					i.addClass( parent, CLASS::IMGUI_GROUPBOX_END, "ImGuiGroupBox_end" );
 					i.addClass( parent, CLASS::IMGUI_CHECKBOX, "ImGuiCheckBox" );
 					i.addClass( parent, CLASS::IMGUI_RENDER, "ImGuiRender" );
+					i.addClass( parent, CLASS::IMGUI_GRAPH, "ImGuiGraph" );
+					i.addClass( parent, CLASS::IMGUI_GRAPH_FLOAT_POLL, "ImGuiGraph_Float_Poll" );
+					i.addClass( parent, CLASS::IMGUI_PEN, "ImGuiPen" );
 					i.addClass( parent, CLASS::IMGUI_DEMOWINDOW, "ImGuiDemoWindow" );
 				return 0;
 			}
@@ -335,6 +348,12 @@
 					i = new BImGuiCheckBox;
 				else if ( type == CLASS::IMGUI_RENDER )
 					i = new BImGuiRender();
+				else if ( type == CLASS::IMGUI_GRAPH )
+					i = new BImGuiGraph();
+				else if ( type == CLASS::IMGUI_GRAPH_FLOAT_POLL )
+					i = new BImGuiGraph_Float_Poll();
+				else if ( type == CLASS::IMGUI_PEN )
+					i = new BImGuiPen();
 				else if ( type == CLASS::IMGUI_DEMOWINDOW )
 					i = new BImGuiDemoWindow();
 					

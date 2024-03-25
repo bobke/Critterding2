@@ -1,4 +1,5 @@
 #include "be_lib_handler.h"
+#include "be_entity_core_types.h"
 #include <dlfcn.h>
 #include <iostream>
 
@@ -162,6 +163,53 @@
 		{
 			newName = name;
 		}
+		
+		// PRIMITIVES
+			if ( newName == "entity" )
+				return new BEntity();
+
+			if ( newName == "reference" )
+				return new BEntity_reference();
+
+			if ( newName == "external_child" )
+				return new BEntity_external();
+
+			if ( newName == "trigger" )
+				return new BEntity_trigger();
+
+			if ( newName == "bool" )
+				return new BEntity_bool();
+
+			if ( newName == "bool_property" )
+				return new BEntity_bool_property();
+
+			if ( newName == "uint" )
+				return new BEntity_uint();
+
+			if ( newName == "uint_property" )
+				return new BEntity_uint_property();
+			
+			if ( newName == "int" )
+				return new BEntity_int();
+
+			if ( newName == "int_property" )
+				return new BEntity_int_property();
+
+			if ( newName == "int_property_new" )
+				return new BEntity_int_propertyNew();
+		
+			if ( newName == "float" )
+				return new BEntity_float();
+
+			if ( newName == "float_property" )
+				return new BEntity_float_property();
+			
+			if ( newName == "string" )
+				return new BEntity_string();
+
+			if ( newName == "string_property" )
+				return new BEntity_string_property();
+		
 		
 		// std::cout << "searching for plugin \"" << name << "\"" << std::endl;
 		if ( hasChildren() )
