@@ -26,7 +26,7 @@
 				if ( s != text() )
 				{
 					setText(s);
-					setFixedSize(QSize(10 * s.size(), 15));  //HACK
+					setFixedSize(QSize(14 * s.size(), 20));  //HACK
 					return true;
 				}
 			}

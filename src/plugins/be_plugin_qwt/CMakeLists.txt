@@ -10,8 +10,8 @@
 	
 	# QWT
 		FIND_PATH(QWT_INCLUDE_DIR NAMES qwt.h PATHS
-		/usr/qwt-6.2.0/include # NOTE: SEE NOTEs.txt
-		/usr/local/qwt-6.2.0/include # NOTE: SEE NOTEs.txt
+		/usr/qwt-6.2.0/include
+		/usr/local/qwt-6.2.0/include
 		/usr/include
 		/usr/local/include
 		"$ENV{LIB_DIR}/include" 
@@ -20,8 +20,8 @@
 		)
  
 		FIND_LIBRARY(QWT_LIBRARY NAMES qwt PATHS 
-		/usr/qwt-6.2.0/lib # NOTE: SEE NOTEs.txt
-		/usr/local/qwt-6.2.0/lib # NOTE: SEE NOTEs.txt
+		/usr/qwt-6.2.0/lib
+		/usr/local/qwt-6.2.0/lib
 		/usr/lib
 		/usr/local/lib
 		"$ENV{LIB_DIR}/lib" 
@@ -33,18 +33,21 @@
 		ENDIF (QWT_INCLUDE_DIR AND QWT_LIBRARY)
  
 		IF (QWT_FOUND)
-		IF (NOT QWT_FIND_QUIETLY)
-			MESSAGE("QWT FOUND")
-		ENDIF (NOT QWT_FIND_QUIETLY)
+			IF (NOT QWT_FIND_QUIETLY)
+				MESSAGE("QWT FOUND")
+				
+				INCLUDE_DIRECTORIES( ${bengine3_INCLUDES} ${QWT_INCLUDE_DIR} )
+				ADD_LIBRARY( be_plugin_qwt SHARED ${plugin_SRCS} )
+				TARGET_LINK_LIBRARIES( be_plugin_qwt kernel ${QWT_LIBRARY} Qt6::Widgets )
+				
+				
+			ENDIF (NOT QWT_FIND_QUIETLY)
 		ELSE (QWT_FOUND)
-		IF (QWT_FIND_REQUIRED)
-			MESSAGE(FATAL_ERROR "Could not find QWT")
-		ENDIF (QWT_FIND_REQUIRED)
+			# IF (QWT_FIND_REQUIRED)
+			# 	MESSAGE(FATAL_ERROR "Could not find QWT")
+			# ENDIF (QWT_FIND_REQUIRED)
 		ENDIF (QWT_FOUND)
 
-	INCLUDE_DIRECTORIES( ${bengine3_INCLUDES} ${QWT_INCLUDE_DIR} )
-	ADD_LIBRARY( be_plugin_qwt SHARED ${plugin_SRCS} )
-	TARGET_LINK_LIBRARIES( be_plugin_qwt kernel ${QWT_LIBRARY} Qt6::Widgets )
 
 	
 	

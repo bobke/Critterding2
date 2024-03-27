@@ -145,11 +145,6 @@
 			return e->set( m_value );
 		}
 
-		Buint BEntity_uint::get_uint()
-		{
-			return m_value;
-		}
-
 	// UINT_PROPERTY
 		BEntity_uint_property::BEntity_uint_property()
 // 		: m_value(0)
@@ -288,11 +283,6 @@
 		{
 // 			std::cout << "applying " << m_value << std::endl;
 			return e->set( m_value );
-		}
-
-		Bfloat BEntity_float::get_float()
-		{
-			return m_value;
 		}
 
 	// FLOAT_PROPERTY

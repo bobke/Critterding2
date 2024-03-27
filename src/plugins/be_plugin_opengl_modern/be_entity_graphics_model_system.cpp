@@ -102,20 +102,23 @@
 	{
 		if ( m_active->get_bool() )
 		{
-			if ( !m_skyDome )
-			{
-				m_skyDome = getChild("GraphicsModel_SkyDome", 1);
-			}
+			// SETUP SKYDOME SHORTCUTS
+				if ( !m_skyDome )
+				{
+					m_skyDome = getChild("GraphicsModel_SkyDome", 1);
+					dynamic_cast<BGraphicsModel*>(m_skyDome)->m_disable_depthmap = true;
+				}
 
-			glUseProgram( m_effect_depthmap->m_program.get()->handle() );
+			// RENDER TO DEPTHMAP
+				glUseProgram( m_effect_depthmap->m_program.get()->handle() );
+				glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+				glViewport(0, 0, m_depth_map_resolution_x, m_depth_map_resolution_y);
+				glClear(GL_DEPTH_BUFFER_BIT);
 
-			glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-			glViewport(0, 0, m_depth_map_resolution_x, m_depth_map_resolution_y);
-			glClear(GL_DEPTH_BUFFER_BIT);
-			
-			// SHADOWS: render to depthmap
-			glUniformMatrix4fv(m_lightSpaceMatrixID_depthmap, 1, GL_FALSE, glm::value_ptr(m_lightSpaceMatrix));
+				// upload lightspacematrix
+				glUniformMatrix4fv(m_lightSpaceMatrixID_depthmap, 1, GL_FALSE, glm::value_ptr(m_lightSpaceMatrix));
 
+				// render all but skydome
 				for_all_children
 				{
 					if (  (*child) != m_skyDome )
@@ -130,17 +133,18 @@
 					}
 				}
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			
 			// SWITCH TO NORMAL SHADER
-			glUseProgram( m_effect->m_program.get()->handle() );
-			glUniformMatrix4fv(m_lightSpaceMatrixID, 1, GL_FALSE, glm::value_ptr(m_lightSpaceMatrix));
-			
-			glUniform1i(glGetUniformLocation(m_effect->m_program.get()->handle(), "depthMap"), 1); // Assuming you use texture unit 0 for the depth map
+				glUseProgram( m_effect->m_program.get()->handle() );
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+				glUniformMatrix4fv(m_lightSpaceMatrixID, 1, GL_FALSE, glm::value_ptr(m_lightSpaceMatrix));
+
+				glUniform1i(glGetUniformLocation(m_effect->m_program.get()->handle(), "depthMap"), 1); // Assuming you use texture unit 0 for the depth map
+				glUniform1i(glGetUniformLocation(m_effect->m_program.get()->handle(), "m_useDepthMap"), 1); // default to use depthmap
+
 			// Bind the depth map texture
-			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, depthMap);
-			glActiveTexture(GL_TEXTURE0);
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, depthMap);
+				glActiveTexture(GL_TEXTURE0);
 		}
 	}
 	

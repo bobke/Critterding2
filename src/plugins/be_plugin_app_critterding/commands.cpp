@@ -8,18 +8,20 @@
 		auto fs = topParent()->getChild( "bin", 1 )->getChild( "GLWindow", 2 )->getChild( "fullscreen", 1 );
 		fs->set( !fs->get_bool() );
 		
-		// set / unset GUI tranlation
-		auto lib = topParent()->getChild( "lib", 1 );
-		if ( fs->get_bool() && !lib->getChild("Translate_QT_IMGUI", 1) )
-		{
-			lib->addChild("Translate_QT_IMGUI", "Translate_QT_IMGUI");
-			return true;
-		}
-		else
-		{
-			// lib->removeChild( lib->getChild("Translate_QT_IMGUI", 1) );
-			return true;
-		}
+		// // set / unset GUI tranlation
+		// auto lib = topParent()->getChild( "lib", 1 );
+		// if ( fs->get_bool() && !lib->getChild("Translate_QT_IMGUI", 1) )
+		// {
+		// 	lib->addChild("Translate_QT_IMGUI", "Translate_QT_IMGUI");
+		// 	return true;
+		// }
+		// else
+		// {
+		// 	// lib->removeChild( lib->getChild("Translate_QT_IMGUI", 1) );
+		// 	return true;
+		// }
+		
+		return true;
 	}
 
 	bool cmd_launchAdminWindow::set()
@@ -111,6 +113,14 @@
 	{
 		auto bin = topParent()->getChild( "bin", 1 );
 		auto lib = topParent()->getChild( "lib", 1 );
+
+		// set GUI tranlation if fullscreen
+		auto fs = bin->getChild( "GLWindow", 2 )->getChild( "fullscreen", 1 );
+		if ( fs->get_bool() && !lib->getChild("Translate_QT_IMGUI", 1) )
+		{
+			lib->addChild("Translate_QT_IMGUI", "Translate_QT_IMGUI");
+		}
+
 		BEntity* p;
 		if ( lib->getChild("Translate_QT_IMGUI", 1) )
 		{
@@ -123,8 +133,14 @@
 		if ( !p->getChild( "CdControlPanel", 1 ) )
 		{
 			p->addChild( "CdControlPanel", "CdControlPanel" );
-			return true;
 		}
+
+		// unset GUI tranlation
+		if ( lib->getChild("Translate_QT_IMGUI", 1) )
+		{
+			lib->removeChild( lib->getChild("Translate_QT_IMGUI", 1) );
+		}
+		
 		
 		// auto qt_app = topParent()->getChild( "bin", 1 )->getChild( "QT Application", 2 );
 		// if ( qt_app )
@@ -142,6 +158,14 @@
 	{
 		auto bin = topParent()->getChild( "bin", 1 );
 		auto lib = topParent()->getChild( "lib", 1 );
+
+		// set GUI tranlation if fullscreen
+		auto fs = bin->getChild( "GLWindow", 2 )->getChild( "fullscreen", 1 );
+		if ( fs->get_bool() && !lib->getChild("Translate_QT_IMGUI", 1) )
+		{
+			lib->addChild("Translate_QT_IMGUI", "Translate_QT_IMGUI");
+		}
+
 		BEntity* p;
 		if ( lib->getChild("Translate_QT_IMGUI", 1) )
 		{
@@ -154,9 +178,15 @@
 		if ( !p->getChild( "SystemMonitor", 1 ) )
 		{
 			p->addChild( "SystemMonitor", "SystemMonitor" );
-			return true;
 		}
-		return false;
+		
+		// unset GUI tranlation
+		if ( lib->getChild("Translate_QT_IMGUI", 1) )
+		{
+			lib->removeChild( lib->getChild("Translate_QT_IMGUI", 1) );
+		}
+
+		return true;
 		
 		
 // // 			auto bin = topParent()->getChild( "bin", 1 );

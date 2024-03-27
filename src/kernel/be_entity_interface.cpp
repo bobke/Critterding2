@@ -98,7 +98,7 @@
 
 		Bfloat BEntity::get_float()
 		{
-			std::cout << "BEntity::get_float(): should be overriding this entity " << id() << "(" << name() << ")" << "(" << class_id() << ")" << std::endl;
+			std::cout << "BEntity::get_float(): should be overriding this entity id: " << id() << " (name: " << name() << ")" << " (class_id:" << class_id() << ")" << std::endl;
 			return 0.0f;
 		}
 

@@ -37,7 +37,7 @@
 		// QWINDOW
 			auto qwindow = addChild( "QT MainWindow", "QMainWindow" );
 			qwindow->addChild( "title", "string_property" )->set("Critterding Control Panel");
-			qwindow->addChild( "x", "uint_property" )->set(Buint(1560));
+			qwindow->addChild( "x", "uint_property" )->set(Buint(460));
 			qwindow->addChild( "y", "uint_property" )->set(Buint(40));
 			qwindow->addChild( "width", "uint_property" )->set(Buint(590));
 			qwindow->addChild( "height", "uint_property" )->set(Buint(460));
@@ -61,10 +61,10 @@
 					{
 						auto text_min_critters = layout_H->addChild( "min_critters", "QLabel" );
 						text_min_critters->set("text", "minimum critters");
-						text_min_critters->set("width", Buint(264));
+						text_min_critters->set("width", Buint(165));
 						auto line_edit_min_critters= layout_H->addChild( "min_critters_lineedit", "QLineEdit" );
 						line_edit_min_critters->set("min_critters");
-						line_edit_min_critters->set("width", Buint(164));
+						line_edit_min_critters->set("width", Buint(84));
 						line_edit_min_critters->set("height", Buint(28));
 
 						auto critter_system = critterding->getChild("critter_system", 1);
@@ -79,10 +79,10 @@
 					{
 						auto text_energy = layout_H->addChild( "energy", "QLabel" );
 						text_energy->set("text", "energy");
-						text_energy->set("width", Buint(264));
+						text_energy->set("width", Buint(165));
 						auto line_edit_energy= layout_H->addChild( "energy_lineedit", "QLineEdit" );
 						// m_line_edit_energy->set("energy");
-						line_edit_energy->set("width", Buint(164));
+						line_edit_energy->set("width", Buint(84));
 						line_edit_energy->set("height", Buint(28));
 
 						auto food_system = critterding->getChild("food_system", 1);
@@ -99,10 +99,10 @@
 					{
 						auto text_mutation_chance = layout_H->addChild( "mutation_chance", "QLabel" );
 						text_mutation_chance->set("text", "mutation_chance");
-						text_mutation_chance->set("width", Buint(264));
+						text_mutation_chance->set("width", Buint(165));
 						auto line_edit_mutation_chance = layout_H->addChild( "mutation_chance_lineedit", "QLineEdit" );
 						line_edit_mutation_chance->set("mutation_chance");
-						line_edit_mutation_chance->set("width", Buint(164));
+						line_edit_mutation_chance->set("width", Buint(84));
 						line_edit_mutation_chance->set("height", Buint(28));
 
 						auto brain_settings = brain_system->getChild("settings", 1);
@@ -116,10 +116,10 @@
 					{
 						auto text_mutationruns_max = layout_H->addChild( "mutationruns_max", "QLabel" );
 						text_mutationruns_max->set("text", "mutationruns_max");
-						text_mutationruns_max->set("width", Buint(264));
+						text_mutationruns_max->set("width", Buint(165));
 						auto line_edit_mutationruns_max = layout_H->addChild( "mutationruns_max_lineedit", "QLineEdit" );
 						// m_line_edit_mutationruns_max->set("mutationruns_max");
-						line_edit_mutationruns_max->set("width", Buint(164));
+						line_edit_mutationruns_max->set("width", Buint(84));
 						line_edit_mutationruns_max->set("height", Buint(28));
 
 						auto brain_settings = brain_system->getChild("settings", 1);
@@ -135,10 +135,10 @@
 					{
 						auto text_avg_adam_distance = layout_H->addChild( "avg_adam_distance", "QLabel" );
 						text_avg_adam_distance->set("text", "avg_adam_distance");
-						text_avg_adam_distance->set("width", Buint(264));
+						text_avg_adam_distance->set("width", Buint(165));
 						m_line_edit_avg_adam_distance= layout_H->addChild( "avg_adam_distance_lineedit", "QLineEdit" );
 						m_line_edit_avg_adam_distance->set("avg_adam_distance");
-						m_line_edit_avg_adam_distance->set("width", Buint(164));
+						m_line_edit_avg_adam_distance->set("width", Buint(84));
 						m_line_edit_avg_adam_distance->set("height", Buint(28));
 					}
 
@@ -146,10 +146,10 @@
 					{
 						auto text_generations = layout_H->addChild( "generations", "QLabel" );
 						text_generations->set("text", "generations");
-						text_generations->set("width", Buint(264));
+						text_generations->set("width", Buint(165));
 						m_line_edit_generations= layout_H->addChild( "generations_lineedit", "QLineEdit" );
 						m_line_edit_generations->set("generations");
-						m_line_edit_generations->set("width", Buint(164));
+						m_line_edit_generations->set("width", Buint(84));
 						m_line_edit_generations->set("height", Buint(28));
 					}
 
@@ -159,10 +159,10 @@
 					{
 						auto text_critters = layout_H->addChild( "critters", "QLabel" );
 						text_critters->set("text", "critters");
-						text_critters->set("width", Buint(264));
+						text_critters->set("width", Buint(165));
 						m_line_edit_critters= layout_H->addChild( "critters_lineedit", "QLineEdit" );
 						m_line_edit_critters->set("critters");
-						m_line_edit_critters->set("width", Buint(164));
+						m_line_edit_critters->set("width", Buint(84));
 						m_line_edit_critters->set("height", Buint(28));
 					}
 
@@ -170,10 +170,10 @@
 					{
 						auto text_food = layout_H->addChild( "food", "QLabel" );
 						text_food->set("text", "food");
-						text_food->set("width", Buint(264));
+						text_food->set("width", Buint(165));
 						m_line_edit_food= layout_H->addChild( "food_lineedit", "QLineEdit" );
 						m_line_edit_food->set("food");
-						m_line_edit_food->set("width", Buint(164));
+						m_line_edit_food->set("width", Buint(84));
 						m_line_edit_food->set("height", Buint(28));
 					}
 
@@ -183,10 +183,10 @@
 					{
 						auto text_total_neurons = layout_H->addChild( "text_total_neurons", "QLabel" );
 						text_total_neurons->set("text", "neurons");
-						text_total_neurons->set("width", Buint(264));
+						text_total_neurons->set("width", Buint(165));
 						m_line_edit_total_neurons = layout_H->addChild( "neurons_lineedit", "QLineEdit" );
 						m_line_edit_total_neurons->set("neurons");
-						m_line_edit_total_neurons->set("width", Buint(164));
+						m_line_edit_total_neurons->set("width", Buint(84));
 						m_line_edit_total_neurons->set("height", Buint(28));
 					}
 					
@@ -194,10 +194,10 @@
 					{
 						auto text_total_synapses = layout_H->addChild( "text_total_synapses", "QLabel" );
 						text_total_synapses->set("text", "synapses");
-						text_total_synapses->set("width", Buint(264));
+						text_total_synapses->set("width", Buint(165));
 						m_line_edit_total_synapses = layout_H->addChild( "total_synapses_lineedit", "QLineEdit" );
 						m_line_edit_total_synapses->set("synapses");
-						m_line_edit_total_synapses->set("width", Buint(164));
+						m_line_edit_total_synapses->set("width", Buint(84));
 						m_line_edit_total_synapses->set("height", Buint(28));
 					}
 
@@ -207,10 +207,10 @@
 					{
 						auto text_avg_neurons = layout_H->addChild( "text_avg_neurons", "QLabel" );
 						text_avg_neurons->set("text", "avg neurons / critter");
-						text_avg_neurons->set("width", Buint(264));
+						text_avg_neurons->set("width", Buint(165));
 						m_line_edit_avg_neurons = layout_H->addChild( "avg_neurons_lineedit", "QLineEdit" );
 						m_line_edit_avg_neurons->set("avg neurons");
-						m_line_edit_avg_neurons->set("width", Buint(164));
+						m_line_edit_avg_neurons->set("width", Buint(84));
 						m_line_edit_avg_neurons->set("height", Buint(28));
 					}
 					
@@ -218,10 +218,10 @@
 					{
 						auto text_avg_synapses = layout_H->addChild( "text_avg_synapses", "QLabel" );
 						text_avg_synapses->set("text", "avg synapses / neuron");
-						text_avg_synapses->set("width", Buint(264));
+						text_avg_synapses->set("width", Buint(165));
 						m_line_edit_avg_synapses = layout_H->addChild( "avg_synapses_lineedit", "QLineEdit" );
 						m_line_edit_avg_synapses->set("avg synapses");
-						m_line_edit_avg_synapses->set("width", Buint(164));
+						m_line_edit_avg_synapses->set("width", Buint(84));
 						m_line_edit_avg_synapses->set("height", Buint(28));
 					}
 
@@ -233,7 +233,7 @@
 						// text_species->set("text", "species");
 						// m_line_edit_species = layout_H->addChild( "species_lineedit", "QLineEdit" );
 						// m_line_edit_species->set("species");
-						// m_line_edit_species->set("width", Buint(164));
+						// m_line_edit_species->set("width", Buint(84));
 						// m_line_edit_species->set("height", Buint(28));
 					}
 
@@ -243,27 +243,31 @@
 						// text_avg_crittersperspecies->set("text", "avg critters / species");
 						// m_line_edit_avg_crittersperspecies = layout_H->addChild( "avg_crittersperspecies_lineedit", "QLineEdit" );
 						// m_line_edit_avg_crittersperspecies->set("avg crittersperspecies");
-						// m_line_edit_avg_crittersperspecies->set("width", Buint(164));
+						// m_line_edit_avg_crittersperspecies->set("width", Buint(84));
 						// m_line_edit_avg_crittersperspecies->set("height", Buint(28));
 					}
 
 				// ROW WQT
+					m_qwt_curve_critters = 0;
+					m_qwt_curve_food = 0;
 					layout_H_row = layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
 					layout_H = layout_H_row->addChild( "graph layout", "QHBoxLayout" );
 					{
 						auto qwt_plot = layout_H->addChild( "plot", "QwtPlot" );
-						
+						if ( qwt_plot )
 						{
-							m_qwt_curve_critters = qwt_plot->addChild( "curve", "QwtCurve" );
-							auto qpen = m_qwt_curve_critters->addChild( "pen", "QPen" );
-							qpen->set( "color_r", Buint(50) );
-							qpen->set( "color_g", Buint(50) );
-							qpen->set( "color_b", Buint(255) );
-						}
-						{
-							m_qwt_curve_food = qwt_plot->addChild( "curve", "QwtCurve" );
-							auto qpen = m_qwt_curve_food->addChild( "pen", "QPen" );
-							qpen->set( "color_g", Buint(200) );
+							{
+								m_qwt_curve_critters = qwt_plot->addChild( "curve", "QwtCurve" );
+								auto qpen = m_qwt_curve_critters->addChild( "pen", "QPen" );
+								qpen->set( "color_r", Buint(50) );
+								qpen->set( "color_g", Buint(50) );
+								qpen->set( "color_b", Buint(255) );
+							}
+							{
+								m_qwt_curve_food = qwt_plot->addChild( "curve", "QwtCurve" );
+								auto qpen = m_qwt_curve_food->addChild( "pen", "QPen" );
+								qpen->set( "color_g", Buint(200) );
+							}
 						}
 					}
 /*
@@ -273,7 +277,7 @@
 						text_avg_crittersperspecies->set("text", "avg critters / species");
 						m_line_edit_avg_crittersperspecies = layout_H->addChild( "avg_crittersperspecies_lineedit", "QLineEdit" );
 						m_line_edit_avg_crittersperspecies->set("avg crittersperspecies");
-						m_line_edit_avg_crittersperspecies->set("width", Buint(164));
+						m_line_edit_avg_crittersperspecies->set("width", Buint(84));
 						m_line_edit_avg_crittersperspecies->set("height", Buint(28));
 					}*/
 	} 
@@ -283,12 +287,18 @@
 		// FOOD
 			auto food = m_food_unit_container->numChildren();
 			m_line_edit_food->set( food );
-			m_qwt_curve_food->set( food );
+			if ( m_qwt_curve_food )
+			{
+				m_qwt_curve_food->set( food );
+			}
 
 		// CRITTERS
 			auto critters = m_critter_unit_container->numChildren();
 			m_line_edit_critters->set( critters );
-			m_qwt_curve_critters->set( critters );
+			if ( m_qwt_curve_critters )
+			{
+				m_qwt_curve_critters->set( critters );
+			}
 
 			unsigned int total_adam_distance(0);
 			for_all_children_of2( m_critter_unit_container )

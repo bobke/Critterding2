@@ -34,6 +34,7 @@
 			GLuint m_buffer;
 			
 			bool m_render_to_depth;
+			bool m_disable_depthmap;
 
 		private:
 			inline void doSetup();
@@ -70,7 +71,7 @@
 			// GLuint m_transformBuffer;
 			GLuint m_scaledTransformsBufferID;
 			GLint m_instanceModelMatrixAttrib;
-			GLint m_instanceModelMatrixAttrib_critter;
+			// GLint m_instanceModelMatrixAttrib_critter;
 			GLint m_instanceModelMatrixAttrib_depthmap;
 			float m_ScaleBuffer[16];
 
@@ -86,6 +87,7 @@
 			
 			// GLuint m_scale_location;
 			GLuint m_color_location;
+			GLuint m_useDepthMap_location;
 			// GLuint m_textureSample_location;
 
 			// btTransform m_ModelMatrix;

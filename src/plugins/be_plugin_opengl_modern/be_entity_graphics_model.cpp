@@ -20,6 +20,7 @@
 	, m_setup_done(false)
 	, m_always_render(false)
 	, m_render_to_depth(false)
+	, m_disable_depthmap(false)
 	, m_basic_mat4(1.0f)
 	{
 		setProcessing();
@@ -63,6 +64,9 @@
 			m_uniform_color = dynamic_cast<BShaderUniformVec4*>( parent()->getChild("shaders", 1)->getChild("u_Color", 1) );
 		}
 		m_color_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect_critter->m_program.get()->handle(), "u_Color" );
+		
+		m_useDepthMap_location = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "u_UseDepthMap" );
+		
 		// glUniform4f( m_color_location, 0.2f, 0.8f, 0.4f, 1.0f );
 		
 		// // m_ViewModelMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ViewModelMatrix_Model" );
@@ -133,7 +137,7 @@
 			glBufferData(GL_ARRAY_BUFFER, buffer_max_instances * sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
 
 			m_instanceModelMatrixAttrib = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect->m_program.get()->handle(), "InstanceModelMatrix");
-			m_instanceModelMatrixAttrib_critter = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect_critter->m_program.get()->handle(), "InstanceModelMatrix");
+			// m_instanceModelMatrixAttrib_critter = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect_critter->m_program.get()->handle(), "InstanceModelMatrix");
 			m_instanceModelMatrixAttrib_depthmap = glGetAttribLocation(dynamic_cast<BGraphicsModelSystem*>(parent())->m_effect_depthmap->m_program.get()->handle(), "InstanceModelMatrix");
 
 			// Set up per-instance attribute pointers
@@ -153,22 +157,22 @@
 				glVertexAttribDivisor(m_instanceModelMatrixAttrib+2, 1);
 				glVertexAttribDivisor(m_instanceModelMatrixAttrib+3, 1);
 			}
-			if ( m_instanceModelMatrixAttrib_critter > -1 && m_instanceModelMatrixAttrib_critter < 40000 )
-			{
-				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter);
-				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0));
-				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter+1);
-				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter+1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(1 * sizeof(glm::vec4)));
-				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter+2);
-				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter+2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
-				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter+3);
-				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter+3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
-   
-				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter, 1);
-				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter+1, 1);
-				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter+2, 1);
-				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter+3, 1);
-			}
+// 			if ( m_instanceModelMatrixAttrib_critter > -1 && m_instanceModelMatrixAttrib_critter < 40000 )
+// 			{
+// 				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter);
+// 				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(0));
+// 				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter+1);
+// 				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter+1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(1 * sizeof(glm::vec4)));
+// 				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter+2);
+// 				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter+2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(2 * sizeof(glm::vec4)));
+// 				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_critter+3);
+// 				glVertexAttribPointer(m_instanceModelMatrixAttrib_critter+3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(3 * sizeof(glm::vec4)));
+//    
+// 				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter, 1);
+// 				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter+1, 1);
+// 				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter+2, 1);
+// 				glVertexAttribDivisor(m_instanceModelMatrixAttrib_critter+3, 1);
+// 			}
 			if ( m_instanceModelMatrixAttrib_depthmap > -1 && m_instanceModelMatrixAttrib_depthmap < 40000 )
 			{
 				glEnableVertexAttribArray(m_instanceModelMatrixAttrib_depthmap);
@@ -186,7 +190,7 @@
 				glVertexAttribDivisor(m_instanceModelMatrixAttrib_depthmap+3, 1);
 			}
 
-			std::cout << m_instanceModelMatrixAttrib << " " << m_instanceModelMatrixAttrib_critter << " " << m_instanceModelMatrixAttrib_depthmap << std::endl;
+			// std::cout << m_instanceModelMatrixAttrib << " " << m_instanceModelMatrixAttrib_critter << " " << m_instanceModelMatrixAttrib_depthmap << std::endl;
 
 			m_setup_done = true;
 			auto e = glGetError(); if ( e != 0 ) { std::cout << "BGraphicsModel::process() glError: " << e << std::endl; exit(0); }
@@ -199,6 +203,12 @@
 		
 		if (m_active->get_bool() && getModel() && getModel()->isReady())
 		{
+			// Unbind the depth map texture
+			if ( m_disable_depthmap )
+			{
+				glUniform1i(m_useDepthMap_location, 0); // Assuming you use texture unit 0 for the depth map
+			}
+
 			glBindVertexArray( getModel()->get()->m_vertexArray.get() ? getModel()->get()->m_vertexArray.get()->handle() : 0 );
 
 			// SET COLOR HACK
@@ -275,6 +285,12 @@
 
 			m_modelMatrices.clear();
 			glBindVertexArray(0);
+			
+			// Rebind the depth map texture
+			if ( m_disable_depthmap )
+			{
+				glUniform1i(m_useDepthMap_location, 1); // Assuming you use texture unit 0 for the depth map
+			}
 			
 		}
 		// auto e = glGetError(); if ( e != 0 ) { std::cout << "BGraphicsModel::process() glError: " << e << std::endl; exit(0); }

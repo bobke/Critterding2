@@ -114,9 +114,9 @@
 		// QWINDOW
 			auto qwindow = addChild( "QT MainWindow", "QMainWindow" );
 			qwindow->addChild( "title", "string_property" )->set("System Monitor");
-			qwindow->addChild( "x", "uint_property" )->set(Buint(2250));
-			qwindow->addChild( "y", "uint_property" )->set(Buint(40));
-			qwindow->addChild( "width", "uint_property" )->set(Buint(300));
+			qwindow->addChild( "x", "uint_property" )->set(Buint(160));
+			qwindow->addChild( "y", "uint_property" )->set(Buint(580));
+			qwindow->addChild( "width", "uint_property" )->set(Buint(350));
 			qwindow->addChild( "height", "uint_property" )->set(Buint(226));
 			qwindow->set("on_close_destroy_entity", this);
 

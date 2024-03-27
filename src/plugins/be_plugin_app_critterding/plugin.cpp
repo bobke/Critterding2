@@ -61,7 +61,7 @@
 
 		if ( !pluginManager()->load( "glfw", "src/plugins/be_plugin_glfw", "be_plugin_glfw" ) )
 		{
-			pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
+			// pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
 		}
 
 		// // TIMER
@@ -321,8 +321,6 @@
 					physics_entity_transform->connectServerServer( graphics_transform );
 					physics_entity_transform->onUpdate();
 				}
-				
-				
 		}
 
 		// SKY DOME
@@ -331,10 +329,10 @@
 
 		// DEPTHMAP VIEWER
 			t_graphicsModelSystem->addChild("DepthMapViewer", "DepthMapViewer");
-			
+
 		// VISION SYSTEM
 			auto vision_system = addChild( "vision_system", "CdVisionSystem" );
-  			addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
+  			// addChild("GLSwapBuffers", "GLSwapBuffers")->set("set_glwindow", glwindow);
 
 		// CRITTER SYSTEM
 			auto critter_system = addChild( "critter_system", new CdCritterSystem() );

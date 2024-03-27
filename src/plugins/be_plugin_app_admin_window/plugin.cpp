@@ -426,7 +426,9 @@
 				auto entity = value->get_reference();
 				
 				auto qwindow = addChild( "QT MainWindow", "QMainWindow" );
-				qwindow->addChild( "title", "string_property" )->set( "Graph" );
+				// qwindow->addChild( "title", "string_property" )->set( "Graph" );
+				qwindow->addChild( "title", "string_property" )->set( entity->name().c_str() );
+
 				qwindow->addChild( "x", "uint_property" )->set(Buint(1000));
 				qwindow->addChild( "y", "uint_property" )->set(Buint(300));
 				qwindow->addChild( "width", "uint_property" )->set(Buint(460));
@@ -681,6 +683,7 @@
 					// std::cout << entity->name().c_str() << std::endl;
 					label->set( "text", entity->name().c_str() );
 					label->set( "width", Buint(220) );
+					label->set( "height", Buint(20) );
 
 					// drag and drop= reference to adminned entity
 					label->addChild( "reference", new BEntity_reference() )->set( entity );
@@ -912,17 +915,24 @@
 				}
 			}
 
-			// GRAPH FOR FLOAT
+			// GRAPHS FOR FLOAT, INT, UINT
 			auto t_float = dynamic_cast<BEntity_float*>( entity );
-			if ( t_float )
+			auto t_uint = dynamic_cast<BEntity_uint*>( entity );
+			auto t_int = dynamic_cast<BEntity_int*>( entity );
+			if ( t_float || t_uint || t_int )
 			{
-				auto button = to_layout->addChild("qt button", "QPushButton" );
-				button->set("text", "gr");
+				// exceptions
+				auto qwtlib = lib->getChild("qwt", 1);
+				if ( qwtlib && qwtlib->getChild("Classes", 1) )
+				{
+					auto button = to_layout->addChild("qt button", "QPushButton" );
+					button->set("text", "gr");
 
-				// COMMAND
-					auto actions = button->addChild("_commands", new BEntity() );
-					auto command = actions->addChild("admin_entity_graph", new BEntity_reference() );
-					command->set(entity);
+					// COMMAND
+						auto actions = button->addChild("_commands", new BEntity() );
+						auto command = actions->addChild("admin_entity_graph", new BEntity_reference() );
+						command->set(entity);
+				}
 			}
 
 			// RECOMPILE LIBRARY

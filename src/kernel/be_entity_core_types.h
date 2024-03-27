@@ -76,7 +76,9 @@
 
 			virtual bool set( const Buint& value );
 // 			virtual bool set( BEntity* entity );
-			virtual Buint get_uint();
+			virtual Buint get_uint() { return m_value; };
+			virtual Bint get_int() { return (Bint)m_value; }
+			virtual Bfloat get_float() { return (Bfloat)m_value; }
 			virtual bool apply( BEntity* e );
 // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 		protected:
@@ -107,6 +109,8 @@
 			virtual bool set( const Bint& value );
 // 			virtual bool set( BEntity* entity );
 			virtual Bint get_int() { return m_value; }
+			virtual Buint get_uint() { return (Buint)m_value; }
+			virtual Bfloat get_float() { return (Bfloat)m_value; }
 			virtual bool apply( BEntity* e ) { return e->set( m_value ); };
 // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 		protected:
@@ -153,7 +157,9 @@
 			virtual ~BEntity_float() {};
 
 			virtual bool set( const Bfloat& value );
-			virtual Bfloat get_float();
+			virtual Bfloat get_float() { return m_value; }
+			virtual Bint get_int() { return (Bfloat)m_value; }
+			virtual Buint get_uint() { return (Bfloat)m_value; }
 			virtual bool apply( BEntity* e );
 // 			void adminButtons( BEntity* hboxlayout, BEntity* plugin_manager );
 		protected:

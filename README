@@ -2,17 +2,19 @@ REQUIREMENTS
 ------------
 
     Qt6
-    Qwt (compiled against Qt6)
-    FGLW or SDL
+    qwt-qt6 (optional for graphs)
+    FGLW
     glew
     boost
     glm
-    
 
 BUILDING
 --------
     > cd build
     > ./compile-release.sh [threads]
+
+    alternatively:
+    > ./compile-clang-release.sh [threads]
 
 RUNNING
 -------
@@ -21,6 +23,14 @@ RUNNING
     running with server threads:
     > ./src/bengine app_critterding_threads
 
+    alternatively:
+    > ./src/bengine app_admin_window
+    click "ld" next to "lib", navigate to src/plugins/be_plugin_app_critterding(_threads) and load .so file.
+    expand "lib" "be_plugin_app_critterding_threads" "Classes" and drag and drop "Critterding" to "bin"
+    
+    to save critters navigate to "bin/Critterding(/threadX/Critterding)/critter_system/unit_container" and click "sv" next to critter
+    to load critters click "ld" next to critter_system/unit_container 
+    
 KEYS
 ----
     F1      open admin window

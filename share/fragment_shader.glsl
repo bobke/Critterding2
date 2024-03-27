@@ -4,18 +4,17 @@ out vec4 FragColor;
 in vec4 FragPos; // FragPos from the vertex shader
 in vec3 Normal;  // Normal from the vertex shader
 in vec2 v_texCoord;
-in vec3 viewPos;
+// in vec3 viewPos;
 
 uniform sampler2D u_Texture;
 uniform sampler2D depthMap;
 uniform mat4 lightSpaceMatrix;
+uniform int u_UseDepthMap;
 
 uniform vec4 u_Color;
 
-    vec3 lightPos = vec3( 0.0, 50.0, -100.0 );
+    vec3 lightPos = vec3( 0.0, 800.0, -100.0 );
     
-// vec3 viewPos = vec3(0.0, 0.0, 0.0); // Assuming the view position is at the origin
-
     void main()
     {
         // Convert coordinates to light space
@@ -25,44 +24,52 @@ uniform vec4 u_Color;
         // Map to [0,1] range
         lightCoords = 0.5 * lightCoords + 0.5;
 
-        // Get depth value from the depth map
-        float depthValue = texture(depthMap, lightCoords.xy).r;
+//         // Get depth value from the depth map
+//         float depthValue = texture(depthMap, lightCoords.xy).r;
 
-        // Calculate distance between fragment and light source
-        float distanceToLight = length(lightPos - FragPos.xyz);
+//         // Calculate distance between fragment and light source
+//         float distanceToLight = length(lightPos - FragPos.xyz);
 
         // Calculate diffuse lighting (replace with your own lighting model)
         vec3 normal = normalize(Normal);
-        // vec3 lightDir = normalize(lightPos - FragPos.xyz);
-        vec3 lightDir = vec3(0.0, 1.0, 0.0);
+//         vec3 lightDir = normalize(lightPos - FragPos.xyz);
+        vec3 lightDir = vec3(0.0, 0.9999, 0.0); // well this isn't correct but for now it's faster
+        
         float diff = max(dot(normal, lightDir), 0.0);
 
         
-// Calculate specular lighting
+// // Calculate specular lighting
 // vec3 viewDir = normalize(viewPos - FragPos.xyz);
 // vec3 reflectDir = reflect(-lightDir, normal);
-// float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0); // You can adjust the shininess value (32.0) as needed        
-        
-        // bias
-        // float bias = 0.002;
-        // Calculate bias to reduce shadow acne
-        float bias = max(0.03 * (1.0 - dot(normal, lightCoords)), 0.002);
+// float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+    
 
         // Soft shadow calculation using Percentage-Closer Filtering (PCF)
         float shadow = 0.0;
-        vec2 texelSize = 1.0 / textureSize(depthMap, 0);
-        for (int x = -1; x <= 1; ++x)
+        if ( u_UseDepthMap == 1 )
         {
-            for (int y = -1; y <= 1; ++y)
+            // Calculate bias to reduce shadow acne
+            // float bias = 0.002;
+            float bias = max(0.02 * (1.0 - dot(normal, lightCoords)), 0.001);
+            
+            vec2 texelSize = 1.0 / textureSize(depthMap, 0);
+            for (int x = -1; x <= 1; ++x)
             {
-                float pcfDepth = texture(depthMap, lightCoords.xy + vec2(x, y) * texelSize).r;
-                shadow += (lightCoords.z - bias > pcfDepth) ? 0.0 : 1.0;
-            }
-        }    
-        shadow /= 9.0; // Assuming a 3x3 PCF kernel        
+                for (int y = -1; y <= 1; ++y)
+                {
+                    float pcfDepth = texture(depthMap, lightCoords.xy + vec2(x, y) * texelSize).r;
+                    shadow += (lightCoords.z - bias > pcfDepth) ? 0.0 : 1.0;
+                }
+            }    
+            shadow /= 9.0; // Assuming a 3x3 PCF kernel        
+        }
+        else
+        {
+            shadow = 1.0;
+        }
 
         // Apply shadow factor to diffuse lighting
-        vec3 diffuse = diff * shadow * vec3(0.7);
+        vec3 diffuse = diff * shadow * vec3(0.6);
 
 // vec3 specular = spec * shadow * vec3(1.0); // Specular color is usually white        
 
@@ -70,7 +77,7 @@ uniform vec4 u_Color;
     //     FragColor = texture(u_Texture, v_texCoord) * vec4(diffuse, 1.0) * u_Color;
         
         // Calculate ambient color
-        vec3 ambient_color = vec3(0.5); // You can adjust the ambient intensity here
+        vec3 ambient_color = vec3(0.6); // You can adjust the ambient intensity here
         vec3 ambient = ambient_color * u_Color.rgb;
 
         // Final color output
@@ -80,6 +87,16 @@ uniform vec4 u_Color;
 
 
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 // #version 330 core
 // 
 //     layout (location = 0) out vec4 color;

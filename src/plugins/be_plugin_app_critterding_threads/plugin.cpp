@@ -145,7 +145,7 @@
 
 		if ( !pluginManager()->load( "glfw", "src/plugins/be_plugin_glfw", "be_plugin_glfw" ) )
 		{
-			pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
+			// pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
 		}
 
 		// SDL & OPENGL
@@ -668,6 +668,9 @@
 // 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker2 );
 // 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker3 );
 // 			mousepickers->addChild( "external_mousepicker", new BEntity_external() )->set( mousepicker4 );
+
+		// FORCE IMGUI
+			// topParent()->getChild( "lib", 1 )->addChild("Translate_QT_IMGUI", "Translate_QT_IMGUI");
 	}
 
 	BEntity* Scene::getServer( const unsigned int row, const unsigned int column, const unsigned int rows, const unsigned int columns )

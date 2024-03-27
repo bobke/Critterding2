@@ -53,7 +53,7 @@
 		
 		// GL UNIFORMS
 		// m_ProjectionMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ProjectionMatrix_Camera" );
-		m_ViewMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ViewMatrix_Camera" );
+		// m_ViewMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ViewMatrix_Camera" );
 		m_ProjectionViewMatrixID = glGetUniformLocation(  dynamic_cast<BGraphicsModelSystem*>( parent() )->m_effect->m_program.get()->handle(), "ProjectionViewMatrix_Camera" );
 		
 		m_e_scale_x = 0;
@@ -161,7 +161,7 @@
 				m_ViewMatrix = (m_base_transform->m_transform * m_transform->m_transform).inverse();
 				m_ViewMatrix.getOpenGLMatrix( m_viewMatrix );
 				glm::mat4 viewMatrix = glm::make_mat4(m_viewMatrix);
-				glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, glm::value_ptr(viewMatrix) );
+				// glUniformMatrix4fv( m_ViewMatrixID, 1, GL_FALSE, glm::value_ptr(viewMatrix) );
 
 
 	// 		// PROJECTIONVIEW MATRIX GLM
