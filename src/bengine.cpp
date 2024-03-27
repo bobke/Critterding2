@@ -29,9 +29,11 @@ int main(int argc, char* argv[])
 	// HACK DO TIMER HERE SO WE SEE IT IN ADMINWINDOW
 		auto sys = toptop->addChild("sys", new BEntity());
 		// sys->addChild("dummy", new BEntity());
+		sys->addChild( "version", "float" )->set( 2.001f );
 		sys->addChild( "timer", new BTimer() );
 		sys->addChild( "sleeper", new BSleeper() );
 
+		
 		// binary path
 		char buf3[1024];
 		readlink("/proc/self/exe", buf3, 1024);
