@@ -24,10 +24,12 @@ RUNNING
 
     launcher:
     > ./src/bengine app_critterding_launcher
-    launch directly on one thread:
-    > ./src/bengine app_critterding
-    running with 4 server threads (4 columns):
+    
+    4 server threads (4 columns):
     > ./src/bengine app_critterding_threads
+    
+    all on one thread:
+    > ./src/bengine app_critterding
 
     alternatively:
     > ./src/bengine app_admin_window
