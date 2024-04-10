@@ -2,12 +2,15 @@ REQUIREMENTS
 ------------
 
     Qt6
-    qwt-qt6 (optional for graphs)
     FGLW
     glew
     boost
     glm
 
+OPTIONAL
+--------
+    qwt-qt6 (graphs)
+    
 BUILDING
 --------
     > cd build
@@ -18,9 +21,12 @@ BUILDING
 
 RUNNING
 -------
-    running single thread: 
+
+    launcher:
+    > ./src/bengine app_critterding_launcher
+    launch directly on one thread:
     > ./src/bengine app_critterding
-    running with server threads:
+    running with server threads (4 columns):
     > ./src/bengine app_critterding_threads
 
     alternatively:

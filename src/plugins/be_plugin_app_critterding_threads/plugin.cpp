@@ -148,6 +148,19 @@
 			// pluginManager()->load( "sdl", "src/plugins/be_plugin_sdl", "be_plugin_sdl" );
 		}
 
+		// LAUNCHER SETTINGS
+			BEntity* launcher_settings(0);
+			BEntity* launcher_setting_servers_on_background(0);
+			auto launcher = topParent()->getChild( "bin", 1 )->getChild( "Critterding Launcher", 1 ); 
+			if ( launcher )
+			{
+				launcher_settings = launcher->getChild( "settings", 1 ); 
+				if ( launcher_settings )
+				{
+					launcher_setting_servers_on_background = launcher_settings->getChild( "threadsServersBackground", 1 ); 
+				}
+			}
+
 		// SDL & OPENGL
 			auto glwindow = addChild( "GLWindow", "GLWindow" );
 			glwindow->set("title", "Critterding 2 (threads)");
@@ -389,20 +402,51 @@
 			m_raycasters = addChild( "raycasters", new BEntity() );
 
 		// THREADS FINISH
-			auto threads_finish = addChild("threads_finish", "threads_finish");
+			BEntity* threads_finish(0);
+			if ( (launcher_setting_servers_on_background && launcher_setting_servers_on_background->get_bool()) || !launcher_setting_servers_on_background )
+			{
+				threads_finish = addChild("threads_finish", "threads_finish");
+			}
 
 		// POPLUATION CONTROLLER
 			auto population_controller = addChild( "CdPopulationController", "CdPopulationController" );
 
 		// SERVERS
 			const float spacing( 2.0f );
-			const unsigned int total_minimum_critters( 20 ); // FIXME TO GLOBAL ENTITY
-			const unsigned int total_minimum_food( 1400 ); // FIXME TO GLOBAL ENTITY
+			unsigned int total_minimum_critters( 20 ); // FIXME TO GLOBAL ENTITY
+			unsigned int total_minimum_food( 1400 ); // FIXME TO GLOBAL ENTITY
 			const float critter_spacing( 1.0f );
 			
-			const unsigned int rows( 1 );
-			const unsigned int columns( 4 );
+			unsigned int rows( 1 );
+			unsigned int columns( 4 );
+			
+			// IF LAUNCHER UPDATE VALUES FROM LAUNCHER
+			if ( launcher_settings )
+			{
+				auto setting_rows = launcher_settings->getChild( "threadsRows", 1 ); 
+				if ( setting_rows )
+				{
+					rows = setting_rows->get_uint();
+				}
+				auto setting_columns = launcher_settings->getChild( "threadsColumns", 1 ); 
+				if ( setting_columns )
+				{
+					columns = setting_columns->get_uint();
+				}
+				auto setting_critters = launcher_settings->getChild( "numCritters", 1 ); 
+				if ( setting_critters )
+				{
+					total_minimum_critters = setting_critters->get_uint();
+				}
+				auto setting_food = launcher_settings->getChild( "numFood", 1 ); 
+				if ( setting_food )
+				{
+					total_minimum_food = setting_food->get_uint();
+				}
+			}
+
 			const unsigned int total_threads( rows * columns );
+			std::cout << "threads: " << total_threads << " (" << rows << " rows * " << columns << " columns)" << std::endl;
 
 			const float dropzone_total_width( 190 );
 			const float dropzone_total_height( 130 );
@@ -589,13 +633,19 @@
 			}
 
 		// // THREADS FINISH
-			// addChild("threads_finish", "threads_finish");
+			if ( launcher_setting_servers_on_background && !launcher_setting_servers_on_background->get_bool() )
+			{
+				addChild("threads_finish", "threads_finish");
+			}
 
 		// CRITTER EXCHANGER
 			addChild( "CdCritterExchanger", "CdCritterExchanger" );
 			
 		// ASSURES NICE CLEANUP FOR THREADS
-			addChild( "thread_finish_external", new BEntity_external() )->set( threads_finish );
+			if ( (launcher_setting_servers_on_background && launcher_setting_servers_on_background->get_bool()) || !launcher_setting_servers_on_background )
+			{
+				addChild( "thread_finish_external", new BEntity_external() )->set( threads_finish );
+			}
 		
 		// DEAR IMGUI
 			// auto imgui = glwindow->addChild( "ImGuiWindow", "ImGuiWindow" );

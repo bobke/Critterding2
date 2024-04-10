@@ -2,6 +2,7 @@
 #include "be_entity_graphics_model.h"
 #include <GL/gl.h>
 #include <glm/gtc/type_ptr.hpp>
+
 // #include <iostream>
 
 	BCamera::BCamera()

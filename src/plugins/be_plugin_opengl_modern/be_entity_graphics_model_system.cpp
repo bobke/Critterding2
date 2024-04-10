@@ -114,10 +114,10 @@
 				glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 				glViewport(0, 0, m_depth_map_resolution_x, m_depth_map_resolution_y);
 				glClear(GL_DEPTH_BUFFER_BIT);
-
+   
 				// upload lightspacematrix
 				glUniformMatrix4fv(m_lightSpaceMatrixID_depthmap, 1, GL_FALSE, glm::value_ptr(m_lightSpaceMatrix));
-
+   
 				// render all but skydome
 				for_all_children
 				{

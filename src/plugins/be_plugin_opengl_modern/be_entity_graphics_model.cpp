@@ -131,7 +131,7 @@
 			glGetError();
 
 			// Create the VBO for transforms
-			constexpr auto buffer_max_instances = 32768;
+			constexpr auto buffer_max_instances = 11000000;
 			glGenBuffers(1, &m_scaledTransformsBufferID);
 			glBindBuffer(GL_ARRAY_BUFFER, m_scaledTransformsBufferID);
 			glBufferData(GL_ARRAY_BUFFER, buffer_max_instances * sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
@@ -220,6 +220,7 @@
 				auto t = dynamic_cast<glTransform*>( *child );
 				if ( t )
 				{
+			// std::cout << "push back" << std::endl;
 					m_modelMatrices.push_back( glm::scale( glm::make_mat4( t->m_value ), glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) ) );
 					// m_scales.push_back( glm::vec3( t->m_scale_x->get_float(), t->m_scale_y->get_float(), t->m_scale_z->get_float() ) );
 				}
