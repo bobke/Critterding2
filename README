@@ -26,7 +26,7 @@ RUNNING
     > ./src/bengine app_critterding_launcher
     launch directly on one thread:
     > ./src/bengine app_critterding
-    running with server threads (4 columns):
+    running with 4 server threads (4 columns):
     > ./src/bengine app_critterding_threads
 
     alternatively:
