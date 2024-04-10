@@ -36,7 +36,8 @@ RUNNING
     click "ld" next to "lib", navigate to src/plugins/be_plugin_app_critterding(_threads) and load .so file.
     expand "lib" "be_plugin_app_critterding_threads" "Classes" and drag and drop "Critterding" to "bin"
     
-    to save critters navigate to "bin/Critterding(/threadX/Critterding)/critter_system/unit_container" and click "sv" next to critter
+    to save critters navigate to "bin/Critterding(/threadX/Critterding)/critter_system/unit_container"
+    and click "sv" next to critter
     to load critters click "ld" next to critter_system/unit_container
     an evolved critter can be found in share
     
