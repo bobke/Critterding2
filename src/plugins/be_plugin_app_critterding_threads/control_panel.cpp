@@ -297,22 +297,26 @@
 					}
 
 				// ROW WQT
+					m_qwt_curve_critters = 0;
+					m_qwt_curve_food = 0;
 					layout_H_row = layout_V->addChild( "QT HBoxlayout", "QHBoxLayout" );
 					layout_H = layout_H_row->addChild( "graph layout", "QHBoxLayout" );
 					{
 						auto qwt_plot = layout_H->addChild( "plot", "QwtPlot" );
-						
+						if ( qwt_plot )
 						{
-							m_qwt_curve_critters = qwt_plot->addChild( "curve", "QwtCurve" );
-							auto qpen = m_qwt_curve_critters->addChild( "pen", "QPen" );
-							qpen->set( "color_r", Buint(50) );
-							qpen->set( "color_g", Buint(50) );
-							qpen->set( "color_b", Buint(255) );
-						}
-						{
-							m_qwt_curve_food = qwt_plot->addChild( "curve", "QwtCurve" );
-							auto qpen = m_qwt_curve_food->addChild( "pen", "QPen" );
-							qpen->set( "color_g", Buint(200) );
+							{
+								m_qwt_curve_critters = qwt_plot->addChild( "curve", "QwtCurve" );
+								auto qpen = m_qwt_curve_critters->addChild( "pen", "QPen" );
+								qpen->set( "color_r", Buint(50) );
+								qpen->set( "color_g", Buint(50) );
+								qpen->set( "color_b", Buint(255) );
+							}
+							{
+								m_qwt_curve_food = qwt_plot->addChild( "curve", "QwtCurve" );
+								auto qpen = m_qwt_curve_food->addChild( "pen", "QPen" );
+								qpen->set( "color_g", Buint(200) );
+							}
 						}
 					}
 	} 
@@ -329,7 +333,10 @@
 			}
 			
 			m_line_edit_food->set( (float)total_food );
-			m_qwt_curve_food->set( total_food );
+			if ( m_qwt_curve_food )
+			{
+				m_qwt_curve_food->set( total_food );
+			}
 
 		// CRITTERS
 			unsigned int total_critters(0);
@@ -340,7 +347,10 @@
 				}
 			}
 			m_line_edit_critters->set( total_critters );
-			m_qwt_curve_critters->set( total_critters );
+			if ( m_qwt_curve_critters )
+			{
+				m_qwt_curve_critters->set( total_critters );
+			}
 
 			unsigned int total_adam_distance(0);
 			{
