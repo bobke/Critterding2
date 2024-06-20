@@ -24,13 +24,13 @@ RUNNING
 
     launcher:
     > ./src/bengine app_critterding_launcher
+
+    single thread:
+    > ./src/bengine app_critterding
     
     4 server threads (4 columns):
     > ./src/bengine app_critterding_threads
     
-    all on one thread:
-    > ./src/bengine app_critterding
-
     alternatively:
     > ./src/bengine app_admin_window
     click "ld" next to "lib", navigate to src/plugins/be_plugin_app_critterding(_threads) and load .so file.
