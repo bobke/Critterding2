@@ -58,7 +58,7 @@
 
 			setAdminWindow( this );
 			
-			setName( "Admin Window" );
+			setName( "Entity Tree" );
 			// std::cout << "Scene::construct()" << std::endl;
 
 			// LOAD QT APP FIXME THIS DOESN'T NEED TO GET ONTO THE TREE
@@ -101,7 +101,7 @@
 			
 			auto qwindow = addChild( "QMainWindow", "QMainWindow" );
 				
-			qwindow->addChild( "title", "string_property" )->set("Admin Window");
+			qwindow->addChild( "title", "string_property" )->set("Entity Tree");
 			qwindow->addChild( "x", "uint_property" )->set(Buint(100));
 			qwindow->addChild( "y", "uint_property" )->set(Buint(30));
 			qwindow->addChild( "width", "uint_property" )->set(Buint(500));
@@ -138,7 +138,7 @@
 			
 			// CREATE LEFT ENTITIES
 				auto entity_groupbox = general_layout_H->addChild( "Entity Groupbox", "QGroupBox" );
-				entity_groupbox->addChild( "title", "string_property" )->set("Entities");
+				// entity_groupbox->addChild( "title", "string_property" )->set("Entities");
 				auto groupVbox = entity_groupbox->addChild( "QT VBoxlayout", "QVBoxLayout" );
 				entity_groupbox->addChild( "QGroupBox_end", "QGroupBox_end" );
 				
@@ -405,7 +405,7 @@
 					
 					// CREATE LEFT ENTITIES
 						auto entity_groupbox = general_layout_H->addChild( "Entity Groupbox", "QGroupBox" );
-						entity_groupbox->addChild( "title", "string_property" )->set("Entities");
+						// entity_groupbox->addChild( "title", "string_property" )->set("Entities");
 						auto groupVbox = entity_groupbox->addChild( "QT VBoxlayout", "QVBoxLayout" );
 
 						add_admin_entity_groupbox(groupVbox, entity);

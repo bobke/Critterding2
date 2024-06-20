@@ -11,14 +11,18 @@ int main(int argc, char* argv[])
 	std::cout << "bengine3 starting..." << std::endl;
 
 	// TOP PARENT ENTITY
-		BEntityTop* toptop = new BEntityTop(); // in this entity we do slower mem saving stuff
+		BEntityTop* toptop = new BEntityTop();
 		toptop->setName("root");
 		toptop->construct();
 		toptop->enableLoopManager();
 		toptop->spawnChildrenManager();
 		toptop->spawnCommandBuffer();
-		toptop->spawnPluginManager();
 
+		// assure bin directory comes firs
+		auto bin = toptop->addChild( "bin", new BEntity() );
+
+		// plugin manager (spawns /lib)
+		toptop->spawnPluginManager();
 
 	// PLUGIN MANAGER 
 		BEntity_Plugin_Manager* plugin_manager = toptop->pluginManager();
@@ -33,7 +37,6 @@ int main(int argc, char* argv[])
 		sys->addChild( "timer", new BTimer() );
 		sys->addChild( "sleeper", new BSleeper() );
 
-		
 		// binary path
 		char buf3[1024];
 		readlink("/proc/self/exe", buf3, 1024);
@@ -45,11 +48,9 @@ int main(int argc, char* argv[])
 			sys->addChild( "binary_path", new BEntity_string() )->set( buff2.c_str() );
 		}
 
-		// binary
+		// binary relative path
 		std::string binary( argv[0] );
 		sys->addChild( "binary", new BEntity_string() )->set( binary.c_str() );
-
-		std::cout << binary.c_str() << std::endl;
 
 	// LOAD SCENE
 		if ( argc > 1  )
@@ -66,10 +67,8 @@ int main(int argc, char* argv[])
 			plugin_manager->load( "app_admin window", "src/plugins/be_plugin_app_admin_window", "be_plugin_app_admin_window" );
 		}
 
-
 	// LOADING OBJECT FROM CLASS NAMED SCENE FROM LIBRARY
 		// BEntity* scene = toptop->addChild("bin", "Scene");
-		BEntity* bin = toptop->addChild( "bin", "entity" );
 		BEntity* scene = bin->addChild( "", "Scene" );
 
 		if ( scene != 0 )
@@ -108,7 +107,7 @@ int main(int argc, char* argv[])
 			std::cout << "running..." << std::endl;
 			toptop->process_general();
 		}
-		
+
 		delete toptop;
 
 	// FINISH
