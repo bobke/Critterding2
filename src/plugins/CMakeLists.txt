@@ -14,6 +14,7 @@
 
 # ADD_SUBDIRECTORY(be_plugin_sdl)
 # ADD_SUBDIRECTORY(be_plugin_app_attractors)
+# ADD_SUBDIRECTORY(be_plugin_app_conway)
 
 ADD_SUBDIRECTORY(be_plugin_opengl_modern)
 ADD_SUBDIRECTORY(be_plugin_imgui)
@@ -31,3 +32,4 @@ ADD_SUBDIRECTORY(be_plugin_app_sysmon)
 ADD_SUBDIRECTORY(be_plugin_app_critterding)
 ADD_SUBDIRECTORY(be_plugin_app_critterding_threads)
 ADD_SUBDIRECTORY(be_plugin_app_critterding_launcher)
+

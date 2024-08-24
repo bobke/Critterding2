@@ -8,7 +8,6 @@
 
 	find_package(Qt6 COMPONENTS Widgets Gui OpenGLWidgets REQUIRED)
 	
-	
 	SET(
 		plugin_SRCS 
 		qwindow.h

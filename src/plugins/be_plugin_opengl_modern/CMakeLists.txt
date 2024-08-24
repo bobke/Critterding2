@@ -5,10 +5,7 @@
 		include_directories(${GLEW_INCLUDE_DIRS})
 		include_directories( $(shell pkg-config --cflags glew) ) # BSD HACK
 	endif()	
-	
 
-	
-	
 	SET(Boost_USE_MULTITHREAD ON) #set a flag
 # 	FIND_PACKAGE(Boost)
 	FIND_PACKAGE ( Boost COMPONENTS filesystem system iostreams thread REQUIRED)

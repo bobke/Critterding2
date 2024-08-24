@@ -91,7 +91,7 @@
 				{
 					BEntity* layout_H = group_layout_V->addChild( "hlayout", "QHBoxLayout" );
 						auto checkbox = layout_H->addChild( "lineedit", "QCheckBox" );
-						checkbox->set( true );
+						checkbox->set( false );
 						auto text_label = layout_H->addChild( "text_label", "QLabel" );
 						text_label->set("text", "servers on background (experimental)");
 						text_label->set("width", Buint(300));

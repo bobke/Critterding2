@@ -403,7 +403,7 @@
 
 		// THREADS FINISH
 			BEntity* threads_finish(0);
-			if ( (launcher_setting_servers_on_background && launcher_setting_servers_on_background->get_bool()) || !launcher_setting_servers_on_background )
+			if ( (launcher_setting_servers_on_background && launcher_setting_servers_on_background->get_bool()) /*|| !launcher_setting_servers_on_background*/ )
 			{
 				threads_finish = addChild("threads_finish", "threads_finish");
 			}
@@ -633,7 +633,7 @@
 			}
 
 		// // THREADS FINISH
-			if ( launcher_setting_servers_on_background && !launcher_setting_servers_on_background->get_bool() )
+			if ( launcher_setting_servers_on_background && !launcher_setting_servers_on_background->get_bool() || !launcher_setting_servers_on_background )
 			{
 				addChild("threads_finish", "threads_finish");
 			}
@@ -642,7 +642,7 @@
 			addChild( "CdCritterExchanger", "CdCritterExchanger" );
 			
 		// ASSURES NICE CLEANUP FOR THREADS
-			if ( (launcher_setting_servers_on_background && launcher_setting_servers_on_background->get_bool()) || !launcher_setting_servers_on_background )
+			if ( (launcher_setting_servers_on_background && launcher_setting_servers_on_background->get_bool()) /*|| !launcher_setting_servers_on_background*/ )
 			{
 				addChild( "thread_finish_external", new BEntity_external() )->set( threads_finish );
 			}
