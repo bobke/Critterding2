@@ -16,6 +16,8 @@
 		, INT_PROPERTY_NEW
 		, FLOAT
 		, FLOAT_PROPERTY
+		, DOUBLE
+		, DOUBLE_PROPERTY
 		, STRING
 		, STRING_PROPERTY
 	};
@@ -40,6 +42,8 @@
 					i.addClass( parent, CLASS::INT_PROPERTY_NEW, "int_property_new" );
 					i.addClass( parent, CLASS::FLOAT, "float" );
 					i.addClass( parent, CLASS::FLOAT_PROPERTY, "float_property" );
+					i.addClass( parent, CLASS::DOUBLE, "double" );
+					i.addClass( parent, CLASS::DOUBLE_PROPERTY, "double_property" );
 					i.addClass( parent, CLASS::STRING, "string" );
 					i.addClass( parent, CLASS::STRING_PROPERTY, "string_property" );
 				return 0;

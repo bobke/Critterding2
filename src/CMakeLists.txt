@@ -1,7 +1,3 @@
-	# SUBDIRECTORIES
-		ADD_SUBDIRECTORY(kernel)
-		
-		ADD_SUBDIRECTORY(plugins)
 
 	SET (
 		bengine_SRCS 
@@ -51,6 +47,10 @@
 	 	# FIXME OR DISABLE LINK_LIBRARIES AND DO
 	 	# TARGET_LINK_LIBRARIES ( bengine kernel ${bengine_LIBS} )
 
-
+	# SUBDIRECTORIES
+		ADD_SUBDIRECTORY(kernel)
+		ADD_SUBDIRECTORY(plugins)
+		ADD_SUBDIRECTORY(ai_plugins)
+	 	
 # 	# INCLUDE_DIRECTORIES
 # 		INCLUDE_DIRECTORIES( ${bengine_INCLUDES} )

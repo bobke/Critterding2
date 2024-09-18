@@ -21,6 +21,7 @@
 #include "qcheckbox.h"
 #include "qpen.h"
 #include "qfiledialog.h"
+#include "qplaintextedit.h"
 
 #include <iostream>
 #include <QApplication>
@@ -64,6 +65,7 @@
 		, QCHECKBOX
 		, QPEN
 		, QFILEDIALOG
+		, QPLAINTEXTEDIT
 		
 	};
 
@@ -107,6 +109,7 @@
 					i.addClass( parent, CLASS::QCHECKBOX, "QCheckBox" );
 					i.addClass( parent, CLASS::QPEN, "QPen" );
 					i.addClass( parent, CLASS::QFILEDIALOG, "QFileDialog" );
+					i.addClass( parent, CLASS::QPLAINTEXTEDIT, "QPlainTextEdit" );
 				return 0;
 			}
 
@@ -181,6 +184,8 @@
 					i = new BQPen();
 				else if ( type == CLASS::QFILEDIALOG )
 					i = new BQFileDialog();
+				else if ( type == CLASS::QPLAINTEXTEDIT )
+					i = new BQPlainTextEdit();
 				
 				
 

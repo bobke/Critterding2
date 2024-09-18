@@ -366,6 +366,23 @@
 			return name( this );
 		}
 
+		const std::string BEntity::nameFullPath()
+		{
+			std::string full_path;
+			auto top = topParent();
+			auto current = this;
+			while ( current != top )
+			{
+				if ( current->name() != "root" )
+					full_path = "/" + current->name() + full_path;
+				else
+					full_path = "/" + full_path;
+				current = current->parent();
+			}
+			// return "";
+			return full_path;
+		}
+
 		std::string& BEntity::name(BEntity* entity)
 		{
 			return parent()->name( entity );
@@ -692,7 +709,7 @@
 			return childHandler()->children( this );
 		}
 
-		BEntity* BEntity::getChild(const char* name, const unsigned int max_levels)
+		BEntity* BEntity::getChild(const char* name, const unsigned int max_levels) const
 		{
 			// std::cout << "getChild::" << name << " " << std::endl;
 			if ( max_levels > 0 && hasChildren() )
@@ -727,6 +744,33 @@
 			return 0;
 		}
 
+		BEntity* BEntity::getChildWithID(const unsigned int id, const BEntity* parent) const
+		{
+			const auto& children_vector = childHandler()->children( parent );
+			const auto& begin(children_vector.begin());
+			const auto& end(children_vector.end());
+			for ( auto it(begin); it != end; ++it )
+			{
+				if ( (*it)->id() == id )
+				{
+					return (*it);
+				}
+			}
+			
+			// reloop and pass on to children
+			for ( auto it(begin); it != end; ++it )
+			{
+				BEntity* found_entity = getChildWithID(id, (*it));
+				if ( found_entity )
+				{
+					return found_entity;
+				}
+			}
+			
+			
+			return 0;
+		}
+		
 	// NUMBER OF CHILDREN
 		Buint BEntity::numChildren() const
 		{

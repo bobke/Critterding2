@@ -50,6 +50,8 @@
 		qpen.cpp
 		qfiledialog.h
 		qfiledialog.cpp
+		qplaintextedit.h
+		qplaintextedit.cpp
 		
 		plugin.h
 		plugin.cpp

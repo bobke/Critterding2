@@ -12,19 +12,6 @@
 	class BEntity_Plugin_Manager;
 	class B_Children_Handler;
 
-	// class BECommandBuffer : public BEntity
-	// {
-	// 	// CONSTRUCTORS / DESTRUCTOR
-	// 		public:
-	// 			BECommandBuffer() {};
-	// 			virtual ~BECommandBuffer() {};
- // 
-	// 			virtual void construct() {};
-	// 			BEntity* addChild( const std::string& name, BEntity* const entity );
-	// 			std::vector<BEntity*> m_command_buffer;
-	// 			std::vector<std::string> m_name_buffer;
-	// };
-	
 	class BEntityTop : public BEntity
 	{
 		// CONSTRUCTORS / DESTRUCTOR

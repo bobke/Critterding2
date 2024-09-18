@@ -7,7 +7,7 @@
 #include <QwtPlot>
 #include <QwtPlotCurve>
 
-// PLOT
+	// PLOT
 		class BeEntityQwtPlot : public BEntity, public QwtPlot
 		{
 			// Q_OBJECT
@@ -15,12 +15,12 @@
 				BeEntityQwtPlot();
 				virtual ~BeEntityQwtPlot() {};
 				virtual Bbool onAddChild( BEntity* entity );
-// 				virtual Bbool onRemoveChild( BEntity* entity );
+				// virtual Bbool onRemoveChild( BEntity* entity );
 			protected:
 		};
 
 
-// CURVE
+	// CURVE
 		class BeEntityQwtPlotCurve : public BEntity, public QwtPlotCurve
 		{
 			public:
@@ -39,8 +39,7 @@
 				inline void resizeList();
 		};
 
-
-// CURVE_FLOAT
+	// CURVE_FLOAT
 		class BeEntityQwtPlotCurve_Float : public BeEntityQwtPlotCurve
 		{
 			public:
@@ -49,10 +48,10 @@
 
 				virtual bool set( const Bfloat& value );
 				virtual bool set( const Buint& value );
-		protected:
+			protected:
 		};
 
-// CURVE_FLOAT_POLL
+	// CURVE_FLOAT_POLL
 		class BeEntityQwtPlotCurve_Float_Poll : public BeEntityQwtPlotCurve
 		{
 			public:
@@ -62,7 +61,7 @@
 				void process();
 				bool set( const Bstring& id, BEntity* value );
 
-		protected:
+			protected:
 				BEntity* m_entity_to_poll;
 		};
 

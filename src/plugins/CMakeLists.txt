@@ -12,9 +12,11 @@
 # ADD_SUBDIRECTORY(be_plugin_opengl)
 # ADD_SUBDIRECTORY(be_plugin_app_stunt_coureur)
 
-# ADD_SUBDIRECTORY(be_plugin_sdl)
+ADD_SUBDIRECTORY(be_plugin_sdl)
 # ADD_SUBDIRECTORY(be_plugin_app_attractors)
 # ADD_SUBDIRECTORY(be_plugin_app_conway)
+ADD_SUBDIRECTORY(be_plugin_app_cmdline)
+ADD_SUBDIRECTORY(be_plugin_openai)
 
 ADD_SUBDIRECTORY(be_plugin_opengl_modern)
 ADD_SUBDIRECTORY(be_plugin_imgui)

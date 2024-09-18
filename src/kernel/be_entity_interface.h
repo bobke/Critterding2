@@ -81,6 +81,7 @@
 				virtual void removeName();
 				virtual void removeName(BEntity* entity);
 				virtual const std::string& name();
+				virtual const std::string nameFullPath();
 				virtual std::string& name(BEntity* entity);
 
 		// FPS
@@ -131,7 +132,8 @@
 				bool removeChild( BEntity* const entity );
 				virtual Bbool onRemoveChild( BEntity* entity );
 
-				BEntity* getChild(const char* name, const unsigned int max_levels=100000000); // FIXME 1 seems best
+				BEntity* getChild(const char* name, const unsigned int max_levels=100000000) const; // FIXME 1 seems best
+				BEntity* getChildWithID(const unsigned int id, const BEntity* parent) const;
 				virtual BEntity* getChildCustom( BEntity* parent, const char* name = "" ) { (void)parent; (void)name; return 0; };
 				// virtual BEntity* genericFunction( const char* id, BEntity* entity ) { (void)id; (void)entity; return 0; }; // TO USE, can do anything?, FIXME but can be done through ::set(string id, entity*) too ???
 

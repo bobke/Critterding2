@@ -204,6 +204,12 @@
 			if ( newName == "float_property" )
 				return new BEntity_float_property();
 			
+			if ( newName == "double" )
+				return new BEntity_double();
+
+			if ( newName == "double_property" )
+				return new BEntity_double_property();
+
 			if ( newName == "string" )
 				return new BEntity_string();
 

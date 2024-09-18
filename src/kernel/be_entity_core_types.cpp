@@ -349,6 +349,35 @@
 			return m_value;
 		}
 		
+	// DOUBLE_PROPERTY
+		BEntity_double_property::BEntity_double_property() {};
+
+		bool BEntity_double_property::set( const Bdouble& value )
+		{
+			if ( parent() )
+			{
+				return parent()->set( name(), value );
+			}
+			return false;
+		}
+
+		Bdouble BEntity_double_property::get_double()
+		{
+			if ( parent() )
+			{
+				return parent()->get_double( name() );
+			}
+			return 0.0;
+		}
+
+		bool BEntity_double_property::apply( BEntity* e )
+		{
+			if ( parent() )
+			{
+				return e->set( (Bfloat)parent()->get_double( name() ) );
+			}
+			return false;
+		}
 
 // 	// STRING
 // 		BEntity_string::BEntity_string()

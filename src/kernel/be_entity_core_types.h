@@ -213,6 +213,18 @@
 		protected:
 			Bdouble m_value;
 	};	
+
+	class BEntity_double_property : public BEntity
+	{
+		public:
+			BEntity_double_property();
+			const char* class_id() const { return "double_property"; }
+			virtual ~BEntity_double_property() {};
+			virtual bool set( const Bdouble& value );
+			virtual Bdouble get_double();
+			virtual bool apply( BEntity* e );
+	};
+
 	
 // 	class BEntity_string : public BEntity
 // 	{

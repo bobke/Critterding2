@@ -556,6 +556,7 @@
 			{
 				setText(s);
 				BEntity_string::set( value );
+				onUpdate();
 				return true;
 			}
 			return false;
@@ -571,6 +572,7 @@
 				{
 					setText(s);
 					BEntity_string::set( value );
+					onUpdate();
 					return true;
 				}
 				return false;
