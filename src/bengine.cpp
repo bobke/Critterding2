@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 	// HACK DO TIMER HERE SO WE SEE IT IN ADMINWINDOW
 		auto sys = toptop->addChild("sys", new BEntity());
 		// sys->addChild("dummy", new BEntity());
-		sys->addChild( "version", "float" )->set( 2.001f );
+		sys->addChild( "version", "float" )->set( 3.0f );
 		sys->addChild( "timer", new BTimer() );
 		sys->addChild( "sleeper", new BSleeper() );
 

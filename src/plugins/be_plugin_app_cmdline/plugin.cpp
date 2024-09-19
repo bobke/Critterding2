@@ -474,6 +474,7 @@
 							output << std::endl << "cd [ENTITY] " << "                          " << "Change the current directory to the ENTITY";
 							output << std::endl << "get [ENTITY] " << "                        " << "Get value of the ENTITY";
 							output << std::endl << "set [ENTITY] [VALUE] " << "         " << "Set value of the ENTITY to VALUE";
+							output << std::endl << "ai (whatever you demand from llama.cpp)" << "         " << "Demand from llama.cpp to do what is required";
 
 						// APPEND TO TEXTBOX
 							textbox_last = output.str();
@@ -510,7 +511,7 @@
 
 		// APPEND TO TEXTBOX
 			output << std::endl << "unknown command: " << program;
-			output << std::endl << "possible commands: ls, cd, get, set, ai (asking the AI: dragons lay here)";
+			output << std::endl << "possible commands: ls, cd, get, set, ai, help";
 			// output << std::endl << "possible commands: ls, cd, get, set";
 
 		// APPEND TO TEXTBOX
@@ -530,7 +531,7 @@
 	std::string BEntityBrowser::execAI(const char* cmd)
 	{
 		// 	CREATE PROMPT
-			std::ifstream file1("/vol/space/llama.cpp/prompts/bengine-assistant.txt");
+			std::ifstream file1("../share/bengine-prompt-assistant.txt");
 			std::ofstream file2("bengine-ai-assistant.txt");
 			std::string line;
 			if (file1.good() && file2.good())
@@ -580,11 +581,11 @@
 			// BE AWARE REMOVING -n 256 FIXED HANGING IN INTERACTIVE MODE
 			
 			// LAUNCHING LLAMA.CPP
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file /vol/space/llama.cpp/prompts/bengine-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-//ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 26 --ctx-size 4096 --file /vol/space/llama.cpp/prompts/bengine-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-//ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q4_K_L.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 42 --ctx-size 4096 --file /vol/space/llama.cpp/prompts/bengine-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q5_K_S.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 32 --ctx-size 4096 --file /vol/space/llama.cpp/prompts/bengine-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-// good		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file /vol/space/llama.cpp/prompts/bengine-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+//ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 26 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+//ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q4_K_L.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 42 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q5_K_S.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 32 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+// good		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
 
 			// USE THESE
 			// LAMA 3
@@ -658,7 +659,7 @@
 					}
 
 					// end = std::chrono::steady_clock::now();
-					if ( std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() > 700000 )
+					if ( std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() > 600000 )
 					{
 						// std::cout << std::endl << "ai passed out after " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs], poking ai";
 						
