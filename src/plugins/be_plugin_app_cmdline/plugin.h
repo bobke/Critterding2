@@ -16,7 +16,7 @@
 	class BEntityBrowser: public BEntity_string
 	{
 		public:
-			BEntityBrowser() : m_pipeR(0) {};
+			BEntityBrowser() : m_pipeR(0), m_ai_runs(false) {};
 			virtual ~BEntityBrowser() {};
 			void construct();
 			bool set( const char* value );
@@ -36,6 +36,8 @@
 			FILE* m_pipeR;
 			int in_pipe[2];    // This pipe is for sending input to the command
 			int out_pipe[2];   // This pipe is for reading output from the command
+			pid_t m_pid;
+			bool m_ai_runs;
 	};
 
 // // COMMANDS

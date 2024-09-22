@@ -80,17 +80,17 @@
 		// CONNECT QUERY AND BROWSER
 			query->connectServerServer( browser );
 			
-		// TEST ENTITIES
-			auto trigger = addChild("trigger", "trigger");
-			auto reference = addChild("reference", "reference");
-			reference->set( trigger );
-			
-			addChild("bool", "bool");
-			addChild("uint", "uint");
-			addChild("int", "int");
-			addChild("float", "float");
-			addChild("double", "double");
-			addChild("string", "string");
+// 		// TEST ENTITIES
+// 			auto trigger = addChild("trigger", "trigger");
+// 			auto reference = addChild("reference", "reference");
+// 			reference->set( trigger );
+// 			
+// 			addChild("bool", "bool");
+// 			addChild("uint", "uint");
+// 			addChild("int", "int");
+// 			addChild("float", "float");
+// 			addChild("double", "double");
+// 			addChild("string", "string");
 	}
 
 	void BEntityBrowser::construct()
@@ -222,7 +222,9 @@
 		// PRINT COMMAND
 			std::string ct(">>");
 			ct.append(command);
-			textbox->set( ct.c_str() );
+
+			if ( !m_ai_runs )
+				textbox->set( ct.c_str() );
 
 			std::stringstream output;
 			// output <<  ">>" << command;
@@ -272,13 +274,15 @@
 						
 						// APPEND TO TEXTBOX
 							textbox_last = output.str();
-							textbox->set( output.str().c_str() );
+							if ( !m_ai_runs )
+								textbox->set( output.str().c_str() );
 
 						// RESET QUERY LINEEDIT
 							query->set( "" );
 						
 						// ENDLINE TO TEXTBOX
-							textbox->set( "" );
+							if ( !m_ai_runs )
+								textbox->set( "" );
 
 						return true;
 					}
@@ -295,7 +299,8 @@
 
 									output << std::endl << "entering " << current_position->name();
 									textbox_last = output.str();
-									textbox->set( output.str().c_str() );
+									if ( !m_ai_runs )
+										textbox->set( output.str().c_str() );
 								}
 
 							// GO UP ONE ENTITY
@@ -303,13 +308,23 @@
 								{
 									if ( candidate_entity == ".." )
 									{
+										if ( current_position == topParent() )
+										{
+											output << std::endl << "entering " << current_position->name();
+										}
+										else
+										{
+											if ( current_position->id() > 0 )
+											{
+												output << std::endl << "entering " << current_position->nameFullPath();
+											}
+										}
 										if ( current_position->id() > 0 )
 										{
 											current_position = current_position->parent();
-
-											output << std::endl << "entering " << current_position->nameFullPath();
 											textbox_last = output.str();
-											textbox->set( output.str().c_str() );
+											if ( !m_ai_runs )
+												textbox->set( output.str().c_str() );
 										}
 									}
 									else
@@ -333,9 +348,17 @@
 										{
 											current_position = found_entity;
 
-											output << std::endl << "entering " << current_position->nameFullPath();
+											if ( current_position == topParent() )
+											{
+												output << std::endl << "entering " << current_position->name();
+											}
+											else
+											{
+												output << std::endl << "entering " << current_position->nameFullPath();
+											}
 											textbox_last = output.str();
-											textbox->set( output.str().c_str() );
+											if ( !m_ai_runs )
+												textbox->set( output.str().c_str() );
 										}
 										else
 										{
@@ -343,7 +366,8 @@
 												output << std::endl << "entity does not exist: " << candidate_entity;
 												output << std::endl << "try \"ls\"";
 												textbox_last = output.str();
-												textbox->set( output.str().c_str() );
+												if ( !m_ai_runs )
+													textbox->set( output.str().c_str() );
 										}
 										
 									}
@@ -353,7 +377,8 @@
 								query->set( "" );
 							
 							// ENDLINE TO TEXTBOX
-								textbox->set( "" );
+								if ( !m_ai_runs )
+									textbox->set( "" );
 
 							return true;
 					}
@@ -384,7 +409,8 @@
 						{
 							output << std::endl << print_value(found_entity) << "\n";
 							textbox_last = output.str();
-							textbox->set( output.str().c_str() );
+							if ( !m_ai_runs )
+								textbox->set( output.str().c_str() );
 						}
 						else
 						{
@@ -392,15 +418,17 @@
 								output << std::endl << "entity does not exist: " << candidate_entity;
 								output << std::endl << "try \"ls\"";
 								textbox_last = output.str();
-								textbox->set( output.str().c_str() );
+								if ( !m_ai_runs )
+									textbox->set( output.str().c_str() );
 						}
 						
 
 						// RESET QUERY LINEEDIT
 							query->set( "" );
-						
+
 						// ENDLINE TO TEXTBOX
-							textbox->set( "" );
+							if ( !m_ai_runs )
+								textbox->set( "" );
 
 						return true;
 					}
@@ -410,9 +438,6 @@
 					{
 						auto candidate_entity = parseH.returnUntillStrip( " ", command );
 						auto candidate_value = parseH.returnRemainder( command );
-
-
-
 
 						// FIND ENTITY ON ID
 						BEntity* found_entity(0);
@@ -432,11 +457,10 @@
 						if ( found_entity )
 						{
 							// set it's value
-							if ( set_value( found_entity, candidate_value ) )
+							if ( !candidate_value.empty() && set_value( found_entity, candidate_value ) )
 							{
 								output << std::endl << "changed value of " << found_entity->name();
-								if ( !candidate_value.empty() )
-									output << " to: " << candidate_value;
+								output << " to: " << candidate_value;
 							}
 							else
 							{
@@ -444,7 +468,8 @@
 							}
 
 							textbox_last = output.str();
-							textbox->set( output.str().c_str() );
+							if ( !m_ai_runs )
+								textbox->set( output.str().c_str() );
 						}
 						else
 						{
@@ -452,15 +477,17 @@
 								output << std::endl << "entity does not exist: " << candidate_entity;
 								output << std::endl << "try \"ls\"";
 								textbox_last = output.str();
-								textbox->set( output.str().c_str() );
+								if ( !m_ai_runs )
+									textbox->set( output.str().c_str() );
 						}
 
 
 						// RESET QUERY LINEEDIT
 							query->set( "" );
-						
+
 						// ENDLINE TO TEXTBOX
-							textbox->set( "" );
+							if ( !m_ai_runs )
+								textbox->set( "" );
 
 						return true;
 					}
@@ -478,13 +505,15 @@
 
 						// APPEND TO TEXTBOX
 							textbox_last = output.str();
-							textbox->set( output.str().c_str() );
+							if ( !m_ai_runs )
+								textbox->set( output.str().c_str() );
 
 						// RESET QUERY LINEEDIT
 							query->set( "" );
 						
 						// ENDLINE TO TEXTBOX
-							textbox->set( "" );
+							if ( !m_ai_runs )
+								textbox->set( "" );
 
 						return true;
 					}
@@ -499,10 +528,30 @@
 						// ENDLINE TO TEXTBOX
 							textbox->set( "" );
 						
+						// enable ai runs
+							m_ai_runs = true;
+
+						// save position and set it to top
+							auto save_position = current_position;
+							current_position = topParent();
+						
 						output << execAI( candidate_value.c_str() );
 
+						// disable ai runs
+							m_ai_runs = false;
+
+						// restore position
+							current_position = save_position;
+
+						while (m_pid == 0)
+						{
+							std::cout << "killing from set" << std::endl;
+							kill( m_pid, SIGINT);
+						}
+
 						// APPEND TO TEXTBOX
-							textbox->set( output.str().c_str() );
+							if ( !m_ai_runs )
+								textbox->set( output.str().c_str() );
 
 						return true;
 					}
@@ -516,13 +565,15 @@
 
 		// APPEND TO TEXTBOX
 			textbox_last = output.str();
-			textbox->set( output.str().c_str() );
+			if ( !m_ai_runs )
+				textbox->set( output.str().c_str() );
 
 		// RESET QUERY LINEEDUT
 			query->set("");
 
 		// ENDLINE TO TEXTBOX
-			textbox->set( "" );
+			if ( !m_ai_runs )
+				textbox->set( "" );
 
 		// FIXME TURN AROUND SO THIS RETURNS TRUE
 		return false;
@@ -557,14 +608,15 @@
 		}
 
 		// 2. Create a child process with fork()
-		pid_t pid = fork();
-		if (pid == -1) {
+		m_pid = fork();
+		if (m_pid == -1)
+		{
 			perror("fork");  // If fork fails, show an error
 			return "";        // Exit if fork fails
 		}
 
 		// CHILD PROCESS
-		if (pid == 0)
+		if (m_pid == 0)
 		{
 			// Redirect the standard input (stdin) to the reading end of in_pipe
 			dup2(in_pipe[0], STDIN_FILENO);   // Now the command's stdin will come from in_pipe[0]
@@ -589,12 +641,20 @@
 
 			// USE THESE
 			// LAMA 3
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);			
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
 			// REFLECTION
-			execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);			
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
 			// LIQUID (8B)
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);			
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
 			
+			// QWEN2
+			
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 44 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 36 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+			execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 30 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+
 			// If `execl()` fails, print an error and exit
 			perror("execl");
 			return "";
@@ -625,7 +685,7 @@
 			char buffer[128];
 			ssize_t count;
 			std::stringstream output;
-			std::cout << "start loop" << std::endl;
+			// std::cout << "start loop" << std::endl;
 
 			std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 			std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -635,18 +695,21 @@
 				// std::cout << "read pipe" << std::endl;
 				count = read(out_pipe[0], buffer, sizeof(buffer) - 1);
 
+				// RECEIVED FROM PIPE
 				if (count > 0)
 				{
 					begin = std::chrono::steady_clock::now();
 					
 					buffer[count] = '\0';  // Null-terminate the string
 					output << buffer;
-					std::cout << buffer;
+					std::cout << buffer << std::flush;
 				}
+
+				// NOT RECEIVED FROM PIPE
 				else
 				{
 					end = std::chrono::steady_clock::now();
-					if ( after_first_command && std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() > 6000000 )
+					if ( after_first_command && std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() > 5000000 )
 					{
 						std::cout << std::endl << "ai passed out after " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs], poking ai" << std::endl;
 
@@ -655,11 +718,22 @@
 						const char *endchar = "\n";  // We send this to the child process
 						write(in_pipe[1], endchar, strlen(endchar));
 						begin = std::chrono::steady_clock::now();
+						
+						// KILL PROCESS AND EXIT
+							kill( m_pid, SIGINT);
+							if ( m_pid == 0 )
+							{
+								std::cout << "sending second kill" << std::endl;
+								kill( m_pid, SIGINT);
+							}
+						return "I have failed you";
+						
+						
 						// continue;
 					}
 
 					// end = std::chrono::steady_clock::now();
-					if ( std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() > 600000 )
+					if ( std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() > 100000 )
 					{
 						// std::cout << std::endl << "ai passed out after " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs], poking ai";
 						
@@ -757,11 +831,25 @@
 										if ( parseH.beginMatchesStrip( "answer\":", result ) )
 										{
 											parseH.returnUntillStrip( "\"", result );
-											std::string answer_run = parseH.returnUntillStrip( "\"", result );
+											std::string answer_run = parseH.returnUntillStrip( "\"", result ) + "\n";
+											std::cout << "\n";
 											
 												// const char *sigint = SIGINT;
 												// write(in_pipe[1], sigint, strlen(sigint));
-												kill( pid, SIGINT);
+												kill( m_pid, SIGINT);
+												if ( m_pid == 0 )
+												{
+													std::cout << "sending second kill" << std::endl;
+													kill( m_pid, SIGINT);
+												}
+												// kill( m_pid, SIGKILL);
+
+												
+												std::string::size_type pos = 0; // Must initialize
+												while ( ( pos = answer_run.find ("\\n",pos) ) != std::string::npos )
+												{
+													answer_run.replace(pos, 2, " \n");
+												}
 
 											return answer_run;
 										}
@@ -803,7 +891,7 @@
 				// topParent()->process_general();
 				
 			}
-			std::cout << "end loop" << std::endl;
+			// std::cout << "end loop" << std::endl;
 
 			// std::cout << output.str();
 
