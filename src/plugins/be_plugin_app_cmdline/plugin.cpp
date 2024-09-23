@@ -1,21 +1,20 @@
 #include "plugin.h"
 #include "kernel/be_lib_handler.h"
 #include "kernel/be_entity_io_handler.h"
-#include "kernel/be_plugin_base_entity_types.h"
+// #include "kernel/be_plugin_base_entity_types.h"
 #include <iostream>
-#include <iomanip>
-#include <array>
+// #include <iomanip>
+// #include <array>
 // #include <algorithm>
 #include <memory>
 // #include <sys/stat.h>
-#include <unistd.h>
+// #include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <string.h>
 #include <chrono>
 #include <fstream>
-
-#include <stdlib.h>
+// #include <stdlib.h>
 
 	void Scene::construct()
 	{
@@ -280,9 +279,9 @@
 						// RESET QUERY LINEEDIT
 							query->set( "" );
 						
-						// ENDLINE TO TEXTBOX
-							if ( !m_ai_runs )
-								textbox->set( "" );
+						// // ENDLINE TO TEXTBOX
+						// 	if ( !m_ai_runs )
+						// 		textbox->set( "" );
 
 						return true;
 					}
@@ -376,9 +375,9 @@
 							// RESET QUERY LINEEDIT
 								query->set( "" );
 							
-							// ENDLINE TO TEXTBOX
-								if ( !m_ai_runs )
-									textbox->set( "" );
+							// // ENDLINE TO TEXTBOX
+							// 	if ( !m_ai_runs )
+							// 		textbox->set( "" );
 
 							return true;
 					}
@@ -426,9 +425,9 @@
 						// RESET QUERY LINEEDIT
 							query->set( "" );
 
-						// ENDLINE TO TEXTBOX
-							if ( !m_ai_runs )
-								textbox->set( "" );
+						// // ENDLINE TO TEXTBOX
+						// 	if ( !m_ai_runs )
+						// 		textbox->set( "" );
 
 						return true;
 					}
@@ -485,13 +484,82 @@
 						// RESET QUERY LINEEDIT
 							query->set( "" );
 
-						// ENDLINE TO TEXTBOX
-							if ( !m_ai_runs )
-								textbox->set( "" );
+						// // ENDLINE TO TEXTBOX
+						// 	if ( !m_ai_runs )
+						// 		textbox->set( "" );
 
 						return true;
 					}
-					
+
+				// LOADLIB
+					else if ( program == "loadlib" )
+					{
+						// auto  = parseH.returnUntillStrip( " ", command );
+						auto candidate_entity = parseH.returnRemainder( command );
+
+						if ( !candidate_entity.empty() )
+						{
+							if ( pluginManager()->load( candidate_entity, "src/plugins/be_plugin_" + candidate_entity, "be_plugin_" + candidate_entity ) )
+							{
+								output << std::endl << "succesfully loaded " << candidate_entity;
+							}
+							else
+							{
+								output << std::endl << "failed loading " << candidate_entity << ": lib not found";
+							}
+						}
+						
+						// APPEND TO TEXTBOX
+							textbox_last = output.str();
+							if ( !m_ai_runs )
+								textbox->set( output.str().c_str() );
+
+						// RESET QUERY LINEEDIT
+							query->set( "" );
+
+						return true;
+					}
+
+				// LOAD ENTITY CLASS
+					else if ( program == "load" )
+					{
+						// auto  = parseH.returnUntillStrip( " ", command );
+						auto candidate_entity = parseH.returnUntillStrip( " ", command );
+						// auto candidate_entity = parseH.returnRemainder( command );
+						auto candidate_name = parseH.returnRemainder( command );
+
+						if ( !candidate_name.empty() )
+						{
+							if ( !candidate_entity.empty() )
+							{
+								auto new_entity = current_position->addChild("", candidate_entity);
+								if ( new_entity )
+								{
+									// if ( !m_ai_runs )
+									output << std::endl <<  "succesfully spawned " << candidate_entity << " named '" << candidate_name << "' in " << current_position->nameFullPath();
+									new_entity->setName( candidate_name );
+								}
+								else
+								{
+									output << std::endl << "failed loading " << candidate_entity << ": entity class does not exist";
+								}
+							}
+						}
+						else
+						{
+							output << std::endl << "failed loading " << candidate_entity << ": you must supply a name";
+						}
+						
+						// APPEND TO TEXTBOX
+							textbox_last = output.str();
+							if ( !m_ai_runs )
+								textbox->set( output.str().c_str() );
+
+						// RESET QUERY LINEEDIT
+							query->set( "" );
+
+						return true;
+					}
 
 				// HELP
 					else if ( program == "help" )
@@ -501,7 +569,7 @@
 							output << std::endl << "cd [ENTITY] " << "                          " << "Change the current directory to the ENTITY";
 							output << std::endl << "get [ENTITY] " << "                        " << "Get value of the ENTITY";
 							output << std::endl << "set [ENTITY] [VALUE] " << "         " << "Set value of the ENTITY to VALUE";
-							output << std::endl << "ai (whatever you demand from llama.cpp)" << "         " << "Demand from llama.cpp to do what is required";
+							// output << std::endl << "ai (whatever you demand from llama.cpp)" << "         " << "Demand from llama.cpp to do what is required";
 
 						// APPEND TO TEXTBOX
 							textbox_last = output.str();
@@ -511,9 +579,9 @@
 						// RESET QUERY LINEEDIT
 							query->set( "" );
 						
-						// ENDLINE TO TEXTBOX
-							if ( !m_ai_runs )
-								textbox->set( "" );
+						// // ENDLINE TO TEXTBOX
+						// 	if ( !m_ai_runs )
+						// 		textbox->set( "" );
 
 						return true;
 					}
@@ -525,8 +593,8 @@
 
 						// RESET QUERY LINEEDIT
 							query->set( "" );
-						// ENDLINE TO TEXTBOX
-							textbox->set( "" );
+						// // ENDLINE TO TEXTBOX
+						// 	textbox->set( "" );
 						
 						// enable ai runs
 							m_ai_runs = true;
@@ -543,9 +611,9 @@
 						// restore position
 							current_position = save_position;
 
-						while (m_pid == 0)
+						// while (m_pid == 0)
 						{
-							std::cout << "killing from set" << std::endl;
+							// std::cout << "killing from set" << std::endl;
 							kill( m_pid, SIGINT);
 						}
 
@@ -560,7 +628,7 @@
 
 		// APPEND TO TEXTBOX
 			output << std::endl << "unknown command: " << program;
-			output << std::endl << "possible commands: ls, cd, get, set, ai, help";
+			output << std::endl << "possible commands: ls, cd, get, set, help";
 			// output << std::endl << "possible commands: ls, cd, get, set";
 
 		// APPEND TO TEXTBOX
@@ -571,9 +639,9 @@
 		// RESET QUERY LINEEDUT
 			query->set("");
 
-		// ENDLINE TO TEXTBOX
-			if ( !m_ai_runs )
-				textbox->set( "" );
+		// // ENDLINE TO TEXTBOX
+		// 	if ( !m_ai_runs )
+		// 		textbox->set( "" );
 
 		// FIXME TURN AROUND SO THIS RETURNS TRUE
 		return false;
@@ -640,21 +708,23 @@
 // good		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
 
 			// USE THESE
+
 			// LAMA 3
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 30 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+
 			// REFLECTION
 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+
 			// LIQUID (8B)
 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
 			
 			// QWEN2
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 43 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf --prompt-cache cache.txt", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+			execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 29 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
 			
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 44 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 36 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-			execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 30 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-
 			// If `execl()` fails, print an error and exit
 			perror("execl");
 			return "";
@@ -687,6 +757,8 @@
 			std::stringstream output;
 			// std::cout << "start loop" << std::endl;
 
+			//FIXME chrono reset every time to make timer work, shit.   
+			
 			std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 			std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
@@ -721,7 +793,7 @@
 						
 						// KILL PROCESS AND EXIT
 							kill( m_pid, SIGINT);
-							if ( m_pid == 0 )
+							while ( m_pid == 0 )
 							{
 								std::cout << "sending second kill" << std::endl;
 								kill( m_pid, SIGINT);
@@ -834,14 +906,16 @@
 											std::string answer_run = parseH.returnUntillStrip( "\"", result ) + "\n";
 											std::cout << "\n";
 											
-												// const char *sigint = SIGINT;
+												// const char *sigint = "^C";
 												// write(in_pipe[1], sigint, strlen(sigint));
-												kill( m_pid, SIGINT);
-												if ( m_pid == 0 )
-												{
-													std::cout << "sending second kill" << std::endl;
-													kill( m_pid, SIGINT);
-												}
+												// kill( m_pid, SIGHUP );
+												kill( m_pid, SIGINT );
+												// kill( m_pid, SIGQUIT );
+												// while ( m_pid == 0 )
+												// {
+												// 	std::cout << "sending first kill" << std::endl;
+												// 	kill( m_pid, SIGINT);
+												// }
 												// kill( m_pid, SIGKILL);
 
 												
@@ -906,82 +980,224 @@
 	
 	bool BEntityBrowser::set_value( BEntity* e, const std::string& value )
 	{
-		if ( e->class_id() == std::string("trigger") )
 		{
-			e->set();
-			return true;
-		}
-		else if ( e->class_id() == std::string("bool") || e->class_id() == std::string("bool_property") )
-		{
-			if ( value == "0" || value == "0.0" || value == "false" || value == "False" || value == "FALSE" )
+			auto t_trigger = dynamic_cast<BEntity_bool*>( e );
+			if ( t_trigger )
 			{
-				e->set( false );
+				e->set();
+				return true;
 			}
-			else
+		}
+		{
+			auto t_bool = dynamic_cast<BEntity_bool*>( e );
+			if ( t_bool )
 			{
-				e->set( true );
+				if ( value == "0" || value == "0.0" || value == "false" || value == "False" || value == "FALSE" )
+				{
+					e->set( false );
+				}
+				else // FIXME or be explicit?
+				{
+					e->set( true );
+				}
+				return true;
 			}
-			return true;
 		}
-		else if ( e->class_id() == std::string("uint") || e->class_id() == std::string("uint_property") )
 		{
-			e->set( (uint)std::stoull( value ) );
-			return true;
+			auto t_bool = dynamic_cast<BEntity_bool_property*>( e );
+			if ( t_bool )
+			{
+				if ( value == "0" || value == "0.0" || value == "false" || value == "False" || value == "FALSE" )
+				{
+					e->set( false );
+				}
+				else // FIXME or be explicit?
+				{
+					e->set( true );
+				}
+				return true;
+			}
 		}
-		else if ( e->class_id() == std::string("int") || e->class_id() == std::string("int_property") )
 		{
-			e->set( (int)std::stoi( value ) );
-			return true;
+			auto t_value = dynamic_cast<BEntity_uint*>( e );
+			if ( t_value )
+			{
+				e->set( (uint)std::stoull( value ) );
+				return true;
+			}
 		}
-		else if ( e->class_id() == std::string("float") || e->class_id() == std::string("float_property") )
 		{
-			e->set( (float)std::stof( value ) );
-			return true;
+			auto t_value = dynamic_cast<BEntity_uint_property*>( e );
+			if ( t_value )
+			{
+				e->set( (uint)std::stoull( value ) );
+				return true;
+			}
 		}
-		else if ( e->class_id() == std::string("double") || e->class_id() == std::string("double_property") )
 		{
-			e->set( (double)std::stod( value ) );
-			return true;
+			auto t_value = dynamic_cast<BEntity_int*>( e );
+			if ( t_value )
+			{
+				e->set( (int)std::stoi( value ) );
+				return true;
+			}
 		}
-		else if ( e->class_id() == std::string("string") || e->class_id() == std::string("string_property") )
 		{
-			e->set( value.c_str() );
-			return true;
+			auto t_value = dynamic_cast<BEntity_int_property*>( e );
+			if ( t_value )
+			{
+				e->set( (int)std::stoi( value ) );
+				return true;
+			}
 		}
+		{
+			auto t_value = dynamic_cast<BEntity_float*>( e );
+			if ( t_value )
+			{
+				e->set( (float)std::stof( value ) );
+				return true;
+			}
+		}
+		{
+			auto t_value = dynamic_cast<BEntity_float_property*>( e );
+			if ( t_value )
+			{
+				e->set( (float)std::stof( value ) );
+				return true;
+			}
+		}
+		{
+			auto t_value = dynamic_cast<BEntity_double*>( e );
+			if ( t_value )
+			{
+				e->set( (double)std::stod( value ) );
+				return true;
+			}
+		}
+		{
+			auto t_value = dynamic_cast<BEntity_double_property*>( e );
+			if ( t_value )
+			{
+				e->set( (double)std::stod( value ) );
+				return true;
+			}
+		}
+		{
+			auto t_value = dynamic_cast<BEntity_string*>( e );
+			if ( t_value )
+			{
+				e->set( value.c_str() );
+				return true;
+			}
+		}
+		{
+			auto t_value = dynamic_cast<BEntity_string_property*>( e );
+			if ( t_value )
+			{
+				e->set( value.c_str() );
+				return true;
+			}
+		}
+
 		return false;
 	}
 	
 	std::string BEntityBrowser::print_value( BEntity* e )
 	{
 		std::stringstream txt;
-		if ( e->class_id() == std::string("reference") )
+		
+		auto t_reference = dynamic_cast<BEntity_reference*>( e );
+		if ( t_reference )
 		{
 			txt << e->get_reference()->id();
+			return txt.str();
 		}
-		else if ( e->class_id() == std::string("bool") || e->class_id() == std::string("bool_property") )
+
+		auto t_bool = dynamic_cast<BEntity_bool*>( e );
+		if ( t_bool )
 		{
 			txt << e->get_bool();
+			return txt.str();
 		}
-		else if ( e->class_id() == std::string("uint") || e->class_id() == std::string("uint_property") )
+
+		auto t_bool_property = dynamic_cast<BEntity_bool_property*>( e );
+		if ( t_bool_property )
+		{
+			txt << e->get_bool();
+			return txt.str();
+		}
+		
+		
+		auto t_uint = dynamic_cast<BEntity_uint*>( e );
+		if ( t_uint )
 		{
 			txt << e->get_uint();
+			return txt.str();
 		}
-		else if ( e->class_id() == std::string("int") || e->class_id() == std::string("int_property") )
+
+		auto t_uint_property = dynamic_cast<BEntity_uint_property*>( e );
+		if ( t_uint_property )
+		{
+			txt << e->get_uint();
+			return txt.str();
+		}
+		
+		auto t_int = dynamic_cast<BEntity_int*>( e );
+		if ( t_int )
 		{
 			txt << e->get_int();
+			return txt.str();
 		}
-		else if ( e->class_id() == std::string("float") || e->class_id() == std::string("float_property") )
+
+		auto t_int_property = dynamic_cast<BEntity_int_property*>( e );
+		if ( t_int_property )
+		{
+			txt << e->get_int();
+			return txt.str();
+		}
+
+		auto t_float = dynamic_cast<BEntity_float*>( e );
+		if ( t_float )
 		{
 			txt << e->get_float();
+			return txt.str();
 		}
-		else if ( e->class_id() == std::string("double") || e->class_id() == std::string("double_property") )
+
+		auto t_float_property = dynamic_cast<BEntity_float_property*>( e );
+		if ( t_float_property )
+		{
+			txt << e->get_float();
+			return txt.str();
+		}
+
+		auto t_double = dynamic_cast<BEntity_double*>( e );
+		if ( t_double )
 		{
 			txt << e->get_double();
+			return txt.str();
 		}
-		else if ( e->class_id() == std::string("string") || e->class_id() == std::string("string_property") )
+
+		auto t_double_property = dynamic_cast<BEntity_double_property*>( e );
+		if ( t_double_property )
+		{
+			txt << e->get_double();
+			return txt.str();
+		}
+
+		auto t_string = dynamic_cast<BEntity_string*>( e );
+		if ( t_string )
 		{
 			txt << e->get_string();
+			return txt.str();
 		}
+
+		auto t_string_property = dynamic_cast<BEntity_string_property*>( e );
+		if ( t_string_property )
+		{
+			txt << e->get_string();
+			return txt.str();
+		}
+
 		return txt.str();
 	}
  
