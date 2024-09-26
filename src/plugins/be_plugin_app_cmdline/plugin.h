@@ -2,6 +2,7 @@
 #include "kernel/be_plugin_interface.h"
 #include "kernel/be_entity_core_types.h"
 #include "be_parser.h"
+#include <chrono>
 
 // SCENE
 	class Scene: public BEntity
@@ -16,13 +17,15 @@
 	class BEntityBrowser: public BEntity_string
 	{
 		public:
-			BEntityBrowser() : m_pipeR(0), m_ai_runs(false) {};
+			BEntityBrowser() : m_pipeR(0), m_ai_runs(false) { setProcessing(); }
 			virtual ~BEntityBrowser() {};
 			void construct();
+			virtual void process();
 			bool set( const char* value );
 
 		private:
-			std::string execAI(const char* cmd);
+			std::string launchAI(const char* cmd);
+			std::string execAI();
 			std::string print_entityLine( BEntity* e, bool main=false );
 			std::string print_entity( BEntity* e );
 			std::string print_value( BEntity* e );
@@ -38,6 +41,20 @@
 			int out_pipe[2];   // This pipe is for reading output from the command
 			pid_t m_pid;
 			bool m_ai_runs;
+		std::chrono::steady_clock::time_point begin;
+		std::chrono::steady_clock::time_point end;
+
+		BEntity* textbox;
+		
+		bool stop;
+		bool started;
+		// bool unqueried = true;
+		bool after_first_command;
+		// Read output from the command while it's running
+		char buffer[128];
+		ssize_t count;
+		std::stringstream output;
+		
 	};
 
 // // COMMANDS
