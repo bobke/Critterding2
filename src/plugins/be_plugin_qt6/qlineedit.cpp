@@ -202,8 +202,133 @@
 
 
 		
+		
+	// QLINEEDIT_uint
+		BQLineEdit_uint::BQLineEdit_uint()
+		: QLineEdit()
+		, m_width(0)
+		, m_height(0)
+		{
+			connect(this, SIGNAL(editingFinished()), SLOT(onChange()));
+// 			connect(this, SIGNAL(textChanged(const QString&)), SLOT(onChange()));
+		}
 
-	// QLINEEDIT_float
+		bool BQLineEdit_uint::set( BEntity* entity )
+		{
+			QString s;
+			s.setNum( entity->get_int() );
+			if ( m_value != entity->get_int() )
+			{
+// 				std::cout << "BQLineEdit_uint::set( BEntity* entity ): " << " changing " << text().toStdString() << " to " << entity->get_uint() << std::endl;
+				m_value = entity->get_int();
+				setText(s);
+				onUpdate();
+				return true;
+			}
+			return false;
+		}
+
+		bool BQLineEdit_uint::set( const char* value )
+		{
+			QString s(value);
+			if ( s != text() )
+			{
+				setText(s);
+				onUpdate();
+				return true;
+			}
+			return false;
+		}
+
+		bool BQLineEdit_uint::set( const Buint& value )
+		{
+			
+			if ( m_value != value )
+			{
+// 				std::cout << "BQLineEdit::set( const Buint& value ): " << " changing " << text().toStdString() << " to " << value << std::endl;
+				m_value = value;
+				QString s;
+				s.setNum(value);
+				setText(s);
+				onUpdate();
+
+				return true;
+			}
+			return false;
+		}
+
+		bool BQLineEdit_uint::set( const Bint& value )
+		{
+			if ( m_value != value )
+			{
+// 				std::cout << "BQLineEdit_uint::set( const Buint& value ): " << " changing " << text().toStdString() << " to " << value << std::endl;
+				m_value = value;
+				QString s;
+				s.setNum(value);
+				setText(s);
+				onUpdate();
+
+				return true;
+			}
+			return false;
+		}
+
+// 		bool BQLineEdit_uint::set( const Bstring& id, const Bint& value )
+// 		{
+// 			if ( id == "value" )
+// 			{
+// 				if ( compareAndSetValue( m_value, value ) )
+// 				{
+// // 					std::cout << "BQLineEdit_uint::set( const Bstring& id, const Buint& value ): " << " changing " << text().toStdString() << " to " << value << std::endl;
+// 					QString s;
+// 					s.setNum(value);
+// 					setText(s);
+// 					onUpdate();
+// 					return true;
+// 				}
+// 			}
+// 			return false;
+// 		}
+
+		bool BQLineEdit_uint::set( const Bstring& id, const Buint& value )
+		{
+			if ( id == "width" )
+			{
+				if ( compareAndSetValue( m_width, value ) )
+				{
+					setFixedSize(QSize(value, height()));  //HACK
+					return true;
+				}
+			}
+
+			else if ( id == "height" )
+			{
+				if ( compareAndSetValue( m_height, value ) )
+				{
+					setFixedSize(QSize(width(), value));  //HACK
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		void BQLineEdit_uint::onChange()
+		{
+			auto v = text().toUInt();
+			if ( m_value != v )
+			{
+				m_value = v;
+// 				std::cout << "2BQLineEdit_float::onChange(): " << id() << name() << " " << m_value << " STRING: " << text().toStdString() << " UINT: " << text().toUInt() << std::endl;
+				onUpdate();
+			}
+		}
+				
+		
+		
+		
+
+	// QLINEEDIT_int
 		BQLineEdit_int::BQLineEdit_int()
 		: QLineEdit()
 		, m_width(0)
@@ -240,7 +365,23 @@
 			return false;
 		}
 
-		
+		bool BQLineEdit_int::set( const Buint& value )
+		{
+			
+			if ( m_value != value )
+			{
+// 				std::cout << "BQLineEdit::set( const Buint& value ): " << " changing " << text().toStdString() << " to " << value << std::endl;
+				m_value = value;
+				QString s;
+				s.setNum(value);
+				setText(s);
+				onUpdate();
+
+				return true;
+			}
+			return false;
+		}
+
 		bool BQLineEdit_int::set( const Bint& value )
 		{
 			if ( m_value != value )

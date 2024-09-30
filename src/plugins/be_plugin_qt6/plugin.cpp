@@ -44,7 +44,7 @@
 		, QVBOXLAYOUT
 		, QMDIAREA
 		, QLINEEDIT
-// 		, QLINEEDIT_UINT
+		, QLINEEDIT_UINT
 		, QLINEEDIT_INT
 		, QLINEEDIT_FLOAT
 		, QLINEEDIT_DOUBLE
@@ -88,7 +88,7 @@
 					i.addClass( parent, CLASS::QVBOXLAYOUT, "QVBoxLayout" );
 					i.addClass( parent, CLASS::QMDIAREA, "QMdiArea" );
 					i.addClass( parent, CLASS::QLINEEDIT, "QLineEdit" );
-// 					i.addClass( parent, CLASS::QLINEEDIT_UINT, "QLineEdit_uint" );
+					i.addClass( parent, CLASS::QLINEEDIT_UINT, "QLineEdit_uint" );
 					i.addClass( parent, CLASS::QLINEEDIT_INT, "QLineEdit_int" );
 					i.addClass( parent, CLASS::QLINEEDIT_FLOAT, "QLineEdit_float" );
 					i.addClass( parent, CLASS::QLINEEDIT_DOUBLE, "QLineEdit_double" );
@@ -142,8 +142,8 @@
 					i = new BQMdiArea();
 				else if ( type == CLASS::QLINEEDIT )
 					i = new BQLineEdit();
-// 				else if ( type == CLASS::QLINEEDIT_UINT )
-// 					i = new BQLineEdit_uint();
+				else if ( type == CLASS::QLINEEDIT_UINT )
+					i = new BQLineEdit_uint();
 				else if ( type == CLASS::QLINEEDIT_INT )
 					i = new BQLineEdit_int();
 				else if ( type == CLASS::QLINEEDIT_FLOAT )

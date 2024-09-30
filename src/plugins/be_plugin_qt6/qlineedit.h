@@ -43,7 +43,7 @@
 				const char* class_id() const { return "QLineEdit_int"; }
 				bool set( BEntity* entity );
 				bool set( const char* value );
-// 				bool set( const Buint& value );
+				bool set( const Buint& value );
 				bool set( const Bint& value );
 				bool set( const Bstring& id, const Buint& value );
 				bool set( const Bstring& id, const Bint& value );
@@ -56,6 +56,30 @@
 				Buint m_height;
 		};
 
+	// QLINEEDIT_UINT
+		class BQLineEdit_uint : public QLineEdit, public BEntity_uint
+		{
+			Q_OBJECT
+			public:
+				BQLineEdit_uint();
+				virtual ~BQLineEdit_uint() {};
+				const char* class_id() const { return "QLineEdit_int"; }
+				bool set( BEntity* entity );
+				bool set( const char* value );
+				bool set( const Buint& value );
+				bool set( const Bint& value );
+				bool set( const Bstring& id, const Buint& value );
+				// bool set( const Bstring& id, const Bint& value );
+
+			private Q_SLOTS:
+				void onChange();
+			private:
+// 				Bfloat m_float; // HACK
+				Buint m_width;
+				Buint m_height;
+		};
+		
+		
 	// QLINEEDIT_FLOAT
 		class BQLineEdit_float : public QLineEdit, public BEntity_float
 		{
