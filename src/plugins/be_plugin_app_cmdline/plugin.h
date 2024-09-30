@@ -54,6 +54,15 @@
 		char buffer[128];
 		ssize_t count;
 		std::stringstream output;
+		std::stringstream session_output;
+		
+		BEntity* llama_location;
+		BEntity* layers_on_gpu;
+		BEntity* model_location;
+		BEntity* ctx_size;
+		BEntity* repeat_penalty;
+		BEntity* prompt_assistant;
+		BEntity* session_name;
 		
 	};
 

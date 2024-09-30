@@ -1,4 +1,5 @@
 #include "plugin.h"
+#include "llama_gui.h"
 #include "kernel/be_lib_handler.h"
 #include "kernel/be_entity_io_handler.h"
 // #include "kernel/be_plugin_base_entity_types.h"
@@ -45,7 +46,7 @@
 		// QWINDOW
 			auto qwindow = qt_app->addChild( "cmdline_window", "QMainWindow" );
 			qwindow->addChild( "title", "string_property" )->set("Entity Browser");
-			qwindow->addChild( "x", "uint_property" )->set(Buint(1050));
+			qwindow->addChild( "x", "uint_property" )->set(Buint(750));
 			qwindow->addChild( "y", "uint_property" )->set(Buint(300));
 			qwindow->addChild( "width", "uint_property" )->set(Buint(900));
 			qwindow->addChild( "height", "uint_property" )->set(Buint(930));
@@ -94,6 +95,84 @@
 	void BEntityBrowser::construct()
 	{
 		current_position = topParent();
+
+		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Arcee-Nova-Alpha-GGUF.Q6_K-00001-of-00008.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 27 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+
+		auto bin = topParent()->getChild( "bin", 1 );
+		auto qt_app = bin->getChild( "QT Application", 2 );
+		auto llama_gui = addChild( "llama_gui", "LLama_gui" );
+		
+		// LLAMA LOCATION
+		llama_location = addChild( "llama_location", "string" );
+		auto gui_llama_location = qt_app->getChild( "llama_location", 4);
+		gui_llama_location->connectServerServer( llama_location );
+		llama_location->connectServerServer( gui_llama_location );
+		llama_location->set( "/vol/space/llama.cpp/llama-cli" );
+		
+		// MODEL LOCATION
+		model_location = addChild( "model_location", "string" );
+		auto gui_model_location = qt_app->getChild( "model_location", 4);
+		gui_model_location->connectServerServer( model_location );
+		model_location->connectServerServer( gui_model_location );
+  
+		// LAYERS ON GPU
+		layers_on_gpu = addChild( "layers_on_gpu", "uint" );
+		auto gui_layers_on_gpu = qt_app->getChild( "layers_on_gpu", 4);
+		gui_layers_on_gpu->connectServerServer( layers_on_gpu );
+		layers_on_gpu->connectServerServer( gui_layers_on_gpu );
+
+
+
+		// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf" );
+		// layers_on_gpu->set( (Buint)48 );
+
+		// QWEN2
+		// // execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 43 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+		// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf" );
+		// layers_on_gpu->set( (Buint)43 );
+		// // execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf --prompt-cache cache.txt", (char *)NULL);
+		// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf" );
+		// layers_on_gpu->set( (Buint)35 );
+		// // execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+		model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf" );
+		layers_on_gpu->set( (Buint)33 );
+		// // execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 29 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+		// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf" );
+		// layers_on_gpu->set( (Buint)29 );
+		
+		// model_location->set( "/vol/space/oobabooga/models/Arcee-Nova-Alpha-GGUF.Q6_K-00001-of-00008.gguf" );
+		// layers_on_gpu->set( (Buint)27 );
+
+
+		// CTXSIZE
+		ctx_size = addChild( "ctx_size", "uint" );
+		auto gui_ctx_size = qt_app->getChild( "ctx_size", 4);
+		gui_ctx_size->connectServerServer( ctx_size );
+		ctx_size->connectServerServer( gui_ctx_size );
+		ctx_size->set( (Buint)8192 );
+
+		// REPEAT PENALTY
+		repeat_penalty = addChild( "repeat_penalty", "float" );
+		auto gui_repeat_penalty = qt_app->getChild( "repeat_penalty", 4);
+		gui_repeat_penalty->connectServerServer( repeat_penalty );
+		repeat_penalty->connectServerServer( gui_repeat_penalty );
+		repeat_penalty->set( 1.0f );
+
+		// PROMPT ASSISTANT
+		prompt_assistant = addChild( "prompt_assistant", "string" );
+		auto gui_prompt_assistant = qt_app->getChild( "prompt_assistant", 4);
+		gui_prompt_assistant->connectServerServer( prompt_assistant );
+		prompt_assistant->connectServerServer( gui_prompt_assistant );
+		prompt_assistant->set( "../share/bengine-prompt-assistant.txt" );
+
+		// // SESSION NAME
+		// session_name = addChild( "session_name", "string" );
+		// auto gui_session_name = qt_app->getChild( "session_name", 4);
+		// gui_session_name->connectServerServer( session_name );
+		// session_name->connectServerServer( gui_session_name );
+		// session_name->set( "" );
+
 	}
 
 	std::string BEntityBrowser::print_entityLine( BEntity* e, bool main )
@@ -310,7 +389,8 @@
 										{
 											current_position = current_position->parent();
 										}
-										output << std::endl << "entering " << current_position->nameFullPath();
+										std::cout << "FULL NAME PATH: " << current_position->nameFullPath() << std::endl;
+										output << std::endl << "entering " << current_position->nameFullPath() << std::endl;
 										// current_position = current_position->parent();
 										textbox_last = output.str();
 										if ( !m_ai_runs )
@@ -526,18 +606,18 @@
 								if ( new_entity )
 								{
 									// if ( !m_ai_runs )
-									output << std::endl <<  "succesfully spawned " << candidate_entity << " named '" << candidate_name << "' in " << current_position->nameFullPath();
+									output << std::endl <<  "succesfully spawned " << candidate_entity << " named '" << candidate_name << "' in " << current_position->nameFullPath() << std::endl;;
 									new_entity->setName( candidate_name );
 								}
 								else
 								{
-									output << std::endl << "failed loading " << candidate_entity << ": entity class does not exist";
+									output << std::endl << "failed loading " << candidate_entity << ": entity class does not exist, try exploring /lib lib it's classes";
 								}
 							}
 						}
 						else
 						{
-							output << std::endl << "failed loading " << candidate_entity << ": you must supply a name";
+							output << std::endl << "failed loading " << candidate_entity << ": you must supply a name, try exploring /lib lib it's classes";
 						}
 						
 						// APPEND TO TEXTBOX
@@ -559,7 +639,7 @@
 							output << std::endl << "cd [ENTITY] " << "                          " << "Change the current directory to the ENTITY";
 							output << std::endl << "get [ENTITY] " << "                        " << "Get value of the ENTITY";
 							output << std::endl << "set [ENTITY] [VALUE] " << "         " << "Set value of the ENTITY to VALUE";
-							// output << std::endl << "ai (whatever you demand from llama.cpp)" << "         " << "Demand from llama.cpp to do what is required";
+							output << std::endl << "rest" << "         " << "AI";
 
 						// APPEND TO TEXTBOX
 							textbox_last = output.str();
@@ -577,7 +657,7 @@
 					}
 					
 				// AI
-					else if ( program == "ai" )
+					else/* if ( program == "ai" )*/
 					{
 						auto candidate_value = parseH.returnRemainder( command );
 
@@ -611,25 +691,25 @@
 
 			}
 
-		// APPEND TO TEXTBOX
-			output << std::endl << "unknown command: " << program;
-			output << std::endl << "possible commands: ls, cd, get, set, help";
-			// output << std::endl << "possible commands: ls, cd, get, set";
-
-		// APPEND TO TEXTBOX
-			textbox_last = output.str();
-			if ( !m_ai_runs )
-				textbox->set( output.str().c_str() );
-
-		// RESET QUERY LINEEDUT
-			query->set("");
-
-		// // ENDLINE TO TEXTBOX
+		// // APPEND TO TEXTBOX
+		// 	output << std::endl << "unknown command: " << program;
+		// 	output << std::endl << "possible commands: ls, cd, get, set, help";
+		// 	// output << std::endl << "possible commands: ls, cd, get, set";
+  // 
+		// // APPEND TO TEXTBOX
+		// 	textbox_last = output.str();
 		// 	if ( !m_ai_runs )
-		// 		textbox->set( "" );
-
-		// FIXME TURN AROUND SO THIS RETURNS TRUE
-		return false;
+		// 		textbox->set( output.str().c_str() );
+  // 
+		// // RESET QUERY LINEEDUT
+		// 	query->set("");
+  // 
+		// // // ENDLINE TO TEXTBOX
+		// // 	if ( !m_ai_runs )
+		// // 		textbox->set( "" );
+  // 
+		// // FIXME TURN AROUND SO THIS RETURNS TRUE
+		// return false;
 	}
 
 // LAUNCH AI
@@ -638,10 +718,11 @@
 	{
 // 		if ( m_ai_runs )
 // 		{
+			// std::cout << "proc" << std::endl;
+// 			// Set the output pipe to non-blocking mode (so we can read while the command runs)
 // 			fcntl(out_pipe[0], F_SETFL, O_NONBLOCK);
 // 			// fcntl(in_pipe[1], F_SETFL, O_NONBLOCK);
 // 			
-// 			std::cout << "proc" << std::endl;
 // 			std::string result = execAI();
 // 			if ( !result.empty() )
 // 			{
@@ -649,30 +730,12 @@
 // 				// textbox->set( output.str().c_str() );
 // 				textbox->set( result.c_str() );
 // 			}
+// 
 // 		}
 	}
 
 	std::string BEntityBrowser::launchAI(const char* cmd)
 	{
-		// 	CREATE PROMPT
-			std::ifstream file1("../share/bengine-prompt-assistant.txt");
-			std::ofstream file2("bengine-ai-assistant.txt");
-			std::string line;
-			if (file1.good() && file2.good())
-			{
-				while (getline(file1, line))
-				{
-					file2 << line;
-					file2 << '\n';
-				}
-				file2 << cmd;
-				file2 << '\n';
-				file2 << '\n';
-			}
-			file1.close();
-			file2.close();
-		
-		
 		// 1. Create two pipes: one for input and one for output
 		// `pipe()` returns two file descriptors: one for reading and one for writing
 		if (pipe(in_pipe) == -1 || pipe(out_pipe) == -1) {
@@ -706,29 +769,81 @@
 			close(out_pipe[1]); // Close out_pipe[1] because the child has stdout redirected to it
 
 			// LAUNCHING LLAMA.CPP
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-//ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 26 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-//ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q4_K_L.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 42 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q5_K_S.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 32 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-// good		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+//ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 26 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+//ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q4_K_L.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 42 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q5_K_S.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 32 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+// good		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 
 			// USE THESE
 
 			// LAMA 3
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 30 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 30 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 
 			// REFLECTION
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 
 			// LIQUID (8B)
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 			
 			// QWEN2
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 43 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf --prompt-cache cache.txt", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 43 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf --prompt-cache cache.txt", (char *)NULL);
 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-			execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 29 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 29 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+
+			// Arcee-Nova
+			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Arcee-Nova-Alpha-GGUF.Q6_K-00001-of-00008.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 27 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+
+			
+		// 	CREATE PROMPT
+
+			std::stringstream construct_prompt;
+			
+			// // NEW OR CONTINUE SESSION
+			// std::string sessname(session_name->get_string());
+			// if ( !sessname.empty() )
+			// {
+			// 	construct_prompt << "PROMPT_CACHE_FILE=chat.prompt.bin CHAT_SAVE_DIR=./chat/" << sessname << " ";
+			// }
+			// else
+			// {
+			// 	session_output.clear();
+			// }
+			
+			construct_prompt << llama_location->get_string() << " -m " << model_location->get_string() << " --repeat_penalty " << repeat_penalty->get_float() << " -i -r 'User:' -ngl " << layers_on_gpu->get_uint() << " --ctx-size " << ctx_size->get_uint() << " --file " << "bengine-ai-assistant.txt" << " --grammar-file  ../share/ai-json.gbnf";
+			
+			// if ( !sessname.empty() )
+			// {
+			// 	construct_prompt << " --prompt-cache cache.txt"; //  --prompt-cache-all
+			// }
+
+
+
+			// std::ifstream file1("../share/bengine-prompt-assistant.txt");
+			std::ifstream file1( prompt_assistant->get_string() );
+			std::ofstream file2("bengine-ai-assistant.txt");
+			std::string line;
+			if (file1.good() && file2.good())
+			{
+				while (getline(file1, line))
+				{
+					file2 << line;
+					file2 << '\n';
+				}
+				file2 << cmd;
+				file2 << '\n';
+				file2 << '\n';
+			}
+			file1.close();
+			file2.close();
+			
+			
+			
+			// EXECUTE LLAMA.CPP
+				std::cout << construct_prompt.str() << std::endl;
+				execl("/bin/bash","/bin/bash", "-c", construct_prompt.str().c_str(), (char *)NULL);
 			
 			// If `execl()` fails, print an error and exit
 			perror("execl");
@@ -742,8 +857,8 @@
 				m_ai_runs = true;
 
 			// Set the output pipe to non-blocking mode (so we can read while the command runs)
-			fcntl(out_pipe[0], F_SETFL, O_NONBLOCK);
-			fcntl(in_pipe[1], F_SETFL, O_NONBLOCK);
+			fcntl(out_pipe[0], F_SETFL, O_ASYNC);
+			// fcntl(in_pipe[1], F_SETFL, O_NONBLOCK);
 			
 			// Close the ends of the pipes we won't use
 			close(in_pipe[0]);  // Parent doesn't need to read from in_pipe
@@ -768,6 +883,7 @@
 	{
 		while ( true )
 		{
+			fcntl(out_pipe[0], F_SETFL, O_NONBLOCK);
 			// std::cout << "read pipe" << std::endl;
 			count = read(out_pipe[0], buffer, sizeof(buffer) - 1);
 
@@ -800,6 +916,7 @@
 					
 					// KILL PROCESS AND EXIT
 					kill( m_pid, SIGINT);
+					// execl("/bin/bash","/bin/bash", "-c", "killall -9 llama-cli", (char *)NULL);
 					return "I have failed you";
 					
 					
@@ -810,6 +927,8 @@
 				if ( std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() > 100000 )
 				{
 					// std::cout << std::endl << "ai passed out after " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs], poking ai";
+					
+					begin = std::chrono::steady_clock::now();
 					
 					
 					std::string result = output.str();
@@ -824,6 +943,7 @@
 	
 					if ( started && !stop )
 					{
+						
 						if ( result.find('}') != result.npos )
 						{
 							// std::cout << std::endl << "STOP" << std::endl << std::endl;
@@ -889,7 +1009,10 @@
 										// const char *sigint = "^C";
 										// write(in_pipe[1], sigint, strlen(sigint));
 										// kill( m_pid, SIGHUP );
+				std::cout << "m_pid before: " << m_pid << std::endl;
 										kill( m_pid, SIGINT );
+										// execl("/bin/bash","/bin/bash", "-c", "killall llama-cli", (char *)NULL);
+
 										// kill( m_pid, SIGQUIT );
 										// while ( m_pid == 0 )
 										// {
@@ -909,8 +1032,8 @@
 
 									// disable ai runs
 										m_ai_runs = false;
-									
-									
+
+				std::cout << "m_pid after: " << m_pid << std::endl;
 									return answer_run;
 								}
 							}
@@ -921,8 +1044,9 @@
 				}
 				
 			}
-		}
 
+		}
+		
 		// Wait for the child process to finish (important to avoid zombie processes)
 		// wait(nullptr);
 		return output.str();
@@ -999,29 +1123,29 @@
 // 			// BE AWARE REMOVING -n 256 FIXED HANGING IN INTERACTIVE MODE
 // 			
 // 			// LAUNCHING LLAMA.CPP
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-// //ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 26 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-// //ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q4_K_L.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 42 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q5_K_S.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 32 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-// // good		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+// //ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 26 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+// //ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q4_K_L.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 42 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q5_K_S.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 32 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+// // good		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 // 
 // 			// USE THESE
 // 
 // 			// LAMA 3
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 30 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 30 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 // 
 // 			// REFLECTION
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 // 
 // 			// LIQUID (8B)
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 // 			
 // 			// QWEN2
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 43 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf --prompt-cache cache.txt", (char *)NULL);
+// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 43 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
+// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf --prompt-cache cache.txt", (char *)NULL);
 // 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 			execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 29 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file /vol/space/llama.cpp/grammars/json.gbnf", (char *)NULL);
+// 			execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 29 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 // 			
 // 			// If `execl()` fails, print an error and exit
 // 			perror("execl");
@@ -1517,6 +1641,7 @@
 		  PLUGIN_INFO
 		, SCENE
 		, BENTITYBROWSER
+		, LLAMA_GUI
 	};
 
 	extern "C" BEntity* create( BEntity* parent, const Buint type )
@@ -1527,6 +1652,7 @@
 				BClassesHelper i;
 					i.addClass( parent, CLASS::SCENE, "Scene" );
 					i.addClass( parent, CLASS::BENTITYBROWSER, "BEntityBrowser" );
+					i.addClass( parent, CLASS::LLAMA_GUI, "LLama_gui" );
 				return 0;
 			}
 		// ENTITIES
@@ -1538,6 +1664,8 @@
 					i = new Scene();
 				else if ( type == CLASS::BENTITYBROWSER )
 					i = new BEntityBrowser();
+				else if ( type == CLASS::LLAMA_GUI )
+					i = new LLama_GUI();
 				return i;
 			}
 	}
