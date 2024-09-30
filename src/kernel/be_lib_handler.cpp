@@ -255,7 +255,7 @@
 			}
 		}
 
-		std::cout << "BEntity_Plugin_Manager::create warning: entity class '" << newName << "' was found" << std::endl;
+		std::cout << "BEntity_Plugin_Manager::create warning: entity class '" << newName << "' was not found" << std::endl;
 		return 0;
 	}
 	
