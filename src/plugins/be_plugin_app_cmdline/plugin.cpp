@@ -639,7 +639,7 @@
 							output << std::endl << "cd [ENTITY] " << "                          " << "Change the current directory to the ENTITY";
 							output << std::endl << "get [ENTITY] " << "                        " << "Get value of the ENTITY";
 							output << std::endl << "set [ENTITY] [VALUE] " << "         " << "Set value of the ENTITY to VALUE";
-							output << std::endl << "rest" << "         " << "AI";
+							output << std::endl << "ai question/command" << "         " << "Demand from llama.cpp to do what is required";
 
 						// APPEND TO TEXTBOX
 							textbox_last = output.str();
@@ -657,7 +657,7 @@
 					}
 					
 				// AI
-					else/* if ( program == "ai" )*/
+					else if ( program == "ai" )
 					{
 						auto candidate_value = parseH.returnRemainder( command );
 
@@ -691,25 +691,25 @@
 
 			}
 
-		// // APPEND TO TEXTBOX
-		// 	output << std::endl << "unknown command: " << program;
-		// 	output << std::endl << "possible commands: ls, cd, get, set, help";
-		// 	// output << std::endl << "possible commands: ls, cd, get, set";
-  // 
-		// // APPEND TO TEXTBOX
-		// 	textbox_last = output.str();
+		// APPEND TO TEXTBOX
+			output << std::endl << "unknown command: " << program;
+			output << std::endl << "possible commands: ls, cd, get, set, help";
+			// output << std::endl << "possible commands: ls, cd, get, set";
+
+		// APPEND TO TEXTBOX
+			textbox_last = output.str();
+			if ( !m_ai_runs )
+				textbox->set( output.str().c_str() );
+
+		// RESET QUERY LINEEDUT
+			query->set("");
+
+		// // ENDLINE TO TEXTBOX
 		// 	if ( !m_ai_runs )
-		// 		textbox->set( output.str().c_str() );
-  // 
-		// // RESET QUERY LINEEDUT
-		// 	query->set("");
-  // 
-		// // // ENDLINE TO TEXTBOX
-		// // 	if ( !m_ai_runs )
-		// // 		textbox->set( "" );
-  // 
-		// // FIXME TURN AROUND SO THIS RETURNS TRUE
-		// return false;
+		// 		textbox->set( "" );
+
+		// FIXME TURN AROUND SO THIS RETURNS TRUE
+		return false;
 	}
 
 // LAUNCH AI
@@ -1002,38 +1002,51 @@
 								}
 								else if ( parseH.beginMatchesStrip( "answer\":", result ) )
 								{
-									parseH.returnUntillStrip( "\"", result );
-									std::string answer_run = parseH.returnUntillStrip( "\"", result ) + "\n";
-									std::cout << "\n";
+									auto answer_full = parseH.returnRemainder( result );
+									parseH.reset();
+									answer_full = parseH.returnUntillStrip( "}", answer_full );
+									parseH.reset();
 									
-										// const char *sigint = "^C";
-										// write(in_pipe[1], sigint, strlen(sigint));
-										// kill( m_pid, SIGHUP );
-				std::cout << "m_pid before: " << m_pid << std::endl;
-										kill( m_pid, SIGINT );
-										// execl("/bin/bash","/bin/bash", "-c", "killall llama-cli", (char *)NULL);
+									std::string answer_run;
+									if ( answer_full.find('\"') != answer_full.npos )
+									{
+										parseH.returnUntillStrip( "\"", answer_full );
+										answer_run = parseH.returnUntillStrip( "\"", answer_full ) + "\n";
+									}
+									
+									else /*if ( answer_run.empty() )*/
+									{
+										answer_run = parseH.returnRemainder( answer_full ) + "\n";
+									}
+									std::cout << "\n";
+								
+									// const char *sigint = "^C";
+									// write(in_pipe[1], sigint, strlen(sigint));
+									// kill( m_pid, SIGHUP );
+									kill( m_pid, SIGINT );
+									// execl("/bin/bash","/bin/bash", "-c", "killall llama-cli", (char *)NULL);
 
-										// kill( m_pid, SIGQUIT );
-										// while ( m_pid == 0 )
-										// {
-										// 	std::cout << "sending first kill" << std::endl;
-										// 	kill( m_pid, SIGINT);
-										// }
-										// kill( m_pid, SIGKILL);
+									// kill( m_pid, SIGQUIT );
+									// while ( m_pid == 0 )
+									// {
+									// 	std::cout << "sending first kill" << std::endl;
+									// 	kill( m_pid, SIGINT);
+									// }
+									// kill( m_pid, SIGKILL);
 
-										
-										std::string::size_type pos = 0; // Must initialize
-										while ( ( pos = answer_run.find ("\\n",pos) ) != std::string::npos )
-										{
-											answer_run.replace(pos, 2, " \n");
-										}
-										
-									// std::cout << "sending answer" << std::endl;
+									
+									std::string::size_type pos = 0; // Must initialize
+									while ( ( pos = answer_run.find ("\\n",pos) ) != std::string::npos )
+									{
+										answer_run.replace(pos, 2, " \n");
+									}
+									
+								// std::cout << "sending answer" << std::endl;
 
-									// disable ai runs
-										m_ai_runs = false;
+								// disable ai runs
+									m_ai_runs = false;
 
-				std::cout << "m_pid after: " << m_pid << std::endl;
+									// std::cout << "answer: " << answer_run << std::endl;
 									return answer_run;
 								}
 							}

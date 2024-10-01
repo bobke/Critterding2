@@ -3,6 +3,7 @@
 #include "kernel/be_entity_core_types.h"
 #include "be_parser.h"
 #include <chrono>
+#include <signal.h>
 
 // SCENE
 	class Scene: public BEntity
@@ -18,7 +19,10 @@
 	{
 		public:
 			BEntityBrowser() : m_pipeR(0), m_ai_runs(false) { setProcessing(); }
-			virtual ~BEntityBrowser() {};
+			virtual ~BEntityBrowser()
+			{
+				kill( m_pid, SIGINT);
+			};
 			void construct();
 			virtual void process();
 			bool set( const char* value );
