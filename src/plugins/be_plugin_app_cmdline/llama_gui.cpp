@@ -30,7 +30,7 @@
 			auto llama_location_label = hl->addChild( "label_llama_location", "QLabel" );
 			llama_location_label->set( "llama_location" );
 			llama_location_label->set( "width", (Buint)130 );
-			auto llama_location = hl->addChild( "llama_location", "QLineEdit_string" );
+			auto llama_location = hl->addChild( "llama_location", "QLineEdit" );
 		}
 
 		// LAYERS ON GPU
@@ -48,7 +48,7 @@
 			auto model_location_label = hl->addChild( "label_model_location", "QLabel" );
 			model_location_label->set( "model_location" );
 			model_location_label->set( "width", (Buint)130 );
-			auto model_location = hl->addChild( "model_location", "QLineEdit_string" );
+			auto model_location = hl->addChild( "model_location", "QLineEdit" );
 		}
 
 		// CTX_SIZE
@@ -75,7 +75,7 @@
 			auto prompt_assistant_label = hl->addChild( "label_prompt_assistant", "QLabel" );
 			prompt_assistant_label->set( "prompt_assistant" );
 			prompt_assistant_label->set( "width", (Buint)130 );
-			auto prompt_assistant = hl->addChild( "prompt_assistant", "QLineEdit_string" );
+			auto prompt_assistant = hl->addChild( "prompt_assistant", "QLineEdit" );
 		}
 		
 		// // SESSION NAME
@@ -84,7 +84,7 @@
 		// 	auto session_name_label = hl->addChild( "label_session_name", "QLabel" );
 		// 	session_name_label->set( "session_name" );
 		// 	session_name_label->set( "width", (Buint)130 );
-		// 	auto session_name = hl->addChild( "session_name", "QLineEdit_string" );
+		// 	auto session_name = hl->addChild( "session_name", "QLineEdit" );
 		// }
 		
 	}

@@ -728,7 +728,7 @@
 			auto t_uint = dynamic_cast<BEntity_uint*>( entity );
 			if ( t_uint )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_uint" );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_uint->get_uint() );
@@ -740,7 +740,7 @@
 			auto t_uintp = dynamic_cast<BEntity_uint_property*>( entity );
 			if ( t_uintp )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_uint" );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_uintp->get_uint() );
@@ -801,7 +801,7 @@
 			auto t_string = dynamic_cast<BEntity_string*>( entity );
 			if ( t_string )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_string" );
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_string->get_string() );
@@ -813,7 +813,7 @@
 			auto t_stringp = dynamic_cast<BEntity_string_property*>( entity );
 			if ( t_stringp )
 			{
-				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit_string" );
+				auto edit = to_layout->addChild( "value_lineedit", "QLineEdit" );
 				edit->set( "width", Buint(80) );
 				edit->set( "height", Buint(14) );
 				edit->set( t_stringp->get_string() );

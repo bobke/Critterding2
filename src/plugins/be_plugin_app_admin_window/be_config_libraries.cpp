@@ -296,10 +296,10 @@
 						auto t_string = dynamic_cast<BEntity_string*>( entity );
 						if ( t_string )
 						{
-							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit_string" );
+							auto edit = hboxlayout_entity->addChild( "value_lineedit", "QLineEdit" );
 							edit->set( "width", Buint(80) );
 							edit->set( "height", Buint(14) );
-							edit->set( t_string->get_float() );
+							edit->set( t_string->get_string() );
 							t_string->connectServerServer( edit );
 							edit->connectServerServer( t_string );
 						}

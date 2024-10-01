@@ -251,7 +251,7 @@
 						BEntity* text_memory = layout_H->addChild( "text_memory", "QLabel" );
 						text_memory->set("text", "memory");
 						text_memory->set("width", Buint(164));
-						m_line_edit_memory = layout_H->addChild( "Memory", "QLineEdit_string" );
+						m_line_edit_memory = layout_H->addChild( "Memory", "QLineEdit" );
 						m_line_edit_memory->set("memory");
 						m_line_edit_memory->set("width", Buint(165));
 						m_line_edit_memory->set("height", Buint(28));

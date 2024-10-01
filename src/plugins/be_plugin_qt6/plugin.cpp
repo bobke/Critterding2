@@ -48,7 +48,7 @@
 		, QLINEEDIT_INT
 		, QLINEEDIT_FLOAT
 		, QLINEEDIT_DOUBLE
-		, QLINEEDIT_STRING
+		// , QLINEEDIT_STRING
 		, QGRAPHICSVIEW
 		, QGRAPHICSSCENE
 		, QOPENGLWIDGET
@@ -92,7 +92,7 @@
 					i.addClass( parent, CLASS::QLINEEDIT_INT, "QLineEdit_int" );
 					i.addClass( parent, CLASS::QLINEEDIT_FLOAT, "QLineEdit_float" );
 					i.addClass( parent, CLASS::QLINEEDIT_DOUBLE, "QLineEdit_double" );
-					i.addClass( parent, CLASS::QLINEEDIT_STRING, "QLineEdit_string" );
+					// i.addClass( parent, CLASS::QLINEEDIT_STRING, "QLineEdit_string" );
 					i.addClass( parent, CLASS::QGRAPHICSVIEW, "QGraphicsView" );
 					i.addClass( parent, CLASS::QGRAPHICSSCENE, "QGraphicsScene" );
 					i.addClass( parent, CLASS::QOPENGLWIDGET, "QOpenGLWidget" );
@@ -150,8 +150,8 @@
 					i = new BQLineEdit_float();
 				else if ( type == CLASS::QLINEEDIT_DOUBLE )
 					i = new BQLineEdit_double();
-				else if ( type == CLASS::QLINEEDIT_STRING )
-					i = new BQLineEdit_string();
+				// else if ( type == CLASS::QLINEEDIT_STRING )
+					// i = new BQLineEdit_string();
 				else if ( type == CLASS::QGRAPHICSVIEW )
 					i = new BQGraphicsView();
 				else if ( type == CLASS::QGRAPHICSSCENE )

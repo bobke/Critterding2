@@ -69,7 +69,7 @@
 					textbox->set( "height", Buint(900) );
 
 				// QUERY INPUT
-					auto query = param_layout_H_b->addChild( "query_lineedit_INPUT", "QLineEdit_string" );
+					auto query = param_layout_H_b->addChild( "query_lineedit_INPUT", "QLineEdit" );
 					query->set( "width", Buint(890) );
 					query->set( "height", Buint(28) );
 					
@@ -571,7 +571,7 @@
 						{
 							if ( pluginManager()->load( candidate_entity, "src/plugins/be_plugin_" + candidate_entity, "be_plugin_" + candidate_entity ) )
 							{
-								output << std::endl << "succesfully loaded " << candidate_entity;
+								output << std::endl << "loaded " << candidate_entity;
 							}
 							else
 							{
@@ -606,7 +606,7 @@
 								if ( new_entity )
 								{
 									// if ( !m_ai_runs )
-									output << std::endl <<  "succesfully spawned " << candidate_entity << " named '" << candidate_name << "' in " << current_position->nameFullPath() << std::endl;;
+									output << std::endl <<  "loaded " << candidate_entity << " named '" << candidate_name << "' as child of " << current_position->nameFullPath() << std::endl;;
 									new_entity->setName( candidate_name );
 								}
 								else
@@ -695,19 +695,19 @@
 			output << std::endl << "unknown command: " << program;
 			output << std::endl << "possible commands: ls, cd, get, set, help";
 			// output << std::endl << "possible commands: ls, cd, get, set";
-
+  
 		// APPEND TO TEXTBOX
 			textbox_last = output.str();
 			if ( !m_ai_runs )
 				textbox->set( output.str().c_str() );
-
+  
 		// RESET QUERY LINEEDUT
 			query->set("");
-
+  
 		// // ENDLINE TO TEXTBOX
 		// 	if ( !m_ai_runs )
 		// 		textbox->set( "" );
-
+  
 		// FIXME TURN AROUND SO THIS RETURNS TRUE
 		return false;
 	}
@@ -1011,12 +1011,12 @@
 									if ( answer_full.find('\"') != answer_full.npos )
 									{
 										parseH.returnUntillStrip( "\"", answer_full );
-										answer_run = parseH.returnUntillStrip( "\"", answer_full ) + "\n";
+										answer_run = parseH.returnUntillStrip( "\"", answer_full );
 									}
 									
 									else /*if ( answer_run.empty() )*/
 									{
-										answer_run = parseH.returnRemainder( answer_full ) + "\n";
+										answer_run = parseH.returnRemainder( answer_full );
 									}
 									std::cout << "\n";
 								
