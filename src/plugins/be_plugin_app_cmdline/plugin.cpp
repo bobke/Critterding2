@@ -122,28 +122,34 @@
 		gui_layers_on_gpu->connectServerServer( layers_on_gpu );
 		layers_on_gpu->connectServerServer( gui_layers_on_gpu );
 
+		// MODELS
 
+			// LIQUID CODING AGENT (8B)
+				// model_location->set( "/vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf" );
+				// layers_on_gpu->set( (Buint)33 );
 
-		// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf" );
-		// layers_on_gpu->set( (Buint)48 );
-
-		// QWEN2
-		// // execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 43 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-		// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf" );
-		// layers_on_gpu->set( (Buint)43 );
-		// // execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf --prompt-cache cache.txt", (char *)NULL);
-		// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf" );
-		// layers_on_gpu->set( (Buint)35 );
-		// // execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-		model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf" );
-		layers_on_gpu->set( (Buint)33 );
-		// // execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 29 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-		// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf" );
-		// layers_on_gpu->set( (Buint)29 );
+			// LAMA 3
+				// model_location->set( "/vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf" );
+				// layers_on_gpu->set( (Buint)30 );
 		
-		// model_location->set( "/vol/space/oobabooga/models/Arcee-Nova-Alpha-GGUF.Q6_K-00001-of-00008.gguf" );
-		// layers_on_gpu->set( (Buint)27 );
+				// model_location->set( "/vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q8_0-00001-of-00002.gguf" );
+				// layers_on_gpu->set( (Buint)22 );
 
+			// REFLECTION
+				// model_location->set( "/vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf" );
+				// layers_on_gpu->set( (Buint)31 );
+
+			// QWEN2
+				// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf" );
+				// layers_on_gpu->set( (Buint)48 );
+				// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf" );
+				// layers_on_gpu->set( (Buint)43 );
+				model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf" );
+				layers_on_gpu->set( (Buint)29 );
+
+			// ACREE-NOVA
+				// model_location->set( "/vol/space/oobabooga/models/Arcee-Nova-Alpha-GGUF.Q6_K-00001-of-00008.gguf" );
+				// layers_on_gpu->set( (Buint)27 );
 
 		// CTXSIZE
 		ctx_size = addChild( "ctx_size", "uint" );
@@ -562,7 +568,7 @@
 					}
 
 				// LOADLIB
-					else if ( program == "loadlib" )
+					else if ( program == "load_plugin" )
 					{
 						// auto  = parseH.returnUntillStrip( " ", command );
 						auto candidate_entity = parseH.returnRemainder( command );
@@ -611,13 +617,13 @@
 								}
 								else
 								{
-									output << std::endl << "failed loading " << candidate_entity << ": entity class does not exist, try exploring /lib lib it's classes";
+									output << std::endl << "failed loading " << candidate_entity << ": entity class does not exist. use the name of a class in /lib";
 								}
 							}
 						}
 						else
 						{
-							output << std::endl << "failed loading " << candidate_entity << ": you must supply a name, try exploring /lib lib it's classes";
+							output << std::endl << "failed loading " << candidate_entity << ": you must supply a name. use the name of a class in /lib";
 						}
 						
 						// APPEND TO TEXTBOX
@@ -659,42 +665,50 @@
 				// AI
 					else if ( program == "ai" )
 					{
-						auto candidate_value = parseH.returnRemainder( command );
-
-						// RESET QUERY LINEEDIT
-							query->set( "" );
-						// // ENDLINE TO TEXTBOX
-						// 	textbox->set( "" );
-						
-						// save position and set it to top
-							auto save_position = current_position;
-							current_position = topParent();
-						
-						output << launchAI( candidate_value.c_str() );
-						output << execAI();
-
-						// restore position
-							current_position = save_position;
-
-						// while (m_pid == 0)
+						if ( !m_ai_runs )
 						{
-							// std::cout << "killing from set" << std::endl;
-							kill( m_pid, SIGINT);
+							auto candidate_value = parseH.returnRemainder( command );
+
+							// RESET QUERY LINEEDIT
+								query->set( "" );
+							// // ENDLINE TO TEXTBOX
+							// 	textbox->set( "" );
+							
+							// save position and set it to top
+								auto save_position = current_position;
+								current_position = topParent();
+							
+							output << launchAI( candidate_value.c_str() );
+							output << execAI();
+
+							// restore position
+								current_position = save_position;
+
+							// while (m_pid == 0)
+							{
+								// std::cout << "killing from set" << std::endl;
+								kill( m_pid, SIGINT);
+							}
+
+							// APPEND TO TEXTBOX
+								if ( !m_ai_runs )
+									textbox->set( output.str().c_str() );
+
+							return true;
 						}
-
-						// APPEND TO TEXTBOX
-							if ( !m_ai_runs )
-								textbox->set( output.str().c_str() );
-
-						return true;
+						else
+						{
+							output << "you are the ai, don't call yourself";
+							// APPEND TO TEXTBOX
+							textbox_last = output.str();
+							return false;
+						}
 					}
-
 			}
 
 		// APPEND TO TEXTBOX
 			output << std::endl << "unknown command: " << program;
-			output << std::endl << "possible commands: ls, cd, get, set, help";
-			// output << std::endl << "possible commands: ls, cd, get, set";
+			output << std::endl << "possible commands: help, ls, cd, get, set, load_plugin, load, ai";
   
 		// APPEND TO TEXTBOX
 			textbox_last = output.str();
@@ -774,28 +788,6 @@
 //ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q4_K_L.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 42 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q5_K_S.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 32 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
 // good		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-
-			// USE THESE
-
-			// LAMA 3
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 30 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-
-			// REFLECTION
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-
-			// LIQUID (8B)
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-			
-			// QWEN2
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 43 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf --prompt-cache cache.txt", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 29 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-
-			// Arcee-Nova
-			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Arcee-Nova-Alpha-GGUF.Q6_K-00001-of-00008.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 27 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-
 			
 		// 	CREATE PROMPT
 
@@ -838,9 +830,7 @@
 			}
 			file1.close();
 			file2.close();
-			
-			
-			
+
 			// EXECUTE LLAMA.CPP
 				std::cout << construct_prompt.str() << std::endl;
 				execl("/bin/bash","/bin/bash", "-c", construct_prompt.str().c_str(), (char *)NULL);
@@ -875,7 +865,7 @@
 			begin = std::chrono::steady_clock::now();
 			end = std::chrono::steady_clock::now();
 		}
-		
+
 		return "";
 	}
 		
@@ -905,12 +895,6 @@
 				{
 					std::cout << std::endl << "ai passed out after " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs], poking ai" << std::endl;
 
-					// write(in_pipe[1], cmd, strlen(cmd));
-					
-					// const char *endchar = "\n";  // We send this to the child process
-					// write(in_pipe[1], endchar, strlen(endchar));
-					// begin = std::chrono::steady_clock::now();
-					
 					// disable ai runs
 						m_ai_runs = false;
 					
@@ -918,9 +902,6 @@
 					kill( m_pid, SIGINT);
 					// execl("/bin/bash","/bin/bash", "-c", "killall -9 llama-cli", (char *)NULL);
 					return "I have failed you";
-					
-					
-					// continue;
 				}
 
 				// end = std::chrono::steady_clock::now();
@@ -1000,7 +981,7 @@
 									
 									// return cmd_run;
 								}
-								else if ( parseH.beginMatchesStrip( "answer\":", result ) )
+								else if ( parseH.beginMatchesStrip( "answer\":", result ) || parseH.beginMatchesStrip( "python\":", result ) )
 								{
 									auto answer_full = parseH.returnRemainder( result );
 									parseH.reset();
@@ -1020,28 +1001,14 @@
 									}
 									std::cout << "\n";
 								
-									// const char *sigint = "^C";
-									// write(in_pipe[1], sigint, strlen(sigint));
-									// kill( m_pid, SIGHUP );
 									kill( m_pid, SIGINT );
-									// execl("/bin/bash","/bin/bash", "-c", "killall llama-cli", (char *)NULL);
+									// wait(nullptr);
 
-									// kill( m_pid, SIGQUIT );
-									// while ( m_pid == 0 )
-									// {
-									// 	std::cout << "sending first kill" << std::endl;
-									// 	kill( m_pid, SIGINT);
-									// }
-									// kill( m_pid, SIGKILL);
-
-									
 									std::string::size_type pos = 0; // Must initialize
 									while ( ( pos = answer_run.find ("\\n",pos) ) != std::string::npos )
 									{
 										answer_run.replace(pos, 2, " \n");
 									}
-									
-								// std::cout << "sending answer" << std::endl;
 
 								// disable ai runs
 									m_ai_runs = false;
@@ -1049,367 +1016,25 @@
 									// std::cout << "answer: " << answer_run << std::endl;
 									return answer_run;
 								}
+								else if ( parseH.beginMatchesStrip( "pre_answer\":", result ) || parseH.beginMatchesStrip( "pre_python\":", result ) )
+								{
+									const char *endchar = "\n";  // We send this to the child process
+									write(in_pipe[1], endchar, strlen(endchar));
+									
+									started = false;
+									stop = false;
+								}
 							}
 						}
 					}
-					
-
 				}
 				
 			}
-
 		}
-		
 		// Wait for the child process to finish (important to avoid zombie processes)
 		// wait(nullptr);
 		return output.str();
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-// 	std::string BEntityBrowser::execAI(const char* cmd)
-// 	{
-// 		// 	CREATE PROMPT
-// 			std::ifstream file1("../share/bengine-prompt-assistant.txt");
-// 			std::ofstream file2("bengine-ai-assistant.txt");
-// 			std::string line;
-// 			if (file1.good() && file2.good())
-// 			{
-// 				while (getline(file1, line))
-// 				{
-// 					file2 << line;
-// 					file2 << '\n';
-// 				}
-// 				file2 << cmd;
-// 				file2 << '\n';
-// 				file2 << '\n';
-// 			}
-// 			file1.close();
-// 			file2.close();
-// 		
-// 		
-// 		// 1. Create two pipes: one for input and one for output
-// 		// `pipe()` returns two file descriptors: one for reading and one for writing
-// 		if (pipe(in_pipe) == -1 || pipe(out_pipe) == -1) {
-// 			perror("pipe");  // If pipe creation fails, show an error
-// 			return "";        // Exit if pipe creation fails
-// 		}
-// 
-// 		// 2. Create a child process with fork()
-// 		m_pid = fork();
-// 		if (m_pid == -1)
-// 		{
-// 			perror("fork");  // If fork fails, show an error
-// 			return "";        // Exit if fork fails
-// 		}
-// 
-// 		// CHILD PROCESS
-// 		if (m_pid == 0)
-// 		{
-// 			// Redirect the standard input (stdin) to the reading end of in_pipe
-// 			dup2(in_pipe[0], STDIN_FILENO);   // Now the command's stdin will come from in_pipe[0]
-// 			// Redirect the standard output (stdout) to the writing end of out_pipe
-// 			dup2(out_pipe[1], STDOUT_FILENO); // The command's stdout will go to out_pipe[1]
-// 
-// 			// Close the unused ends of the pipes (important!)
-// 			close(in_pipe[0]);  // Close in_pipe[0] because we are done with it in the child
-// 			close(in_pipe[1]);  // Close in_pipe[1] in the child (the parent will write to this)
-// 			close(out_pipe[0]); // Close out_pipe[0] in the child (the parent will read from this)
-// 			close(out_pipe[1]); // Close out_pipe[1] because the child has stdout redirected to it
-// 
-// 			
-// 			// BE AWARE REMOVING -n 256 FIXED HANGING IN INTERACTIVE MODE
-// 			
-// 			// LAUNCHING LLAMA.CPP
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// //ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 26 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// //ok			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q4_K_L.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 42 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q5_K_S.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 32 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// // good		// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 4096 --file ../share/bengine-prompt-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 
-// 			// USE THESE
-// 
-// 			// LAMA 3
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Meta-Llama-3.1-70B-Instruct-Q6_K-00001-of-00002.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 30 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 
-// 			// REFLECTION
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/Reflection-Llama-3.1-70B-Q4_K_M.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 31 --ctx-size 1024 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 
-// 			// LIQUID (8B)
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/llama-3-8b-liquid-coding-agent.F16.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 4096 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 			
-// 			// QWEN2
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 51 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 43 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_0-00001-of-00013.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 35 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf --prompt-cache cache.txt", (char *)NULL);
-// 			// execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q5_k_m-00001-of-00014.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 33 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 			execl("/bin/bash","/bin/bash", "-c", "/vol/space/llama.cpp/llama-cli -mg 0 -m /vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf --repeat_penalty 1.0 -i -r 'User:' -ngl 29 --ctx-size 2048 --file bengine-ai-assistant.txt --grammar-file ../share/ai-json.gbnf", (char *)NULL);
-// 			
-// 			// If `execl()` fails, print an error and exit
-// 			perror("execl");
-// 			return "";
-// 		}
-// 		
-// 		// PARENT PROCESS
-// 		else
-// 		{
-// 			// Set the output pipe to non-blocking mode (so we can read while the command runs)
-// 			fcntl(out_pipe[0], F_SETFL, O_NONBLOCK);
-// 			fcntl(in_pipe[1], F_SETFL, O_NONBLOCK);
-// 			
-// 			// Close the ends of the pipes we won't use
-// 			close(in_pipe[0]);  // Parent doesn't need to read from in_pipe
-// 			close(out_pipe[1]); // Parent doesn't write to out_pipe
-// 
-// 			// // // Write command to the command
-// 			// write(in_pipe[1], cmd, strlen(cmd));
-// 			// const char *endchar = "\n";  // We send this to the child process
-// 			// write(in_pipe[1], endchar, strlen(endchar));
-// 
-// 			// WE'RE STUCK IN THIS LOOP
-// 			bool stop = false;
-// 			bool started = false;
-// 			// bool unqueried = true;
-// 			bool after_first_command = false;
-// 			// Read output from the command while it's running
-// 			char buffer[128];
-// 			ssize_t count;
-// 			std::stringstream output;
-// 			// std::cout << "start loop" << std::endl;
-// 
-// 			//FIXME chrono reset every time to make timer work, shit.   
-// 			
-// 			std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-// 			std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-// 
-// 			while ( true )
-// 			{
-// 				// std::cout << "read pipe" << std::endl;
-// 				count = read(out_pipe[0], buffer, sizeof(buffer) - 1);
-// 
-// 				// RECEIVED FROM PIPE
-// 				if (count > 0)
-// 				{
-// 					begin = std::chrono::steady_clock::now();
-// 					
-// 					buffer[count] = '\0';  // Null-terminate the string
-// 					output << buffer;
-// 					std::cout << buffer << std::flush;
-// 				}
-// 
-// 				// NOT RECEIVED FROM PIPE
-// 				else
-// 				{
-// 					end = std::chrono::steady_clock::now();
-// 					if ( after_first_command && std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() > 5000000 )
-// 					{
-// 						std::cout << std::endl << "ai passed out after " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs], poking ai" << std::endl;
-// 
-// 						write(in_pipe[1], cmd, strlen(cmd));
-// 						
-// 						const char *endchar = "\n";  // We send this to the child process
-// 						write(in_pipe[1], endchar, strlen(endchar));
-// 						begin = std::chrono::steady_clock::now();
-// 						
-// 						// KILL PROCESS AND EXIT
-// 							kill( m_pid, SIGINT);
-// 							while ( m_pid == 0 )
-// 							{
-// 								std::cout << "sending second kill" << std::endl;
-// 								kill( m_pid, SIGINT);
-// 							}
-// 						return "I have failed you";
-// 						
-// 						
-// 						// continue;
-// 					}
-// 
-// 					// end = std::chrono::steady_clock::now();
-// 					if ( std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() > 100000 )
-// 					{
-// 						// std::cout << std::endl << "ai passed out after " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs], poking ai";
-// 						
-// 						
-// 						std::string result = output.str();
-// 						if ( !started )
-// 						{
-// 							if ( result.find('{') != result.npos )
-// 							{
-// 								// std::cout << "started" << std::endl;
-// 								started = true;
-// 							}
-// 						}
-// 		
-// 						if ( started && !stop )
-// 						{
-// 							if ( result.find('}') != result.npos )
-// 							{
-// 								// std::cout << std::endl << "STOP" << std::endl << std::endl;
-// 								output.str("");
-// 								output.clear();
-// 								
-// 								// std::cout << "|";
-// 								// return result;
-// 								stop = true;
-// 								
-// 								after_first_command = true;
-// 								
-// 								parseH.reset();
-// 								
-// 								parseH.returnUntillStrip( "{", result );
-// 								
-// 								if ( result.find('\"') != result.npos )
-// 								{
-// 									parseH.returnUntillStrip( "\"", result );
-// 									
-// 									// std::string cmd_found = parseH.returnUntillStrip( "command\":", result );
-// 									// std::cout << std::endl << std::endl << "cmd_found : '" << cmd_found << "'" << std::endl << std::endl;
-// 									// if ( !cmd_found.empty() )
-// 									if ( parseH.beginMatchesStrip( "command\":", result ) )
-// 									{
-// 										// std::cout << std::endl << "COMMAND" << std::endl << std::endl;
-// 
-// 										parseH.returnUntillStrip( "\"", result );
-// 										
-// 										std::string cmd_run = parseH.returnUntillStrip( "\"", result );
-// 										// std::cout << std::endl << std::endl << std::endl << "command_run: " << cmd_run << std::endl << std::endl << std::endl;
-// 										this->set( cmd_run.c_str() );
-// 										
-// 										// std::cout << std::endl << "textbox_last: " << textbox_last;
-// 
-// 										std::string str = textbox_last;
-// 										textbox_last = "";
-// 										std::string::size_type pos = 0; // Must initialize
-// 										while ( ( pos = str.find ("\n",pos) ) != std::string::npos )
-// 										{
-// 											str.replace(pos, 1, " \\ ");
-// 										}
-// 
-// 										str = str + "";
-// 										// std::cout << std::endl << "str: " << str;
-// 
-// 	// 									// IGNORE FIRST
-// 	// 									if ( unqueried )
-// 	// 									{
-// 	// 										// // Write command to the command
-// 	// 										write(in_pipe[1], cmd, strlen(cmd));
-// 	// 										const char *endchar = "\n";  // We send this to the child process
-// 	// 										write(in_pipe[1], endchar, strlen(endchar));
-// 	// 										unqueried = false;
-// 	// 									}
-// 	//          
-// 	// 									else
-// 										{
-// 											// Write the str to the command
-// 											const char *input = str.c_str();  // We send this to the child process
-// 											write(in_pipe[1], input, strlen(input));
-// 											const char *endchar = "\n";  // We send this to the child process
-// 											write(in_pipe[1], endchar, strlen(endchar));
-// 										}
-// 										
-// 										
-// 										// Close input pipe after sending input to indicate no more input
-// 										// close(in_pipe[1]);
-// 										
-// 										// sleep (2);
-// 										parseH.reset();
-// 										started = false;
-// 										stop = false;
-// 										
-// 										// return cmd_run;
-// 									}
-// 									else if ( parseH.beginMatchesStrip( "answer\":", result ) )
-// 									{
-// 										parseH.returnUntillStrip( "\"", result );
-// 										std::string answer_run = parseH.returnUntillStrip( "\"", result ) + "\n";
-// 										std::cout << "\n";
-// 										
-// 											// const char *sigint = "^C";
-// 											// write(in_pipe[1], sigint, strlen(sigint));
-// 											// kill( m_pid, SIGHUP );
-// 											kill( m_pid, SIGINT );
-// 											// kill( m_pid, SIGQUIT );
-// 											// while ( m_pid == 0 )
-// 											// {
-// 											// 	std::cout << "sending first kill" << std::endl;
-// 											// 	kill( m_pid, SIGINT);
-// 											// }
-// 											// kill( m_pid, SIGKILL);
-// 
-// 											
-// 											std::string::size_type pos = 0; // Must initialize
-// 											while ( ( pos = answer_run.find ("\\n",pos) ) != std::string::npos )
-// 											{
-// 												answer_run.replace(pos, 2, " \n");
-// 											}
-// 											
-// 										// std::cout << "sending answer" << std::endl;
-// 
-// 										return answer_run;
-// 									}
-// 									
-// 									// if ( unqueried )
-// 									// {
-// 									// 	// Write command to the command
-// 									// 	write(in_pipe[1], cmd, strlen(cmd));
-// 									// 	const char *endchar = "\n";  // We send this to the child process
-// 									// 	write(in_pipe[1], endchar, strlen(endchar));
-// 									// 	unqueried = false;
-// 									// }
-// 								}
-// 							}
-// 						}
-// 						
-// 
-// 					}
-// 					
-// 				}
-// 					// end = std::chrono::steady_clock::now();
-// 					// std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
-// 
-// 				// if (count == 0)
-// 				// {
-// 				// 	// EAGAIN means no data available, continue looping
-// 				// 	// continue;
-// 				// 	break;
-// 				// }
-// 				// else if (count == 0)
-// 				// {
-// 				// 	// Command has finished and closed the pipe
-// 				// 	break;
-// 				// }
-// 				
-// 				
-// 				// EXPERIMENT, CALL PROCESS LOOP
-// 				// topParent()->process_general();
-// 				
-// 			}
-// 			// std::cout << "end loop" << std::endl;
-// 
-// 			// std::cout << output.str();
-// 
-// 			// Wait for the child process to finish (important to avoid zombie processes)
-// 			wait(nullptr);
-// 			return output.str();
-// 		}
-// 
-// 		return "";
-// 	}
 
 	
 	bool BEntityBrowser::set_value( BEntity* e, const std::string& value )

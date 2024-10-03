@@ -23,7 +23,7 @@
 		, m_isHidden(false)
 		, m_isEnabled(false)
 		{
-			setWindowTitle("Engine Qt6 ");
+			setWindowTitle("QWindow ");
 			QWidget::setVisible(true);
 
 			// FIXME DISABLED FOR NOW BECAUSE WARNING
