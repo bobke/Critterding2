@@ -142,10 +142,10 @@
 			// QWEN2
 				// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q3_k_m-00001-of-00009.gguf" );
 				// layers_on_gpu->set( (Buint)48 );
-				// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q4_0-00001-of-00011.gguf" );
-				// layers_on_gpu->set( (Buint)43 );
 				model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q6_k-00001-of-00016.gguf" );
 				layers_on_gpu->set( (Buint)29 );
+				// model_location->set( "/vol/space/oobabooga/models/qwen2.5-72b-instruct-q8_0-00001-of-00021.gguf" );
+				// layers_on_gpu->set( (Buint)22 );
 
 			// ACREE-NOVA
 				// model_location->set( "/vol/space/oobabooga/models/Arcee-Nova-Alpha-GGUF.Q6_K-00001-of-00008.gguf" );
@@ -981,7 +981,7 @@
 									
 									// return cmd_run;
 								}
-								else if ( parseH.beginMatchesStrip( "answer\":", result ) || parseH.beginMatchesStrip( "python\":", result ) )
+								else if ( parseH.beginMatchesStrip( "answer\":", result ) )
 								{
 									auto answer_full = parseH.returnRemainder( result );
 									parseH.reset();
@@ -1016,6 +1016,48 @@
 									// std::cout << "answer: " << answer_run << std::endl;
 									return answer_run;
 								}
+								else if ( parseH.beginMatchesStrip( "python\":", result ) )
+								{
+									auto answer_full = parseH.returnRemainder( result );
+									parseH.reset();
+									answer_full = parseH.returnUntillStrip( "}", answer_full );
+									parseH.reset();
+									
+									std::string answer_run;
+									if ( answer_full.find('\"') != answer_full.npos )
+									{
+										parseH.returnUntillStrip( "\"", answer_full );
+										answer_run = parseH.returnUntillStrip( "\"", answer_full );
+									}
+									
+									else /*if ( answer_run.empty() )*/
+									{
+										answer_run = parseH.returnRemainder( answer_full );
+									}
+									std::cout << "\n";
+
+									kill( m_pid, SIGINT );
+									// wait(nullptr);
+
+									std::string::size_type pos = 0; // Must initialize
+									while ( ( pos = answer_run.find ("\\n",pos) ) != std::string::npos )
+									{
+										answer_run.replace(pos, 2, " \n");
+									}
+
+									// disable ai runs
+										m_ai_runs = false;
+
+									// write pyscript
+										std::ofstream file2("pyscript.py");
+										file2 << answer_run;
+										file2.close();
+
+									execl("/bin/bash","/bin/bash", "-c", "python pyscript.py", (char *)NULL);
+
+									// std::cout << "answer: " << answer_run << std::endl;
+									return answer_run;
+								}
 								else if ( parseH.beginMatchesStrip( "pre_answer\":", result ) || parseH.beginMatchesStrip( "pre_python\":", result ) )
 								{
 									const char *endchar = "\n";  // We send this to the child process
@@ -1030,6 +1072,8 @@
 				}
 				
 			}
+
+			usleep(10000);
 		}
 		// Wait for the child process to finish (important to avoid zombie processes)
 		// wait(nullptr);
