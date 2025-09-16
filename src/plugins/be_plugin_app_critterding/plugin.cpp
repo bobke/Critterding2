@@ -365,7 +365,6 @@
 				// std::cout << "collision e1: " << e1->name() << "(" << e1->id() << ")" << std::endl;
 				// std::cout << "collision e2: " << e2->name() << "(" << e2->id() << ")" << std::endl;
 
-				// FIXME BUGGY WHEN DELETING CRITTERS
 				// EAT: TRANSFER ENERGY FROM FOOD TO CRITTER 
 					auto critter = findCritter( e1, e2 );
 					if ( critter )

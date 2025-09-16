@@ -347,7 +347,7 @@
 		}
 	}
 	
-	bool BrainSystem::set( const Bstring& id, BEntity* value )
+	bool BrainSystem::set( const Bstring& id, BEntity* brain )
 	{
 		if ( id == "mutate" )
 		{
@@ -390,7 +390,7 @@
 						unsigned int max_attempts(runs*20);
 						
 					// ENTITIES
-						auto neurons = value->getChild( "neurons", 1 );
+						auto neurons = brain->getChild( "neurons", 1 );
 
 					for ( int run(0); run < runs && attempts < max_attempts; ++run )
 					{
@@ -445,7 +445,7 @@
 										if ( m_rng->get_int() == 1 )
 										{
 											// PICK RANDOM NEURON TO CONNECT FROM
-											auto random_input = randomChild( value->getChild( "inputs", 1 ) );
+											auto random_input = randomChild( brain->getChild( "inputs", 1 ) );
 
 											// ADD SYNAPSE TO THIS NEURON AND CONNECT FROM RANDOM INPUT TO SYNAPSE
 											auto synapse = addSynapse( neuron );
@@ -712,7 +712,7 @@
 								auto random_neuron = randomChild( neurons );
 								
 								// get random output FIXME this only does motors now
-								auto outputs = value->getChild( "outputs", 1 );
+								auto outputs = brain->getChild( "outputs", 1 );
 								auto constraints = outputs->getChild( "bullet_constraints", 1 )->get_reference();
 								auto random_constraint = randomChild( constraints )->get_reference();
 								random_neuron->getChild("firingWeight", 1)->connectServerServer( random_constraint );
@@ -735,7 +735,7 @@
 								// BeEntity::ptr neuron(brain_container->randomChild());
 								
 								// get random input
-								auto random_input = randomChild( value->getChild( "inputs", 1 ) );
+								auto random_input = randomChild( brain->getChild( "inputs", 1 ) );
 								if ( random_input )
 								{
 									// get random neuron
@@ -801,7 +801,7 @@
 								for ( unsigned int i(0); i < attempts && !done ; i++  )
 								{
 									// get 1 random output
-									auto random_output = randomChild( value->getChild( "outputs", 1 ) );
+									auto random_output = randomChild( brain->getChild( "outputs", 1 ) );
 
 									// std::cout << random_output->class_id() << "::" << random_output->name() << std::endl;
 									if ( random_output->class_id() == std::string("reference") )

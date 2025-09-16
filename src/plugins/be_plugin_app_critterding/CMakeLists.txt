@@ -29,6 +29,7 @@
 	)
 
 	ADD_LIBRARY( be_plugin_app_critterding SHARED ${plugin_SRCS} )
+	# TARGET_LINK_LIBRARIES( be_plugin_app_critterding )
 	TARGET_LINK_LIBRARIES( be_plugin_app_critterding be_plugin_opengl_modern )
 
 

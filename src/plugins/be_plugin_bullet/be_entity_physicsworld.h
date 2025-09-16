@@ -32,6 +32,10 @@
 				btAxisSweep3* m_broadphase;
 				btConstraintSolver* m_solver;
 				btGhostPairCallback*  m_ghostPairCallback;
+				
+				BEntity* m_timeStep;
+				BEntity* m_maxSubSteps;
+				BEntity* m_fixedTimeStep;
 		};
 
 #endif

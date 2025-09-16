@@ -17,8 +17,8 @@
 				bool set( const Bstring& id, const char* value );
 				// const char* get_string();
 
-			// private Q_SLOTS:
-				// void onChange();
+			private Q_SLOTS:
+				void onChange();
 			private:
 				Buint m_width;
 				Buint m_height;

@@ -99,7 +99,7 @@
 						for_all_children_of( critter_settings )
 						{
 							auto critter_sett = (*child)->get_reference();
-							auto line_edit_min_critters= layout_H->addChild( "min_critters_lineedit", "QLineEdit" );
+							auto line_edit_min_critters= layout_H->addChild( "min_critters_lineedit", "QLineEdit_uint" );
 							line_edit_min_critters->set("min_critters");
 							line_edit_min_critters->set("width", Buint(41));
 							line_edit_min_critters->set("height", Buint(28));
@@ -120,7 +120,7 @@
 						for_all_children_of( food_systems )
 						{
 							
-							auto line_edit_energy= layout_H->addChild( "energy_lineedit", "QLineEdit" );
+							auto line_edit_energy= layout_H->addChild( "energy_lineedit", "QLineEdit_uint" );
 							// m_line_edit_energy->set("energy");
 							line_edit_energy->set("width", Buint(41));
 							line_edit_energy->set("height", Buint(28));
@@ -144,7 +144,7 @@
 						for_all_children_of( brain_settings )
 						{
 							auto brain_sett = (*child)->get_reference();
-							auto line_edit_mutation_chance = layout_H->addChild( "mutation_chance_lineedit", "QLineEdit" );
+							auto line_edit_mutation_chance = layout_H->addChild( "mutation_chance_lineedit", "QLineEdit_uint" );
 							line_edit_mutation_chance->set("mutation_chance");
 							line_edit_mutation_chance->set("width", Buint(41));
 							line_edit_mutation_chance->set("height", Buint(28));
@@ -166,7 +166,7 @@
 						{
 							auto brain_sett = (*child)->get_reference();
 						
-							auto line_edit_mutationruns_max = layout_H->addChild( "mutationruns_max_lineedit", "QLineEdit" );
+							auto line_edit_mutationruns_max = layout_H->addChild( "mutationruns_max_lineedit", "QLineEdit_uint" );
 							// m_line_edit_mutationruns_max->set("mutationruns_max");
 							line_edit_mutationruns_max->set("width", Buint(41));
 							line_edit_mutationruns_max->set("height", Buint(28));
@@ -185,8 +185,8 @@
 						auto text_avg_adam_distance = layout_H->addChild( "avg_adam_distance", "QLabel" );
 						text_avg_adam_distance->set("text", "avg_adam_distance");
 						text_avg_adam_distance->set("width", Buint(165));
-						m_line_edit_avg_adam_distance= layout_H->addChild( "avg_adam_distance_lineedit", "QLineEdit" );
-						m_line_edit_avg_adam_distance->set("avg_adam_distance");
+						m_line_edit_avg_adam_distance= layout_H->addChild( "avg_adam_distance_lineedit", "QLineEdit_float" );
+						m_line_edit_avg_adam_distance->set("0.0f");
 						m_line_edit_avg_adam_distance->set("width", Buint(164));
 						m_line_edit_avg_adam_distance->set("height", Buint(28));
 					}
@@ -196,7 +196,7 @@
 						auto text_generations = layout_H->addChild( "generations", "QLabel" );
 						text_generations->set("text", "generations");
 						text_generations->set("width", Buint(165));
-						m_line_edit_generations= layout_H->addChild( "generations_lineedit", "QLineEdit" );
+						m_line_edit_generations= layout_H->addChild( "generations_lineedit", "QLineEdit_float" );
 						m_line_edit_generations->set("generations");
 						m_line_edit_generations->set("width", Buint(164));
 						m_line_edit_generations->set("height", Buint(28));
@@ -209,7 +209,7 @@
 						auto text_critters = layout_H->addChild( "critters", "QLabel" );
 						text_critters->set("text", "critters");
 						text_critters->set("width", Buint(165));
-						m_line_edit_critters= layout_H->addChild( "critters_lineedit", "QLineEdit" );
+						m_line_edit_critters= layout_H->addChild( "critters_lineedit", "QLineEdit_uint" );
 						m_line_edit_critters->set("critters");
 						m_line_edit_critters->set("width", Buint(164));
 						m_line_edit_critters->set("height", Buint(28));
@@ -220,7 +220,7 @@
 						auto text_food = layout_H->addChild( "food", "QLabel" );
 						text_food->set("text", "food");
 						text_food->set("width", Buint(165));
-						m_line_edit_food= layout_H->addChild( "food_lineedit", "QLineEdit" );
+						m_line_edit_food= layout_H->addChild( "food_lineedit", "QLineEdit_uint" );
 						m_line_edit_food->set("food");
 						m_line_edit_food->set("width", Buint(164));
 						m_line_edit_food->set("height", Buint(28));
@@ -233,7 +233,7 @@
 						auto text_total_neurons = layout_H->addChild( "text_total_neurons", "QLabel" );
 						text_total_neurons->set("text", "neurons");
 						text_total_neurons->set("width", Buint(165));
-						m_line_edit_total_neurons = layout_H->addChild( "neurons_lineedit", "QLineEdit" );
+						m_line_edit_total_neurons = layout_H->addChild( "neurons_lineedit", "QLineEdit_uint" );
 						m_line_edit_total_neurons->set("neurons");
 						m_line_edit_total_neurons->set("width", Buint(164));
 						m_line_edit_total_neurons->set("height", Buint(28));
@@ -244,7 +244,7 @@
 						auto text_total_synapses = layout_H->addChild( "text_total_synapses", "QLabel" );
 						text_total_synapses->set("text", "synapses");
 						text_total_synapses->set("width", Buint(165));
-						m_line_edit_total_synapses = layout_H->addChild( "total_synapses_lineedit", "QLineEdit" );
+						m_line_edit_total_synapses = layout_H->addChild( "total_synapses_lineedit", "QLineEdit_uint" );
 						m_line_edit_total_synapses->set("synapses");
 						m_line_edit_total_synapses->set("width", Buint(164));
 						m_line_edit_total_synapses->set("height", Buint(28));
@@ -257,7 +257,7 @@
 						auto text_avg_neurons = layout_H->addChild( "text_avg_neurons", "QLabel" );
 						text_avg_neurons->set("text", "avg neurons / critter");
 						text_avg_neurons->set("width", Buint(165));
-						m_line_edit_avg_neurons = layout_H->addChild( "avg_neurons_lineedit", "QLineEdit" );
+						m_line_edit_avg_neurons = layout_H->addChild( "avg_neurons_lineedit", "QLineEdit_float" );
 						m_line_edit_avg_neurons->set("avg neurons");
 						m_line_edit_avg_neurons->set("width", Buint(164));
 						m_line_edit_avg_neurons->set("height", Buint(28));
@@ -268,7 +268,7 @@
 						auto text_avg_synapses = layout_H->addChild( "text_avg_synapses", "QLabel" );
 						text_avg_synapses->set("text", "avg synapses / neuron");
 						text_avg_synapses->set("width", Buint(165));
-						m_line_edit_avg_synapses = layout_H->addChild( "avg_synapses_lineedit", "QLineEdit" );
+						m_line_edit_avg_synapses = layout_H->addChild( "avg_synapses_lineedit", "QLineEdit_float" );
 						m_line_edit_avg_synapses->set("avg synapses");
 						m_line_edit_avg_synapses->set("width", Buint(164));
 						m_line_edit_avg_synapses->set("height", Buint(28));
@@ -332,7 +332,7 @@
 				}
 			}
 			
-			m_line_edit_food->set( (float)total_food );
+			m_line_edit_food->set( total_food );
 			if ( m_qwt_curve_food )
 			{
 				m_qwt_curve_food->set( total_food );

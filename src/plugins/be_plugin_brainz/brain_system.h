@@ -14,7 +14,7 @@
 				void process();
 
 				BEntity* getChildCustom( BEntity* parent, const char* name = "" );
-				bool set( const Bstring& id, BEntity* value );
+				bool set( const Bstring& id, BEntity* brain );
 				
 			private:
 				BEntity* randomChild( const BEntity* parent );

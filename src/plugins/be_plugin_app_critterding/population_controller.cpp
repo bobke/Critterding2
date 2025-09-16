@@ -12,10 +12,10 @@
 		m_active->set( true );
 
 		m_population_trigger = addChild( "population_trigger", new BEntity_uint() );
-		m_population_trigger->set( Buint(160) );
+		m_population_trigger->set( Buint(200) );
 
 		m_population_reduce_to = addChild( "population_reduce_to", new BEntity_uint() );
-		m_population_reduce_to->set( Buint(120) );
+		m_population_reduce_to->set( Buint(150) );
 
 		m_energy_reduce_by = addChild( "energy_reduce_by", new BEntity_uint() );
 		m_energy_reduce_by->set( Buint(1) );

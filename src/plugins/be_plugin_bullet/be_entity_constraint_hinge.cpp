@@ -14,7 +14,7 @@
 		addChild( "limit_low", new BEntity_float() )->set( 0.0f );
 		addChild( "limit_high", new BEntity_float() )->set( 0.72f );
 		
-		addChild( "softness", new BEntity_float() )->set( 0.001f );
+		addChild( "softness", new BEntity_float() )->set( 0.501f );
 		addChild( "biasfactor", new BEntity_float() )->set( 0.5f );
 		addChild( "relaxationfactor", new BEntity_float() )->set( 0.5f );
 
@@ -55,7 +55,8 @@
 			// std::cout << "input sum = " << m_input_sum << std::endl;
 			
 			// float max_input_sum = 0.38f; // FIXME MAKE OPTION
-			float max_input_sum = 0.42f; // FIXME MAKE OPTION
+			// float max_input_sum = 0.42f; // FIXME MAKE OPTION
+			float max_input_sum = 0.23f; // FIXME MAKE OPTION
 			if ( m_input_sum > max_input_sum )
 			{
 				m_input_sum = max_input_sum;

@@ -59,7 +59,7 @@
 						auto text_label = layout_H->addChild( "text_label", "QLabel" );
 						text_label->set("text", "rows");
 						text_label->set("width", Buint(121));
-						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit" );
+						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit_uint" );
 						lineedit->set( (Buint)1 );
 						lineedit->set("width", Buint(40));
 						lineedit->set("height", Buint(28));
@@ -76,7 +76,7 @@
 						auto text_label = layout_H->addChild( "text_label", "QLabel" );
 						text_label->set("text", "columns");
 						text_label->set("width", Buint(121));
-						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit" );
+						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit_uint" );
 						lineedit->set( (Buint)4 );
 						lineedit->set("width", Buint(40));
 						lineedit->set("height", Buint(28));
@@ -115,7 +115,7 @@
 						auto text_label = layout_H->addChild( "text_label", "QLabel" );
 						text_label->set("text", "minimum critters");
 						text_label->set("width", Buint(121));
-						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit" );
+						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit_uint" );
 						lineedit->set( (Buint)20 );
 						lineedit->set("width", Buint(40));
 						lineedit->set("height", Buint(28));
@@ -132,7 +132,7 @@
 						auto text_label = layout_H->addChild( "text_label", "QLabel" );
 						text_label->set("text", "minimum food");
 						text_label->set("width", Buint(121));
-						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit" );
+						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit_uint" );
 						lineedit->set( (Buint)1400 );
 						lineedit->set("width", Buint(40));
 						lineedit->set("height", Buint(28));

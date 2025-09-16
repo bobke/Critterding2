@@ -83,6 +83,14 @@
 		{
 			// COLLISIONS
 			m_collisions = addChild( "collisions", new BEntity() );
+			m_timeStep = addChild( "timeStep", new BEntity_float() );
+			m_maxSubSteps = addChild( "maxSubSteps", new BEntity_int() );
+			m_fixedTimeStep = addChild( "fixedTimeStep", new BEntity_float() );
+			m_timeStep->set(0.016667f);
+			// m_maxSubSteps->set(Bint(1));
+			// m_fixedTimeStep->set(0.016667f);
+			m_maxSubSteps->set(Bint(2));
+			m_fixedTimeStep->set(0.0083335f);
 		}
 
 		void BPhysicsWorld::CollisionNearOverride(btBroadphasePair& collisionPair, btCollisionDispatcher& dispatcher, const btDispatcherInfo& dispatchInfo)
@@ -205,8 +213,7 @@
 // 			std::cout << "clear children" << std::endl;
 			m_collisions->clearChildren();
 			
-// 			m_physics_world->stepSimulation(0.016667f, 3, 0.00833334f);
-			m_physics_world->stepSimulation(0.016667f, 1, 0.016667f);
+			m_physics_world->stepSimulation( m_timeStep->get_float(), m_maxSubSteps->get_int(), m_fixedTimeStep->get_float() );
 			
 			
 		}

@@ -414,7 +414,7 @@
 		// SERVERS
 			const float spacing( 2.0f );
 			unsigned int total_minimum_critters( 20 ); // FIXME TO GLOBAL ENTITY
-			unsigned int total_minimum_food( 1400 ); // FIXME TO GLOBAL ENTITY
+			unsigned int total_minimum_food( 2000 ); // FIXME TO GLOBAL ENTITY
 			const float critter_spacing( 1.0f );
 			
 			unsigned int rows( 1 );

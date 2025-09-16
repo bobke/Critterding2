@@ -76,7 +76,7 @@
 		qmainwindow->set("on_close_destroy_entity", this);
 
 		// load a opengltest
-		auto glApp = t_parent_to_add_to->addChild("GLAppApp", new BGLApp());
+		// auto glApp = t_parent_to_add_to->addChild("GLAppApp", new BGLApp());
 // 		auto sdlwin = glApp->getChild("GLWindow");
 // 		sdlwin->set("on_close_destroy_entity", this);
 	}
@@ -185,7 +185,7 @@
 						BEntity* text_frame_counter = layout_H->addChild( "text_frame_counter", "QLabel" );
 						text_frame_counter->set("text", "current frame");
 						text_frame_counter->set("width", Buint(164));
-						m_line_edit_frame_counter = layout_H->addChild( "Frames", "QLineEdit" );
+						m_line_edit_frame_counter = layout_H->addChild( "Frames", "QLineEdit_uint" );
 						m_line_edit_frame_counter->set("frames");
 						m_line_edit_frame_counter->set("width", Buint(164));
 						m_line_edit_frame_counter->set("height", Buint(28));
@@ -196,7 +196,7 @@
 						BEntity* text_current_fps = layout_H->addChild( "text_current_fps", "QLabel" );
 						text_current_fps->set("text", "current fps");
 						text_current_fps->set("width", Buint(164));
-						m_line_edit_fps_cur = layout_H->addChild( "Current FPS", "QLineEdit" );
+						m_line_edit_fps_cur = layout_H->addChild( "Current FPS", "QLineEdit_float" );
 						m_line_edit_fps_cur->set("current fps");
 						m_line_edit_fps_cur->set("width", Buint(164));
 						m_line_edit_fps_cur->set("height", Buint(28));
@@ -207,7 +207,7 @@
 						BEntity* text_average_fps = layout_H->addChild( "text_average_fps", "QLabel" );
 						text_average_fps->set("text", "average fps");
 						text_average_fps->set("width", Buint(164));
-						m_line_edit_fps_avg = layout_H->addChild( "Average FPS", "QLineEdit" );
+						m_line_edit_fps_avg = layout_H->addChild( "Average FPS", "QLineEdit_float" );
 						m_line_edit_fps_avg->set("average fps");
 						m_line_edit_fps_avg->set("width", Buint(164));
 						m_line_edit_fps_avg->set("height", Buint(28));
@@ -218,7 +218,7 @@
 						BEntity* text_entities = layout_H->addChild( "text_entities", "QLabel" );
 						text_entities->set("text", "entities");
 						text_entities->set("width", Buint(164));
-						m_line_edit_entities = layout_H->addChild( "Entities", "QLineEdit" );
+						m_line_edit_entities = layout_H->addChild( "Entities", "QLineEdit_uint" );
 						m_line_edit_entities->set("entities");
 						m_line_edit_entities->set("width", Buint(164));
 						m_line_edit_entities->set("height", Buint(28));
@@ -229,7 +229,7 @@
 						BEntity* text_last_entity_id = layout_H->addChild( "text_last_entity_id", "QLabel" );
 						text_last_entity_id->set("text", "last entity id");
 						text_last_entity_id->set("width", Buint(164));
-						m_line_edit_last_entity_id = layout_H->addChild( "Last Entity ID", "QLineEdit" );
+						m_line_edit_last_entity_id = layout_H->addChild( "Last Entity ID", "QLineEdit_uint" );
 						m_line_edit_last_entity_id->set("last entity id");
 						m_line_edit_last_entity_id->set("width", Buint(164));
 						m_line_edit_last_entity_id->set("height", Buint(28));
@@ -257,7 +257,7 @@
 						m_line_edit_memory->set("height", Buint(28));
 					}
 
-			if ( false )
+			// if ( false )
 			{
 				// SYSTEM OBJECTS
 					pluginManager()->load( "system", "src/plugins/be_plugin_system", "be_plugin_system" );
@@ -329,7 +329,7 @@
 								BEntity* percent = (*child)->getChild("workload_percent");
 								for_all_children_of3( percent )
 								{
-									BEntity* line_edit = layout_H2->addChild( (*child3)->name(), "QLineEdit" );
+									BEntity* line_edit = layout_H2->addChild( (*child3)->name(), "QLineEdit_float" );
 									line_edit->set( (*child3)->get_float() );
 									(*child3)->connectServerServer(line_edit);
 								}
@@ -347,7 +347,7 @@
 			}
 
 		// TESTGRAPHICS VIEW AND SCENE
-// 			if (false)
+			if (false)
 			{
 				if (false)
 				{

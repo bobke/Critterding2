@@ -8,14 +8,14 @@
 		, m_width(0)
 		, m_height(0)
 		{
-			// connect(this, SIGNAL(editingFinished()), SLOT(onChange()));
-// 			connect(this, SIGNAL(textChanged(const QString&)), SLOT(onChange()));
+			connect(this, SIGNAL(textChanged()), SLOT(onChange()));
 		}
 
 		bool BQPlainTextEdit::set( const char* value )
 		{
 			QString s(value);
 			appendPlainText( s );
+			BEntity_string::set( toPlainText().toStdString().c_str() );
 			// if ( s != text() )
 			// {
 			// 	setText(s);
@@ -35,7 +35,7 @@
 				// {
 					appendPlainText( s );
 					// setText(s);
-					BEntity_string::set( value );
+					BEntity_string::set( toPlainText().toStdString().c_str() );
 					return true;
 				// }
 				// return false;
@@ -48,6 +48,12 @@
 				// 	onUpdate();
 				// 	return true;
 				// }
+			}
+			else if ( id == "clear" )
+			{
+				// std::cout << "CLEARING" << std::endl;
+				QPlainTextEdit::clear();
+				return true;
 			}
 			return false;
 		}
@@ -75,7 +81,9 @@
 			return false;
 		}
 
-		// void BQPlainTextEdit::onChange()
-		// {
-		// 	BEntity_string::set( text().toStdString().c_str() );
-		// }
+		void BQPlainTextEdit::onChange()
+		{
+			std::cout << "changed " << std::endl;
+			// BEntity_string::set( text().toStdString().c_str() );
+			BEntity_string::set( toPlainText().toStdString().c_str() );
+		}

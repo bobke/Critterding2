@@ -30,7 +30,7 @@
 	
 			btTransform m_turn_180;
 			btTransform m_pos_transform;
-			btScalar m_drawingMatrix[16];
+			// btScalar m_drawingMatrix[16];
 			unsigned int m_retinasperrow;
 			
 			glm::mat4 m_ProjectionMatrixGLM;

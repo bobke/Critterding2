@@ -1,5 +1,4 @@
-#ifndef BE_ENTITY_INTERFACE_H_INCLUDED
-#define BE_ENTITY_INTERFACE_H_INCLUDED
+#pragma once
 
 	#include "be_types.h"
 	#include <map>
@@ -222,5 +221,3 @@
 // 					
 // 					BEntityVector* m_children;
 // 		};
-	
-#endif

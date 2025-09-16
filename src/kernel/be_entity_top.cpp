@@ -409,11 +409,16 @@
 						}
 					}
 					
-					
 					else
 					{
-						std::cout << "WARNING::unknown command: " << c->id() << " " << c->name() << std::endl;
+						// std::cout << "running command" << std::endl;
+						(*command_it)->get_reference()->set();
 					}
+					
+					// else
+					// {
+					// 	std::cout << "WARNING::unknown command: " << c->id() << " " << c->name() << std::endl;
+					// }
 
 					// // BASIC COMMANDS
 					// 	BCommand* cmd = dynamic_cast<BCommand*>(*command_it);
