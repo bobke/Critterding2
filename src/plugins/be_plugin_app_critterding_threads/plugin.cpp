@@ -403,7 +403,10 @@
 
 		// THREADS FINISH
 			BEntity* threads_finish(0);
-			if ( (launcher_setting_servers_on_background && launcher_setting_servers_on_background->get_bool()) /*|| !launcher_setting_servers_on_background*/ )
+			bool background_thread(true);
+			if ( (launcher_setting_servers_on_background) )
+				background_thread = launcher_setting_servers_on_background->get_bool();
+			if ( background_thread )
 			{
 				threads_finish = addChild("threads_finish", "threads_finish");
 			}
@@ -633,7 +636,7 @@
 			}
 
 		// // THREADS FINISH
-			if ( launcher_setting_servers_on_background && !launcher_setting_servers_on_background->get_bool() || !launcher_setting_servers_on_background )
+			if ( !background_thread )
 			{
 				addChild("threads_finish", "threads_finish");
 			}

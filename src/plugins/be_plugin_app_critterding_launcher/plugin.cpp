@@ -91,7 +91,7 @@
 				{
 					BEntity* layout_H = group_layout_V->addChild( "hlayout", "QHBoxLayout" );
 						auto checkbox = layout_H->addChild( "lineedit", "QCheckBox" );
-						checkbox->set( false );
+						checkbox->set( true );
 						auto text_label = layout_H->addChild( "text_label", "QLabel" );
 						text_label->set("text", "servers on background (experimental)");
 						text_label->set("width", Buint(300));
@@ -133,7 +133,7 @@
 						text_label->set("text", "minimum food");
 						text_label->set("width", Buint(121));
 						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit_uint" );
-						lineedit->set( (Buint)1400 );
+						lineedit->set( (Buint)2000 );
 						lineedit->set("width", Buint(40));
 						lineedit->set("height", Buint(28));
 
