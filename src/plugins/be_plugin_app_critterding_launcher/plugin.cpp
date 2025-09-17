@@ -133,7 +133,7 @@
 						text_label->set("text", "minimum food");
 						text_label->set("width", Buint(121));
 						auto lineedit = layout_H->addChild( "lineedit", "QLineEdit_uint" );
-						lineedit->set( (Buint)2000 );
+						lineedit->set( (Buint)2100 );
 						lineedit->set("width", Buint(40));
 						lineedit->set("height", Buint(28));
 
